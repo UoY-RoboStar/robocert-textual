@@ -22,7 +22,6 @@
 	</properties>
 	<modules>
 		<module>circus.robocalc.roboprop.prototype</module>
-		<module>circus.robocalc.roboprop.prototype.csp</module>
 		<module>circus.robocalc.roboprop.prototype.ide</module>
 		<module>circus.robocalc.roboprop.prototype.ui</module>
 		<module>circus.robocalc.roboprop.prototype.target</module>
