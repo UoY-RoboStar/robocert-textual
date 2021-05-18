@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="robocert" nsURI="http://robocert.robocalc/" nsPrefix="robocert">
+  <eClassifiers xsi:type="ecore:EClass" name="Package">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cspFragments" upperBound="-1"
+        eType="#//CSPFragment" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" upperBound="-1"
+        eType="#//Sequence" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" upperBound="-1"
+        eType="#//Assertion" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Named" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="#//Named">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//SequenceTarget"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
+        upperBound="-1" eType="#//SequenceActor" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="steps" lowerBound="1" upperBound="-1"
+        eType="#//SequenceStep" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isStrictEnd" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceTarget" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ModuleSequenceTarget" eSuperTypes="#//SequenceTarget">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="moduleName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceActor" abstract="true" eSuperTypes="#//Named"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PlatformSequenceActor" eSuperTypes="#//SequenceActor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ModuleSequenceActor" eSuperTypes="#//SequenceActor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceStep" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arrow" eType="#//SequenceArrow"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LooseSequenceStep" eSuperTypes="#//SequenceStep"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StrictSequenceStep" eSuperTypes="#//SequenceStep"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceArrow">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//SequenceArrowBody"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//SequenceActor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//SequenceActor"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceArrowBody" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EventSequenceArrowBody" eSuperTypes="#//SequenceArrowBody">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="eventName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OperationSequenceArrowBody" eSuperTypes="#//SequenceArrowBody">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="opName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="#//Named">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//AssertionBody"
+        containment="true" eOpposite="#//AssertionBody/assertion"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" eType="#//CSPModel"
+        defaultValueLiteral="Traces"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssertionBody" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assertion" eType="#//Assertion"
+        eOpposite="#//Assertion/body"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceAssertionBody" abstract="true"
+      eSuperTypes="#//AssertionBody">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNegated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WitnessingSequenceAssertionBody" eSuperTypes="#//SequenceAssertionBody"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
+    <eLiterals name="Traces"/>
+    <eLiterals name="Failures" value="1"/>
+    <eLiterals name="FailuresDivergences" value="2"/>
+  </eClassifiers>
+</ecore:EPackage>

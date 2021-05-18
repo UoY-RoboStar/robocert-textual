@@ -33,7 +33,7 @@ Workflow {
 		language = StandardLanguage {
 			name = "robocalc.robocert.RoboCert"
 			fileExtensions = "rcert"
-			referencedResource = "platform:/resource/robocalc.robocert.model/model/RoboCert.xcore"
+			referencedResource = "platform:/resource/robocalc.robocert.model/model/RoboCert.genmodel"
 			
 			fragment = ecore2xtext.Ecore2XtextValueConverterServiceFragment2 auto-inject {}
 

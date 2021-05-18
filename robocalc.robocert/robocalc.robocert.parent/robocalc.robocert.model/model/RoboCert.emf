@@ -1,0 +1,222 @@
+@namespace(uri="http://robocert.robocalc/", prefix="robocert")
+package robocert;
+
+/**
+ * A RoboCert package.
+ */
+class Package {
+	/**
+	 * Any top-level CSP fragments in this package.
+	 * 
+	 * TODO: these will likely go away once we have a way of resolving files.
+	 */
+	val CSPFragment[] cspFragments;
+	val Sequence[] sequences;
+	val Assertion[] assertions;
+}
+
+/**
+ * Class for things that have a name.
+ */
+abstract class Named {
+	attr String name;
+}
+
+//
+// CSP FRAGMENTS
+//
+/**
+ * A fragment of CSP-M.
+ */
+class CSPFragment {
+	/**
+	 * The raw contents of the CSP fragment.
+	 */
+	attr String contents;
+}
+
+//
+// SEQUENCES
+//
+/**
+ * A sequence diagram.
+ */
+class Sequence extends Named {
+	/**
+	 * The target of the sequence diagram.
+	 */
+	val SequenceTarget target;
+	/**
+	 * The actors in the sequence diagram.
+	 */
+	val SequenceActor[2..*] actors;
+	/**
+	 * The steps contained within the sequence diagram.
+	 */
+	val SequenceStep[1..*] steps;
+	/**
+	 * Whether the sequence refuses any further communications after the last step.
+	 */
+	attr boolean isStrictEnd;
+}
+
+/**
+ * The target of a sequence.
+ */
+abstract class SequenceTarget {
+}
+
+/**
+ * A sequence target referring to a RoboChart module.
+ */
+class ModuleSequenceTarget extends SequenceTarget {
+	// TODO: convert this to a reference to the RoboChart metamodel?
+	attr String moduleName;
+}
+
+/**
+ * An actor in a sequence diagram.
+ */
+abstract class SequenceActor extends Named {
+}
+
+/**
+ * A robotic platform actor.
+ */
+class PlatformSequenceActor extends SequenceActor {
+}
+
+/**
+ * A module actor.
+ */
+class ModuleSequenceActor extends SequenceActor {
+}
+
+/**
+ * A single step in a sequence diagram.
+ */
+abstract class SequenceStep {
+	/**
+	 * The arrow contained within the step.
+	 * 
+	 * TODO: eventually this will allow combined fragments.
+	 */
+	val SequenceArrow arrow;
+}
+
+/**
+ * A sequence step that allows implicit communications before itself.
+ */
+class LooseSequenceStep extends SequenceStep {
+}
+
+/**
+ * A sequence step that does not permit implicit communications before itself.
+ */
+class StrictSequenceStep extends SequenceStep {
+}
+
+/**
+ * A communication in a sequence diagram.
+ */
+class SequenceArrow {
+	/**
+	 * The body of the arrow.
+	 */
+	val SequenceArrowBody body;
+	/**
+	 * The source of the communication.
+	 */
+	ref SequenceActor from;
+	/**
+	 * The target of the communication.
+	 */
+	ref SequenceActor to;
+}
+
+/**
+ * The body of a sequence arrow.
+ */
+abstract class SequenceArrowBody {
+}
+
+/**
+ * An event arrow in a sequence diagram.
+ */
+class EventSequenceArrowBody extends SequenceArrowBody {
+	/**
+	 * The name of the event.
+	 */
+	attr String eventName;
+// TODO: parameter
+}
+
+/**
+ * An operation arrow in a sequence diagram.
+ */
+class OperationSequenceArrowBody extends SequenceArrowBody {
+	/**
+	 * The name of the operation.
+	 */
+	attr String opName;
+// TODO: parameters
+}
+
+//
+// ASSERTIONS
+//
+/**
+ * A RoboCert assertion, containing a named body with metadata.
+ */
+class Assertion extends Named {
+	/**
+	 * The body containing the part of the assertion that can vary.
+	 */
+	val AssertionBody#assertion body;
+	/**
+	 * The model under which this assertion should be checked if converted to (untimed) CSP.
+	 * 
+	 * TODO: is this always useful?
+	 */
+	attr CSPModel model = "Traces";
+}
+
+/**
+ * An assertion body.
+ */
+abstract class AssertionBody {
+	/**
+	 * The parent assertion.
+	 */
+	ref Assertion#body assertion;
+}
+
+/**
+ * A RoboCert sequence assertion body.
+ */
+abstract class SequenceAssertionBody extends AssertionBody {
+	/**
+	 * The sequence to which this assertion refers.
+	 */
+	ref Sequence sequence;
+	/**
+	 * Whether the assertion must fail to hold for the model to be validated.
+	 */
+	attr boolean isNegated;
+}
+
+/**
+ * A sequence assertion body that requires that the behaviour described by the
+ * sequence is (or is not) witnessed by the model.
+ */
+class WitnessingSequenceAssertionBody extends SequenceAssertionBody {
+}
+
+/**
+ * A CSP refinement model.
+ */
+enum CSPModel {
+	Traces;
+	Failures;
+	FailuresDivergences;
+}

@@ -3,6 +3,7 @@
 	<name>robocalc.robocert</name>
 	<comment></comment>
 	<projects>
+		<project>robocalc.robocert.model</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

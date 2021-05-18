@@ -6,14 +6,14 @@ package robocalc.robocert.formatting2
 import com.google.inject.Inject
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import robocalc.robocert.model.Sequence
+import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.services.RoboCertGrammarAccess
 
 class RoboCertFormatter extends AbstractFormatter2 {
 	
 	@Inject extension RoboCertGrammarAccess
 
-	def dispatch void format(robocalc.robocert.model.Package _package, extension IFormattableDocument document) {
+	def dispatch void format(robocalc.robocert.model.robocert.Package _package, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
 		for (sequence : _package.sequences) {
 			sequence.format

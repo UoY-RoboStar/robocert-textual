@@ -9,9 +9,9 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated RoboCert -->
       <package
-            uri="robocalc.robocert.model"
-            class="robocalc.robocert.model.ModelPackage"
-            genModel="model/RoboCert.xcore"/>
+            uri="http://robocert.robocalc/"
+            class="robocalc.robocert.model.robocert.RoboCertPackage"
+            genModel="model/RoboCert.genmodel"/>
    </extension>
 
 </plugin>

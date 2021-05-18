@@ -7,14 +7,14 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import robocalc.robocert.model.Sequence
-import robocalc.robocert.model.Assertion
-import robocalc.robocert.model.SequenceAssertionBody
-import robocalc.robocert.model.AssertionBody
-import robocalc.robocert.model.WitnessingSequenceAssertionBody
-import robocalc.robocert.model.ModuleSequenceTarget
-import robocalc.robocert.model.SequenceTarget
-import robocalc.robocert.model.CSPFragment
+import robocalc.robocert.model.robocert.Sequence
+import robocalc.robocert.model.robocert.Assertion
+import robocalc.robocert.model.robocert.SequenceAssertionBody
+import robocalc.robocert.model.robocert.AssertionBody
+import robocalc.robocert.model.robocert.WitnessingSequenceAssertionBody
+import robocalc.robocert.model.robocert.ModuleSequenceTarget
+import robocalc.robocert.model.robocert.SequenceTarget
+import robocalc.robocert.model.robocert.CSPFragment
 
 /**
  * Generates code from your model files on save.
