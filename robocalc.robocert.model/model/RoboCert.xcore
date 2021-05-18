@@ -6,6 +6,12 @@ import org.eclipse.emf.ecore.xml.^type.ID
  * A RoboCert package.
  */
 class Package {
+	/**
+	 * Any top-level CSP fragments in this package.
+	 * 
+	 * TODO: these will likely go away once we have a way of resolving files.
+	 */
+	contains CSPFragment[] cspFragments
 	contains Sequence[] sequences
 	contains Assertion[] assertions
 }
@@ -18,9 +24,21 @@ abstract class Named {
 }
 
 //
+// CSP FRAGMENTS
+//
+/**
+ * A fragment of CSP-M.
+ */
+class CSPFragment {
+	/**
+	 * The raw contents of the CSP fragment.
+	 */
+	String contents
+}
+
+//
 // SEQUENCES
 //
-
 /**
  * A sequence diagram.
  */
@@ -29,17 +47,14 @@ class Sequence extends Named {
 	 * The target of the sequence diagram.
 	 */
 	contains SequenceTarget target
-	
 	/**
 	 * The actors in the sequence diagram.
 	 */
 	contains SequenceActor[2..*] actors
-	
 	/**
 	 * The steps contained within the sequence diagram.
 	 */
 	contains SequenceStep[1..*] steps
-	
 	/**
 	 * Whether the sequence refuses any further communications after the last step.
 	 */
@@ -64,14 +79,12 @@ class ModuleSequenceTarget extends SequenceTarget {
  * An actor in a sequence diagram.
  */
 abstract class SequenceActor extends Named {
-	
 }
 
 /**
  * A robotic platform actor.
  */
 class PlatformSequenceActor extends SequenceActor {
-	
 }
 
 /**
@@ -112,7 +125,6 @@ class SequenceArrow {
 	 * The body of the arrow.
 	 */
 	contains SequenceArrowBody body
-	
 	/**
 	 * The source of the communication.
 	 */
@@ -126,7 +138,8 @@ class SequenceArrow {
 /**
  * The body of a sequence arrow.
  */
-abstract class SequenceArrowBody {}
+abstract class SequenceArrowBody {
+}
 
 /**
  * An event arrow in a sequence diagram.
@@ -136,8 +149,7 @@ class EventSequenceArrowBody extends SequenceArrowBody {
 	 * The name of the event.
 	 */
 	ID eventName
-	
-	// TODO: parameter
+// TODO: parameter
 }
 
 /**
@@ -147,16 +159,13 @@ class OperationSequenceArrowBody extends SequenceArrowBody {
 	/**
 	 * The name of the operation.
 	 */
-	 ID opName
-	 
-	 // TODO: parameters
+	ID opName
+// TODO: parameters
 }
-
 
 //
 // ASSERTIONS
 //
-
 /**
  * A RoboCert assertion, containing a named body with metadata.
  */
@@ -165,7 +174,6 @@ class Assertion extends Named {
 	 * The body containing the part of the assertion that can vary.
 	 */
 	contains AssertionBody body opposite assertion
-	
 	/**
 	 * The model under which this assertion should be checked if converted to (untimed) CSP.
 	 * 
@@ -192,7 +200,6 @@ abstract class SequenceAssertionBody extends AssertionBody {
 	 * The sequence to which this assertion refers.
 	 */
 	refers Sequence sequence
-	
 	/**
 	 * Whether the assertion must fail to hold for the model to be validated.
 	 */
