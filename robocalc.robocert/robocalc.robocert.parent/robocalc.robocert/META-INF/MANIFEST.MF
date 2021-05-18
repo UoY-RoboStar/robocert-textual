@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: robocalc.robocert
+Bundle-ManifestVersion: 2
+Bundle-Name: robocalc.robocert
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: robocalc.robocert; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: robocalc.robocert.model,
+ org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: robocalc.robocert.services,
+ robocalc.robocert.serializer,
+ robocalc.robocert.formatting2,
+ robocalc.robocert,
+ robocalc.robocert.validation,
+ robocalc.robocert.scoping,
+ robocalc.robocert.parser.antlr.internal,
+ robocalc.robocert.parser.antlr,
+ robocalc.robocert.generator
+Import-Package: org.apache.log4j
