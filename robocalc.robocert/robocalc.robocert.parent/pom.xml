@@ -23,6 +23,7 @@
 	<modules>
 		<module>robocalc.robocert</module>
 		<module>robocalc.robocert.ide</module>
+		<module>robocalc.robocert.model</module>
 		<module>robocalc.robocert.ui</module>
 		<module>robocalc.robocert.target</module>
 		<module>robocalc.robocert.tests</module>

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="robocert" nsURI="http://robocert.robocalc/" nsPrefix="robocert">
+  <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+    <details key="basePackage" value="robocalc.robocert.model"/>
+    <details key="modelPluginID" value="robocalc.robocert.model"/>
+    <details key="modelDirectory" value="/robocalc.robocert.model/src-gen"/>
+    <details key="editDirectory" value="/robocalc.robocert.model.edit/src-gen"/>
+    <details key="editorDirectory" value="/robocalc.robocert.model.editor/src-gen"/>
+    <details key="testsDirectory" value="/robocalc.robocert.model.tests/src-gen"/>
+  </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="Package">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cspFragments" upperBound="-1"
         eType="#//CSPFragment" containment="true"/>

@@ -1,4 +1,12 @@
 @namespace(uri="http://robocert.robocalc/", prefix="robocert")
+@genmodel
+	( basePackage="robocalc.robocert.model"
+	, modelPluginID="robocalc.robocert.model"
+	, modelDirectory="/robocalc.robocert.model/src-gen"
+	, editDirectory="/robocalc.robocert.model.edit/src-gen"
+	, editorDirectory="/robocalc.robocert.model.editor/src-gen"
+	, testsDirectory="/robocalc.robocert.model.tests/src-gen"
+	)
 package robocert;
 
 /**
