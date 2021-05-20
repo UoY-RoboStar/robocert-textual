@@ -168,7 +168,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @return generated CSP for the left-hand side of the assertion.
 	 */
 	def dispatch String generateAssertionLeft(WitnessingSequenceAssertionBody asst) {
-		asst.generateAssertionSeqRef
+		asst.generateAssertionTarget
 	}
 
 	/**
@@ -193,7 +193,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @return generated CSP for the right-hand side of the assertion.
 	 */
 	def dispatch String generateAssertionRight(WitnessingSequenceAssertionBody asst) {
-		asst.generateAssertionTarget
+		asst.generateAssertionSeqRef
 	}
 
 	/**

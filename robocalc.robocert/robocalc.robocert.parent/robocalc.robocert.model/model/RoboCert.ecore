@@ -39,26 +39,31 @@
   <eClassifiers xsi:type="ecore:EClass" name="SequenceActor" abstract="true" eSuperTypes="#//Named"/>
   <eClassifiers xsi:type="ecore:EClass" name="PlatformSequenceActor" eSuperTypes="#//SequenceActor"/>
   <eClassifiers xsi:type="ecore:EClass" name="ModuleSequenceActor" eSuperTypes="#//SequenceActor"/>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceStep" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="arrow" eType="#//SequenceArrow"
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceStep">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gap" eType="#//SequenceGap"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="action" eType="#//SequenceAction"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LooseSequenceStep" eSuperTypes="#//SequenceStep"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StrictSequenceStep" eSuperTypes="#//SequenceStep"/>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceArrow">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//SequenceArrowBody"
-        containment="true" eOpposite="#//SequenceArrowBody/parent"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceGap" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StrictSequenceGap" eSuperTypes="#//SequenceGap"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AnythingSequenceGap" eSuperTypes="#//SequenceGap"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrowSequenceAction" eSuperTypes="#//SequenceAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//SequenceArrow"
+        containment="true" eOpposite="#//SequenceArrow/parent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//SequenceActor"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//SequenceActor"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceArrowBody" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//SequenceArrow"
-        eOpposite="#//SequenceArrow/body"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FinalSequenceAction" eSuperTypes="#//SequenceAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceArrow" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//ArrowSequenceAction"
+        eOpposite="#//ArrowSequenceAction/body"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventSequenceArrowBody" eSuperTypes="#//SequenceArrowBody">
+  <eClassifiers xsi:type="ecore:EClass" name="EventSequenceArrow" eSuperTypes="#//SequenceArrow">
     <eStructuralFeatures xsi:type="ecore:EReference" name="event" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="OperationSequenceArrowBody" eSuperTypes="#//SequenceArrowBody">
+  <eClassifiers xsi:type="ecore:EClass" name="OperationSequenceArrow" eSuperTypes="#//SequenceArrow">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="#//Named">

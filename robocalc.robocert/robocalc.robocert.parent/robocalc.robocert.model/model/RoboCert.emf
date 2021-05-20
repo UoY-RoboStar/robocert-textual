@@ -104,35 +104,51 @@ class ModuleSequenceActor extends SequenceActor {
 /**
  * A single step in a sequence diagram.
  */
-abstract class SequenceStep {
+class SequenceStep {
 	/**
-	 * The arrow contained within the step.
-	 * 
-	 * TODO: eventually this will allow combined fragments.
+	 * The specification of what can happen in the 'gap' before the step.
 	 */
-	val SequenceArrow arrow;
+	val SequenceGap gap;
+
+	/**
+	 * The component inside the sequence step.
+	 */
+	val SequenceAction action;
 }
 
 /**
- * A sequence step that allows implicit communications before itself.
+ * A specification of which internal communications can happen before a
+ * sequence step, or at the end of a sequence diagram.
  */
-class LooseSequenceStep extends SequenceStep {
+abstract class SequenceGap {
 }
 
 /**
- * A sequence step that does not permit implicit communications before itself.
+ * A sequence gap that permits no implicit communications.
  */
-class StrictSequenceStep extends SequenceStep {
+class StrictSequenceGap extends SequenceGap {
 }
 
 /**
- * A communication in a sequence diagram.
+ * A sequence gap that permits any implicit communications.
  */
-class SequenceArrow {
+class AnythingSequenceGap extends SequenceGap {
+}
+
+/**
+ * An action in a sequence diagram.
+ */
+abstract class SequenceAction {
+}
+
+/**
+ * A communicating action in a sequence diagram.
+ */
+class ArrowSequenceAction extends SequenceAction {
 	/**
 	 * The body of the arrow.
 	 */
-	val SequenceArrowBody#parent body;
+	val SequenceArrow#parent body;
 	/**
 	 * The source of the communication.
 	 */
@@ -144,19 +160,27 @@ class SequenceArrow {
 }
 
 /**
- * The body of a sequence arrow.
+ * A special action marking the end of a diagram.
+ *
+ * This exists mainly to allow a sequence gap at the end of the diagram.
  */
-abstract class SequenceArrowBody {
+class FinalSequenceAction extends SequenceAction {
+}
+
+/**
+ * A type of communication in a sequence diagram.
+ */
+abstract class SequenceArrow {
 	/**
 	 * The parent of the arrow.
 	 */
-	ref SequenceArrow#body parent;
+	ref ArrowSequenceAction#body parent;
 }
 
 /**
  * An event arrow in a sequence diagram.
  */
-class EventSequenceArrowBody extends SequenceArrowBody {
+class EventSequenceArrow extends SequenceArrow {
 	/**
 	 * The name of the event.
 	 */
@@ -167,7 +191,7 @@ class EventSequenceArrowBody extends SequenceArrowBody {
 /**
  * An operation arrow in a sequence diagram.
  */
-class OperationSequenceArrowBody extends SequenceArrowBody {
+class OperationSequenceArrow extends SequenceArrow {
 	/**
 	 * The name of the operation.
 	 */

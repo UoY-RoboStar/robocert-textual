@@ -89,25 +89,32 @@ SequenceActor:
  * A step in a sequence diagram.
  */
 SequenceStep:
-	{LooseSequenceStep} 'when' arrow=SequenceArrow |
-	// Represents a sequence that begins live.
-	{StrictSequenceStep} arrow=SequenceArrow
+	gap=SequenceGap action=SequenceAction
 ;
 
 /**
- * An arrow (communication between participants).
+ * An action in a sequence diagram.
+ */
+SequenceAction:
+	{ArrowSequenceAction} body=SequenceArrow 'from' from=[SequenceActor] 'to' to=[SequenceActor] |
+	{FinalSequenceAction} 'end'
+;
+
+/**
+ * An arrow.
  */
 SequenceArrow:
-	(body=SequenceArrowBody) 'from' from=[SequenceActor] 'to' to=[SequenceActor]
+	// need arguments
+	{EventSequenceArrow} 'event' event=[Event|QualifiedName] ('(' ')')? |
+	{OperationSequenceArrow} 'operation' operation=[OperationSig|QualifiedName] '(' ')'
 ;
 
 /**
- * An arrow body.
+ * A gap specification.
  */
-SequenceArrowBody:
-	// need arguments
-	{EventSequenceArrowBody} 'event' event=[Event|QualifiedName] ('(' ')')? |
-	{OperationSequenceArrowBody} 'operation' operation=[OperationSig|QualifiedName] '(' ')'
+SequenceGap:
+	{AnythingSequenceGap} 'anything' 'until' |
+	{StrictSequenceGap}
 ;
 
 //

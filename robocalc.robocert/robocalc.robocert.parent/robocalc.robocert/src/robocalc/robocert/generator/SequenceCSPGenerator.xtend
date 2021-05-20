@@ -1,17 +1,21 @@
 package robocalc.robocert.generator
 
 import robocalc.robocert.model.robocert.Sequence
-import robocalc.robocert.model.robocert.StrictSequenceStep
 import robocalc.robocert.model.robocert.PlatformSequenceActor
 import robocalc.robocert.model.robocert.ModuleSequenceActor
-import robocalc.robocert.model.robocert.SequenceArrowBody
 import robocalc.robocert.model.robocert.SequenceActor
-import robocalc.robocert.model.robocert.EventSequenceArrowBody
 import robocalc.robocert.model.robocert.SequenceArrow
-import robocalc.robocert.model.robocert.LooseSequenceStep
 import robocalc.robocert.model.robocert.ModuleSequenceTarget
 import robocalc.robocert.model.robocert.SequenceTarget
-import robocalc.robocert.model.robocert.OperationSequenceArrowBody
+import robocalc.robocert.model.robocert.SequenceStep
+import robocalc.robocert.model.robocert.ArrowSequenceAction
+import robocalc.robocert.model.robocert.StrictSequenceGap
+import robocalc.robocert.model.robocert.AnythingSequenceGap
+import robocalc.robocert.model.robocert.SequenceGap
+import robocalc.robocert.model.robocert.FinalSequenceAction
+import robocalc.robocert.model.robocert.SequenceAction
+import robocalc.robocert.model.robocert.EventSequenceArrow
+import robocalc.robocert.model.robocert.OperationSequenceArrow
 
 /**
  * A generator that emits (untimed, for now) CSP for a sequence.
@@ -45,7 +49,6 @@ class SequenceCSPGenerator {
 				«FOR step : IndexedSequenceStep.enumerate(sequence.steps)»
 					Step«step.index» = «step.step.generateStep(step.index)»
 				«ENDFOR»
-				Step«sequence.steps.length» = «generateEnd»
 			within Step0
 		'''
 	}
@@ -66,34 +69,105 @@ class SequenceCSPGenerator {
 	}
 
 	/**
-	 * @return generated CSP for one strict sequence step.
+	 * @return generated CSP for one sequence step.
 	 * 
 	 * @param step   the step for which we are generating CSP.
 	 * @param index  the index of the step.
 	 */
-	def dispatch String generateStep(StrictSequenceStep step, int index) {
+	def String generateStep(SequenceStep step, int index) {
+		step.action.generateAction(step.gap, index)
+	}
+	
+	/**
+	 * Generates CSP for an arrow action with a strict gap.
+	 * 
+	 * @param action  the arrow action.
+	 * @param gap     the strict gap.
+	 * @param index   the index of the step.
+	 * 
+	 * @return the generated CSP.
+	 */
+	def dispatch String generateAction(ArrowSequenceAction action, StrictSequenceGap gap, int index) {
 		// NOTE: always leading to StepN+1 might need changing when we
 		// introduce combined fragments.
-		'''«step.arrow.generateArrow» -> Step«index+1»'''
+		'''«action.generateArrowPrefix» -> Step«index+1»'''
 	}
 
 	/**
-	 * @return generated CSP for one loose sequence step.
+	 * Generates CSP for an arrow action with an anything gap.
 	 * 
-	 * A loose sequence step becomes a throws operator, where the arrow is the
-	 * event being thrown on.
+	 * @param action  the arrow action.
+	 * @param gap     the anything gap.
+	 * @param index   the index of the step.
 	 * 
-	 * @param step   the step for which we are generating CSP.
-	 * @param index  the index of the step.
+	 * @return the generated CSP.
 	 */
-	def dispatch String generateStep(LooseSequenceStep step, int index) {
+	def dispatch String generateAction(ArrowSequenceAction action, AnythingSequenceGap gap, int index) {
 		// TODO: allow negating events here
 		// NOTE: if the arrow makes any bindings, we might not be able to
 		// use throws?  An alternative encoding would be making the RUN exclude
 		// the set of events the arrow can generate, and using /\.
-		'''«generateRun» [|«step.arrow.generateArrowEventSet»|> Step«index+1»'''
+		'''«gap.generateRun» [|«action.generateArrowEventSet»|> Step«index+1»'''
 	}
 	
+	/**
+	 * Generates CSP for a final action.
+	 * 
+	 * @param action  the final action.
+	 * @param gap     the gap.
+	 * @param index   the index of the step.
+	 * 
+	 * @return the generated CSP.
+	 */
+	def dispatch String generateAction(FinalSequenceAction action, SequenceGap gap, int index) {
+		gap.generateRun
+	}
+	
+	/**
+	 * Generates fallback CSP for an unsupported action.
+	 * 
+	 * @param action  the arrow action.
+	 * @param gap     the (strict) gap.
+	 * @param index   the index of the step.
+	 * 
+	 * @return the generated CSP.
+	 */
+	def dispatch String generateAction(SequenceAction action, SequenceGap gap, int index) {
+		'''{- unsupported action: «action» (gap «gap» -} STOP'''
+	}
+
+	/** 
+	 * @return the generated CSP for running the given gap.
+	 *
+	 * @param gap  the (strict) gap for which we are generating run.
+	 */
+	def dispatch String generateRun(StrictSequenceGap gap) {
+		// A strict gap doesn't allow anything to happen until something we
+		// want to happen *does* happen, so if there isn't such a thing then
+		// we assume termination.
+		// TODO: this doesn't seem right, strictly speaking.
+		"SKIP"
+	}
+	
+	/** 
+	 * @return the generated CSP for running the given gap.
+	 *
+	 * @param gap  the (anything) gap for which we are generating run.
+	 */
+	def dispatch String generateRun(AnythingSequenceGap gap) {
+		// NOTE: will need something other than 'Events' here eventually
+		"RUN(Events)"
+	}
+
+	/** 
+	 * @return fallback CSP for an unknown gap type.
+	 *
+	 * @param gap  the gap for which we are generating run.
+	 */
+	def dispatch String generateRun(SequenceGap gap) {
+		'''{- unknown gap: «gap» -} STOP'''
+	}
+
 	/**
 	 * Generates a CSP event set for one sequence arrow.
 	 * 
@@ -101,24 +175,24 @@ class SequenceCSPGenerator {
 	 * 
 	 * @return generated CSP for the event set of one sequence arrow.
 	 */
-	def String generateArrowEventSet(SequenceArrow arr) {
+	def String generateArrowEventSet(ArrowSequenceAction arr) {
 		// NOTE: if the arrow is introducing a binding, this should be the
 		// set of all possible communications on that arrow, not literally the
 		// arrow's CSP elaboration.
-		'''{| «arr.generateArrow» |}'''
+		'''{| «arr.generateArrowPrefix» |}'''
 	}
 
 	/**
-	 * Generates a CSP event for one sequence arrow.
+	 * Generates a CSP prefix for one sequence arrow action.
 	 * 
 	 * @param arr  the arrow for which we are generating CSP.
 	 *
 	 * @return generated CSP for one sequence arrow.
 	 */
-	def String generateArrow(SequenceArrow arr) {
+	def String generateArrowPrefix(ArrowSequenceAction arr) {
 		// NOTE: we might need to consider from/to at a more sophisticated
 		// level than just boiling them down to 'in'/'out' eventually.
-		arr.body.generateArrowBody(getArrowDirection(arr.from, arr.to))
+		arr.body.generateArrow(getArrowDirection(arr.from, arr.to))
 	}
 
 	/**
@@ -127,7 +201,7 @@ class SequenceCSPGenerator {
 	 * @param arr  the arrow body for which we are generating CSP.
 	 * @param dir  the direction of the arrow.
 	 */
-	def dispatch String generateArrowBody(EventSequenceArrowBody arr, ArrowDirection dir) {
+	def dispatch String generateArrow(EventSequenceArrow arr, ArrowDirection dir) {
 		// TODO: parameters
 		// NOTE: parameters might eventually introduce bindings
 		'''«namespace»::«arr.event.name».«dir»'''
@@ -139,7 +213,7 @@ class SequenceCSPGenerator {
 	 * @param arr  the arrow body for which we are generating CSP.
 	 * @param dir  the direction of the arrow.
 	 */
-	def dispatch String generateArrowBody(OperationSequenceArrowBody arr, ArrowDirection dir) {
+	def dispatch String generateArrow(OperationSequenceArrow arr, ArrowDirection dir) {
 		// TODO: parameters
 		// NOTE: parameters might eventually introduce bindings		
 		'''«namespace»::«arr.operation.name»Call'''
@@ -155,7 +229,7 @@ class SequenceCSPGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	def dispatch String generateArrowBody(SequenceArrowBody arr, ArrowDirection dir) {
+	def dispatch String generateArrow(SequenceArrow arr, ArrowDirection dir) {
 		'''{- unsupported arrow body: arr=«arr» dir=«dir» -} tock'''
 	}
 
