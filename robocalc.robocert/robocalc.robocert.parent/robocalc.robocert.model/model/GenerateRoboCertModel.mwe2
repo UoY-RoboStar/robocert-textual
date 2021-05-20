@@ -9,6 +9,9 @@ var project = "robocalc.robocert.model"
 Workflow {
 	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
 		scanClassPath = true
+		
+		registerGenModelFile = "platform:/resource/circus.robocalc.robochart/model/robochart.genmodel"
+		registerEcoreFile = "platform:/resource/circus.robocalc.robochart/model/robochart.ecore"
 	}
 	
 	component = org.eclipse.emf.mwe.utils.DirectoryCleaner {

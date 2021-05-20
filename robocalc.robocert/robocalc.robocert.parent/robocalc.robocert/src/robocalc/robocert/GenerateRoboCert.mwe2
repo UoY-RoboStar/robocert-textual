@@ -6,6 +6,13 @@ import org.eclipse.xtext.xtext.generator.model.project.*
 var rootPath = ".."
 
 Workflow {
+	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
+		scanClassPath = true
+		platformUri = ".."
+		
+		registerGenModelFile = "platform:/resource/circus.robocalc.robochart/model/robochart.genmodel"
+		registerEcoreFile = "platform:/resource/circus.robocalc.robochart/model/robochart.ecore"
+	}
 	
 	component = XtextGenerator {
 		configuration = {

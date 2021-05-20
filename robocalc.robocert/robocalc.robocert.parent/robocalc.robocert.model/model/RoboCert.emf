@@ -9,6 +9,8 @@
 	)
 package robocert;
 
+import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
+
 /**
  * A RoboCert package.
  */
@@ -78,8 +80,7 @@ abstract class SequenceTarget {
  * A sequence target referring to a RoboChart module.
  */
 class ModuleSequenceTarget extends SequenceTarget {
-	// TODO: convert this to a reference to the RoboChart metamodel?
-	attr String moduleName;
+	ref robochart.RCModule module;
 }
 
 /**
@@ -159,7 +160,7 @@ class EventSequenceArrowBody extends SequenceArrowBody {
 	/**
 	 * The name of the event.
 	 */
-	attr String eventName;
+	ref robochart.Event event;
 // TODO: parameter
 }
 
@@ -170,7 +171,8 @@ class OperationSequenceArrowBody extends SequenceArrowBody {
 	/**
 	 * The name of the operation.
 	 */
-	attr String opName;
+	ref robochart.OperationSig operation;
+// TODO: check whether this should be Operation instead
 // TODO: parameters
 }
 

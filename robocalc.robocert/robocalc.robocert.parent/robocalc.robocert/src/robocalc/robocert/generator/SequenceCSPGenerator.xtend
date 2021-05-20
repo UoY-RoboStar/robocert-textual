@@ -130,7 +130,7 @@ class SequenceCSPGenerator {
 	def dispatch String generateArrowBody(EventSequenceArrowBody arr, ArrowDirection dir) {
 		// TODO: parameters
 		// NOTE: parameters might eventually introduce bindings
-		'''«namespace»::«arr.eventName».«dir»'''
+		'''«namespace»::«arr.event.name».«dir»'''
 	}
 
 	/**
@@ -142,7 +142,7 @@ class SequenceCSPGenerator {
 	def dispatch String generateArrowBody(OperationSequenceArrowBody arr, ArrowDirection dir) {
 		// TODO: parameters
 		// NOTE: parameters might eventually introduce bindings		
-		'''«namespace»::«arr.opName»Call'''
+		'''«namespace»::«arr.operation.name»Call'''
 	}
 
 	/**
@@ -212,7 +212,7 @@ class SequenceCSPGenerator {
 	 * @param target  the target for which we are getting a namespace.
 	 */
 	def dispatch String getNamespace(ModuleSequenceTarget target) {
-		target.moduleName
+		target.module.name
 	}
 
 	/**

@@ -234,7 +234,7 @@ class RoboCertGenerator extends AbstractGenerator {
 		// TODO: ideally this should get constant information from the
 		// RoboChart metamodel, and inject user-defined values in.
 		// Presumably the constant overriding should be per-assertion.
-		'''P_«tgt.moduleName»'''
+		'''P_«tgt.module.name»'''
 	}
 
 	def dispatch String generateTarget(SequenceTarget tgt) {

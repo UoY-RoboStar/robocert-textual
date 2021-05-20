@@ -16,7 +16,10 @@ Require-Bundle: robocalc.robocert,
  org.eclipse.ui.ide;bundle-version="3.5.0",
  org.eclipse.ui,
  org.eclipse.compare,
- org.eclipse.xtext.builder
+ org.eclipse.xtext.builder,
+ circus.robocalc.robochart.textual;bundle-version="2.0.0",
+ circus.robocalc.robochart.textual.ide;bundle-version="2.0.0",
+ circus.robocalc.robochart.textual.ui;bundle-version="2.0.0"
 Import-Package: org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: robocalc.robocert.ui.quickfix,

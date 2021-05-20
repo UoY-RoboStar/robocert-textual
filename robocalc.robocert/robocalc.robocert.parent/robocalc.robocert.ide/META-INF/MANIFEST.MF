@@ -10,7 +10,9 @@ Require-Bundle: robocalc.robocert,
  robocalc.robocert.model,
  org.eclipse.xtext.ide,
  org.eclipse.xtext.xbase.ide,
- org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ circus.robocalc.robochart.textual;bundle-version="2.0.0",
+ circus.robocalc.robochart.textual.ide;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: robocalc.robocert.ide.contentassist.antlr,
  robocalc.robocert.ide.contentassist.antlr.internal
