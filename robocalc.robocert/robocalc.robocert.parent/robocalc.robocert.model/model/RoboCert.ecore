@@ -47,11 +47,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="StrictSequenceStep" eSuperTypes="#//SequenceStep"/>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceArrow">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//SequenceArrowBody"
-        containment="true"/>
+        containment="true" eOpposite="#//SequenceArrowBody/parent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//SequenceActor"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//SequenceActor"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceArrowBody" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceArrowBody" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//SequenceArrow"
+        eOpposite="#//SequenceArrow/body"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EventSequenceArrowBody" eSuperTypes="#//SequenceArrowBody">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="eventName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>

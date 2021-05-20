@@ -85,9 +85,9 @@ SequenceActor:
  * A step in a sequence diagram.
  */
 SequenceStep:
-	{LooseSequenceStep} 'when' (arrow = SequenceArrow) |
+	{LooseSequenceStep} 'when' arrow=SequenceArrow |
 	// Represents a sequence that begins live.
-	{StrictSequenceStep} (arrow = SequenceArrow)
+	{StrictSequenceStep} arrow=SequenceArrow
 ;
 
 /**

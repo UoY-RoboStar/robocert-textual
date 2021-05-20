@@ -131,7 +131,7 @@ class SequenceArrow {
 	/**
 	 * The body of the arrow.
 	 */
-	val SequenceArrowBody body;
+	val SequenceArrowBody#parent body;
 	/**
 	 * The source of the communication.
 	 */
@@ -146,6 +146,10 @@ class SequenceArrow {
  * The body of a sequence arrow.
  */
 abstract class SequenceArrowBody {
+	/**
+	 * The parent of the arrow.
+	 */
+	ref SequenceArrow#body parent;
 }
 
 /**

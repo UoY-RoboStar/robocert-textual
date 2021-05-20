@@ -24,7 +24,7 @@ import robocalc.robocert.model.robocert.CSPFragment
 class RoboCertGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		fsa.generateFile('seq.csp', generate(resource));
+		fsa.generateFile('seq.csp', resource.generate);
 	}
 
 	/**
@@ -37,19 +37,19 @@ class RoboCertGenerator extends AbstractGenerator {
 			--
 			-- CSP fragments
 			--
-			«generateCSPFragments(resource)»
+			«resource.generateCSPFragments»
 			
 			--
 			-- Sequences
 			--
 			
-			«generateSequences(resource)»
+			«resource.generateSequences»
 			
 			--
 			-- Assertions
 			--
 			
-			«generateAssertions(resource)»
+			«resource.generateAssertions»
 		'''
 	}
 
@@ -69,7 +69,7 @@ class RoboCertGenerator extends AbstractGenerator {
 		// diagrams.  This will change later on.
 		'''
 			«FOR csp : resource.allContents.filter(CSPFragment).toIterable»
-				«generateCSPFragment(csp)»
+				«csp.generateCSPFragment»
 			«ENDFOR»
 		'''
 	}
@@ -83,7 +83,7 @@ class RoboCertGenerator extends AbstractGenerator {
 		// stripping 'csp-begin' (9 chars) and 'csp-end' (7 chars).
 		// TODO: is this the right way to do this, or do we need a value
 		// converter?
-		frag.contents.substring(9, frag.contents.length() - 7)
+		frag.contents.substring(9, frag.contents.length - 7)
 	}
 
 	/**
@@ -94,28 +94,19 @@ class RoboCertGenerator extends AbstractGenerator {
 	def String generateSequences(Resource resource) {
 		'''
 			«FOR seq : resource.allContents.filter(Sequence).toIterable»
-				«generateSequence(seq)»
+				«seq.generateSequence»
 			«ENDFOR»
 		'''
 	}
-
-	//
-	// Sequences
-	//
 	/**
 	 * @return generated CSP for one sequence.
 	 * 
 	 * @param seq  the sequence for which we are generating CSP.
 	 */
 	def String generateSequence(Sequence seq) {
-		// TODO: emit correct CSP here.
-		'''
-			«seq.name» = let
-				Step0 = SKIP
-			within Step0
-		'''
+		new SequenceCSPGenerator(seq).generate
 	}
-
+	
 	//
 	// Assertions
 	//
@@ -127,7 +118,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	def String generateAssertions(Resource resource) {
 		'''
 			«FOR asst : resource.allContents.filter(Assertion).toIterable»
-				«generateAssertion(asst)»
+				«asst.generateAssertion»
 			«ENDFOR»
 		'''
 	}
@@ -140,7 +131,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	def String generateAssertion(Assertion asst) {
 		'''
 			-- Assertion «asst.name»
-			«generateAssertionBody(asst.body)»
+			«asst.body.generateAssertionBody»
 		'''
 	}
 
@@ -150,9 +141,9 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
 	def dispatch String generateAssertionBody(SequenceAssertionBody asst) {
-		var lhs = generateAssertionLeft(asst);
-		var rhs = generateAssertionRight(asst);
-		var model = generateAssertionModel(asst);
+		var lhs = asst.generateAssertionLeft;
+		var rhs = asst.generateAssertionRight;
+		var model = asst.generateAssertionModel;
 		'''
 			assert«IF asst.isNegated» not«ENDIF» «lhs» [«model»= «rhs»
 		'''
@@ -177,7 +168,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @return generated CSP for the left-hand side of the assertion.
 	 */
 	def dispatch String generateAssertionLeft(WitnessingSequenceAssertionBody asst) {
-		generateAssertionSeqRef(asst)
+		asst.generateAssertionSeqRef
 	}
 
 	/**
@@ -202,7 +193,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @return generated CSP for the right-hand side of the assertion.
 	 */
 	def dispatch String generateAssertionRight(WitnessingSequenceAssertionBody asst) {
-		generateAssertionTarget(asst)
+		asst.generateAssertionTarget
 	}
 
 	/**
@@ -231,7 +222,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
 	def String generateAssertionTarget(SequenceAssertionBody asst) {
-		generateTarget(asst.sequence.target)
+		asst.sequence.target.generateTarget
 	}
 
 	/**

@@ -22,7 +22,7 @@ class RoboCertOutputConfigurationProvider implements IOutputConfigurationProvide
     	defaultOutput.setCleanUpDerivedResources(true);
     	defaultOutput.setSetDerivedProperty(true);
     	
-    	var set = new HashSet()
+    	var set = new HashSet
     	set.add(defaultOutput);
     	set
 	}
