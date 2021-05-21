@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.csp.untimed
+package robocalc.robocert.generator.csp
 
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.PlatformSequenceActor
