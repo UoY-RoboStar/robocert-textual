@@ -50,7 +50,7 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'in' target=SequenceTarget 'with' (actors+=SequenceActor (',' actors+=SequenceActor)*) '{'
+	'sequence' name=ID 'for' target=SequenceTarget 'with' (actors+=SequenceActor (',' actors+=SequenceActor)*) '{'
 		(steps+=SequenceStep)
 		('then' steps+=SequenceStep)*
 		(isStrictEnd?='end')?
@@ -69,8 +69,8 @@ SequenceTarget:
  * A participant in a sequence diagram.
  */
 SequenceActor:
-	{PlatformSequenceActor} 'platform' name=ID |
-	{ModuleSequenceActor} 'module' name=ID
+	{PlatformSequenceActor} 'world' name=ID |
+	{ModuleSequenceActor} 'component' name=ID
 ;
 
 // The basic trace is 'X then X then X... end'.  We can change to weak
@@ -139,5 +139,5 @@ Assertion:
  * A RoboCert assertion body.
  */
 AssertionBody:
-	{WitnessingSequenceAssertionBody} sequence=[Sequence] 'is' (isNegated?='not')? 'witnessed'
+	{WitnessingSequenceAssertionBody} sequence=[Sequence] 'is' (isNegated?='not')? 'observed'
 ;
