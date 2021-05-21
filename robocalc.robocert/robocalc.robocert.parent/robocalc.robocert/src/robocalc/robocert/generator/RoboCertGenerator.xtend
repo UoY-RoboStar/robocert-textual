@@ -9,13 +9,10 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.Assertion
-import robocalc.robocert.model.robocert.SequenceAssertionBody
-import robocalc.robocert.model.robocert.AssertionBody
-import robocalc.robocert.model.robocert.WitnessingSequenceAssertionBody
-import robocalc.robocert.model.robocert.ModuleSequenceTarget
-import robocalc.robocert.model.robocert.SequenceTarget
 import robocalc.robocert.model.robocert.CSPFragment
 import robocalc.robocert.generator.csp.ImportGenerator
+import robocalc.robocert.generator.csp.SequenceGenerator
+import robocalc.robocert.generator.csp.AssertionGenerator
 
 /**
  * Generates code from your model files on save.
@@ -23,6 +20,9 @@ import robocalc.robocert.generator.csp.ImportGenerator
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class RoboCertGenerator extends AbstractGenerator {
+	// TODO: inject this
+	extension AssertionGenerator ag = new AssertionGenerator()
+	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		fsa.generateFile('seq.csp', resource.generate);
 	}
@@ -117,7 +117,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @param seq  the sequence for which we are generating CSP.
 	 */
 	def String generateSequence(Sequence seq) {
-		new robocalc.robocert.generator.csp.SequenceGenerator(seq).generate
+		new SequenceGenerator(seq).generate
 	}
 
 	//
@@ -131,140 +131,8 @@ class RoboCertGenerator extends AbstractGenerator {
 	def String generateAssertions(Resource resource) {
 		'''
 			«FOR asst : resource.allContents.filter(Assertion).toIterable»
-				«asst.generateAssertion»
+				«asst.generate»
 			«ENDFOR»
 		'''
-	}
-
-	/**
-	 * @return generated CSP for one assertion.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 */
-	def String generateAssertion(Assertion asst) {
-		'''
-			-- Assertion «asst.name»
-			«asst.body.generateAssertionBody»
-		'''
-	}
-
-	/**
-	 * @return generated CSP for one sequence assertion body.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 */
-	def dispatch String generateAssertionBody(SequenceAssertionBody asst) {
-		var lhs = asst.generateAssertionLeft;
-		var rhs = asst.generateAssertionRight;
-		var model = asst.generateAssertionModel;
-		'''
-			assert«IF asst.isNegated» not«ENDIF» «lhs» [«model»= «rhs»
-		'''
-	}
-
-	/**
-	 * Catch-all case for when we are asked to generate CSP for an assertion
-	 * that can't have CSP generated for it.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * @return generated CSP for one sequence assertion body.
-	 */
-	def dispatch String generateAssertionBody(AssertionBody asst) {
-		""
-	}
-
-	/**
-	 * Generates CSP for the left-hand side of a witnessing assertion.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the left-hand side of the assertion.
-	 */
-	def dispatch String generateAssertionLeft(WitnessingSequenceAssertionBody asst) {
-		asst.generateAssertionTarget
-	}
-
-	/**
-	 * Generates catch-all CSP for an unsupported assertion's left side.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the left-hand side of the assertion.
-	 */
-	def dispatch String generateAssertionLeft(SequenceAssertionBody asst) {
-		'''{- UNSUPPORTED LHS: «asst» -} STOP'''
-	}
-
-	/**
-	 * Generates CSP for the right-hand side of a witnessing assertion.
-	 * 
-	 * Depending on the assertion type, this may expand to the sequence or the
-	 * target of the sequence.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the right-hand side of the assertion.
-	 */
-	def dispatch String generateAssertionRight(WitnessingSequenceAssertionBody asst) {
-		asst.generateAssertionSeqRef
-	}
-
-	/**
-	 * Generates catch-all CSP for an unsupported assertion's right side.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the left-hand side of the assertion.
-	 */
-	def dispatch String generateAssertionRight(SequenceAssertionBody asst) {
-		'''{- UNSUPPORTED RHS: «asst» -} STOP'''
-	}
-
-	/**
-	 * @return generated CSP for a sequence reference in one assertion.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 */
-	def String generateAssertionSeqRef(SequenceAssertionBody asst) {
-		asst.sequence.name
-	}
-
-	/**
-	 * @return generated CSP for the target of one assertion.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 */
-	def String generateAssertionTarget(SequenceAssertionBody asst) {
-		asst.sequence.target.generateTarget
-	}
-
-	/**
-	 * @return generated CSP for a module sequence target.
-	 * 
-	 * @param tgt  the context for which we are generating CSP.
-	 */
-	def dispatch String generateTarget(ModuleSequenceTarget tgt) {
-		// TODO: ideally this should get constant information from the
-		// RoboChart metamodel, and inject user-defined values in.
-		// Presumably the constant overriding should be per-assertion.
-		'''P_«tgt.module.name»'''
-	}
-
-	def dispatch String generateTarget(SequenceTarget tgt) {
-		'''{- UNSUPPORTED TARGET: «tgt» -} STOP'''
-	}
-
-	/**
-	 * @return the appropriate FDR model shorthand for this assertion.
-	 */
-	def String generateAssertionModel(AssertionBody asst) {
-		switch asst.assertion.model {
-			case TRACES:
-				"T"
-			case FAILURES:
-				"F"
-			case FAILURES_DIVERGENCES:
-				"FD"
-		}
 	}
 }
