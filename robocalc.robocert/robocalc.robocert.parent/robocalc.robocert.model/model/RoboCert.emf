@@ -245,9 +245,16 @@ abstract class SequenceAssertionBody extends AssertionBody {
 
 /**
  * A sequence assertion body that requires that the behaviour described by the
- * sequence is (or is not) witnessed by the model.
+ * sequence is (or is not) observable by the model.
  */
-class WitnessingSequenceAssertionBody extends SequenceAssertionBody {
+class ObservedSequenceAssertionBody extends SequenceAssertionBody {
+}
+
+/**
+ * A sequence assertion body that requires that the behaviour described by the
+ * sequence is (or is not) implemented by the model.
+ */
+class ImplementedSequenceAssertionBody extends SequenceAssertionBody {
 }
 
 /**

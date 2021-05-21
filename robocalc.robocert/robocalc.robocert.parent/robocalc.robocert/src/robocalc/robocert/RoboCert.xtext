@@ -117,17 +117,6 @@ SequenceGap:
 	{StrictSequenceGap}
 ;
 
-//
-// Sequence assertions
-//
-// These are:
-//
-// - assertion ID: SEQUENCE is witnessed
-//     (in CSP: sequence refines design)
-// - assertion ID: SEQUENCE is not witnessed
-//     (in CSP: sequence does not refine design)
-//
-
 /**
  * A RoboCert assertion.
  */
@@ -139,5 +128,20 @@ Assertion:
  * A RoboCert assertion body.
  */
 AssertionBody:
-	{WitnessingSequenceAssertionBody} sequence=[Sequence] 'is' (isNegated?='not')? 'observed'
+	SequenceAssertionBody
+;
+	
+/**
+ * A sequence assertion.
+ *
+ * These are:
+ *
+ * - assertion ID: SEQUENCE is observed (in CSP: sequence refines target)
+ * - assertion ID: SEQUENCE is not observed (in CSP: sequence does not refine target)
+ * - assertion ID: SEQUENCE holds (in CSP: target refines sequence)
+ * - assertion ID: SEQUENCE does not hold (in CSP: target does not refine sequence)
+ */
+SequenceAssertionBody:
+	{ObservedSequenceAssertionBody} sequence=[Sequence] 'is' (isNegated?='not')? 'observed' |
+	{ImplementedSequenceAssertionBody} sequence=[Sequence] ('holds' | 'does' (isNegated?='not') 'hold')
 ;

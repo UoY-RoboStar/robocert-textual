@@ -3,7 +3,8 @@ package robocalc.robocert.generator.csp
 import robocalc.robocert.model.robocert.SequenceAssertionBody
 import robocalc.robocert.model.robocert.Assertion
 import robocalc.robocert.model.robocert.AssertionBody
-import robocalc.robocert.model.robocert.WitnessingSequenceAssertionBody
+import robocalc.robocert.model.robocert.ObservedSequenceAssertionBody
+import robocalc.robocert.model.robocert.ImplementedSequenceAssertionBody
 
 /**
  * Generates CSP for assertions.
@@ -48,14 +49,25 @@ class AssertionGenerator {
 	}
 
 	/**
-	 * Generates CSP for the left-hand side of a witnessing assertion.
+	 * Generates CSP for the left-hand side of an 'observed' assertion.
 	 * 
 	 * @param asst  the assertion for which we are generating CSP.
 	 * 
 	 * @return generated CSP for the left-hand side of the assertion.
 	 */
-	def dispatch String generateLeft(WitnessingSequenceAssertionBody asst) {
+	def dispatch String generateLeft(ObservedSequenceAssertionBody asst) {
 		asst.generateTarget
+	}
+
+	/**
+	 * Generates CSP for the left-hand side of an 'implemented' assertion.
+	 * 
+	 * @param asst  the assertion for which we are generating CSP.
+	 * 
+	 * @return generated CSP for the left-hand side of the assertion.
+	 */
+	def dispatch String generateLeft(ImplementedSequenceAssertionBody asst) {
+		asst.generateSeqRef
 	}
 
 	/**
@@ -70,7 +82,7 @@ class AssertionGenerator {
 	}
 
 	/**
-	 * Generates CSP for the right-hand side of a witnessing assertion.
+	 * Generates CSP for the right-hand side of an 'observed' assertion.
 	 * 
 	 * Depending on the assertion type, this may expand to the sequence or the
 	 * target of the sequence.
@@ -79,8 +91,22 @@ class AssertionGenerator {
 	 * 
 	 * @return generated CSP for the right-hand side of the assertion.
 	 */
-	def dispatch String generateRight(WitnessingSequenceAssertionBody asst) {
+	def dispatch String generateRight(ObservedSequenceAssertionBody asst) {
 		asst.generateSeqRef
+	}
+	
+	/**
+	 * Generates CSP for the right-hand side of an 'implemented' assertion.
+	 * 
+	 * Depending on the assertion type, this may expand to the sequence or the
+	 * target of the sequence.
+	 * 
+	 * @param asst  the assertion for which we are generating CSP.
+	 * 
+	 * @return generated CSP for the right-hand side of the assertion.
+	 */
+	def dispatch String generateRight(ImplementedSequenceAssertionBody asst) {
+		asst.generateTarget
 	}
 
 	/**
