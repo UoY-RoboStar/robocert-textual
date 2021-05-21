@@ -104,7 +104,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @param seq  the sequence for which we are generating CSP.
 	 */
 	def String generateSequence(Sequence seq) {
-		new SequenceCSPGenerator(seq).generate
+		new robocalc.robocert.generator.csp.untimed.SequenceGenerator(seq).generate
 	}
 	
 	//

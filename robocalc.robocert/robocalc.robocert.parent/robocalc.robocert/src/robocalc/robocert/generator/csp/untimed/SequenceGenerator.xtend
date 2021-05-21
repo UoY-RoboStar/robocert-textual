@@ -1,4 +1,4 @@
-package robocalc.robocert.generator
+package robocalc.robocert.generator.csp.untimed
 
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.PlatformSequenceActor
@@ -16,11 +16,13 @@ import robocalc.robocert.model.robocert.FinalSequenceAction
 import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.model.robocert.EventSequenceArrow
 import robocalc.robocert.model.robocert.OperationSequenceArrow
+import robocalc.robocert.generator.ArrowDirection
+import robocalc.robocert.generator.IndexedSequenceStep
 
 /**
- * A generator that emits (untimed, for now) CSP for a sequence.
+ * A generator that emits untimed CSP for a sequence.
  */
-class SequenceCSPGenerator {
+class SequenceGenerator {
 	// TODO: handle timed vs untimed CSP
 	// TODO: consider moving some of the extension methods into the model
 	
