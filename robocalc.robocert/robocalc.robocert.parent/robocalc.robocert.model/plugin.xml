@@ -10,7 +10,7 @@
       <!-- @generated RoboCert -->
       <package
             uri="http://robocert.robocalc/"
-            class="robocalc.robocert.model.robocert.RoboCertPackage"
+            class="robocalc.robocert.model.robocert.RobocertPackage"
             genModel="model/RoboCert.genmodel"/>
    </extension>
 
