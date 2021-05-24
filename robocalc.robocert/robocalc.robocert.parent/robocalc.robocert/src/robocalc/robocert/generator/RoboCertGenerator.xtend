@@ -13,6 +13,7 @@ import robocalc.robocert.model.robocert.CSPFragment
 import robocalc.robocert.generator.csp.ImportGenerator
 import robocalc.robocert.generator.csp.SequenceGenerator
 import robocalc.robocert.generator.csp.AssertionGenerator
+import com.google.inject.Inject
 
 /**
  * Generates code from your model files on save.
@@ -20,8 +21,9 @@ import robocalc.robocert.generator.csp.AssertionGenerator
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class RoboCertGenerator extends AbstractGenerator {
-	// TODO: inject this
-	extension AssertionGenerator ag = new AssertionGenerator()
+	@Inject extension AssertionGenerator ag
+	@Inject extension ImportGenerator ig
+	@Inject extension SequenceGenerator sg
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		fsa.generateFile('seq.csp', resource.generate);
@@ -54,15 +56,6 @@ class RoboCertGenerator extends AbstractGenerator {
 			
 			«resource.generateAssertions»
 		'''
-	}
-
-	/**
-	 * @return any imports generated from the given resource.
-	 * 
-	 * @param resource  the resource to generate imports from.
-	 */
-	private def generateImports(Resource resource) {
-		new ImportGenerator(resource).generateImports
 	}
 
 	//
@@ -108,15 +101,6 @@ class RoboCertGenerator extends AbstractGenerator {
 			«seq.generateSequence»
 		«ENDFOR»
 	'''
-
-	/**
-	 * @return generated CSP for one sequence.
-	 * 
-	 * @param seq  the sequence for which we are generating CSP.
-	 */
-	private def generateSequence(Sequence seq) {
-		new SequenceGenerator(seq).generate
-	}
 
 	//
 	// Assertions

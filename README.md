@@ -18,11 +18,13 @@ I greatly appreciate any suggestions, comments, and issues.
 
 ```
 sequence ExampleSeq
-	for module ExampleRobot
-	with world P, component D {	
-	anything until operation deviceOff() from D to P
-	then operation deviceOn() from D to P
-	then anything until end
+  for module ExampleRobot as R, world as W {	
+    anything except { operation deviceOn() from D to P } until
+      operation deviceOff() from D to P
+    then anything except { operation deviceOff() from D to P } until
+      operation deviceOn() from D to P
+    then anything until
+      end
 }
 assertion Foo: ExampleSeq is not observed
 assertion Bar: ExampleSeq holds

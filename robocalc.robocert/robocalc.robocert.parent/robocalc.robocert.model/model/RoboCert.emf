@@ -55,50 +55,47 @@ class Sequence extends Named {
 	/**
 	 * The target of the sequence diagram.
 	 */
-	val SequenceTarget target;
+	val TargetSequenceActor target;
 	/**
-	 * The actors in the sequence diagram.
+	 * The world of the sequence diagram.
 	 */
-	val SequenceActor[2..*] actors;
+	val WorldSequenceActor world;
 	/**
 	 * The steps contained within the sequence diagram.
+	 * There is always at least one step (a final step, if the diagram is
+	 * well-formed).
 	 */
 	val SequenceStep[1..*] steps;
-	/**
-	 * Whether the sequence refuses any further communications after the last step.
-	 */
-	attr boolean isStrictEnd;
 }
 
 /**
- * The target of a sequence.
- */
-abstract class SequenceTarget {
-}
-
-/**
- * A sequence target referring to a RoboChart module.
- */
-class ModuleSequenceTarget extends SequenceTarget {
-	ref robochart.RCModule module;
-}
-
-/**
- * An actor in a sequence diagram.
+ * An actor in a sequence.
+ *
+ * There are two actors in a sequence: the 'target' of the sequence,
+ * which is the system under test; and the 'world', which is the sum of
+ * everything connected to the target.  They are bound to names used in the
+ * diagram itself, but the target may also name an external RoboChart entity.
  */
 abstract class SequenceActor extends Named {
 }
 
 /**
- * A robotic platform actor.
+ * The world of a sequence.
  */
-class PlatformSequenceActor extends SequenceActor {
+class WorldSequenceActor extends SequenceActor {
 }
 
 /**
- * A module actor.
+ * The target of a sequence.
  */
-class ModuleSequenceActor extends SequenceActor {
+abstract class TargetSequenceActor extends SequenceActor {
+}
+
+/**
+ * A sequence target referring to a RoboChart module.
+ */
+class ModuleSequenceActor extends TargetSequenceActor {
+	ref robochart.RCModule module;
 }
 
 /**

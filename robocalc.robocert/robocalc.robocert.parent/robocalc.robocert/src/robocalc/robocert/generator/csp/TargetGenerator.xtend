@@ -1,7 +1,7 @@
 package robocalc.robocert.generator.csp
 
-import robocalc.robocert.model.robocert.ModuleSequenceTarget
-import robocalc.robocert.model.robocert.SequenceTarget
+import robocalc.robocert.model.robocert.ModuleSequenceActor
+import robocalc.robocert.model.robocert.TargetSequenceActor
 
 /**
  * Generates CSP referring to a target.
@@ -12,16 +12,14 @@ class TargetGenerator {
 	 * 
 	 * @param tgt  the context for which we are generating CSP.
 	 */
-	def dispatch String generate(ModuleSequenceTarget tgt) {
+	def dispatch CharSequence generate(ModuleSequenceActor tgt)
 		// TODO: move this and the import logic into the same place.
 		
 		// TODO: ideally this should get constant information from the
 		// RoboChart metamodel, and inject user-defined values in.
 		// Presumably the constant overriding should be per-assertion.
 		'''P_«tgt.module.name»'''
-	}
 
-	def dispatch String generate(SequenceTarget tgt) {
+	def dispatch CharSequence generate(TargetSequenceActor tgt)
 		'''{- UNSUPPORTED TARGET: «tgt» -} STOP'''
-	}
 }

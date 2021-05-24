@@ -50,26 +50,24 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'for' target=SequenceTarget 'with' (actors+=SequenceActor (',' actors+=SequenceActor)*) '{'
+	'sequence' name=ID 'for' target=TargetSequenceActor ',' world=WorldSequenceActor '{'
 		(steps+=SequenceStep)
 		('then' steps+=SequenceStep)*
-		(isStrictEnd?='end')?
 	'}'	
 ;
 
 /**
- * The target of a sequence diagram.
+ * The target actor of a sequence diagram.
  */
-SequenceTarget:
-	{ModuleSequenceTarget} 'module' module=[RCModule|QualifiedName]
+TargetSequenceActor:
+	 'module' {ModuleSequenceActor} module=[RCModule|QualifiedName] 'as' name=ID
 ;
 
 /**
- * A participant in a sequence diagram.
+ * The world actor of a sequence diagram.
  */
-SequenceActor:
-	{PlatformSequenceActor} 'world' name=ID |
-	{ModuleSequenceActor} 'component' name=ID
+WorldSequenceActor:
+	'world' 'as' name=ID
 ;
 
 // The basic trace is 'X then X then X... end'.  We can change to weak
@@ -110,8 +108,8 @@ ArrowSequenceAction:
  * An arrow.
  */
 SequenceArrow:
-	{EventSequenceArrow} 'event' event=[Event|QualifiedName] ArgList |
-	{OperationSequenceArrow} 'operation' operation=[OperationSig|QualifiedName] ArgList
+	'event' {EventSequenceArrow} event=[Event|QualifiedName] ArgList |
+	'operation' {OperationSequenceArrow} operation=[OperationSig|QualifiedName] ArgList
 ;
 
 /**

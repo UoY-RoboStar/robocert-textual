@@ -14,17 +14,17 @@ class RoboCertOutputConfigurationProvider implements IOutputConfigurationProvide
 		// TODO: is this the right thing to do?
 		// TODO: PRISM gen
 		
-		var defaultOutput = new OutputConfiguration(IFileSystemAccess2.DEFAULT_OUTPUT);
-    	defaultOutput.setDescription("CSP Folder");
-    	defaultOutput.setOutputDirectory("./csp-gen");
-    	defaultOutput.setOverrideExistingResources(true);
-    	defaultOutput.setCreateOutputDirectory(true);
-    	defaultOutput.setCleanUpDerivedResources(true);
-    	defaultOutput.setSetDerivedProperty(true);
+		var defaultOutput = new OutputConfiguration(IFileSystemAccess2.DEFAULT_OUTPUT) => [
+			description = "CSP Folder"
+    		outputDirectory = "./csp-gen";
+    		overrideExistingResources = true;
+    		createOutputDirectory = true;
+    		cleanUpDerivedResources = true;
+    		setDerivedProperty = true;
+    		keepLocalHistory = true  		
+    	];
     	
-    	var set = new HashSet
-    	set.add(defaultOutput);
-    	set
+    	newHashSet(defaultOutput)
 	}
 	
 }

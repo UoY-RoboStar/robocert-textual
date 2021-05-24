@@ -1,12 +1,9 @@
 package robocalc.robocert.generator.csp
 
 import robocalc.robocert.model.robocert.Sequence
-import robocalc.robocert.model.robocert.PlatformSequenceActor
 import robocalc.robocert.model.robocert.ModuleSequenceActor
 import robocalc.robocert.model.robocert.SequenceActor
 import robocalc.robocert.model.robocert.SequenceArrow
-import robocalc.robocert.model.robocert.ModuleSequenceTarget
-import robocalc.robocert.model.robocert.SequenceTarget
 import robocalc.robocert.model.robocert.SequenceStep
 import robocalc.robocert.model.robocert.ArrowSequenceAction
 import robocalc.robocert.model.robocert.StrictSequenceGap
@@ -19,6 +16,8 @@ import robocalc.robocert.generator.ArrowDirection
 import robocalc.robocert.generator.IndexedSequenceStep
 import robocalc.robocert.model.robocert.LooseSequenceGap
 import robocalc.robocert.model.robocert.ArrowSet
+import robocalc.robocert.model.robocert.WorldSequenceActor
+import robocalc.robocert.model.robocert.TargetSequenceActor
 
 /**
  * A generator that emits untimed CSP for a sequence.
@@ -26,24 +25,15 @@ import robocalc.robocert.model.robocert.ArrowSet
 class SequenceGenerator {
 	// TODO: handle timed vs untimed CSP
 	// TODO: consider moving some of the extension methods into the model
-	/**
-	 * Reference to the top-level sequence.
-	 */
-	Sequence sequence;
 
 	/**
-	 * Constructs a CSP generator for a given sequence.
+	 * Generates CSP for a sequence.
 	 * 
 	 * @param sequence  the sequence for which we are generating CSP.
-	 */
-	new(Sequence sequence) {
-		this.sequence = sequence;
-	}
-
-	/**
+	 * 
 	 * @return CSP for this generator's sequence.
 	 */
-	def CharSequence generate() // NOTE: might need factoring into a sequential composition rule.
+	def CharSequence generateSequence(Sequence sequence) // NOTE: might need factoring into a sequential composition rule.
 	'''
 		«sequence.name» = let
 			«FOR step : IndexedSequenceStep.enumerate(sequence.steps)»
@@ -191,7 +181,7 @@ class SequenceGenerator {
 	private def generateArrowPrefix(ArrowSequenceAction arr) {
 		// NOTE: we might need to consider from/to at a more sophisticated
 		// level than just boiling them down to 'in'/'out' eventually.
-		arr.body.generateArrow(getArrowDirection(arr.from, arr.to))
+		arr.body.generateArrow(getArrowDirection(arr.from, arr.to), getArrowNamespace(arr.from, arr.to))
 	}
 
 	/**
@@ -199,11 +189,12 @@ class SequenceGenerator {
 	 * 
 	 * @param arr  the arrow body for which we are generating CSP.
 	 * @param dir  the direction of the arrow.
+	 * @param ns   the namespace of the component to which the sequence is attached.
 	 */
-	private def dispatch generateArrow(EventSequenceArrow arr, ArrowDirection dir) {
+	private def dispatch generateArrow(EventSequenceArrow arr, ArrowDirection dir, String ns) {
 		// TODO: parameters
 		// NOTE: parameters might eventually introduce bindings
-		'''«namespace»::«arr.event.name».«dir»'''
+		'''«ns»::«arr.event.name».«dir»'''
 	}
 
 	/**
@@ -211,11 +202,12 @@ class SequenceGenerator {
 	 * 
 	 * @param arr  the arrow body for which we are generating CSP.
 	 * @param dir  the direction of the arrow.
+	 * @param ns   the namespace of the component to which the sequence is attached.
 	 */
-	private def dispatch generateArrow(OperationSequenceArrow arr, ArrowDirection dir) {
+	private def dispatch generateArrow(OperationSequenceArrow arr, ArrowDirection dir, String ns) {
 		// TODO: parameters
 		// NOTE: parameters might eventually introduce bindings		
-		'''«namespace»::«arr.operation.name»Call'''
+		'''«ns»::«arr.operation.name»Call'''
 	}
 
 	/**
@@ -228,7 +220,7 @@ class SequenceGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch generateArrow(SequenceArrow arr, ArrowDirection dir) {
+	private def dispatch generateArrow(SequenceArrow arr, ArrowDirection dir, String ns) {
 		'''{- unsupported arrow body: arr=«arr» dir=«dir» -} tock'''
 	}
 
@@ -241,12 +233,12 @@ class SequenceGenerator {
 	// and eventually resolve it to 'out' or 'in' in the CSP.
 	//
 	/**
-	 * @return input (from platform to module).
+	 * @return input (from world to target).
 	 * 
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch getArrowDirection(PlatformSequenceActor from, ModuleSequenceActor to) {
+	private def dispatch getArrowDirection(WorldSequenceActor from, TargetSequenceActor to) {
 		ArrowDirection::Input
 	}
 
@@ -256,7 +248,7 @@ class SequenceGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch ArrowDirection getArrowDirection(ModuleSequenceActor from, PlatformSequenceActor to) {
+	private def dispatch ArrowDirection getArrowDirection(TargetSequenceActor from, WorldSequenceActor to) {
 		ArrowDirection::Output
 	}
 
@@ -271,29 +263,38 @@ class SequenceGenerator {
 	}
 
 	/**
-	 * @return the namespace of all communications in this diagram.
+	 * Gets the sequence's namespace by trying to find the target in a pair of
+	 * actors.
+	 * 
+	 * @param from  the from-node of the arrow.
+	 * @param to    the to-node of the arrow.
+	 * 
+	 * @return the sequence's namespace.
 	 */
-	private def getNamespace() {
-		// NOTE: it might not be the case that all communications have a common
-		// namespace in future.
-		sequence.target.namespace
+	private def getArrowNamespace(SequenceActor from, SequenceActor to) {
+		var it = from.namespace
+		if (it.empty) it = to.namespace
+		if (it.empty) it = "UNSUPPORTED_ACTORS"
+		it
 	}
 
 	/**
-	 * @return the module name (as the namespace of any communications over the module).
+	 * Scrapes the namespace from a module sequence actor.
 	 * 
-	 * @param target  the target for which we are getting a namespace.
+	 * @param actor  the actor for which we are getting a namespace.
+	 * @return the module name (as the namespace of any communications over the module).
+
 	 */
-	private def dispatch getNamespace(ModuleSequenceTarget target) {
+	private def dispatch getNamespace(ModuleSequenceActor target) {
 		target.module.name
 	}
 
 	/**
-	 * @return fallback for an unsupported sequence target
-	 * 
-	 * @param target  the target for which we are getting a namespace.
+	 * Fallback for actors that don't correspond to a namespace.
+	 * @param actor  the target for which we are getting a namespace.
+	 * @return the empty string (signifying this actor has no namespace).
 	 */
-	private def dispatch getNamespace(SequenceTarget target) {
-		"UNSUPPORTED_TARGET"
+	private def dispatch getNamespace(SequenceActor target) {
+		""
 	}
 }

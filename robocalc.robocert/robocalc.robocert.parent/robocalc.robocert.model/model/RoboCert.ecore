@@ -24,21 +24,20 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="#//Named">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//SequenceTarget"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//TargetSequenceActor"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
-        upperBound="-1" eType="#//SequenceActor" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="world" eType="#//WorldSequenceActor"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="steps" lowerBound="1" upperBound="-1"
         eType="#//SequenceStep" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isStrictEnd" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceTarget" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ModuleSequenceTarget" eSuperTypes="#//SequenceTarget">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceActor" abstract="true" eSuperTypes="#//Named"/>
-  <eClassifiers xsi:type="ecore:EClass" name="PlatformSequenceActor" eSuperTypes="#//SequenceActor"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ModuleSequenceActor" eSuperTypes="#//SequenceActor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="WorldSequenceActor" eSuperTypes="#//SequenceActor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TargetSequenceActor" abstract="true"
+      eSuperTypes="#//SequenceActor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ModuleSequenceActor" eSuperTypes="#//TargetSequenceActor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceStep">
     <eStructuralFeatures xsi:type="ecore:EReference" name="gap" eType="#//SequenceGap"
         containment="true"/>
