@@ -47,7 +47,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceGap" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="StrictSequenceGap" eSuperTypes="#//SequenceGap"/>
-  <eClassifiers xsi:type="ecore:EClass" name="AnythingSequenceGap" eSuperTypes="#//SequenceGap"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LooseSequenceGap" eSuperTypes="#//SequenceGap">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="allowed" eType="#//ArrowSet"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="forbidden" eType="#//ArrowSet"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ArrowSequenceAction" eSuperTypes="#//SequenceAction">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//SequenceArrow"
@@ -65,6 +70,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OperationSequenceArrow" eSuperTypes="#//SequenceArrow">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrowSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arrows" upperBound="-1"
+        eType="#//ArrowSequenceAction" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="#//Named">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//AssertionBody"

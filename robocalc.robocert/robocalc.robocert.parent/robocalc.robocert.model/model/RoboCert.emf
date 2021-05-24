@@ -130,9 +130,20 @@ class StrictSequenceGap extends SequenceGap {
 }
 
 /**
- * A sequence gap that permits any implicit communications.
+ * A sequence gap that permits implicit communications.
  */
-class AnythingSequenceGap extends SequenceGap {
+class LooseSequenceGap extends SequenceGap {
+	/**
+	 * The arrows forbidden by this gap.
+	 * If there is no allow set, all arrows are allowed.
+	 */
+	val ArrowSet[?] allowed;
+
+	/**
+	 * The arrows forbidden by this gap.
+	 * The empty set is considered to be 'no arrows are forbidden'.
+	 */
+	val ArrowSet forbidden;
 }
 
 /**
@@ -198,6 +209,14 @@ class OperationSequenceArrow extends SequenceArrow {
 	ref robochart.OperationSig operation;
 // TODO: check whether this should be Operation instead
 // TODO: parameters
+}
+
+/**
+ * A set of arrows, used in loose sequence gaps.
+ */
+class ArrowSet {
+	// TODO: should this be something other than an ArrowSequenceAction?
+	val ArrowSequenceAction[*] arrows;
 }
 
 //

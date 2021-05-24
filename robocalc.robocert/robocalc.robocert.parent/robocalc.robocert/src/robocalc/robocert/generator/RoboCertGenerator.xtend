@@ -22,7 +22,7 @@ import robocalc.robocert.generator.csp.AssertionGenerator
 class RoboCertGenerator extends AbstractGenerator {
 	// TODO: inject this
 	extension AssertionGenerator ag = new AssertionGenerator()
-	
+
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		fsa.generateFile('seq.csp', resource.generate);
 	}
@@ -32,7 +32,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * 
 	 * @param resource  the top-level property model.
 	 */
-	def String generate(Resource resource) {
+	def CharSequence generate(Resource resource) {
 		'''
 			«resource.generateImports»
 			
@@ -55,13 +55,13 @@ class RoboCertGenerator extends AbstractGenerator {
 			«resource.generateAssertions»
 		'''
 	}
-	
+
 	/**
 	 * @return any imports generated from the given resource.
 	 * 
 	 * @param resource  the resource to generate imports from.
 	 */
-	def String generateImports(Resource resource) {
+	private def generateImports(Resource resource) {
 		new ImportGenerator(resource).generateImports
 	}
 
@@ -73,7 +73,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * 
 	 * @param resource  the top-level property model.
 	 */
-	def String generateCSPFragments(Resource resource) {
+	private def generateCSPFragments(Resource resource) {
 		// TODO: align this with RoboCert's process-based escape hatch.
 		//
 		// Currently our escape hatch is a lot more low-level, to let us
@@ -91,7 +91,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * 
 	 * @param frag  the CSP fragment.
 	 */
-	def String generateCSPFragment(CSPFragment frag) {
+	private def generateCSPFragment(CSPFragment frag) {
 		// stripping 'csp-begin' (9 chars) and 'csp-end' (7 chars).
 		// TODO: is this the right way to do this, or do we need a value
 		// converter?
@@ -103,20 +103,18 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * 
 	 * @param resource  the top-level property model.
 	 */
-	def String generateSequences(Resource resource) {
-		'''
-			«FOR seq : resource.allContents.filter(Sequence).toIterable»
-				«seq.generateSequence»
-			«ENDFOR»
-		'''
-	}
+	private def generateSequences(Resource resource) '''
+		«FOR seq : resource.allContents.filter(Sequence).toIterable»
+			«seq.generateSequence»
+		«ENDFOR»
+	'''
 
 	/**
 	 * @return generated CSP for one sequence.
 	 * 
 	 * @param seq  the sequence for which we are generating CSP.
 	 */
-	def String generateSequence(Sequence seq) {
+	private def generateSequence(Sequence seq) {
 		new SequenceGenerator(seq).generate
 	}
 
@@ -128,11 +126,9 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * 
 	 * @param resource  the top-level property model.
 	 */
-	def String generateAssertions(Resource resource) {
-		'''
-			«FOR asst : resource.allContents.filter(Assertion).toIterable»
-				«asst.generate»
-			«ENDFOR»
-		'''
-	}
+	private def generateAssertions(Resource resource) '''
+		«FOR asst : resource.allContents.filter(Assertion).toIterable»
+			«asst.generate»
+		«ENDFOR»
+	'''
 }

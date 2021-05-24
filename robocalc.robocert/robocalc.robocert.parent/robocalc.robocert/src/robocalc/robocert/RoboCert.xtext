@@ -61,7 +61,6 @@ Sequence:
  * The target of a sequence diagram.
  */
 SequenceTarget:
-	// This should be a QualifiedName when we merge with RoboCert.
 	{ModuleSequenceTarget} 'module' module=[RCModule|QualifiedName]
 ;
 
@@ -96,25 +95,46 @@ SequenceStep:
  * An action in a sequence diagram.
  */
 SequenceAction:
-	{ArrowSequenceAction} body=SequenceArrow 'from' from=[SequenceActor] 'to' to=[SequenceActor] |
-	{FinalSequenceAction} 'end'
+	ArrowSequenceAction |
+	'end' {FinalSequenceAction}
+;
+
+/**
+ * An arrow sequence action.
+ */
+ArrowSequenceAction:
+	body=SequenceArrow 'from' from=[SequenceActor] 'to' to=[SequenceActor]
 ;
 
 /**
  * An arrow.
  */
 SequenceArrow:
+	{EventSequenceArrow} 'event' event=[Event|QualifiedName] ArgList |
+	{OperationSequenceArrow} 'operation' operation=[OperationSig|QualifiedName] ArgList
+;
+
+/**
+ * An event or operation argument list.
+ */
+fragment ArgList:
 	// need arguments
-	{EventSequenceArrow} 'event' event=[Event|QualifiedName] ('(' ')')? |
-	{OperationSequenceArrow} 'operation' operation=[OperationSig|QualifiedName] '(' ')'
+	('(' ')')?
 ;
 
 /**
  * A gap specification.
  */
 SequenceGap:
-	{AnythingSequenceGap} 'anything' 'until' |
+	'anything' {LooseSequenceGap} ('in' allowed=ArrowSet)? ('except' forbidden=ArrowSet)? 'until' |
 	{StrictSequenceGap}
+;
+
+/**
+ * An arrow set specification.
+ */
+ArrowSet:
+	'{' arrows+=ArrowSequenceAction (',' arrows+=ArrowSequenceAction)* '}'
 ;
 
 /**
