@@ -55,11 +55,11 @@ class Sequence extends Named {
 	/**
 	 * The target of the sequence diagram.
 	 */
-	val TargetSequenceActor target;
+	val TargetActor target;
 	/**
 	 * The world of the sequence diagram.
 	 */
-	val WorldSequenceActor world;
+	val WorldActor world;
 	/**
 	 * The steps contained within the sequence diagram.
 	 * There is always at least one step (a final step, if the diagram is
@@ -76,25 +76,25 @@ class Sequence extends Named {
  * everything connected to the target.  They are bound to names used in the
  * diagram itself, but the target may also name an external RoboChart entity.
  */
-abstract class SequenceActor extends Named {
+abstract class Actor extends Named {
 }
 
 /**
  * The world of a sequence.
  */
-class WorldSequenceActor extends SequenceActor {
+class WorldActor extends Actor {
 }
 
 /**
  * The target of a sequence.
  */
-abstract class TargetSequenceActor extends SequenceActor {
+abstract class TargetActor extends Actor {
 }
 
 /**
  * A sequence target referring to a RoboChart module.
  */
-class ModuleSequenceActor extends TargetSequenceActor {
+class ModuleActor extends TargetActor {
 	ref robochart.RCModule module;
 }
 
@@ -134,14 +134,25 @@ class LooseSequenceGap extends SequenceGap {
 	 * The arrows forbidden by this gap.
 	 * If there is no allow set, all arrows are allowed.
 	 */
-	val ArrowSet[?] allowed;
+	val GapMessageSet[?] allowed;
 
 	/**
 	 * The arrows forbidden by this gap.
 	 * The empty set is considered to be 'no arrows are forbidden'.
 	 */
-	val ArrowSet forbidden;
+	val GapMessageSet forbidden;
 }
+
+/**
+ * A set of gap message specs, used in loose sequence gaps.
+ */
+class GapMessageSet {
+	/**
+	 * The message specifications held by this message set.
+	 */
+	val GapMessageSpec[*]#parent messages;
+}
+
 
 /**
  * An action in a sequence diagram.
@@ -152,19 +163,11 @@ abstract class SequenceAction {
 /**
  * A communicating action in a sequence diagram.
  */
-class ArrowSequenceAction extends SequenceAction {
+class ArrowAction extends SequenceAction {
 	/**
 	 * The body of the arrow.
 	 */
-	val SequenceArrow#parent body;
-	/**
-	 * The source of the communication.
-	 */
-	ref SequenceActor from;
-	/**
-	 * The target of the communication.
-	 */
-	ref SequenceActor to;
+	val ArrowMessageSpec#parent body;
 }
 
 /**
@@ -172,23 +175,65 @@ class ArrowSequenceAction extends SequenceAction {
  *
  * This exists mainly to allow a sequence gap at the end of the diagram.
  */
-class FinalSequenceAction extends SequenceAction {
+class FinalAction extends SequenceAction {
+}
+
+//
+// Message specs
+//
+
+/**
+ * A specification of a message.
+ */
+abstract class MessageSpec {
+	/**
+	 * The topic of the message.
+	 */
+	val MessageTopic topic;
+	/**
+	 * The source of the message.
+	 */
+	ref Actor from;
+	/**
+	 * The target of the message.
+	 */
+	ref Actor to;
 }
 
 /**
- * A type of communication in a sequence diagram.
+ * A message specification corresponding to an arrow on a sequence diagram.
  */
-abstract class SequenceArrow {
+class ArrowMessageSpec extends MessageSpec {
 	/**
 	 * The parent of the arrow.
 	 */
-	ref ArrowSequenceAction#body parent;
+	ref ArrowAction#body parent;
 }
 
 /**
- * An event arrow in a sequence diagram.
+ * A message specification corresponding to an entry in a gap list.
  */
-class EventSequenceArrow extends SequenceArrow {
+class GapMessageSpec extends MessageSpec {
+	/**
+	 * The parent gap.
+	 */
+	ref GapMessageSet#messages parent;
+}
+
+//
+// Message topics
+//
+
+/**
+ * A message topic.
+ */
+abstract class MessageTopic {
+}
+
+/**
+ * An event message topic.
+ */
+class EventTopic extends MessageTopic {
 	/**
 	 * The name of the event.
 	 */
@@ -197,23 +242,15 @@ class EventSequenceArrow extends SequenceArrow {
 }
 
 /**
- * An operation arrow in a sequence diagram.
+ * An operation message topic.
  */
-class OperationSequenceArrow extends SequenceArrow {
+class OperationTopic extends MessageTopic {
 	/**
 	 * The name of the operation.
 	 */
 	ref robochart.OperationSig operation;
 // TODO: check whether this should be Operation instead
 // TODO: parameters
-}
-
-/**
- * A set of arrows, used in loose sequence gaps.
- */
-class ArrowSet {
-	// TODO: should this be something other than an ArrowSequenceAction?
-	val ArrowSequenceAction[*] arrows;
 }
 
 //

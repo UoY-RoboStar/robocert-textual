@@ -2,7 +2,7 @@ package robocalc.robocert.generator.csp
 
 import circus.robocalc.robochart.RCPackage
 import org.eclipse.emf.ecore.resource.Resource
-import robocalc.robocert.model.robocert.ModuleSequenceActor
+import robocalc.robocert.model.robocert.ModuleActor
 import circus.robocalc.robochart.RCModule
 
 /**
@@ -39,7 +39,7 @@ class ImportGenerator {
 	private def hasTargetedModules(Resource r, Resource parent) {
 		// TODO: this is extremely flaky, I need to find out a more robust way
 		// of doing it.
-		val boundModules = parent.allContents.filter(ModuleSequenceActor).map[x|x.module];
+		val boundModules = parent.allContents.filter(ModuleActor).map[x|x.module];
 		r.allContents.filter(RCModule).exists[x|boundModules.contains(x)]
 	}
 	

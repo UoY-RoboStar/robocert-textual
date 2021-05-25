@@ -50,7 +50,7 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'for' target=TargetSequenceActor ',' world=WorldSequenceActor '{'
+	'sequence' name=ID 'for' target=TargetActor ',' world=WorldActor '{'
 		(steps+=SequenceStep)
 		('then' steps+=SequenceStep)*
 	'}'	
@@ -59,14 +59,14 @@ Sequence:
 /**
  * The target actor of a sequence diagram.
  */
-TargetSequenceActor:
-	 'module' {ModuleSequenceActor} module=[RCModule|QualifiedName] 'as' name=ID
+TargetActor:
+	 'module' {ModuleActor} module=[RCModule|QualifiedName] 'as' name=ID
 ;
 
 /**
  * The world actor of a sequence diagram.
  */
-WorldSequenceActor:
+WorldActor:
 	'world' 'as' name=ID
 ;
 
@@ -93,23 +93,46 @@ SequenceStep:
  * An action in a sequence diagram.
  */
 SequenceAction:
-	ArrowSequenceAction |
-	'end' {FinalSequenceAction}
+	{ArrowAction} body=ArrowMessageSpec |
+	'end' {FinalAction}
 ;
 
 /**
- * An arrow sequence action.
+ * A gap specification.
  */
-ArrowSequenceAction:
-	body=SequenceArrow 'from' from=[SequenceActor] 'to' to=[SequenceActor]
+SequenceGap:
+	'anything' {LooseSequenceGap} ('in' allowed=GapMessageSet)? ('except' forbidden=GapMessageSet)? 'until' |
+	{StrictSequenceGap}
 ;
 
 /**
- * An arrow.
+ * An arrow set specification.
  */
-SequenceArrow:
-	'event' {EventSequenceArrow} event=[Event|QualifiedName] ArgList |
-	'operation' {OperationSequenceArrow} operation=[OperationSig|QualifiedName] ArgList
+GapMessageSet:
+	'{' messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '}'
+;
+
+/**
+ * An arrow message specification.
+ */
+ArrowMessageSpec:
+	// Fragments don't seem to work for these...
+	topic=MessageTopic 'from' from=[Actor] 'to' to=[Actor]
+;
+
+/**
+ * A gap message specification.
+ */
+GapMessageSpec:
+	topic=MessageTopic 'from' from=[Actor] 'to' to=[Actor]
+;
+
+/**
+ * A message topic.
+ */
+MessageTopic:
+	'event' {EventTopic} event=[Event|QualifiedName] ArgList |
+	'operation' {OperationTopic} operation=[OperationSig|QualifiedName] ArgList
 ;
 
 /**
@@ -118,21 +141,6 @@ SequenceArrow:
 fragment ArgList:
 	// need arguments
 	('(' ')')?
-;
-
-/**
- * A gap specification.
- */
-SequenceGap:
-	'anything' {LooseSequenceGap} ('in' allowed=ArrowSet)? ('except' forbidden=ArrowSet)? 'until' |
-	{StrictSequenceGap}
-;
-
-/**
- * An arrow set specification.
- */
-ArrowSet:
-	'{' arrows+=ArrowSequenceAction (',' arrows+=ArrowSequenceAction)* '}'
 ;
 
 /**
