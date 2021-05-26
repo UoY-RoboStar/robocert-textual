@@ -25,13 +25,6 @@ class Package {
 	val Assertion[] assertions;
 }
 
-/**
- * Class for things that have a name.
- */
-abstract class Named {
-	attr String name;
-}
-
 //
 // CSP FRAGMENTS
 //
@@ -51,7 +44,7 @@ class CSPFragment {
 /**
  * A sequence diagram.
  */
-class Sequence extends Named {
+class Sequence extends robochart.NamedElement {
 	/**
 	 * The target of the sequence diagram.
 	 */
@@ -76,7 +69,7 @@ class Sequence extends Named {
  * everything connected to the target.  They are bound to names used in the
  * diagram itself, but the target may also name an external RoboChart entity.
  */
-abstract class Actor extends Named {
+abstract class Actor extends robochart.NamedElement {
 }
 
 /**
@@ -259,7 +252,7 @@ class OperationTopic extends MessageTopic {
 /**
  * A RoboCert assertion, containing a named body with metadata.
  */
-class Assertion extends Named {
+class Assertion extends robochart.NamedElement {
 	/**
 	 * The body containing the part of the assertion that can vary.
 	 */
