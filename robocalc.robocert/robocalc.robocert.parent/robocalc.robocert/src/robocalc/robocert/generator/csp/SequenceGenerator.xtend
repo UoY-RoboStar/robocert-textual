@@ -10,19 +10,19 @@ import robocalc.robocert.model.robocert.StrictGap
 import robocalc.robocert.model.robocert.SequenceGap
 import robocalc.robocert.model.robocert.FinalAction
 import robocalc.robocert.model.robocert.SequenceAction
-import robocalc.robocert.model.robocert.EventTopic
-import robocalc.robocert.model.robocert.OperationTopic
 import robocalc.robocert.generator.ArrowDirection
 import robocalc.robocert.model.robocert.LooseGap
 import robocalc.robocert.model.robocert.GapMessageSet
 import robocalc.robocert.model.robocert.World
 import robocalc.robocert.model.robocert.Target
-import robocalc.robocert.model.robocert.MessageTopic
+import com.google.inject.Inject
 
 /**
  * A generator that emits untimed CSP for a sequence.
  */
 class SequenceGenerator {
+	@Inject extension TopicGenerator tg
+	
 	// TODO: handle timed vs untimed CSP
 	// TODO: consider moving some of the extension methods into the model
 	/**
@@ -188,47 +188,9 @@ class SequenceGenerator {
 	private def generateSpecPrefix(MessageSpec spec) {
 		// NOTE: we might need to consider from/to at a more sophisticated
 		// level than just boiling them down to 'in'/'out' eventually.
-		spec.topic.generateTopic(getSpecDirection(spec.from, spec.to), getNamespaceFromPair(spec.from, spec.to))
+		spec.topic.generate(getSpecDirection(spec.from, spec.to), getNamespaceFromPair(spec.from, spec.to))
 	}
 
-	/**
-	 * @return generated CSP for an event topic.
-	 * 
-	 * @param topic  the topic for which we are generating CSP.
-	 * @param dir    the direction of the arrow.
-	 * @param ns     the namespace of the component to which the sequence is attached.
-	 */
-	private def dispatch generateTopic(EventTopic topic, ArrowDirection dir, String ns) {
-		// TODO: parameters
-		// NOTE: parameters might eventually introduce bindings
-		'''«ns»::«topic.event.name».«dir»'''
-	}
-
-	/**
-	 * @return generated CSP for an operation topic.
-	 * 
-	 * @param arr  the topic for which we are generating CSP.
-	 * @param dir  the direction of the arrow.
-	 * @param ns   the namespace of the component to which the sequence is attached.
-	 */
-	private def dispatch generateTopic(OperationTopic arr, ArrowDirection dir, String ns) {
-		// TODO: parameters
-		// NOTE: parameters might eventually introduce bindings		
-		'''«ns»::«arr.operation.name»Call'''
-	}
-
-	/**
-	 * Fallback for generating a topic when we don't recognise the actors
-	 * and topic combination.
-	 * 
-	 * Getting here suggests validation isn't working properly.
-	 * 
-	 * @param topic  the topic for which we are generating CSP.
-	 * @param from   the from-actor.
-	 * @param to     the to-actor.
-	 */
-	private def dispatch generateTopic(MessageTopic topic, ArrowDirection dir,
-		String ns) '''{- unsupported topic: topic=«topic» dir=«dir» -} tock'''
 
 	//
 	// Message directions
