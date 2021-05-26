@@ -48,11 +48,11 @@ class Sequence extends robochart.NamedElement {
 	/**
 	 * The target of the sequence diagram.
 	 */
-	val TargetActor[1] target;
+	val Target[1] target;
 	/**
 	 * The world of the sequence diagram.
 	 */
-	val WorldActor[1] world;
+	val World[1] world;
 	/**
 	 * The steps contained within the sequence diagram.
 	 * There is always at least one step (a final step, if the diagram is
@@ -75,19 +75,19 @@ abstract class Actor extends robochart.NamedElement {
 /**
  * The world of a sequence.
  */
-class WorldActor extends Actor {
+class World extends Actor {
 }
 
 /**
  * The target of a sequence.
  */
-abstract class TargetActor extends Actor {
+abstract class Target extends Actor {
 }
 
 /**
  * A sequence target referring to a RoboChart module.
  */
-class ModuleActor extends TargetActor {
+class RCModuleTarget extends Target {
 	ref robochart.RCModule[1] module;
 }
 
@@ -116,13 +116,13 @@ abstract class SequenceGap {
 /**
  * A sequence gap that permits no implicit communications.
  */
-class StrictSequenceGap extends SequenceGap {
+class StrictGap extends SequenceGap {
 }
 
 /**
  * A sequence gap that permits implicit communications.
  */
-class LooseSequenceGap extends SequenceGap {
+class LooseGap extends SequenceGap {
 	/**
 	 * The messages forbidden by this gap.
 	 * The empty set is considered to be 'all messages are allowed'.

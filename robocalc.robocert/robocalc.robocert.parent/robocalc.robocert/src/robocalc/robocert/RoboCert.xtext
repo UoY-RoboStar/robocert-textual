@@ -50,7 +50,7 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'for' target=TargetActor ',' world=WorldActor '{'
+	'sequence' name=ID 'for' target=Target ',' world=World '{'
 		(steps+=SequenceStep)
 		('then' steps+=SequenceStep)*
 	'}'	
@@ -59,14 +59,14 @@ Sequence:
 /**
  * The target actor of a sequence diagram.
  */
-TargetActor:
-	 'module' {ModuleActor} module=[RCModule|QualifiedName] 'as' name=ID
+Target:
+	 'module' {RCModuleTarget} module=[RCModule|QualifiedName] 'as' name=ID
 ;
 
 /**
  * The world actor of a sequence diagram.
  */
-WorldActor:
+World:
 	'world' 'as' name=ID
 ;
 
@@ -101,14 +101,28 @@ SequenceAction:
  * A gap specification.
  */
 SequenceGap:
-	'anything' {LooseSequenceGap} ('in' allowed=GapMessageSet)? ('except' forbidden=GapMessageSet)? 'until' |
-	{StrictSequenceGap}
+	'anything' {LooseGap} allowed=AllowSet forbidden=ForbidSet  'until' |
+	{StrictGap}
 ;
 
 /**
- * An arrow set specification.
+ * A gap message set that defaults to being empty, but may be extended with 'in {...}'.
  */
-GapMessageSet:
+AllowSet returns GapMessageSet:
+	{GapMessageSet} ('in' GapMessageSetTail)?
+;
+
+/**
+ * A gap message set that defaults to being empty, but may be extended with 'except {...}'.
+ */
+ForbidSet returns GapMessageSet:
+	{GapMessageSet} ('except' GapMessageSetTail)?
+;
+
+/**
+ * The common part of a gap message set.
+ */
+fragment GapMessageSetTail *:
 	'{' messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '}'
 ;
 

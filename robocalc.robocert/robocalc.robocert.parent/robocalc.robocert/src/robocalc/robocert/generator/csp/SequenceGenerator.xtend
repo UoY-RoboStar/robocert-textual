@@ -1,23 +1,22 @@
 package robocalc.robocert.generator.csp
 
 import robocalc.robocert.model.robocert.Sequence
-import robocalc.robocert.model.robocert.ModuleActor
+import robocalc.robocert.model.robocert.RCModuleTarget
 import robocalc.robocert.model.robocert.Actor
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.SequenceStep
 import robocalc.robocert.model.robocert.ArrowAction
-import robocalc.robocert.model.robocert.StrictSequenceGap
+import robocalc.robocert.model.robocert.StrictGap
 import robocalc.robocert.model.robocert.SequenceGap
 import robocalc.robocert.model.robocert.FinalAction
 import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.model.robocert.EventTopic
 import robocalc.robocert.model.robocert.OperationTopic
 import robocalc.robocert.generator.ArrowDirection
-import robocalc.robocert.generator.IndexedSequenceStep
-import robocalc.robocert.model.robocert.LooseSequenceGap
+import robocalc.robocert.model.robocert.LooseGap
 import robocalc.robocert.model.robocert.GapMessageSet
-import robocalc.robocert.model.robocert.WorldActor
-import robocalc.robocert.model.robocert.TargetActor
+import robocalc.robocert.model.robocert.World
+import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.model.robocert.MessageTopic
 
 /**
@@ -26,7 +25,6 @@ import robocalc.robocert.model.robocert.MessageTopic
 class SequenceGenerator {
 	// TODO: handle timed vs untimed CSP
 	// TODO: consider moving some of the extension methods into the model
-
 	/**
 	 * Generates CSP for a sequence.
 	 * 
@@ -34,23 +32,31 @@ class SequenceGenerator {
 	 * 
 	 * @return CSP for this generator's sequence.
 	 */
-	def CharSequence generateSequence(Sequence sequence) // NOTE: might need factoring into a sequential composition rule.
+	def CharSequence generateSequence(Sequence sequence) '''
+		«sequence.name» =
+			«sequence.steps.generateSteps»
 	'''
-		«sequence.name» = let
-			«FOR step : IndexedSequenceStep.enumerate(sequence.steps)»
-				Step«step.index» = «step.step.generateStep(step.index)»
-			«ENDFOR»
-		within Step0
+
+	/**
+	 * Generates CSP for a sequential composition of steps.
+	 * 
+	 * @param steps   the step set for which we are generating CSP.
+	 * 
+	 * @return generated CSP for one sequence step.
+	 */
+	private def generateSteps(Iterable<SequenceStep> steps) '''
+		«FOR step : steps SEPARATOR ';'»
+			«step.generateStep»
+		«ENDFOR»
 	'''
 
 	/**
 	 * @return generated CSP for one sequence step.
 	 * 
 	 * @param step   the step for which we are generating CSP.
-	 * @param index  the index of the step.
 	 */
-	private def generateStep(SequenceStep step, int index) {
-		step.action.generateAction(step.gap, index)
+	private def generateStep(SequenceStep step) {
+		step.action.generateAction(step.gap)
 	}
 
 	/**
@@ -58,14 +64,13 @@ class SequenceGenerator {
 	 * 
 	 * @param action  the arrow action.
 	 * @param gap     the strict gap.
-	 * @param index   the index of the step.
 	 * 
 	 * @return the generated CSP.
 	 */
-	private def dispatch generateAction(ArrowAction action, StrictSequenceGap gap, int index) {
+	private def dispatch generateAction(ArrowAction action, StrictGap gap) {
 		// NOTE: always leading to StepN+1 might need changing when we
 		// introduce combined fragments.
-		'''«action.body.generateSpecPrefix» -> Step«index+1»'''
+		'''(«action.body.generateSpecPrefix» -> SKIP)'''
 	}
 
 	/**
@@ -73,16 +78,15 @@ class SequenceGenerator {
 	 * 
 	 * @param action  the arrow action.
 	 * @param gap     the anything gap.
-	 * @param index   the index of the step.
 	 * 
 	 * @return the generated CSP.
 	 */
-	private def dispatch generateAction(ArrowAction action, LooseSequenceGap gap, int index) {
+	private def dispatch generateAction(ArrowAction action, LooseGap gap) {
 		// TODO: allow negating events here
 		// NOTE: if the arrow makes any bindings, we might not be able to
 		// use throws?  An alternative encoding would be making the RUN exclude
 		// the set of events the arrow can generate, and using /\.
-		'''«gap.generateRun» [|{|«action.body.generateEventSet»|}|> Step«index+1»'''
+		'''(«gap.generateRun» [|{|«action.body.generateEventSet»|}|> SKIP)'''
 	}
 
 	/**
@@ -90,11 +94,10 @@ class SequenceGenerator {
 	 * 
 	 * @param action  the final action.
 	 * @param gap     the gap.
-	 * @param index   the index of the step.
 	 * 
 	 * @return the generated CSP.
 	 */
-	private def dispatch generateAction(FinalAction action, SequenceGap gap, int index) {
+	private def dispatch generateAction(FinalAction action, SequenceGap gap) {
 		gap.generateRun
 	}
 
@@ -103,19 +106,18 @@ class SequenceGenerator {
 	 * 
 	 * @param action  the arrow action.
 	 * @param gap     the (strict) gap.
-	 * @param index   the index of the step.
 	 * 
 	 * @return the generated CSP.
 	 */
-	private def dispatch generateAction(SequenceAction action, SequenceGap gap,
-		int index) '''{- unsupported action: «action» (gap «gap» -} STOP'''
+	private def dispatch generateAction(SequenceAction action,
+		SequenceGap gap) '''{- unsupported action: «action» (gap «gap» -} STOP'''
 
 	/** 
 	 * @return the generated CSP for running the given gap.
 	 * 
 	 * @param gap  the (strict) gap for which we are generating run.
 	 */
-	private def dispatch generateRun(StrictSequenceGap gap) {
+	private def dispatch generateRun(StrictGap gap) {
 		// A strict gap doesn't allow anything to happen until something we
 		// want to happen *does* happen, so if there isn't such a thing then
 		// we assume termination.
@@ -128,7 +130,7 @@ class SequenceGenerator {
 	 * 
 	 * @param gap  the (anything) gap for which we are generating run.
 	 */
-	private def dispatch generateRun(LooseSequenceGap gap) {
+	private def dispatch generateRun(LooseGap gap) {
 		// We consider empty allowed-sets to allow everything.
 		val allow = gap.allowed.present ? gap.allowed.generateSet : "Events";
 		// NOTE: if we need to implement gapped prefixes using /\,
@@ -150,7 +152,8 @@ class SequenceGenerator {
 	 * 
 	 * @return generated CSP for the event set for multiple sequence messages.
 	 */
-	private def generateSet(GapMessageSet set) '''{|«FOR m : set.messages SEPARATOR ', '»«m.generateEventSet»«ENDFOR»|}'''
+	private def generateSet(
+		GapMessageSet set) '''{|«FOR m : set.messages SEPARATOR ', '»«m.generateEventSet»«ENDFOR»|}'''
 
 	/**
 	 * @return whether this message set is present (non-null and has messages).
@@ -224,9 +227,8 @@ class SequenceGenerator {
 	 * @param from   the from-actor.
 	 * @param to     the to-actor.
 	 */
-	private def dispatch generateTopic(MessageTopic topic, ArrowDirection dir, String ns) {
-		'''{- unsupported topic: topic=«topic» dir=«dir» -} tock'''
-	}
+	private def dispatch generateTopic(MessageTopic topic, ArrowDirection dir,
+		String ns) '''{- unsupported topic: topic=«topic» dir=«dir» -} tock'''
 
 	//
 	// Message directions
@@ -242,7 +244,7 @@ class SequenceGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch getSpecDirection(WorldActor from, TargetActor to) {
+	private def dispatch getSpecDirection(World from, Target to) {
 		ArrowDirection::Input
 	}
 
@@ -252,7 +254,7 @@ class SequenceGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch getSpecDirection(TargetActor from, WorldActor to) {
+	private def dispatch getSpecDirection(Target from, World to) {
 		ArrowDirection::Output
 	}
 
@@ -277,19 +279,19 @@ class SequenceGenerator {
 	 */
 	private def getNamespaceFromPair(Actor from, Actor to) {
 		var it = from.namespace
-		if (it.empty) it = to.namespace
-		if (it.empty) it = "UNSUPPORTED_ACTORS"
+		if(empty) it = to.namespace
+		if(empty) it = "UNSUPPORTED_ACTORS"
 		it
 	}
 
 	/**
-	 * Scrapes the namespace from a module sequence actor.
+	 * Scrapes the namespace from a RoboChart module.
 	 * 
 	 * @param actor  the actor for which we are getting a namespace.
 	 * @return the module name (as the namespace of any communications over the module).
 
 	 */
-	private def dispatch getNamespace(ModuleActor target) {
+	private def dispatch getNamespace(RCModuleTarget target) {
 		target.module.name
 	}
 

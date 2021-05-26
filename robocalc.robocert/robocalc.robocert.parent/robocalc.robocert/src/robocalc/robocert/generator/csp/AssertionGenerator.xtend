@@ -12,15 +12,14 @@ import com.google.inject.Inject
  */
 class AssertionGenerator {
 	@Inject extension TargetGenerator tg;
-	
+
 	/**
 	 * @return generated CSP for the assertion.
 	 */
-	def CharSequence generate(Assertion assertion)
-		'''
-			-- Assertion «assertion.name»
-			«assertion.body.generateBody»
-		'''
+	def CharSequence generate(Assertion assertion) '''
+		-- Assertion «assertion.name»
+		«assertion.body.generateBody»
+	'''
 
 	/**
 	 * @return generated CSP for one sequence assertion body.
@@ -76,9 +75,7 @@ class AssertionGenerator {
 	 * 
 	 * @return generated CSP for the left-hand side of the assertion.
 	 */
-	private def dispatch generateLeft(SequenceAssertionBody asst) {
-		'''{- UNSUPPORTED LHS: «asst» -} STOP'''
-	}
+	private def dispatch generateLeft(SequenceAssertionBody asst) '''{- UNSUPPORTED LHS: «asst» -} STOP'''
 
 	/**
 	 * Generates CSP for the right-hand side of an 'observed' assertion.
@@ -93,7 +90,7 @@ class AssertionGenerator {
 	private def dispatch generateRight(ObservedSequenceAssertionBody asst) {
 		asst.generateSeqRef
 	}
-	
+
 	/**
 	 * Generates CSP for the right-hand side of an 'implemented' assertion.
 	 * 
@@ -115,8 +112,7 @@ class AssertionGenerator {
 	 * 
 	 * @return generated CSP for the left-hand side of the assertion.
 	 */
-	private def dispatch generateRight(SequenceAssertionBody asst)
-		'''{- UNSUPPORTED RHS: «asst» -} STOP'''
+	private def dispatch generateRight(SequenceAssertionBody asst) '''{- UNSUPPORTED RHS: «asst» -} STOP'''
 
 	/**
 	 * @return generated CSP for a sequence reference in one assertion.
@@ -140,7 +136,7 @@ class AssertionGenerator {
 	 * @return the appropriate FDR model shorthand for this assertion.
 	 */
 	private def generateModel(AssertionBody asst) {
-		switch asst.assertion.model {
+		switch asst.parent.model {
 			case TRACES:
 				"T"
 			case FAILURES:

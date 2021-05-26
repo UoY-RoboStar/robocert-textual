@@ -23,16 +23,16 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
-        eType="#//TargetActor" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="world" lowerBound="1" eType="#//WorldActor"
+        eType="#//Target" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="world" lowerBound="1" eType="#//World"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="steps" lowerBound="1" upperBound="-1"
         eType="#//SequenceStep" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="WorldActor" eSuperTypes="#//Actor"/>
-  <eClassifiers xsi:type="ecore:EClass" name="TargetActor" abstract="true" eSuperTypes="#//Actor"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ModuleActor" eSuperTypes="#//TargetActor">
+  <eClassifiers xsi:type="ecore:EClass" name="World" eSuperTypes="#//Actor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Actor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RCModuleTarget" eSuperTypes="#//Target">
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
   </eClassifiers>
@@ -43,8 +43,8 @@
         eType="#//SequenceAction" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceGap" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StrictSequenceGap" eSuperTypes="#//SequenceGap"/>
-  <eClassifiers xsi:type="ecore:EClass" name="LooseSequenceGap" eSuperTypes="#//SequenceGap">
+  <eClassifiers xsi:type="ecore:EClass" name="StrictGap" eSuperTypes="#//SequenceGap"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LooseGap" eSuperTypes="#//SequenceGap">
     <eStructuralFeatures xsi:type="ecore:EReference" name="allowed" lowerBound="1"
         eType="#//GapMessageSet" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="forbidden" lowerBound="1"
@@ -84,12 +84,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//AssertionBody"
-        containment="true" eOpposite="#//AssertionBody/assertion"/>
+        containment="true" eOpposite="#//AssertionBody/parent"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"
         defaultValueLiteral="Traces"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssertionBody" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="assertion" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
         eType="#//Assertion" eOpposite="#//Assertion/body"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAssertionBody" abstract="true"
