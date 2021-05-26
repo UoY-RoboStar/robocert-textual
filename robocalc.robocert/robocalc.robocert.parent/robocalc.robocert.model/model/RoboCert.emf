@@ -20,9 +20,9 @@ class Package {
 	 * 
 	 * TODO: these will likely go away once we have a way of resolving files.
 	 */
-	val CSPFragment[] cspFragments;
-	val Sequence[] sequences;
-	val Assertion[] assertions;
+	val CSPFragment[*] cspFragments;
+	val Sequence[*] sequences;
+	val Assertion[*] assertions;
 }
 
 //
@@ -35,7 +35,7 @@ class CSPFragment {
 	/**
 	 * The raw contents of the CSP fragment.
 	 */
-	attr String contents;
+	attr String[1] contents;
 }
 
 //
@@ -48,17 +48,17 @@ class Sequence extends robochart.NamedElement {
 	/**
 	 * The target of the sequence diagram.
 	 */
-	val TargetActor target;
+	val TargetActor[1] target;
 	/**
 	 * The world of the sequence diagram.
 	 */
-	val WorldActor world;
+	val WorldActor[1] world;
 	/**
 	 * The steps contained within the sequence diagram.
 	 * There is always at least one step (a final step, if the diagram is
 	 * well-formed).
 	 */
-	val SequenceStep[1..*] steps;
+	val SequenceStep[+] steps;
 }
 
 /**
@@ -88,7 +88,7 @@ abstract class TargetActor extends Actor {
  * A sequence target referring to a RoboChart module.
  */
 class ModuleActor extends TargetActor {
-	ref robochart.RCModule module;
+	ref robochart.RCModule[1] module;
 }
 
 /**
@@ -98,12 +98,12 @@ class SequenceStep {
 	/**
 	 * The specification of what can happen in the 'gap' before the step.
 	 */
-	val SequenceGap gap;
+	val SequenceGap[1] gap;
 
 	/**
 	 * The component inside the sequence step.
 	 */
-	val SequenceAction action;
+	val SequenceAction[1] action;
 }
 
 /**
@@ -124,16 +124,16 @@ class StrictSequenceGap extends SequenceGap {
  */
 class LooseSequenceGap extends SequenceGap {
 	/**
-	 * The arrows forbidden by this gap.
-	 * If there is no allow set, all arrows are allowed.
+	 * The messages forbidden by this gap.
+	 * The empty set is considered to be 'all messages are allowed'.
 	 */
-	val GapMessageSet[?] allowed;
+	val GapMessageSet[1] allowed;
 
 	/**
-	 * The arrows forbidden by this gap.
-	 * The empty set is considered to be 'no arrows are forbidden'.
+	 * The messages forbidden by this gap.
+	 * The empty set is considered to be 'no messages are forbidden'.
 	 */
-	val GapMessageSet forbidden;
+	val GapMessageSet[1] forbidden;
 }
 
 /**
@@ -160,7 +160,7 @@ class ArrowAction extends SequenceAction {
 	/**
 	 * The body of the arrow.
 	 */
-	val ArrowMessageSpec#parent body;
+	val ArrowMessageSpec[1]#parent body;
 }
 
 /**
@@ -182,15 +182,15 @@ abstract class MessageSpec {
 	/**
 	 * The topic of the message.
 	 */
-	val MessageTopic topic;
+	val MessageTopic[1] topic;
 	/**
 	 * The source of the message.
 	 */
-	ref Actor from;
+	ref Actor[1] from;
 	/**
 	 * The target of the message.
 	 */
-	ref Actor to;
+	ref Actor[1] to;
 }
 
 /**
@@ -200,7 +200,7 @@ class ArrowMessageSpec extends MessageSpec {
 	/**
 	 * The parent of the arrow.
 	 */
-	ref ArrowAction#body parent;
+	ref ArrowAction[1]#body parent;
 }
 
 /**
@@ -210,7 +210,7 @@ class GapMessageSpec extends MessageSpec {
 	/**
 	 * The parent gap.
 	 */
-	ref GapMessageSet#messages parent;
+	ref GapMessageSet[1]#messages parent;
 }
 
 //
@@ -230,7 +230,7 @@ class EventTopic extends MessageTopic {
 	/**
 	 * The name of the event.
 	 */
-	ref robochart.Event event;
+	ref robochart.Event[1] event;
 // TODO: parameter
 }
 
@@ -241,7 +241,7 @@ class OperationTopic extends MessageTopic {
 	/**
 	 * The name of the operation.
 	 */
-	ref robochart.OperationSig operation;
+	ref robochart.OperationSig[1] operation;
 // TODO: check whether this should be Operation instead
 // TODO: parameters
 }
@@ -256,13 +256,13 @@ class Assertion extends robochart.NamedElement {
 	/**
 	 * The body containing the part of the assertion that can vary.
 	 */
-	val AssertionBody#assertion body;
+	val AssertionBody[1]#parent body;
 	/**
 	 * The model under which this assertion should be checked if converted to (untimed) CSP.
 	 * 
 	 * TODO: is this always useful?
 	 */
-	attr CSPModel model = "Traces";
+	attr CSPModel[1] model = "Traces";
 }
 
 /**
@@ -272,7 +272,7 @@ abstract class AssertionBody {
 	/**
 	 * The parent assertion.
 	 */
-	ref Assertion#body assertion;
+	ref Assertion[1]#body parent;
 }
 
 /**
@@ -282,11 +282,11 @@ abstract class SequenceAssertionBody extends AssertionBody {
 	/**
 	 * The sequence to which this assertion refers.
 	 */
-	ref Sequence sequence;
+	ref Sequence[1] sequence;
 	/**
 	 * Whether the assertion must fail to hold for the model to be validated.
 	 */
-	attr boolean isNegated;
+	attr boolean[1] isNegated;
 }
 
 /**

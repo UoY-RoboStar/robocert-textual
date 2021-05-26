@@ -18,12 +18,13 @@
         eType="#//Assertion" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//TargetActor"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="world" eType="#//WorldActor"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="#//TargetActor" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="world" lowerBound="1" eType="#//WorldActor"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="steps" lowerBound="1" upperBound="-1"
         eType="#//SequenceStep" containment="true"/>
@@ -32,21 +33,22 @@
   <eClassifiers xsi:type="ecore:EClass" name="WorldActor" eSuperTypes="#//Actor"/>
   <eClassifiers xsi:type="ecore:EClass" name="TargetActor" abstract="true" eSuperTypes="#//Actor"/>
   <eClassifiers xsi:type="ecore:EClass" name="ModuleActor" eSuperTypes="#//TargetActor">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceStep">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="gap" eType="#//SequenceGap"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gap" lowerBound="1" eType="#//SequenceGap"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="action" eType="#//SequenceAction"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="1"
+        eType="#//SequenceAction" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceGap" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="StrictSequenceGap" eSuperTypes="#//SequenceGap"/>
   <eClassifiers xsi:type="ecore:EClass" name="LooseSequenceGap" eSuperTypes="#//SequenceGap">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="allowed" eType="#//GapMessageSet"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="forbidden" eType="#//GapMessageSet"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="allowed" lowerBound="1"
+        eType="#//GapMessageSet" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="forbidden" lowerBound="1"
+        eType="#//GapMessageSet" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GapMessageSet">
     <eStructuralFeatures xsi:type="ecore:EReference" name="messages" upperBound="-1"
@@ -54,45 +56,48 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ArrowAction" eSuperTypes="#//SequenceAction">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//ArrowMessageSpec"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//ArrowMessageSpec"
         containment="true" eOpposite="#//ArrowMessageSpec/parent"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction"/>
   <eClassifiers xsi:type="ecore:EClass" name="MessageSpec" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="topic" eType="#//MessageTopic"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="topic" lowerBound="1" eType="#//MessageTopic"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="from" eType="#//Actor"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="to" eType="#//Actor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" lowerBound="1" eType="#//Actor"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" lowerBound="1" eType="#//Actor"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArrowMessageSpec" eSuperTypes="#//MessageSpec">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//ArrowAction"
-        eOpposite="#//ArrowAction/body"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
+        eType="#//ArrowAction" eOpposite="#//ArrowAction/body"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GapMessageSpec" eSuperTypes="#//MessageSpec">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//GapMessageSet"
-        eOpposite="#//GapMessageSet/messages"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
+        eType="#//GapMessageSet" eOpposite="#//GapMessageSet/messages"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageTopic" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="EventTopic" eSuperTypes="#//MessageTopic">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="event" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="event" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OperationTopic" eSuperTypes="#//MessageTopic">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="operation" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operation" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" eType="#//AssertionBody"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//AssertionBody"
         containment="true" eOpposite="#//AssertionBody/assertion"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" eType="#//CSPModel"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"
         defaultValueLiteral="Traces"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssertionBody" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="assertion" eType="#//Assertion"
-        eOpposite="#//Assertion/body"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assertion" lowerBound="1"
+        eType="#//Assertion" eOpposite="#//Assertion/body"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAssertionBody" abstract="true"
       eSuperTypes="#//AssertionBody">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNegated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
+        eType="#//Sequence"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNegated" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ObservedSequenceAssertionBody" eSuperTypes="#//SequenceAssertionBody"/>
   <eClassifiers xsi:type="ecore:EClass" name="ImplementedSequenceAssertionBody" eSuperTypes="#//SequenceAssertionBody"/>
