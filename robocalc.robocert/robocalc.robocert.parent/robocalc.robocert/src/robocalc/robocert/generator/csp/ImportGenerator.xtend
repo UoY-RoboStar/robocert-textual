@@ -25,8 +25,8 @@ class ImportGenerator {
 	// When merging this prototype in, we should probably just use the
 	// original code.
 	private def Iterable<RCPackage> getPackages(Resource parent) {
-		parent.resourceSet.resources.filter[r|r.isPackageWithTargetedModules(parent)].flatMap[x|x.contents.take(1)].
-			filter(RCPackage)
+		parent.resourceSet.resources.filter[isPackageWithTargetedModules(parent)].flatMap[contents.take(1)].filter(
+			RCPackage)
 	}
 
 	private def isPackageWithTargetedModules(Resource r, Resource parent) {
@@ -36,8 +36,8 @@ class ImportGenerator {
 	private def hasTargetedModules(Resource r, Resource parent) {
 		// TODO: this is extremely flaky, I need to find out a more robust way
 		// of doing it.
-		val boundModules = parent.allContents.filter(RCModuleTarget).map[x|x.module];
-		r.allContents.filter(RCModule).exists[x|boundModules.contains(x)]
+		val boundModules = parent.allContents.filter(RCModuleTarget).map[module];
+		r.allContents.filter(RCModule).exists[boundModules.contains(it)]
 	}
 
 	private def getFileName(RCPackage p) // NOTE: when we stop hijacking coreassertions, this'll just become ".csp"
