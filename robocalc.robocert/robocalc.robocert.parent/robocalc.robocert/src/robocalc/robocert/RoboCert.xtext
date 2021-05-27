@@ -6,9 +6,9 @@ import "http://www.robocalc.circus/RoboChart"
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 /**
- * A top-level diagram.
+ * A top-level assertions package.
  */
-Package:
+RAPackage:
 	( cspFragments += CSPFragment
 	| sequences += Sequence
 	| assertions += Assertion
@@ -50,10 +50,14 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'for' target=Target ',' world=World '{'
-		(steps+=SequenceStep)
-		('then' steps+=SequenceStep)*
-	'}'	
+	'sequence' name=ID 'for' target=Target ',' world=World body=Subsequence
+;
+
+/**
+ * A subsequence.
+ */
+Subsequence:
+	'{' (steps+=SequenceStep) ('then' steps+=SequenceStep)* '}'
 ;
 
 /**
@@ -78,7 +82,7 @@ World:
 // The PSP scopes correspond to the following trace step sequences:
 // 
 // 'globally' => X
-// 'after Q'  => when Q then X
+// 'after Q'  => anything until Q then X
 // 'between Q and R' => ??
 // 'after Q until R' => ??
 
@@ -94,6 +98,7 @@ SequenceStep:
  */
 SequenceAction:
 	{ArrowAction} body=ArrowMessageSpec |
+	'loop' {LoopAction} name=ID body=Subsequence |
 	'end' {FinalAction}
 ;
 

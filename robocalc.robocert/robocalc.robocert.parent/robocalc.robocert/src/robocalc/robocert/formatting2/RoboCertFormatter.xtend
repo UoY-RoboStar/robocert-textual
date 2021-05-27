@@ -6,6 +6,7 @@ package robocalc.robocert.formatting2
 import circus.robocalc.robochart.textual.formatting2.RoboChartFormatter
 import com.google.inject.Inject
 import org.eclipse.xtext.formatting2.IFormattableDocument
+import robocalc.robocert.model.robocert.RAPackage
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.services.RoboCertGrammarAccess
 
@@ -13,15 +14,15 @@ class RoboCertFormatter extends RoboChartFormatter {
 	
 	@Inject extension RoboCertGrammarAccess
 
-	def dispatch void format(robocalc.robocert.model.robocert.Package _package, extension IFormattableDocument document) {
+	def dispatch void format(RAPackage rAPackage, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		for (cSPFragment : _package.cspFragments) {
+		for (cSPFragment : rAPackage.cspFragments) {
 			cSPFragment.format
 		}
-		for (sequence : _package.sequences) {
+		for (sequence : rAPackage.sequences) {
 			sequence.format
 		}
-		for (assertion : _package.assertions) {
+		for (assertion : rAPackage.assertions) {
 			assertion.format
 		}
 	}
@@ -30,10 +31,8 @@ class RoboCertFormatter extends RoboChartFormatter {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
 		sequence.target.format
 		sequence.world.format
-		for (sequenceStep : sequence.steps) {
-			sequenceStep.format
-		}
+		sequence.body.format
 	}
 	
-	// TODO: implement for SequenceStep, ArrowSequenceAction, LooseSequenceGap, ArrowSet, Assertion
+	// TODO: implement for Subsequence, SequenceStep, ArrowAction, LoopAction, LooseGap, ArrowMessageSpec, GapMessageSpec, Assertion
 }

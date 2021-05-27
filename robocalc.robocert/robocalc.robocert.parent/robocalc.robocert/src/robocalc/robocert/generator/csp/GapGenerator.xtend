@@ -11,8 +11,8 @@ import robocalc.robocert.model.robocert.GapMessageSet
  * Generates CSP for the gaps between actions.
  */
 class GapGenerator {
-	@Inject extension ActionGenerator ag
-	@Inject extension MessageSpecGenerator mg
+	@Inject extension ActionCSPEventSetGenerator
+	@Inject extension MessageSpecGenerator
 
 	/**
 	 * Generates CSP for a strict gap.

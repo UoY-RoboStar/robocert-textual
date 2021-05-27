@@ -5,6 +5,10 @@ package robocalc.robocert
 
 import org.eclipse.xtext.generator.IOutputConfigurationProvider
 import robocalc.robocert.generator.RoboCertOutputConfigurationProvider
+import robocalc.robocert.generator.csp.ActionGenerator
+import robocalc.robocert.generator.csp.ActionGeneratorImpl
+import robocalc.robocert.generator.csp.SubsequenceGenerator
+import robocalc.robocert.generator.csp.SequenceGenerator
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -13,4 +17,12 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	def Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
 		RoboCertOutputConfigurationProvider
 	}
+	
+	def Class<? extends ActionGenerator> bindActionGenerator() {
+		ActionGeneratorImpl
+	}
+	
+	def Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
+		SequenceGenerator
+	}	
 }

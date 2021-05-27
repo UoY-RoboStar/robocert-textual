@@ -3,45 +3,48 @@ package robocalc.robocert.generator.csp
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.SequenceStep
 import com.google.inject.Inject
+import robocalc.robocert.model.robocert.Subsequence
 
 /**
- * A generator that emits untimed CSP for a sequence.
+ * A generator that emits untimed CSP for sequences and subsequences.
  */
-class SequenceGenerator {
-	@Inject extension ActionGenerator ag
-	@Inject extension GapGenerator gg
+class SequenceGenerator implements SubsequenceGenerator {
+	@Inject extension ActionGenerator
+	@Inject extension GapGenerator
 
 	// TODO: handle timed vs untimed CSP
 	// TODO: consider moving some of the extension methods into the model
 	/**
 	 * Generates CSP for a sequence.
 	 * 
-	 * @param sequence  the sequence for which we are generating CSP.
+	 * @param it  the sequence for which we are generating CSP.
 	 * 
 	 * @return CSP for this generator's sequence.
 	 */
-	def CharSequence generateSequence(Sequence sequence) '''
-		«sequence.name» =
-			«sequence.steps.generateSteps»
+	def CharSequence generate(Sequence it) '''
+		«name» =
+			«body.generate»
 	'''
-
+	
 	/**
-	 * Generates CSP for a sequential composition of steps.
+	 * Generates CSP for a subsequence.
 	 * 
-	 * @param steps   the step set for which we are generating CSP.
+	 * @param it  the step set for which we are generating CSP.
 	 * 
 	 * @return generated CSP for one sequence step.
 	 */
-	private def generateSteps(Iterable<SequenceStep> steps) '''
+	override CharSequence generate(Subsequence it) '''
 		«FOR step : steps SEPARATOR ';'»
 			«step.generateStep»
 		«ENDFOR»
 	'''
 
 	/**
-	 * @param step   the step for which we are generating CSP.
+	 * Generates CSP for one sequence step.
+	 * 
+	 * @param it  the step for which we are generating CSP.
+	 * 
 	 * @return generated CSP for one sequence step.
 	 */
-	private def generateStep(SequenceStep step) '''(«step.gap.generate(step.action)»«step.action.generate»)'''
-
+	private def generateStep(SequenceStep it) '''(«gap.generate(action)»«action.generate»)'''
 }

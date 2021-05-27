@@ -21,9 +21,9 @@ import com.google.inject.Inject
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class RoboCertGenerator extends AbstractGenerator {
-	@Inject extension AssertionGenerator ag
-	@Inject extension ImportGenerator ig
-	@Inject extension SequenceGenerator sg
+	@Inject extension AssertionGenerator
+	@Inject extension ImportGenerator
+	@Inject extension SequenceGenerator
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		fsa.generateFile('seq.csp', resource.generate);
@@ -98,7 +98,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 */
 	private def generateSequences(Resource resource) '''
 		«FOR seq : resource.allContents.filter(Sequence).toIterable»
-			«seq.generateSequence»
+			«seq.generate»
 		«ENDFOR»
 	'''
 

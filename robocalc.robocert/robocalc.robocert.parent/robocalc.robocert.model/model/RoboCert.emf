@@ -14,7 +14,7 @@ import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
 /**
  * A RoboCert package.
  */
-class Package {
+class RAPackage {
 	/**
 	 * Any top-level CSP fragments in this package.
 	 * 
@@ -41,8 +41,22 @@ class CSPFragment {
 //
 // SEQUENCES
 //
+
+/**
+ * A sequence of steps, forming part or all of a sequence diagram.
+ */
+class Subsequence {
+	/**
+	 * The steps contained within the subsequence.
+	 * There is always at least one step.
+	 */
+	val SequenceStep[+]#parent steps;
+}
+
 /**
  * A sequence diagram.
+ *
+ * Well-formed sequence diagrams end with a final or infinite loop action.
  */
 class Sequence extends robochart.NamedElement {
 	/**
@@ -54,11 +68,9 @@ class Sequence extends robochart.NamedElement {
 	 */
 	val World[1] world;
 	/**
-	 * The steps contained within the sequence diagram.
-	 * There is always at least one step (a final step, if the diagram is
-	 * well-formed).
+	 * The top-level subsequence of the sequence diagram.
 	 */
-	val SequenceStep[+] steps;
+	val Subsequence[1] body;
 }
 
 /**
@@ -92,9 +104,14 @@ class RCModuleTarget extends Target {
 }
 
 /**
- * A single step in a sequence diagram.
+ * A single step in a subsequence.
  */
 class SequenceStep {
+	/**
+	 * The parent subsequence of this step.
+	 */
+	ref Subsequence[1]#steps parent;
+
 	/**
 	 * The specification of what can happen in the 'gap' before the step.
 	 */
@@ -161,6 +178,21 @@ class ArrowAction extends SequenceAction {
 	 * The body of the arrow.
 	 */
 	val ArrowMessageSpec[1]#parent body;
+}
+
+/**
+ * An action containing one or more sequence elements in loop.
+ *
+ * A loop action has a name; this is used both in its semantic elaboration and
+ * also as a target for any break actions.
+ */
+class LoopAction extends robochart.NamedElement, SequenceAction {
+	// TODO: conditionals
+	// TODO: break
+	/**
+	 * The body of the loop.
+	 */
+	val Subsequence[1] body;
 }
 
 /**
