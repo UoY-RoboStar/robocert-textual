@@ -26,8 +26,9 @@
 \newcommand{\tsubhead}[1]{\textit{#1}}
 
 \newcommand{\anarrow}{A}
-\newcommand{\astep}{S}
+\newcommand{\astep}{s}
 \newcommand{\anlgap}{L}
+\newcommand{\asseq}{q}
 \newcommand{\anaction}{X}
 
 \lstset{
@@ -42,6 +43,14 @@
 
 \chapter{Semantics}
 
+\section{CSP semantics}
+
+\newcommand{\stepsema}[1]{\sema{#1}^{\text{step}}}
+\newcommand{\lgapsema}[2]{\sema{#1}^{\text{lgap}}_{(#2)}}
+\newcommand{\actsema}[1]{\sema{#1}^{\text{act}}}
+\newcommand{\arrsema}[1]{\sema{#1}^{\text{arr}}}
+\newcommand{\sseqsema}[1]{\sema{#1}^{\text{sseq}}}
+
 \begin{table}
 	\centering
 
@@ -50,6 +59,8 @@
 	\thead{Variable} & \thead{Meaning}
 	\\
 	\midrule
+	\(\asseq\) & subsequence
+	\\
 	\(\anarrow\) & arrow message spec
 	\\
 	\(\anlgap\) & loose gap
@@ -63,14 +74,21 @@
 	\label{tab:metasyntactic-variables}
 \end{table}
 
-\section{Sequences}
+\subsection{Sequences}
 
-\section{Steps}
+\begin{defn}[Sequences]
+\end{defn}
 
-\newcommand{\stepsema}[1]{\sema{#1}^{\text{step}}}
-\newcommand{\lgapsema}[2]{\sema{#1}^{\text{lgap}}_{(#2)}}
-\newcommand{\actsema}[1]{\sema{#1}^{\text{act}}}
-\newcommand{\arrsema}[1]{\sema{#1}^{\text{arr}}}
+\begin{defn}[Subsequences]
+
+\begin{align*}
+	\sseqsema{\astep_1\ \lquote{\lstinline|then|} \dotso}
+\end{align*}
+
+\end{defn}
+
+\subsection{Steps}
+
 
 The semantics of a step is that of the action, inflected by any gap that is
 present; the default, a `strict gap' (no communication permitted between
@@ -100,9 +118,13 @@ this step and any previous step), does not affect the action at all.
 \end{align*}
 \end{defn}
 
-\subsection{Loose gaps}
+\subsection{Gaps}
 
-\section{Actions}
+\begin{defn}[Loose gaps]
+	TODO
+\end{defn}
+
+\subsection{Actions}
 
 \begin{defn}[Actions]
 
@@ -123,9 +145,5 @@ this step and any previous step), does not affect the action at all.
 \end{align*}
 
 \end{defn}
-
-\subsection{Arrows}
-
-
 
 \end{document}
