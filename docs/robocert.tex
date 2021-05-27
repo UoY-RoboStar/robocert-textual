@@ -1,0 +1,131 @@
+\documentclass[a4paper,11pt]{report}
+\usepackage[a4paper,margin=1.5cm]{geometry}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{stmaryrd}
+\usepackage{circus}
+\usepackage{listings}
+% fonts
+\usepackage{tgpagella}
+\usepackage{tgadventor}
+\usepackage{tgcursor}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+\newcommand{\lquote}[1]{\text{`#1'}}
+\newcommand{\sema}[1]{\llbracket #1 \rrbracket}
+\newcommand{\defeq}{\mathbin{\overset{\text{def}}=}}
+
+\newcommand{\interrupt}{\mathbin{\triangle}}
+
+\newcommand{\events}{\mathsf{Events}}
+
+\newcommand{\thead}[1]{\textbf{#1}}
+\newcommand{\tsubhead}[1]{\textit{#1}}
+
+\newcommand{\anarrow}{A}
+\newcommand{\astep}{S}
+\newcommand{\anlgap}{L}
+\newcommand{\anaction}{X}
+
+\lstset{
+	basicstyle={\small\ttfamily}	
+}
+
+\title{RoboCert Sequence Diagram Prototype}
+\author{Matt Windsor}
+
+\begin{document}
+\maketitle
+
+\chapter{Semantics}
+
+\begin{table}
+	\centering
+
+	\begin{tabular}{rl}
+	\toprule
+	\thead{Variable} & \thead{Meaning}
+	\\
+	\midrule
+	\(\anarrow\) & arrow message spec
+	\\
+	\(\anlgap\) & loose gap
+	\\
+	\(\anaction\) & action
+	\\
+	\bottomrule
+	\end{tabular}
+
+	\caption{Metasyntactic variables.}
+	\label{tab:metasyntactic-variables}
+\end{table}
+
+\section{Sequences}
+
+\section{Steps}
+
+\newcommand{\stepsema}[1]{\sema{#1}^{\text{step}}}
+\newcommand{\lgapsema}[2]{\sema{#1}^{\text{lgap}}_{(#2)}}
+\newcommand{\actsema}[1]{\sema{#1}^{\text{act}}}
+\newcommand{\arrsema}[1]{\sema{#1}^{\text{arr}}}
+
+The semantics of a step is that of the action, inflected by any gap that is
+present; the default, a `strict gap' (no communication permitted between
+this step and any previous step), does not affect the action at all.
+
+\begin{defn}[Steps]
+
+\begin{align*}
+	\stepsema{\lquote{\lstinline|anything\ |} \anlgap \lquote{\lstinline|\ until\ |} \anaction}
+	\quad\defeq\quad&	
+	\lgapsema{\anlgap}{\anaction} \interrupt \actsema{\anaction}
+	\tag{loose gap}
+\\
+	\stepsema{\anaction}
+	\quad\defeq\quad&	
+	\actsema{\anaction}
+	\tag{strict gap}
+%	\lgapsema{\lquote{\lstinline|anything in\ |} \events \lquote{\lstinline|\ until|}}{R}
+%	\\
+%	\gapsema{\lquote{\lstinline|anything in\ |} A \lquote{\lstinline|\ until|}}{R}
+%	\quad\defeq\quad&	
+%	\gapsema{\lquote{\lstinline|anything in\ |} A \lquote{\lstinline|\ except \{\} until|}}{R}
+%	\\
+%	\gapsema{\lquote{\lstinline|anything except\ |} X \lquote{\lstinline|\ until|}}{R}
+%	\quad\defeq\quad&	
+%	\gapsema{\lquote{\lstinline|anything in \{\} except\ |} X \lquote{\lstinline|\ until|}}{R}
+\end{align*}
+\end{defn}
+
+\subsection{Loose gaps}
+
+\section{Actions}
+
+\begin{defn}[Actions]
+
+\begin{align*}
+	\actsema{\anarrow}
+	\quad\defeq\quad&
+	\left(
+	\arrsema{\anarrow}
+	\then
+	\Skip
+	\right)
+	\tag{arrow action}
+\\
+	\actsema{\lquote{\lstinline|end|}}
+	\quad\defeq\quad&
+	\Stop
+	\tag{final action}
+\end{align*}
+
+\end{defn}
+
+\subsection{Arrows}
+
+
+
+\end{document}
