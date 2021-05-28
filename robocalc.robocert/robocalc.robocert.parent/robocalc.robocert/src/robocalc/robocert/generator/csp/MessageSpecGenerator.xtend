@@ -6,13 +6,13 @@ import robocalc.robocert.generator.ArrowDirection
 import robocalc.robocert.model.robocert.World
 import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.model.robocert.Actor
-import robocalc.robocert.model.robocert.RCModuleTarget
 
 /**
  * Generates CSP for various aspects of message specs.
  */
 class MessageSpecGenerator {
-	@Inject extension TopicGenerator tg
+	@Inject extension TopicGenerator
+	@Inject extension TargetGenerator
 
 	/**
 	 * Generates a CSP event set for one message spec (less the set delimiters).
@@ -89,27 +89,12 @@ class MessageSpecGenerator {
 	 * @return the sequence's namespace.
 	 */
 	private def getNamespaceFromPair(Actor from, Actor to) {
-		var it = from.namespace
-		if(empty) it = to.namespace
-		if(empty) it = "UNSUPPORTED_ACTORS"
-		it
+		switch from {
+			Target: from.namespace
+			default: switch to {
+				Target: to.namespace
+				default: "UNSUPPORTED_ACTORS"
+			}
+		}
 	}
-
-	/**
-	 * Scrapes the namespace from a RoboChart module.
-	 * 
-	 * @param actor  the actor for which we are getting a namespace.
-	 * @return the module name (as the namespace of any communications over the module).
-
-	 */
-	private def dispatch String getNamespace(RCModuleTarget target) {
-		target.module.name
-	}
-
-	/**
-	 * Fallback for actors that don't correspond to a namespace.
-	 * @param actor  the target for which we are getting a namespace.
-	 * @return the empty string (signifying this actor has no namespace).
-	 */
-	private def dispatch String getNamespace(Actor target) ''''''
 }

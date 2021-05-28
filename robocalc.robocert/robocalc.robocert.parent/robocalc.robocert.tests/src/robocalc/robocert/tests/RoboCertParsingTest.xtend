@@ -15,7 +15,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @InjectWith(RoboCertInjectorProvider)
 class RoboCertParsingTest {
 	@Inject
-	ParseHelper<robocalc.robocert.model.robocert.Package> parseHelper
+	ParseHelper<robocalc.robocert.model.robocert.RAPackage> parseHelper
 	
 	@Test
 	def void loadModel() {
