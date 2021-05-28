@@ -27,6 +27,7 @@
 \newcommand{\anarrow}{a}
 \newcommand{\anevent}{e}
 \newcommand{\anlgap}{l}
+\newcommand{\amsgset}{M}
 \newcommand{\aname}{n}
 \newcommand{\anop}{o}
 \newcommand{\asseq}{q}
@@ -81,8 +82,11 @@ UML sequence diagrams.
 \newcommand{\actsema}[1]{\sema{#1}^{\text{act}}}
 \newcommand{\arrsema}[1]{\sema{#1}^{\text{arr}}}
 \newcommand{\loopsema}[2]{\sema{#1}^{\text{loop}}_{(#2)}}
+\newcommand{\msgsetsema}[1]{\sema{#1}^{\text{mset}}}
 \newcommand{\seqsema}[1]{\sema{#1}^{\text{seq}}}
 \newcommand{\sseqsema}[1]{\sema{#1}^{\text{sseq}}}
+
+\newcommand{\eventsof}[1]{\mathsf{eventsOf}(#1)}
 
 \begin{table}
 	\centering
@@ -98,11 +102,14 @@ UML sequence diagrams.
 	\\
 	\(\asseq\) & subsequence
 	\\
-	\(\anarrow\) & arrow message spec
-	\\
 	\(\anlgap\) & loose gap
 	\\
 	\(\anaction\) & action
+	\\
+	\midrule
+	\(\anarrow\) & arrow message spec
+	\\
+	\(\amsgset\) & gap message set
 	\\
 	\midrule
 	\(\atarget\) & target (eg. module)
@@ -171,29 +178,73 @@ this step and any previous step) does not affect the action at all.
 \begin{align*}
 	\stepsema{\lquote{anything}\ \anlgap\ \lquote{until}\ \anaction}
 	\quad\defeq\quad&	
-	\lgapsema{\anlgap}{\anaction} \interrupt \actsema{\anaction}
+	\mathsf{RUN}\left(\lgapsema{\anlgap}{\anaction}\right) \interrupt \actsema{\anaction}
 	\tag{loose gap}
 \\
 	\stepsema{\anaction}
 	\quad\defeq\quad&	
 	\actsema{\anaction}
 	\tag{strict gap}
-%	\lgapsema{\lquote{anything in}\ \events\ \lquote{until}}{R}
-%	\\
-%	\gapsema{\lquote{anything in}\ A\ \lquote{until}}{R}
-%	\quad\defeq\quad&	
-%	\gapsema{\lquote{anything in}\ A\ \lquote{except \{\} until}}{R}
-%	\\
-%	\gapsema{\lquote{anything except}\ X\ \lquote{until}}{R}
-%	\quad\defeq\quad&	
-%	\gapsema{\lquote{anything in \{\} except}\ X\ \lquote{until}}{R}
 \end{align*}
 \end{defn}
 
 \subsection{Gaps}
 
 \begin{defn}[Loose gaps]
-	TODO
+	The semantics of a loose gap is the CSP event set corresponding to the
+	difference between the `allowed' set (or, if the set is empty,
+	\(\events\). and the union of the `forbidden' set and the set of any
+	events the action following the gap can initially communicate.
+
+\begin{align*}
+	\lgapsema{}{\anaction}
+	\quad\defeq\quad&
+	\events \setminus \eventsof{\anaction}
+	\tag{no sets}
+\\
+	\lgapsema{\lquote{except}\ \amsgset}{\anaction}
+	\quad\defeq\quad&
+	\events \setminus \left(\msgsetsema{\amsgset} \cup \eventsof{\anaction}\right)
+	\tag{forbidden only}
+\\
+	\lgapsema{\lquote{in}\ \amsgset}{\anaction}
+	\quad\defeq\quad&
+	\msgsetsema{\amsgset} \setminus \eventsof{\anaction}
+	\tag{allowed only}
+\\
+	\lgapsema{\lquote{in}\ \amsgset_a\ \lquote{except}\ \amsgset_f}{\anaction}
+	\quad\defeq\quad&
+	\msgsetsema{\amsgset_a} \left(\msgsetsema{\amsgset_f} \cup \eventsof{\anaction}\right)
+	\tag{both}
+\end{align*}
+\end{defn}
+
+\begin{defn}[Gap message sets]
+For now, the semantics of a gap message set depends on treating each message
+spec as if it were an arrow message spec.  This will change when arrow and gap
+message specs diverge.
+\begin{align*}
+	\msgsetsema{\amsgset}
+	\quad\defeq\quad&
+	\bigcup_{\anarrow \in \amsgset} \bullet \arrsema{\anarrow}
+\end{align*}
+\end{defn}
+
+\begin{defn}[CSP event sets]
+For now, the event set of an action is the prefix of an arrow action, or
+the empty set for any other actions.  This will change when the prefix becomes
+inexpressible as an event set.
+\begin{align*}
+	\eventsof{\anarrow}
+	\quad\defeq\quad&
+	\{\arrsema{\anarrow}\}
+	\tag{arrow}
+\\
+	\eventsof{\anaction}
+	\quad\defeq\quad&
+	\emptyset
+	\tag{anything else}
+\end{align*}
 \end{defn}
 
 \subsection{Actions}
