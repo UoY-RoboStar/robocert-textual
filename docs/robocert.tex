@@ -7,15 +7,14 @@
 \usepackage{stmaryrd}
 \usepackage{circus}
 \usepackage{listings}
+\usepackage{xcolor}
 % fonts
-\usepackage{tgpagella}
+\usepackage{tgbonum}
 \usepackage{tgadventor}
 \usepackage{tgcursor}
 
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}
-\newcommand{\lquote}[1]{\text{`#1'}}
-\newcommand{\sema}[1]{\llbracket #1 \rrbracket}
 \newcommand{\defeq}{\mathbin{\overset{\text{def}}=}}
 
 \newcommand{\interrupt}{\mathbin{\triangle}}
@@ -25,15 +24,43 @@
 \newcommand{\thead}[1]{\textbf{#1}}
 \newcommand{\tsubhead}[1]{\textit{#1}}
 
-\newcommand{\anarrow}{A}
-\newcommand{\astep}{s}
-\newcommand{\anlgap}{L}
+\newcommand{\anarrow}{a}
+\newcommand{\anevent}{e}
+\newcommand{\anlgap}{l}
+\newcommand{\aname}{n}
+\newcommand{\anop}{o}
 \newcommand{\asseq}{q}
-\newcommand{\anaction}{X}
+\newcommand{\astep}{s}
+\newcommand{\atarget}{t}
+\newcommand{\aworld}{w}
+\newcommand{\anaction}{x}
+\newcommand{\refto}[1]{#1_r}
 
 \lstset{
 	basicstyle={\small\ttfamily}	
 }
+\lstdefinelanguage{RoboCert}{
+	morekeywords={
+	anything,
+	as,
+	end,
+	event,
+	from,
+	for,
+	loop,
+	module,
+	operation,
+	sequence,
+	then,
+	to,
+	until,
+	world,
+	},
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]",
+}
+\newcommand{\lquote}[1]{\text{`\lstinline[language=RoboCert]{#1}'}}
 
 \title{RoboCert Sequence Diagram Prototype}
 \author{Matt Windsor}
@@ -45,10 +72,16 @@
 
 \section{CSP semantics}
 
+This semantics borrows heavily from that of Lima et al. on the CML semantics of
+UML sequence diagrams.
+
+\newcommand{\sema}[1]{\llbracket #1 \rrbracket}
 \newcommand{\stepsema}[1]{\sema{#1}^{\text{step}}}
 \newcommand{\lgapsema}[2]{\sema{#1}^{\text{lgap}}_{(#2)}}
 \newcommand{\actsema}[1]{\sema{#1}^{\text{act}}}
 \newcommand{\arrsema}[1]{\sema{#1}^{\text{arr}}}
+\newcommand{\loopsema}[2]{\sema{#1}^{\text{loop}}_{(#2)}}
+\newcommand{\seqsema}[1]{\sema{#1}^{\text{seq}}}
 \newcommand{\sseqsema}[1]{\sema{#1}^{\text{sseq}}}
 
 \begin{table}
@@ -59,6 +92,10 @@
 	\thead{Variable} & \thead{Meaning}
 	\\
 	\midrule
+	\(\aname\) & name
+	\\
+	\(\astep\) & step
+	\\
 	\(\asseq\) & subsequence
 	\\
 	\(\anarrow\) & arrow message spec
@@ -66,6 +103,15 @@
 	\(\anlgap\) & loose gap
 	\\
 	\(\anaction\) & action
+	\\
+	\midrule
+	\(\atarget\) & target (eg. module)
+	\\
+	\(\refto{\atarget}\) & reference to target
+	\\
+	\(\aworld\) & world
+	\\
+	\(\refto{\aworld}\) & reference to world
 	\\
 	\bottomrule
 	\end{tabular}
@@ -77,12 +123,38 @@
 \subsection{Sequences}
 
 \begin{defn}[Sequences]
+
+The semantics of a sequence is, for now, that of its subsequence.
+
+This rule does not capture the fact that the target and world definitions
+introduce bindings referred to in message specs; for instance,
+\lstinline[language=RoboCert]{sequence X for module Mod as M, world as W}
+binds \lstinline[language=RoboCert]{M} to the module target,
+\lstinline[language=RoboCert]{Mod} to its module, and
+\lstinline[language=RoboCert]{W} to the world.
+
+\begin{align*}
+	\seqsema{\lquote{sequence}\ \aname\ \lquote{for}\ \atarget\ \lquote{,}\ \aworld\ \asseq}
+	\quad\defeq\quad&	
+	\sseqsema{\asseq}
+\end{align*}
+
 \end{defn}
 
 \begin{defn}[Subsequences]
 
+The semantics of a subsequence is a sequential composition of that of its steps.
+
 \begin{align*}
-	\sseqsema{\astep_1\ \lquote{\lstinline|then|} \dotso}
+	\sseqsema{\lquote{\{}\ \astep\ \lquote{\}}}
+	\quad\defeq\quad&	
+	\stepsema{\astep}
+	\tag{base}
+\\
+	\sseqsema{\lquote{\{}\ \astep\ \lquote{then}\ \asseq\ \lquote{\}}}
+	\quad\defeq\quad&	
+	\stepsema{\astep} \circseq \sseqsema{\lquote{\{}\ \asseq\ \lquote{\}}}
+	\tag{inductive}
 \end{align*}
 
 \end{defn}
@@ -90,14 +162,14 @@
 \subsection{Steps}
 
 
-The semantics of a step is that of the action, inflected by any gap that is
-present; the default, a `strict gap' (no communication permitted between
-this step and any previous step), does not affect the action at all.
-
 \begin{defn}[Steps]
 
+The semantics of a step is that of the action modified by any gap.
+The default `strict' gap (no communication allowed between
+this step and any previous step) does not affect the action at all.
+
 \begin{align*}
-	\stepsema{\lquote{\lstinline|anything\ |} \anlgap \lquote{\lstinline|\ until\ |} \anaction}
+	\stepsema{\lquote{anything}\ \anlgap\ \lquote{until}\ \anaction}
 	\quad\defeq\quad&	
 	\lgapsema{\anlgap}{\anaction} \interrupt \actsema{\anaction}
 	\tag{loose gap}
@@ -106,15 +178,15 @@ this step and any previous step), does not affect the action at all.
 	\quad\defeq\quad&	
 	\actsema{\anaction}
 	\tag{strict gap}
-%	\lgapsema{\lquote{\lstinline|anything in\ |} \events \lquote{\lstinline|\ until|}}{R}
+%	\lgapsema{\lquote{anything in}\ \events\ \lquote{until}}{R}
 %	\\
-%	\gapsema{\lquote{\lstinline|anything in\ |} A \lquote{\lstinline|\ until|}}{R}
+%	\gapsema{\lquote{anything in}\ A\ \lquote{until}}{R}
 %	\quad\defeq\quad&	
-%	\gapsema{\lquote{\lstinline|anything in\ |} A \lquote{\lstinline|\ except \{\} until|}}{R}
+%	\gapsema{\lquote{anything in}\ A\ \lquote{except \{\} until}}{R}
 %	\\
-%	\gapsema{\lquote{\lstinline|anything except\ |} X \lquote{\lstinline|\ until|}}{R}
+%	\gapsema{\lquote{anything except}\ X\ \lquote{until}}{R}
 %	\quad\defeq\quad&	
-%	\gapsema{\lquote{\lstinline|anything in \{\} except\ |} X \lquote{\lstinline|\ until|}}{R}
+%	\gapsema{\lquote{anything in \{\} except}\ X\ \lquote{until}}{R}
 \end{align*}
 \end{defn}
 
@@ -128,6 +200,11 @@ this step and any previous step), does not affect the action at all.
 
 \begin{defn}[Actions]
 
+The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
+prefixing termination.  The semantics of a loop delegates to a separate rule
+over its label and subsequence.
+For now, a final action does not terminate.
+
 \begin{align*}
 	\actsema{\anarrow}
 	\quad\defeq\quad&
@@ -138,12 +215,64 @@ this step and any previous step), does not affect the action at all.
 	\right)
 	\tag{arrow action}
 \\
-	\actsema{\lquote{\lstinline|end|}}
+	\actsema{\lquote{loop}\ \aname\ \asseq}
+	\quad\defeq\quad&
+	\left(
+	\loopsema{\asseq}{\aname}
+	\right)
+	\tag{loop action}
+\\
+	\actsema{\lquote{end}}
 	\quad\defeq\quad&
 	\Stop
 	\tag{final action}
 \end{align*}
 
 \end{defn}
+
+\begin{defn}[Arrows]
+
+The semantics of arrows depends on the topic of their message specs, and, for
+certain topics, the direction (inbound from world to target, or outbound from
+target to world).  For now, neither operations nor events can have arguments.
+
+\newcommand{\nsof}[1]{\mathsf{ns}(#1)}
+
+Let \(\nsof{\refto{\atarget}}\) be the name of the module, controller, or state machine
+referred to by \(\refto{\atarget}\).
+
+\begin{align*}
+	\arrsema{\lquote{operation}\ \anop\ \lquote{from}\ \refto{\aworld}\ \lquote{to}\ \refto{\atarget}}
+	\quad\defeq\quad&
+	\nsof{\refto{\atarget}}::{\anop}\mathsf{Call}
+	\tag{operation}
+\\
+	\arrsema{\lquote{event}\ \anevent\ \lquote{from}\ \refto{\aworld}\ \lquote{to}\ \refto{\atarget}}
+	\quad\defeq\quad&
+	\nsof{\refto{\atarget}}::{\anevent}.\mathsf{in}
+	\tag{inbound event}
+\\
+	\arrsema{\lquote{event}\ \anevent\ \lquote{from}\ \refto{\atarget}\ \lquote{to}\ \refto{\aworld}}
+	\quad\defeq\quad&
+	\nsof{\refto{\atarget}}::{\anevent}.\mathsf{out}
+	\tag{outbound event}
+\end{align*}
+
+\end{defn}
+
+\begin{defn}[Loops]
+
+For now, only infinite loops exist, and their semantics is that of the loop
+subsequence placed in a recursive process.
+
+\begin{align*}
+	\loopsema{\asseq}{\aname}
+	\quad\defeq\quad&
+	\circmu \mathsf{LOOP}_\aname \bullet \left(\sseqsema{\asseq} \circseq \mathsf{LOOP}_\aname\right)
+	\tag{infinite loop}
+\end{align*}
+
+\end{defn}
+
 
 \end{document}
