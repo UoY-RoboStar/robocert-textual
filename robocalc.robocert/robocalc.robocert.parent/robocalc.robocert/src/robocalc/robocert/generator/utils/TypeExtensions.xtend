@@ -13,8 +13,6 @@ import circus.robocalc.robochart.SeqType
 import circus.robocalc.robochart.PrimitiveType
 import circus.robocalc.robochart.Enumeration
 import circus.robocalc.robochart.Literal
-import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.emf.ecore.EObject
 import com.google.inject.Inject
 import circus.robocalc.robochart.RecordType
 import circus.robocalc.robochart.ProductType
@@ -23,7 +21,7 @@ import circus.robocalc.robochart.ProductType
  * Extension methods for working with RoboChart's type system.
  */
 class TypeExtensions {
-	@Inject extension IQualifiedNameProvider
+	@Inject extension EObjectExtensions
 
 	/**
 	 * Gets the default value of a type reference.
@@ -47,7 +45,7 @@ class TypeExtensions {
 		switch name {
 			case "boolean":
 				"true"
-			case "string": '''"'''
+			case "string": '''""'''
 			default:
 				"0"
 		}
@@ -120,11 +118,4 @@ class TypeExtensions {
 	 * @return the default value of the type.
 	 */
 	def dispatch CharSequence defaultValue(Type t) '''{- UNKNOWN TYPE: «t» -}0'''
-
-	def id(EObject e) {
-		// NOTE: this is more or less the same as the version in
-		// GeneratorUtils, and should be sourced either from there or
-		// put somewhere else.
-		e.fullyQualifiedName.toString("_")
-	}
 }

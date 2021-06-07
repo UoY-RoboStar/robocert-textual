@@ -36,9 +36,9 @@ class GapGenerator {
 	 * @return the generated CSP.
 	 */
 	def dispatch generate(LooseGap gap, SequenceAction action) '''
-		RUN(
-			«gap.generateLooseSet(action)»
-		) /\ '''
+	RUN(
+		«gap.generateLooseSet(action)»
+	) /\ '''
 
 	/**
 	 * Generates fallback CSP for an unsupported gap.
@@ -51,11 +51,11 @@ class GapGenerator {
 	def dispatch generate(SequenceGap gap, SequenceAction action) '''{- unsupported gap: «gap» -} '''
 
 	private def generateLooseSet(LooseGap gap, SequenceAction action) '''
-	«IF gap.forbidden.present || action.hasCSPEvents»
-		diff(«gap.allowed.generateAllowSet», «gap.forbidden.generateForbidSet(action)»)
-	«ELSE»
-		«gap.allowed.generateAllowSet»
-	«ENDIF»
+		«IF gap.forbidden.present || action.hasCSPEvents»
+			diff(«gap.allowed.generateAllowSet», «gap.forbidden.generateForbidSet(action)»)
+		«ELSE»
+			«gap.allowed.generateAllowSet»
+		«ENDIF»
 	'''
 
 	/**
@@ -99,7 +99,7 @@ class GapGenerator {
 	private def isPresent(GapMessageSet set) {
 		// TODO: check if this is actually necessary
 		// TODO: move to metamodel?
-		set !== null && !set.messages.isNullOrEmpty
+		!(set?.messages.isNullOrEmpty)
 	}
 
 }
