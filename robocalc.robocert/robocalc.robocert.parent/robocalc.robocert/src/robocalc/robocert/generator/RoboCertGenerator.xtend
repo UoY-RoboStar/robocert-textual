@@ -10,10 +10,11 @@ import org.eclipse.xtext.generator.IGeneratorContext
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.Assertion
 import robocalc.robocert.model.robocert.CSPFragment
-import robocalc.robocert.generator.csp.ImportGenerator
 import robocalc.robocert.generator.csp.SequenceGenerator
 import robocalc.robocert.generator.csp.AssertionGenerator
 import com.google.inject.Inject
+import robocalc.robocert.generator.csp.ImportGenerator
+import org.eclipse.xtext.EcoreUtil2
 
 /**
  * Generates code from your model files on save.
@@ -26,6 +27,9 @@ class RoboCertGenerator extends AbstractGenerator {
 	@Inject extension SequenceGenerator
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		// Needed to make sure that imports in any RoboChart packages
+		// referenced by this assertion file get picked up.
+		EcoreUtil2.resolveAll(resource.resourceSet);
 		fsa.generateFile('seq.csp', resource.generate);
 	}
 
@@ -34,29 +38,27 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * 
 	 * @param resource  the top-level property model.
 	 */
-	def CharSequence generate(Resource resource) {
-		'''
-			«resource.generateImports»
-			
-			--
-			-- CSP fragments
-			--
-			
-			«resource.generateCSPFragments»
-			
-			--
-			-- Sequences
-			--
-			
-			«resource.generateSequences»
-			
-			--
-			-- Assertions
-			--
-			
-			«resource.generateAssertions»
-		'''
-	}
+	def CharSequence generate(Resource resource) '''
+		«resource.generateImports»
+		
+		--
+		-- CSP fragments
+		--
+		
+		«resource.generateCSPFragments»
+		
+		--
+		-- Sequences
+		--
+		
+		«resource.generateSequences»
+		
+		--
+		-- Assertions
+		--
+		
+		«resource.generateAssertions»
+	'''
 
 	//
 	// CSP fragments
