@@ -23,7 +23,6 @@ class ImportGenerator {
 	// at the moment, and, as such, a) import it; and b) import every package
 	// rather than just the anonymous ones.  This should be fixed in line with
 	// upstream, eventually, I think?
-	
 	@Inject extension RAPackageExtensions
 	@Inject extension RCPackageExtensions
 	@Inject extension FilenameExtensions
@@ -45,7 +44,6 @@ class ImportGenerator {
 		// properly, hence the conversion.
 		Iterators.concat(
 			standardImports,
-			namedImports,
 			resourceImports,
 			packageImports
 		).map[toString].toSet
@@ -59,22 +57,6 @@ class ImportGenerator {
 	private def standardImports() {
 		// TODO(@MattWindsor91): remove instantiations.csp eventually?
 		Iterators.forArray(#["defs/robochart_defs.csp", "defs/core_defs.csp", "instantiations.csp"])
-	}
-	
-	/**
-	 * Gets 'defs' imports for any package in the transitive closure of those
-	 * explicitly named as imports on this resource.
-	 * 
-	 * @param it  the resource to query.
-	 * 
-	 * @return  an iterator of input filenames.
-	 */
-	private def getNamedImports(Resource it) {
-		// NOTE: RAPackages aren't BasicPackages (yet), so this doesn't do
-		// anything for RAPackages.  It's mostly here in case the situation
-		// changes, and in case this gets backported to the RoboChart
-		// generators.
-		basicPackage.iterator.flatMap[allImportFiles]
 	}
 
 	/**
@@ -101,12 +83,15 @@ class ImportGenerator {
 	 * @return  an iterator of input filenames.
 	 */
 	private def Iterator<CharSequence> getPackageImports(Resource it) {
-		// TODO(@MattWindsor91): if RAPackage becomes a BasicPackage, merge
-		// this boilerplate with getNamedImports?
-		contents.take(1).iterator.flatMap[packageImportsInner]
+		basicPackage.iterator.flatMap [
+			Iterators.concat(
+				namedImports,
+				packageImportsInner
+			)
+		]
 	}
 
-	private def dispatch Iterator<CharSequence> getPackageImportsInner(RAPackage it) {
+	private def dispatch getPackageImportsInner(RAPackage it) {
 		referencedElements.flatMap[elementImports]
 	}
 
@@ -119,12 +104,12 @@ class ImportGenerator {
 			Iterators.concat(
 				Iterators.singletonIterator(CSPDefsFileName),
 				Iterators.singletonIterator(element.CSPTopModuleFileName),
-				allImportFiles
+				namedImports
 			)
 		]
 	}
 
-	private def allImportFiles(BasicPackage it) {
+	private def getNamedImports(BasicPackage it) {
 		allImports.iterator.map[CSPDefsFileName]
 	}
 

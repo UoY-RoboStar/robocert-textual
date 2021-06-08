@@ -9,7 +9,7 @@
     <details key="editorDirectory" value="/robocalc.robocert.model.editor/src-gen"/>
     <details key="testsDirectory" value="/robocalc.robocert.model.tests/src-gen"/>
   </eAnnotations>
-  <eClassifiers xsi:type="ecore:EClass" name="RAPackage">
+  <eClassifiers xsi:type="ecore:EClass" name="RAPackage" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//BasicPackage">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cspFragments" upperBound="-1"
         eType="#//CSPFragment" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" upperBound="-1"

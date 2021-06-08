@@ -14,7 +14,7 @@ import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
 /**
  * A RoboCert package.
  */
-class RAPackage {
+class RAPackage extends robochart.BasicPackage {
 	/**
 	 * Any top-level CSP fragments in this package.
 	 * 
