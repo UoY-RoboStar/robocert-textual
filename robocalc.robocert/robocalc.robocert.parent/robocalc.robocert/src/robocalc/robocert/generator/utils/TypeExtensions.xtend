@@ -106,9 +106,8 @@ class TypeExtensions {
 	 * 
 	 * @return the default value of the type.
 	 */
-	def dispatch CharSequence defaultValue(Literal it) {
+	def dispatch CharSequence defaultValue(Literal it)
 		'''«id»«FOR x : types BEFORE '.' SEPARATOR '.'»x.defaultValue«ENDFOR»'''
-	}
 
 	/**
 	 * Gets the default value of an unknown type type.

@@ -5,14 +5,14 @@ import robocalc.robocert.model.robocert.Target
 import java.util.Collections
 import javax.inject.Inject
 import robocalc.robocert.generator.utils.RCModuleExtensions
-import robocalc.robocert.generator.utils.TypeExtensions
+import robocalc.robocert.generator.utils.VariableExtensions
 
 /**
  * Generates CSP referring to a target.
  */
 class TargetGenerator {
 	@Inject extension RCModuleExtensions
-	@Inject extension TypeExtensions
+	@Inject extension VariableExtensions
 	
 	/**
 	 * @return generated CSP for a sequence target.
@@ -22,7 +22,7 @@ class TargetGenerator {
 	def CharSequence generate(Target it) '''«namespace»::O__(
 	    {- id -} 0
 		«FOR c: constants.toIterable BEFORE ',' SEPARATOR ','»
-			{- «c.name» -} «c.type.defaultValue»
+			{- «c.name» -} «c.constantId»
 		«ENDFOR»
 	)'''
 

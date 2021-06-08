@@ -13,6 +13,7 @@ import circus.robocalc.robochart.Controller
 import com.google.inject.Inject
 import circus.robocalc.robochart.Variable
 import java.util.Iterator
+import org.eclipse.emf.ecore.EObject
 
 /**
  * Extension methods for dealing with RoboChart modules.
@@ -28,7 +29,7 @@ class RCModuleExtensions {
 	 * This should align with the definition in the CSP semantics.
 	 * 
 	 * @param it  the RoboChart module
-	 * @return an iterator over the constants in the module's parameterisation.
+	 * @return an iterator over (variable, container) pairs.
 	 */
 	def Iterator<Variable> parameterisation(RCModule it) {
 		Iterators.concat(
