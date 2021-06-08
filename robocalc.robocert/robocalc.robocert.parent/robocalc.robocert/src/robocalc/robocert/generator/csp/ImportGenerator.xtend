@@ -114,14 +114,13 @@ class ImportGenerator {
 	}
 
 	private def Set<RCPackage> allImports(BasicPackage p) {
-		val LinkedList<BasicPackage> visited = new LinkedList<BasicPackage>();
-		val LinkedList<BasicPackage> notvisited = new LinkedList<BasicPackage>();
-		notvisited.add(p);
+		val LinkedList<BasicPackage> visited = newLinkedList;
+		val LinkedList<BasicPackage> notvisited = newLinkedList(p);
 		while (!notvisited.empty) {
 			val current = notvisited.pop
 			visited.add(current)
-			val importedPackages = current.imports.map[i|i.package].filter[x|x !== null].filter [ x |
-				!notvisited.contains(x) && !visited.contains(x)
+			val importedPackages = current.imports.map[package].filter [
+				it !== null && !notvisited.contains(it) && !visited.contains(it)
 			]
 
 			notvisited.addAll(importedPackages)
@@ -129,12 +128,10 @@ class ImportGenerator {
 		return visited.filter(RCPackage).toSet
 	}
 
-	private def getPackage(Import i) {
-		val importName = i.importedNamespace.replace("::*", "")
+	private def getPackage(Import it) {
+		val importName = importedNamespace.replace("::*", "")
 		if(importName === null) throw new RuntimeException("Import with invalid format.")
-		val rs = i.eResource.resourceSet
-		rs.resources.filter[r|r.contents.size > 0 && r.contents.get(0) instanceof BasicPackage].map [ r |
-			r.contents.get(0) as BasicPackage
-		].findFirst[p|importName.equals(p.name)]
+		val rs = eResource.resourceSet
+		rs.resources.flatMap[contents.take(1)].filter(BasicPackage).findFirst[importName.equals(name)]
 	}
 }
