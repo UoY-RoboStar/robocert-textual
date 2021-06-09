@@ -3,6 +3,17 @@
  */
 package robocalc.robocert.scoping
 
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
+import robocalc.robocert.model.robocert.ConstOverride
+import static robocalc.robocert.model.robocert.RobocertPackage.Literals.*
+import static extension org.eclipse.xtext.EcoreUtil2.getContainerOfType
+import robocalc.robocert.model.robocert.TargetActor
+import org.eclipse.xtext.scoping.Scopes
+import robocalc.robocert.model.robocert.Target
+import robocalc.robocert.generator.utils.TargetExtensions
+import com.google.inject.Inject
+import org.eclipse.xtext.scoping.IScope
 
 /**
  * This class contains custom scoping description.
@@ -11,5 +22,53 @@ package robocalc.robocert.scoping
  * on how and when to use it.
  */
 class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
-
+	@Inject extension TargetExtensions
+	
+	override getScope(EObject context, EReference reference) {
+		getScopeInner(context, reference)
+	}
+	
+	/**
+	 * Special scoping for overrides in a constant override.
+	 * 
+	 * @param context    the scoping context.
+	 * @param reference  the reference.
+	 * 
+	 * @return  the provided scope.
+	 */
+	private def dispatch getScopeInner(ConstOverride context, EReference reference) {
+		var IScope scope = null
+		if (reference == CONST_OVERRIDE__KEY) {
+			scope = context.constOverrideScope
+		}
+		
+		scope ?: super.getScope(context, reference)	
+	}
+	
+	/**
+	 * Fallback scoping for when we haven't manually overridden anything.
+	 * 
+	 * @param context    the scoping context.
+	 * @param reference  the reference.
+	 * 
+	 * @return  the provided scope.
+	 */
+	private def dispatch getScopeInner(EObject context, EReference reference) {
+		super.getScope(context, reference)
+	}
+	
+	private def constOverrideScope(ConstOverride it) {
+		getContainerOfType(TargetActor)?.target?.targetScope
+	}
+	
+	/**
+	 * Produces a scope containing all of the constants defined on a target.
+	 * 
+	 * @param it  the target in question.
+	 * 
+	 * @return  the target's constants as a scope.
+	 */
+	private def targetScope(Target it) {
+		Scopes.scopeFor(constants.toIterable)
+	} 
 }

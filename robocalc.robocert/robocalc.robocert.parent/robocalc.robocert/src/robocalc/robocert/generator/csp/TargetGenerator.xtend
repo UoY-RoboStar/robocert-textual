@@ -1,19 +1,21 @@
 package robocalc.robocert.generator.csp
 
-import robocalc.robocert.model.robocert.RCModuleTarget
 import robocalc.robocert.model.robocert.Target
-import java.util.Collections
 import javax.inject.Inject
-import robocalc.robocert.generator.utils.RCModuleExtensions
 import robocalc.robocert.generator.utils.VariableExtensions
+import robocalc.robocert.model.robocert.OverrideTarget
+import circus.robocalc.robochart.Variable
+import robocalc.robocert.generator.utils.TargetExtensions
+import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 
 /**
  * Generates CSP referring to a target.
  */
 class TargetGenerator {
-	@Inject extension RCModuleExtensions
+	@Inject extension ExpressionGenerator
+	@Inject extension TargetExtensions
 	@Inject extension VariableExtensions
-	
+
 	/**
 	 * @return generated CSP for a sequence target.
 	 * 
@@ -21,43 +23,34 @@ class TargetGenerator {
 	 */
 	def CharSequence generate(Target it) '''«namespace»::O__(
 	    {- id -} 0
-		«FOR c: constants.toIterable BEFORE ',' SEPARATOR ','»
-			{- «c.name» -} «c.constantId»
+		«FOR c : constants.toIterable BEFORE ',' SEPARATOR ','»
+			{- «c.name» -} «generateValue(c)»
 		«ENDFOR»
 	)'''
 
 	/**
-	 * Gets the constants for a module target.
-	 * @param it  the target for which we are trying to get all constants.
-	 * @return an iterator of all constants defined on this target's module.
-	 */
-	private def dispatch getConstants(RCModuleTarget it) {
-		module.parameterisation
-	}
-
-	/**
-	 * Gets the constants for an otherwise-unsupported target
-	 * @param it  the target for which we are trying to get all constants.
-	 * @return nothing.
-	 */
-	private def dispatch getConstants(Target it) {
-		Collections.emptyIterator
-	}	
-	
-	/**
-	 * Scrapes the namespace from a RoboChart module.
+	 * Gets the value of a constant that may have been overridden.
 	 * 
-	 * @param it  the actor for which we are getting a namespace.
-	 * @return the module name (as the namespace of any communications over the module).
+	 * @param it     the overriding target
+	 * @param const  the constant whose value is requested.
+	 * 
+	 * @return  a CSP string expanding to the value of the constant.
 	 */
-	def dispatch String getNamespace(RCModuleTarget it) {
-		module.name
+	private def dispatch CharSequence generateValue(OverrideTarget it, Variable const) {
+		overrides.findFirst[key == const]?.value?.compileExpression(it) ?: target.generateValue(const)
 	}
 
 	/**
-	 * Fallback for targets that don't correspond to a namespace.
-	 * @param it  the target for which we are getting a namespace.
-	 * @return the empty string (signifying this actor has no namespace).
+	 * Gets the value of a constant that has not been otherwise overridden.
+	 * 
+	 * @param it     the target (ignored).
+	 * @param const  the constant whose value is requested.
+	 * 
+	 * @return  a CSP string expanding to the value of the constant.
 	 */
-	def dispatch String getNamespace(Target it) '''{- UNSUPPORTED TARGET: «it» -}'''
+	private def dispatch generateValue(Target it, Variable const) {
+		// Delegate by default to instantiations.csp
+		const.constantId
+	}
+
 }

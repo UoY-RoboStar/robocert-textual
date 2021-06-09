@@ -60,13 +60,13 @@ class Subsequence {
  */
 class Sequence extends robochart.NamedElement {
 	/**
-	 * The target of the sequence diagram.
+	 * The target actor of the sequence diagram.
 	 */
-	val Target[1] target;
+	val TargetActor[1]#sequence target;
 	/**
-	 * The world of the sequence diagram.
+	 * The world actor of the sequence diagram.
 	 */
-	val World[1] world;
+	val World[1]#sequence world;
 	/**
 	 * The top-level subsequence of the sequence diagram.
 	 */
@@ -88,12 +88,34 @@ abstract class Actor extends robochart.NamedElement {
  * The world of a sequence.
  */
 class World extends Actor {
+	/**
+	 * The sequence to which this actor is attached.
+	 */
+	ref Sequence[1]#world sequence;
 }
 
 /**
- * The target of a sequence.
+ * An actor referring to a target.
+ *
+ * This class serves mainly to attach a name to a target so it can be referred
+ * to in arrows.
  */
-abstract class Target extends Actor {
+class TargetActor extends Actor {
+	/**
+	 * The sequence to which this actor is attached.
+	 */
+	ref Sequence[1]#target sequence;
+
+	/**
+	 * The enclosed target.
+	 */
+	val Target[1] target;
+}
+
+/**
+ * A target of a sequence.
+ */
+abstract class Target {
 }
 
 /**
@@ -101,6 +123,37 @@ abstract class Target extends Actor {
  */
 class RCModuleTarget extends Target {
 	ref robochart.RCModule[1] module;
+}
+
+/**
+ * A sequence target overriding constants on another sequence target.
+ */
+class OverrideTarget extends Target {
+	/**
+	 * The overridden target.
+	 */
+	val Target[1] target;
+	/**
+	 * The overrides being applied.
+	 */
+	val ConstOverride[+] overrides;
+}
+
+/**
+ * A constant override.
+ */
+class ConstOverride {
+	// NOTE: this would ideally be a Map.Entry, but I couldn't get
+	// Xtend's serializer code generator to work with EMaps. 
+
+	/**
+	 * The constant being overridden.
+	 */
+	ref robochart.Variable[1] key;
+	/**
+	 * The new value of the constant.
+	 */
+	val robochart.Expression[1] value;
 }
 
 /**

@@ -50,7 +50,7 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'for' target=Target ',' world=World body=Subsequence
+	'sequence' name=ID 'for' target=TargetActor ',' world=World body=Subsequence
 ;
 
 /**
@@ -63,8 +63,37 @@ Subsequence:
 /**
  * The target actor of a sequence diagram.
  */
+TargetActor:
+	target=Target 'as' name=ID
+;
+
+/**
+ * An actor of a sequence diagram.
+ */
 Target:
-	 'module' {RCModuleTarget} module=[RCModule|QualifiedName] 'as' name=ID
+	SimpleTarget ('with' {OverrideTarget.target = current} ConstOverrideList)?
+;
+
+fragment ConstOverrideList *:
+	'{' (overrides += ConstOverride) (',' overrides += ConstOverride)* '}'
+;
+
+/**
+ * Various synonyms for assignment.
+ */
+fragment AssignWords *:
+	'set' 'to' | 'assigned'
+;
+
+/**
+ * A constant override.
+ */
+ConstOverride returns ConstOverride:
+	key=[Variable] AssignWords value=Expression
+;
+
+SimpleTarget returns Target:
+	 'module' {RCModuleTarget} module=[RCModule|QualifiedName]
 ;
 
 /**

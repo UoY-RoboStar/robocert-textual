@@ -6,13 +6,15 @@ import robocalc.robocert.generator.ArrowDirection
 import robocalc.robocert.model.robocert.World
 import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.model.robocert.Actor
+import robocalc.robocert.generator.utils.TargetExtensions
+import robocalc.robocert.model.robocert.TargetActor
 
 /**
  * Generates CSP for various aspects of message specs.
  */
 class MessageSpecGenerator {
 	@Inject extension TopicGenerator
-	@Inject extension TargetGenerator
+	@Inject extension TargetExtensions
 
 	/**
 	 * Generates a CSP event set for one message spec (less the set delimiters).
@@ -38,7 +40,7 @@ class MessageSpecGenerator {
 	def generatePrefix(MessageSpec spec) {
 		// NOTE: we might need to consider from/to at a more sophisticated
 		// level than just boiling them down to 'in'/'out' eventually.
-		spec.topic.generate(getSpecDirection(spec.from, spec.to), getNamespaceFromPair(spec.from, spec.to))
+		spec.topic.generate(specDirection(spec.from, spec.to), namespaceFromPair(spec.from, spec.to))
 	}
 
 	//
@@ -55,7 +57,7 @@ class MessageSpecGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch getSpecDirection(World from, Target to) {
+	private def dispatch specDirection(World from, TargetActor to) {
 		ArrowDirection::Input
 	}
 
@@ -65,7 +67,7 @@ class MessageSpecGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch getSpecDirection(Target from, World to) {
+	private def dispatch specDirection(TargetActor from, World to) {
 		ArrowDirection::Output
 	}
 
@@ -75,7 +77,7 @@ class MessageSpecGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch getSpecDirection(Actor from, Actor to) {
+	private def dispatch specDirection(Actor from, Actor to) {
 		ArrowDirection::Unknown
 	}
 
@@ -88,13 +90,15 @@ class MessageSpecGenerator {
 	 * 
 	 * @return the sequence's namespace.
 	 */
-	private def getNamespaceFromPair(Actor from, Actor to) {
+	private def namespaceFromPair(Actor from, Actor to) {
 		switch from {
-			Target: from.namespace
-			default: switch to {
-				Target: to.namespace
-				default: "UNSUPPORTED_ACTORS"
-			}
+			TargetActor:
+				from.target.namespace
+			default:
+				switch to {
+					TargetActor: to.target.namespace
+					default: "UNSUPPORTED_ACTORS"
+				}
 		}
 	}
 }

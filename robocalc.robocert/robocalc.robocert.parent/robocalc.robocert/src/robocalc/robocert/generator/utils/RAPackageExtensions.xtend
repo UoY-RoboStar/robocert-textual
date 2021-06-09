@@ -7,6 +7,7 @@ import robocalc.robocert.model.robocert.RCModuleTarget
 import com.google.common.collect.Iterators
 import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.model.robocert.Sequence
+import java.util.Collections
 
 /**
  * Extensions for dealing with assertion packages.
@@ -26,7 +27,7 @@ class RAPackageExtensions {
 	}
 
 	private def Iterator<NamedElement> getReferencedElements(Sequence it) {
-		target.targetElement
+		target.target.targetElement
 	}
 
 	private def dispatch Iterator<NamedElement> getTargetElement(RCModuleTarget it) {
@@ -34,6 +35,6 @@ class RAPackageExtensions {
 	}
 
 	private def dispatch Iterator<NamedElement> getTargetElement(Target it) {
-		Iterators.concat()
+		Collections.emptyIterator
 	}
 }

@@ -13,7 +13,6 @@ import circus.robocalc.robochart.Controller
 import com.google.inject.Inject
 import circus.robocalc.robochart.Variable
 import java.util.Iterator
-import org.eclipse.emf.ecore.EObject
 
 /**
  * Extension methods for dealing with RoboChart modules.
@@ -45,7 +44,7 @@ class RCModuleExtensions {
 	 * @return the module's robotic platform.
 	 */
 	private def platform(RCModule it) {
-		nodes.filter(RoboticPlatform).map[definition].get(0)
+		nodes.filter(RoboticPlatform).map[definition].head
 	}
 
 	private def controllers(RCModule it) {

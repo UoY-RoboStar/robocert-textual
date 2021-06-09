@@ -128,8 +128,16 @@ class AssertionGenerator {
 	 * 
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
-	private def generateTarget(SequenceAssertionBody asst) {
-		asst.sequence.target.generate
+	private def generateTarget(SequenceAssertionBody it) {
+		assertionTarget.generate
+	}
+
+	/**
+	 * Gets the intended target of the sequence assertion.
+	 * 
+	 */
+	private def getAssertionTarget(SequenceAssertionBody it) {
+		sequence.target.target
 	}
 
 	/**

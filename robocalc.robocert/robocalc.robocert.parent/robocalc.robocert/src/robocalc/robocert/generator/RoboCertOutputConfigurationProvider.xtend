@@ -2,7 +2,6 @@ package robocalc.robocert.generator
 
 import org.eclipse.xtext.generator.IOutputConfigurationProvider
 import org.eclipse.xtext.generator.OutputConfiguration
-import java.util.HashSet
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**

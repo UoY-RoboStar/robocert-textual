@@ -27,18 +27,38 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
-        eType="#//Target" containment="true"/>
+        eType="#//TargetActor" containment="true" eOpposite="#//TargetActor/sequence"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="world" lowerBound="1" eType="#//World"
-        containment="true"/>
+        containment="true" eOpposite="#//World/sequence"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="World" eSuperTypes="#//Actor"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Actor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="World" eSuperTypes="#//Actor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
+        eType="#//Sequence" eOpposite="#//Sequence/world"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TargetActor" eSuperTypes="#//Actor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
+        eType="#//Sequence" eOpposite="#//Sequence/target"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="#//Target" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="RCModuleTarget" eSuperTypes="#//Target">
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OverrideTarget" eSuperTypes="#//Target">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="#//Target" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="overrides" lowerBound="1"
+        upperBound="-1" eType="#//ConstOverride" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstOverride">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="key" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceStep">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
