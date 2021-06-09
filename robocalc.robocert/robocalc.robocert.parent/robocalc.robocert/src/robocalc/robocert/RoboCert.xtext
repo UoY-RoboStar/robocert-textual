@@ -221,6 +221,7 @@ SequenceAssertion:
         | 'does' isNegated?='not' type=DoesNotSequenceAssertionType
         | type=DoesSequenceAssertionType
         )
+    	('on' customTarget=Target)?
 ;
 
 /**

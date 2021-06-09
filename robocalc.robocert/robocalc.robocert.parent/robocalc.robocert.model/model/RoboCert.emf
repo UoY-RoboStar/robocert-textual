@@ -371,9 +371,13 @@ class SequenceAssertion extends Assertion {
 	 */
 	attr SequenceAssertionType[1] type;
 	/**
+	 * The target of the assertion, if different from the sequence's target.
+	 */
+	val Target[?] customTarget;
+	/**
 	 * The model under which this assertion should be checked if converted to (untimed) CSP.
 	 * 
-	 * TODO: is this always useful?
+	 * TODO(@MattWindsor91): timed models, work out what to do with this actually.
 	 */
 	attr CSPModel[1] model = "TRACES";	
 }

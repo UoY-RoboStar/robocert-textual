@@ -88,17 +88,16 @@ class AssertionGenerator {
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
 	private def generateTarget(SequenceAssertion it) {
-		// TODO(@MattWindsor91): if the target is overridden here, use that.
-		'''«sequence.name»::Target'''
+		customTarget?.generate ?: standardTarget
 	}
-
+	
 	/**
-	 * Gets the intended target of the sequence assertion.
+	 * @return generated CSP for the standard target of one assertion.
 	 * 
+	 * @param asst  the assertion for which we are generating CSP.
 	 */
-	private def getAssertionTarget(SequenceAssertion it) {
-		sequence.target.target
-	}
+	private def standardTarget(SequenceAssertion it)
+		'''«sequence.name»::Target'''
 
 	/**
 	 * @return the appropriate FDR model shorthand for this assertion.

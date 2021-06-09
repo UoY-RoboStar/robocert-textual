@@ -8,7 +8,6 @@ import org.eclipse.emf.ecore.EReference
 import robocalc.robocert.model.robocert.ConstOverride
 import static robocalc.robocert.model.robocert.RobocertPackage.Literals.*
 import static extension org.eclipse.xtext.EcoreUtil2.getContainerOfType
-import robocalc.robocert.model.robocert.TargetActor
 import org.eclipse.xtext.scoping.Scopes
 import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.generator.utils.TargetExtensions
@@ -58,7 +57,7 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	}
 	
 	private def constOverrideScope(ConstOverride it) {
-		getContainerOfType(TargetActor)?.target?.targetScope
+		getContainerOfType(Target)?.targetScope
 	}
 	
 	/**
