@@ -9,7 +9,7 @@ import robocalc.robocert.model.robocert.Assertion
  * Generates CSP for assertions.
  */
 class AssertionGenerator {
-	@Inject extension TargetGenerator tg;
+	@Inject extension TargetGenerator;
 
 	/**
 	 * @return generated CSP for the assertion.
@@ -77,11 +77,10 @@ class AssertionGenerator {
 	/**
 	 * @return generated CSP for a sequence reference in one assertion.
 	 * 
-	 * @param asst  the assertion for which we are generating CSP.
+	 * @param it  the assertion for which we are generating CSP.
 	 */
-	private def generateSeqRef(SequenceAssertion asst) {
-		asst.sequence.name
-	}
+	private def generateSeqRef(SequenceAssertion it)
+		'''«sequence.name»::Sequence'''
 
 	/**
 	 * @return generated CSP for the target of one assertion.
@@ -89,7 +88,8 @@ class AssertionGenerator {
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
 	private def generateTarget(SequenceAssertion it) {
-		assertionTarget.generate
+		// TODO(@MattWindsor91): if the target is overridden here, use that.
+		'''«sequence.name»::Target'''
 	}
 
 	/**
