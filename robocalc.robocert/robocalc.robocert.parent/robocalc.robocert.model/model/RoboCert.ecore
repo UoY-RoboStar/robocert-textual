@@ -15,7 +15,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" upperBound="-1"
         eType="#//Sequence" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" upperBound="-1"
-        eType="#//Assertion" containment="true"/>
+        eType="#//NamedAssertion" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
@@ -112,28 +112,30 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//AssertionBody"
-        containment="true" eOpposite="#//AssertionBody/parent"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"
-        defaultValueLiteral="Traces"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedAssertion" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Assertion"
+        containment="true" eOpposite="#//Assertion/parent"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AssertionBody" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="Assertion" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//Assertion" eOpposite="#//Assertion/body"/>
+        eType="#//NamedAssertion" eOpposite="#//NamedAssertion/body"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceAssertionBody" abstract="true"
-      eSuperTypes="#//AssertionBody">
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceAssertion" eSuperTypes="#//Assertion">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
         eType="#//Sequence"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNegated" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//SequenceAssertionType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"
+        defaultValueLiteral="TRACES"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ObservedSequenceAssertionBody" eSuperTypes="#//SequenceAssertionBody"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ImplementedSequenceAssertionBody" eSuperTypes="#//SequenceAssertionBody"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="SequenceAssertionType">
+    <eLiterals name="HOLDS"/>
+    <eLiterals name="IS_OBSERVED" value="1"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
-    <eLiterals name="Traces"/>
-    <eLiterals name="Failures" value="1"/>
-    <eLiterals name="FailuresDivergences" value="2"/>
+    <eLiterals name="TRACES"/>
+    <eLiterals name="FAILURES" value="1"/>
+    <eLiterals name="FAILURES_DIVERGENCES" value="2"/>
   </eClassifiers>
 </ecore:EPackage>

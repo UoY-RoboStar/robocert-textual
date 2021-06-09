@@ -1,11 +1,9 @@
 package robocalc.robocert.generator.csp
 
-import robocalc.robocert.model.robocert.SequenceAssertionBody
-import robocalc.robocert.model.robocert.Assertion
-import robocalc.robocert.model.robocert.AssertionBody
-import robocalc.robocert.model.robocert.ObservedSequenceAssertionBody
-import robocalc.robocert.model.robocert.ImplementedSequenceAssertionBody
 import com.google.inject.Inject
+import robocalc.robocert.model.robocert.SequenceAssertion
+import robocalc.robocert.model.robocert.NamedAssertion
+import robocalc.robocert.model.robocert.Assertion
 
 /**
  * Generates CSP for assertions.
@@ -16,24 +14,20 @@ class AssertionGenerator {
 	/**
 	 * @return generated CSP for the assertion.
 	 */
-	def CharSequence generate(Assertion assertion) '''
-		-- Assertion «assertion.name»
-		«assertion.body.generateBody»
+	def CharSequence generate(NamedAssertion it) '''
+		-- Assertion «name»
+		«body.generateBody»
 	'''
 
 	/**
 	 * @return generated CSP for one sequence assertion body.
 	 * 
-	 * @param asst  the assertion for which we are generating CSP.
+	 * @param it  the assertion for which we are generating CSP.
 	 */
-	private def dispatch generateBody(SequenceAssertionBody asst) {
-		var lhs = asst.generateLeft;
-		var rhs = asst.generateRight;
-		var model = asst.generateModel;
+	private def dispatch generateBody(SequenceAssertion it)
 		'''
-			assert«IF asst.isNegated» not«ENDIF» «lhs» [«model»= «rhs»
+			assert«IF isNegated» not«ENDIF» «generateLeft» [«generateModel»= «generateRight»
 		'''
-	}
 
 	/**
 	 * Catch-all case for when we are asked to generate CSP for an assertion
@@ -42,84 +36,50 @@ class AssertionGenerator {
 	 * @param asst  the assertion for which we are generating CSP.
 	 * @return generated CSP for one sequence assertion body.
 	 */
-	private def dispatch generateBody(AssertionBody asst) {
-		""
-	}
+	private def dispatch generateBody(Assertion asst) ''''''
 
 	/**
-	 * Generates CSP for the left-hand side of an 'observed' assertion.
+	 * Generates CSP for the left-hand side of an assertion.
 	 * 
 	 * @param asst  the assertion for which we are generating CSP.
 	 * 
 	 * @return generated CSP for the left-hand side of the assertion.
 	 */
-	private def dispatch generateLeft(ObservedSequenceAssertionBody asst) {
-		asst.generateTarget
+	private def generateLeft(SequenceAssertion it) {
+		switch type {
+			case HOLDS:
+				generateSeqRef
+			case IS_OBSERVED:
+				generateTarget
+			default:
+				'''{- UNSUPPORTED LHS: «type» -} STOP'''
+		}
 	}
 
 	/**
-	 * Generates CSP for the left-hand side of an 'implemented' assertion.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the left-hand side of the assertion.
-	 */
-	private def dispatch generateLeft(ImplementedSequenceAssertionBody asst) {
-		asst.generateSeqRef
-	}
-
-	/**
-	 * Generates catch-all CSP for an unsupported assertion's left side.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the left-hand side of the assertion.
-	 */
-	private def dispatch generateLeft(SequenceAssertionBody asst) '''{- UNSUPPORTED LHS: «asst» -} STOP'''
-
-	/**
-	 * Generates CSP for the right-hand side of an 'observed' assertion.
-	 * 
-	 * Depending on the assertion type, this may expand to the sequence or the
-	 * target of the sequence.
+	 * Generates CSP for the right-hand side of an assertion.
 	 * 
 	 * @param asst  the assertion for which we are generating CSP.
 	 * 
 	 * @return generated CSP for the right-hand side of the assertion.
 	 */
-	private def dispatch generateRight(ObservedSequenceAssertionBody asst) {
-		asst.generateSeqRef
+	private def generateRight(SequenceAssertion it) {
+		switch type {
+			case HOLDS:
+				generateTarget
+			case IS_OBSERVED:
+				generateSeqRef
+			default:
+				'''{- UNSUPPORTED RHS: «type» -} STOP'''
+		}
 	}
-
-	/**
-	 * Generates CSP for the right-hand side of an 'implemented' assertion.
-	 * 
-	 * Depending on the assertion type, this may expand to the sequence or the
-	 * target of the sequence.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the right-hand side of the assertion.
-	 */
-	private def dispatch generateRight(ImplementedSequenceAssertionBody asst) {
-		asst.generateTarget
-	}
-
-	/**
-	 * Generates catch-all CSP for an unsupported assertion's right side.
-	 * 
-	 * @param asst  the assertion for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the left-hand side of the assertion.
-	 */
-	private def dispatch generateRight(SequenceAssertionBody asst) '''{- UNSUPPORTED RHS: «asst» -} STOP'''
 
 	/**
 	 * @return generated CSP for a sequence reference in one assertion.
 	 * 
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
-	private def generateSeqRef(SequenceAssertionBody asst) {
+	private def generateSeqRef(SequenceAssertion asst) {
 		asst.sequence.name
 	}
 
@@ -128,7 +88,7 @@ class AssertionGenerator {
 	 * 
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
-	private def generateTarget(SequenceAssertionBody it) {
+	private def generateTarget(SequenceAssertion it) {
 		assertionTarget.generate
 	}
 
@@ -136,15 +96,15 @@ class AssertionGenerator {
 	 * Gets the intended target of the sequence assertion.
 	 * 
 	 */
-	private def getAssertionTarget(SequenceAssertionBody it) {
+	private def getAssertionTarget(SequenceAssertion it) {
 		sequence.target.target
 	}
 
 	/**
 	 * @return the appropriate FDR model shorthand for this assertion.
 	 */
-	private def generateModel(AssertionBody asst) {
-		switch asst.parent.model {
+	private def generateModel(SequenceAssertion asst) {
+		switch asst.model {
 			case TRACES:
 				"T"
 			case FAILURES:

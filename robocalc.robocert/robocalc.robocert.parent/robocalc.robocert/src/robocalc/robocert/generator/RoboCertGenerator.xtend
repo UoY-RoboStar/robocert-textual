@@ -8,7 +8,7 @@ import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import robocalc.robocert.model.robocert.Sequence
-import robocalc.robocert.model.robocert.Assertion
+import robocalc.robocert.model.robocert.NamedAssertion
 import robocalc.robocert.model.robocert.CSPFragment
 import robocalc.robocert.generator.csp.SequenceGenerator
 import robocalc.robocert.generator.csp.AssertionGenerator
@@ -113,7 +113,7 @@ class RoboCertGenerator extends AbstractGenerator {
 	 * @param resource  the top-level property model.
 	 */
 	private def generateAssertions(Resource resource) '''
-		«FOR asst : resource.allContents.filter(Assertion).toIterable»
+		«FOR asst : resource.allContents.filter(NamedAssertion).toIterable»
 			«asst.generate»
 		«ENDFOR»
 	'''

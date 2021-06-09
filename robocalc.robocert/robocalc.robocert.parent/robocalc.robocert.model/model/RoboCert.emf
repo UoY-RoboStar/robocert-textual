@@ -22,7 +22,7 @@ class RAPackage extends robochart.BasicPackage {
 	 */
 	val CSPFragment[*] cspFragments;
 	val Sequence[*] sequences;
-	val Assertion[*] assertions;
+	val NamedAssertion[*] assertions;
 }
 
 //
@@ -335,35 +335,29 @@ class OperationTopic extends MessageTopic {
 // ASSERTIONS
 //
 /**
- * A RoboCert assertion, containing a named body with metadata.
+ * An assertion that has been given a name.
  */
-class Assertion extends robochart.NamedElement {
+class NamedAssertion extends robochart.NamedElement {
 	/**
 	 * The body containing the part of the assertion that can vary.
 	 */
-	val AssertionBody[1]#parent body;
-	/**
-	 * The model under which this assertion should be checked if converted to (untimed) CSP.
-	 * 
-	 * TODO: is this always useful?
-	 */
-	attr CSPModel[1] model = "Traces";
+	val Assertion[1]#parent body;
 }
 
 /**
  * An assertion body.
  */
-abstract class AssertionBody {
+abstract class Assertion {
 	/**
-	 * The parent assertion.
+	 * The parent named assertion.
 	 */
-	ref Assertion[1]#body parent;
+	ref NamedAssertion[1]#body parent;
 }
 
 /**
  * A RoboCert sequence assertion body.
  */
-abstract class SequenceAssertionBody extends AssertionBody {
+class SequenceAssertion extends Assertion {
 	/**
 	 * The sequence to which this assertion refers.
 	 */
@@ -372,27 +366,36 @@ abstract class SequenceAssertionBody extends AssertionBody {
 	 * Whether the assertion must fail to hold for the model to be validated.
 	 */
 	attr boolean[1] isNegated;
+	/**
+	 * The type of assertion.
+	 */
+	attr SequenceAssertionType[1] type;
+	/**
+	 * The model under which this assertion should be checked if converted to (untimed) CSP.
+	 * 
+	 * TODO: is this always useful?
+	 */
+	attr CSPModel[1] model = "TRACES";	
 }
 
-/**
- * A sequence assertion body that requires that the behaviour described by the
- * sequence is (or is not) observable by the model.
- */
-class ObservedSequenceAssertionBody extends SequenceAssertionBody {
-}
-
-/**
- * A sequence assertion body that requires that the behaviour described by the
- * sequence is (or is not) implemented by the model.
- */
-class ImplementedSequenceAssertionBody extends SequenceAssertionBody {
+enum SequenceAssertionType {
+	/**
+	 * The sequence holds over the target
+	 * (all behaviours of the target are included in the sequence).
+	 */
+	HOLDS;
+	/**
+	 * The sequence is observed on the target
+	 * (all behaviours of the sequence are observable on the target).
+	 */
+	IS_OBSERVED;
 }
 
 /**
  * A CSP refinement model.
  */
 enum CSPModel {
-	Traces;
-	Failures;
-	FailuresDivergences;
+	TRACES;
+	FAILURES;
+	FAILURES_DIVERGENCES;
 }

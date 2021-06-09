@@ -11,7 +11,7 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 RAPackage:
 	( cspFragments += CSPFragment
 	| sequences += Sequence
-	| assertions += Assertion
+	| assertions += NamedAssertion
 	)*;
 
 /**
@@ -192,17 +192,17 @@ fragment ArgList:
 ;
 
 /**
- * A RoboCert assertion.
+ * A RoboCert named assertion.
  */
-Assertion:
-	'assertion' name=ID ':' body=AssertionBody
+NamedAssertion:
+	'assertion' name=ID ':' body=Assertion
 ;
 
 /**
  * A RoboCert assertion body.
  */
-AssertionBody:
-	SequenceAssertionBody
+Assertion:
+	SequenceAssertion
 ;
 	
 /**
@@ -215,7 +215,32 @@ AssertionBody:
  * - assertion ID: SEQUENCE holds (in CSP: target refines sequence)
  * - assertion ID: SEQUENCE does not hold (in CSP: target does not refine sequence)
  */
-SequenceAssertionBody:
-	{ObservedSequenceAssertionBody} sequence=[Sequence] 'is' (isNegated?='not')? 'observed' |
-	{ImplementedSequenceAssertionBody} sequence=[Sequence] ('holds' | 'does' (isNegated?='not') 'hold')
+SequenceAssertion:
+	sequence=[Sequence]
+		( 'is' isNegated?='not' type=IsSequenceAssertionType
+        | 'does' isNegated?='not' type=DoesNotSequenceAssertionType
+        | type=DoesSequenceAssertionType
+        )
+;
+
+/**
+ * Assertion types that agree with 'is' and 'is not'.
+ */
+enum IsSequenceAssertionType returns SequenceAssertionType:
+	IS_OBSERVED='observed'
+;
+
+/**
+ * Assertion types that agree with 'does not'.
+ */
+enum DoesNotSequenceAssertionType returns SequenceAssertionType:
+	HOLDS='hold'
+;
+
+/**
+ * Assertion types that agree without a prefix (eg, the opposite of
+ * 'does not' assertion types).
+ */
+enum DoesSequenceAssertionType returns SequenceAssertionType:
+	HOLDS='holds'
 ;

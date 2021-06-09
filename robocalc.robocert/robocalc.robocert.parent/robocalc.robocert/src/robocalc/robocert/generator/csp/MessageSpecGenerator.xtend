@@ -4,7 +4,6 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.generator.ArrowDirection
 import robocalc.robocert.model.robocert.World
-import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.model.robocert.Actor
 import robocalc.robocert.generator.utils.TargetExtensions
 import robocalc.robocert.model.robocert.TargetActor
