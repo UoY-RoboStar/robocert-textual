@@ -1,41 +1,32 @@
 \documentclass[a4paper,11pt]{report}
+\usepackage[T1]{fontenc}
 \usepackage[a4paper,margin=1.5cm]{geometry}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{stmaryrd}
 \usepackage{circus}
 \usepackage{listings}
 \usepackage{xcolor}
 % fonts
-\usepackage{tgbonum}
-\usepackage{tgadventor}
-\usepackage{tgcursor}
+\usepackage{libertine}
+\usepackage{inconsolata}
+
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+% Open question.
+\newcommand{\todo}[1]{\textcolor{orange}{(#1)}}
+\newcommand{\metaref}[1]{{\sffamily\slshape #1}}
 
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}
-\newcommand{\defeq}{\mathbin{\overset{\text{def}}=}}
-
-\newcommand{\interrupt}{\mathbin{\triangle}}
-
-\newcommand{\events}{\mathsf{Events}}
 
 \newcommand{\thead}[1]{\textbf{#1}}
 \newcommand{\tsubhead}[1]{\textit{#1}}
 
-\newcommand{\anarrow}{a}
-\newcommand{\anevent}{e}
-\newcommand{\anlgap}{l}
-\newcommand{\amsgset}{M}
-\newcommand{\aname}{n}
-\newcommand{\anop}{o}
-\newcommand{\asseq}{q}
-\newcommand{\astep}{s}
-\newcommand{\atarget}{t}
-\newcommand{\aworld}{w}
-\newcommand{\anaction}{x}
-\newcommand{\refto}[1]{#1_r}
 
 \lstset{
 	basicstyle={\small\ttfamily}	
@@ -63,267 +54,23 @@
 }
 \newcommand{\lquote}[1]{\text{`\lstinline[language=RoboCert]{#1}'}}
 
-\title{RoboCert Sequence Diagram Prototype}
+\newcommand{\langname}{{\sffamily\slshape RoboCert}}
+
+\title{\langname{} Sequence Diagram Prototype}
 \author{Matt Windsor}
 
 \begin{document}
 \maketitle
 
+\tableofcontents{}
+
+\section*{How to read this report}
+\input{readme}
+
+\chapter{Abstract syntax}
+\input{metamodel}
+
 \chapter{Semantics}
-
-\section{CSP semantics}
-
-This semantics borrows heavily from that of Lima et al. on the CML semantics of
-UML sequence diagrams.
-
-\newcommand{\sema}[1]{\llbracket #1 \rrbracket}
-\newcommand{\stepsema}[1]{\sema{#1}^{\text{step}}}
-\newcommand{\lgapsema}[2]{\sema{#1}^{\text{lgap}}_{(#2)}}
-\newcommand{\actsema}[1]{\sema{#1}^{\text{act}}}
-\newcommand{\arrsema}[1]{\sema{#1}^{\text{arr}}}
-\newcommand{\loopsema}[2]{\sema{#1}^{\text{loop}}_{(#2)}}
-\newcommand{\msgsetsema}[1]{\sema{#1}^{\text{mset}}}
-\newcommand{\seqsema}[1]{\sema{#1}^{\text{seq}}}
-\newcommand{\sseqsema}[1]{\sema{#1}^{\text{sseq}}}
-
-\newcommand{\eventsof}[1]{\mathsf{eventsOf}(#1)}
-
-\begin{table}
-	\centering
-
-	\begin{tabular}{rl}
-	\toprule
-	\thead{Variable} & \thead{Meaning}
-	\\
-	\midrule
-	\(\aname\) & name
-	\\
-	\(\astep\) & step
-	\\
-	\(\asseq\) & subsequence
-	\\
-	\(\anlgap\) & loose gap
-	\\
-	\(\anaction\) & action
-	\\
-	\midrule
-	\(\anarrow\) & arrow message spec
-	\\
-	\(\amsgset\) & gap message set
-	\\
-	\midrule
-	\(\atarget\) & target (eg. module)
-	\\
-	\(\refto{\atarget}\) & reference to target
-	\\
-	\(\aworld\) & world
-	\\
-	\(\refto{\aworld}\) & reference to world
-	\\
-	\bottomrule
-	\end{tabular}
-
-	\caption{Metasyntactic variables.}
-	\label{tab:metasyntactic-variables}
-\end{table}
-
-\subsection{Sequences}
-
-\begin{defn}[Sequences]
-
-The semantics of a sequence is, for now, that of its subsequence.
-
-This rule does not capture the fact that the target and world definitions
-introduce bindings referred to in message specs; for instance,
-\lstinline[language=RoboCert]{sequence X for module Mod as M, world as W}
-binds \lstinline[language=RoboCert]{M} to the module target,
-\lstinline[language=RoboCert]{Mod} to its module, and
-\lstinline[language=RoboCert]{W} to the world.
-
-\begin{align*}
-	\seqsema{\lquote{sequence}\ \aname\ \lquote{for}\ \atarget\ \lquote{,}\ \aworld\ \asseq}
-	\quad\defeq\quad&	
-	\sseqsema{\asseq}
-\end{align*}
-
-\end{defn}
-
-\begin{defn}[Subsequences]
-
-The semantics of a subsequence is a sequential composition of that of its steps.
-
-\begin{align*}
-	\sseqsema{\lquote{\{}\ \astep\ \lquote{\}}}
-	\quad\defeq\quad&	
-	\stepsema{\astep}
-	\tag{base}
-\\
-	\sseqsema{\lquote{\{}\ \astep\ \lquote{then}\ \asseq\ \lquote{\}}}
-	\quad\defeq\quad&	
-	\stepsema{\astep} \circseq \sseqsema{\lquote{\{}\ \asseq\ \lquote{\}}}
-	\tag{inductive}
-\end{align*}
-
-\end{defn}
-
-\subsection{Steps}
-
-
-\begin{defn}[Steps]
-
-The semantics of a step is that of the action modified by any gap.
-The default `strict' gap (no communication allowed between
-this step and any previous step) does not affect the action at all.
-
-\begin{align*}
-	\stepsema{\lquote{anything}\ \anlgap\ \lquote{until}\ \anaction}
-	\quad\defeq\quad&	
-	\mathsf{RUN}\left(\lgapsema{\anlgap}{\anaction}\right) \interrupt \actsema{\anaction}
-	\tag{loose gap}
-\\
-	\stepsema{\anaction}
-	\quad\defeq\quad&	
-	\actsema{\anaction}
-	\tag{strict gap}
-\end{align*}
-\end{defn}
-
-\subsection{Gaps}
-
-\begin{defn}[Loose gaps]
-	The semantics of a loose gap is the CSP event set corresponding to the
-	difference between the `allowed' set (or, if the set is empty,
-	\(\events\). and the union of the `forbidden' set and the set of any
-	events the action following the gap can initially communicate.
-
-\begin{align*}
-	\lgapsema{}{\anaction}
-	\quad\defeq\quad&
-	\events \setminus \eventsof{\anaction}
-	\tag{no sets}
-\\
-	\lgapsema{\lquote{except}\ \amsgset}{\anaction}
-	\quad\defeq\quad&
-	\events \setminus \left(\msgsetsema{\amsgset} \cup \eventsof{\anaction}\right)
-	\tag{forbidden only}
-\\
-	\lgapsema{\lquote{in}\ \amsgset}{\anaction}
-	\quad\defeq\quad&
-	\msgsetsema{\amsgset} \setminus \eventsof{\anaction}
-	\tag{allowed only}
-\\
-	\lgapsema{\lquote{in}\ \amsgset_a\ \lquote{except}\ \amsgset_f}{\anaction}
-	\quad\defeq\quad&
-	\msgsetsema{\amsgset_a} \left(\msgsetsema{\amsgset_f} \cup \eventsof{\anaction}\right)
-	\tag{both}
-\end{align*}
-\end{defn}
-
-\begin{defn}[Gap message sets]
-For now, the semantics of a gap message set depends on treating each message
-spec as if it were an arrow message spec.  This will change when arrow and gap
-message specs diverge.
-\begin{align*}
-	\msgsetsema{\amsgset}
-	\quad\defeq\quad&
-	\bigcup_{\anarrow \in \amsgset} \bullet \arrsema{\anarrow}
-\end{align*}
-\end{defn}
-
-\begin{defn}[CSP event sets]
-For now, the event set of an action is the prefix of an arrow action, or
-the empty set for any other actions.  This will change when the prefix becomes
-inexpressible as an event set.
-\begin{align*}
-	\eventsof{\anarrow}
-	\quad\defeq\quad&
-	\{\arrsema{\anarrow}\}
-	\tag{arrow}
-\\
-	\eventsof{\anaction}
-	\quad\defeq\quad&
-	\emptyset
-	\tag{anything else}
-\end{align*}
-\end{defn}
-
-\subsection{Actions}
-
-\begin{defn}[Actions]
-
-The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
-prefixing termination.  The semantics of a loop delegates to a separate rule
-over its label and subsequence.
-For now, a final action does not terminate.
-
-\begin{align*}
-	\actsema{\anarrow}
-	\quad\defeq\quad&
-	\left(
-	\arrsema{\anarrow}
-	\then
-	\Skip
-	\right)
-	\tag{arrow action}
-\\
-	\actsema{\lquote{loop}\ \aname\ \asseq}
-	\quad\defeq\quad&
-	\left(
-	\loopsema{\asseq}{\aname}
-	\right)
-	\tag{loop action}
-\\
-	\actsema{\lquote{end}}
-	\quad\defeq\quad&
-	\Stop
-	\tag{final action}
-\end{align*}
-
-\end{defn}
-
-\begin{defn}[Arrows]
-
-The semantics of arrows depends on the topic of their message specs, and, for
-certain topics, the direction (inbound from world to target, or outbound from
-target to world).  For now, neither operations nor events can have arguments.
-
-\newcommand{\nsof}[1]{\mathsf{ns}(#1)}
-
-Let \(\nsof{\refto{\atarget}}\) be the name of the module, controller, or state machine
-referred to by \(\refto{\atarget}\).
-
-\begin{align*}
-	\arrsema{\lquote{operation}\ \anop\ \lquote{from}\ \refto{\aworld}\ \lquote{to}\ \refto{\atarget}}
-	\quad\defeq\quad&
-	\nsof{\refto{\atarget}}::{\anop}\mathsf{Call}
-	\tag{operation}
-\\
-	\arrsema{\lquote{event}\ \anevent\ \lquote{from}\ \refto{\aworld}\ \lquote{to}\ \refto{\atarget}}
-	\quad\defeq\quad&
-	\nsof{\refto{\atarget}}::{\anevent}.\mathsf{in}
-	\tag{inbound event}
-\\
-	\arrsema{\lquote{event}\ \anevent\ \lquote{from}\ \refto{\atarget}\ \lquote{to}\ \refto{\aworld}}
-	\quad\defeq\quad&
-	\nsof{\refto{\atarget}}::{\anevent}.\mathsf{out}
-	\tag{outbound event}
-\end{align*}
-
-\end{defn}
-
-\begin{defn}[Loops]
-
-For now, only infinite loops exist, and their semantics is that of the loop
-subsequence placed in a recursive process.
-
-\begin{align*}
-	\loopsema{\asseq}{\aname}
-	\quad\defeq\quad&
-	\circmu \mathsf{LOOP}_\aname \bullet \left(\sseqsema{\asseq} \circseq \mathsf{LOOP}_\aname\right)
-	\tag{infinite loop}
-\end{align*}
-
-\end{defn}
-
+\input{semantics}
 
 \end{document}
