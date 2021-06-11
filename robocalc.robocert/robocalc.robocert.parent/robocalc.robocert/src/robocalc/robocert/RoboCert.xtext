@@ -134,22 +134,30 @@ SequenceAction:
  * A gap specification.
  */
 SequenceGap:
-	'anything' {LooseGap} allowed=AllowSet forbidden=ForbidSet  'until' |
-	{StrictGap}
+	{SequenceGap} ('anything' allowed=AllowSet forbidden=ForbidSet 'until' | allowed=EmptySet forbidden=EmptySet)
 ;
 
 /**
- * A gap message set that defaults to being empty, but may be extended with 'in {...}'.
+ * A gap message set that defaults to being universal, but may be filtered with 'in {...}'.
  */
 AllowSet returns GapMessageSet:
-	{GapMessageSet} ('in' GapMessageSetTail)?
+	{ExtensionalGapMessageSet} 'in' GapMessageSetTail |
+	{UniverseGapMessageSet}
 ;
 
 /**
  * A gap message set that defaults to being empty, but may be extended with 'except {...}'.
  */
-ForbidSet returns GapMessageSet:
-	{GapMessageSet} ('except' GapMessageSetTail)?
+ForbidSet returns ExtensionalGapMessageSet:
+	{ExtensionalGapMessageSet} ('except' GapMessageSetTail)?
+;
+
+/**
+ * Pseudo-rule that pulls both gap message sets to empty if we don't see an
+ * explicit rule.
+ */
+EmptySet returns ExtensionalGapMessageSet:
+	{ExtensionalGapMessageSet}
 ;
 
 /**

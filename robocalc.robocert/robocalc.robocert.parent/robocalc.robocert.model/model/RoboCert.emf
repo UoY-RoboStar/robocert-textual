@@ -166,44 +166,48 @@ class SequenceStep {
 
 /**
  * A specification of which internal communications can happen before a
- * sequence step, or at the end of a sequence diagram.
+ * sequence step.
+ *
+ * Gaps may permit implicit communications between actions, according to the
+ * allowed and forbidden message sets.  An empty allow set, for instance,
+ * permits no communications. 
  */
-abstract class SequenceGap {
-}
-
-/**
- * A sequence gap that permits no implicit communications.
- */
-class StrictGap extends SequenceGap {
-}
-
-/**
- * A sequence gap that permits implicit communications.
- */
-class LooseGap extends SequenceGap {
+class SequenceGap {
 	/**
-	 * The messages forbidden by this gap.
-	 * The empty set is considered to be 'all messages are allowed'.
+	 * The messages allowed by this gap.
 	 */
 	val GapMessageSet[1] allowed;
 
 	/**
 	 * The messages forbidden by this gap.
-	 * The empty set is considered to be 'no messages are forbidden'.
+	 *
+	 * It makes little sense to have a universal forbidden set, so we permit only an
+	 * extensional set here.
 	 */
-	val GapMessageSet[1] forbidden;
+	val ExtensionalGapMessageSet[1] forbidden;
 }
 
 /**
  * A set of gap message specs, used in loose sequence gaps.
  */
-class GapMessageSet {
+abstract class GapMessageSet {
+}
+
+/**
+ * A message set that extensionally enumerates allowed or forbidden messages.
+ */
+class ExtensionalGapMessageSet extends GapMessageSet {
 	/**
 	 * The message specifications held by this message set.
 	 */
-	val GapMessageSpec[*]#parent messages;
+	!ordered val GapMessageSpec[*]#parent messages;
 }
 
+/**
+ * A message set that includes all messages.
+ */
+class UniverseGapMessageSet extends GapMessageSet {
+}
 
 /**
  * An action in a sequence diagram.
@@ -281,9 +285,9 @@ class ArrowMessageSpec extends MessageSpec {
  */
 class GapMessageSpec extends MessageSpec {
 	/**
-	 * The parent gap.
+	 * The parent gap message set.
 	 */
-	ref GapMessageSet[1]#messages parent;
+	ref ExtensionalGapMessageSet[1]#messages parent;
 }
 
 //

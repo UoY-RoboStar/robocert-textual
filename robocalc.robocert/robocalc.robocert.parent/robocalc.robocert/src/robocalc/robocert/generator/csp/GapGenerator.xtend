@@ -2,10 +2,11 @@ package robocalc.robocert.generator.csp
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.SequenceGap
-import robocalc.robocert.model.robocert.StrictGap
 import robocalc.robocert.model.robocert.SequenceAction
-import robocalc.robocert.model.robocert.LooseGap
 import robocalc.robocert.model.robocert.GapMessageSet
+import robocalc.robocert.model.robocert.ExtensionalGapMessageSet
+import robocalc.robocert.model.robocert.UniverseGapMessageSet
+import robocalc.robocert.generator.utils.GapExtensions
 
 /**
  * Generates CSP for the gaps between actions.
@@ -13,65 +14,45 @@ import robocalc.robocert.model.robocert.GapMessageSet
 class GapGenerator {
 	@Inject extension ActionCSPEventSetGenerator
 	@Inject extension MessageSpecGenerator
+	@Inject extension GapExtensions
 
 	/**
-	 * Generates CSP for a strict gap.
+	 * Generates CSP for a gap.
 	 * 
-	 * A strict gap has no CSP emitted, so this just returns the empty string.
-	 * 
-	 * @param gap     the strict gap.
-	 * @param action  the action adjacent to the gap (ignored)
-	 * 
-	 * @return the generated CSP.
-	 */
-	def dispatch generate(StrictGap gap, SequenceAction action) ''''''
-
-	/**
-	 * Generates CSP for a loose gap.
-	 * 
-	 * @param gap     the loose gap.
-	 * @param action  the action adjacent to the gap, used for calculating
-	 *                events set to remove from the gap process.
-	 * 
-	 * @return the generated CSP.
-	 */
-	def dispatch generate(LooseGap gap, SequenceAction action) '''
-	RUN(
-		«gap.generateLooseSet(action)»
-	) /\ '''
-
-	/**
-	 * Generates fallback CSP for an unsupported gap.
-	 * 
-	 * @param gap     the gap.
+	 * @param it      the gap.
 	 * @param action  the action adjacent to the gap.
 	 * 
 	 * @return the generated CSP.
 	 */
-	def dispatch generate(SequenceGap gap, SequenceAction action) '''{- unsupported gap: «gap» -} '''
+	def generate(SequenceGap it, SequenceAction action) '''
+	«IF allowsMessages»RUN(
+		«generateEventSet(action)»
+	) /\ «ENDIF»'''
 
-	private def generateLooseSet(LooseGap gap, SequenceAction action) '''
-		«IF gap.forbidden.present || action.hasCSPEvents»
-			diff(«gap.allowed.generateAllowSet», «gap.forbidden.generateForbidSet(action)»)
+	private def generateEventSet(SequenceGap it, SequenceAction action) '''
+		«IF hasForbidSet(action)»
+			diff(«allowed.generateSet», «generateForbidSet(action)»)
 		«ELSE»
-			«gap.allowed.generateAllowSet»
+			«allowed.generateSet»
 		«ENDIF»
 	'''
 
 	/**
-	 * Generates a CSP event set for an allow-set.
+	 * Does this sequence gap need to exclude messages when preceding the
+	 * given action?
 	 * 
-	 * Allow sets are unusual in that the empty allow set is special-cased as
-	 * 'Events', ie the universal set.  This may change in future.
+	 * @param it      the sequence gap in question.
+	 * @param action  the action after the gap.
 	 * 
-	 * @param set  the allow-set.
-	 * 
-	 * @return the generated CSP.
+	 * @return true if, and only if, there is at least one message in the
+	 *         forbidden set or one event in the action's CSP events.
 	 */
-	private def generateAllowSet(GapMessageSet set) '''«IF set.present»{|«set.generateSet»|}«ELSE»Events«ENDIF»'''
+	private def hasForbidSet(SequenceGap it, SequenceAction action) {
+		forbidden.hasMessages || action.hasCSPEvents
+	}
 
 	/**
-	 * Generates a CSP event set for a forbid-set.
+	 * Generates a CSP event set for a gap's forbid set.
 	 * 
 	 * Forbid sets also include any CSP events that the adjacent action can
 	 * accept.  This is to avoid the possibility of both the gap and the action
@@ -80,26 +61,44 @@ class GapGenerator {
 	 * NOTE: we may need to change this if we ever generalise gap message sets
 	 * away from being extensional.
 	 */
-	private def generateForbidSet(GapMessageSet set,
-		SequenceAction action) '''{|«set.generateSet»«IF action.hasCSPEvents», «action.generateCSPEventSet»«ENDIF»|}'''
+	private def generateForbidSet(SequenceGap it,
+		SequenceAction action) '''{|«forbidden.generateSetContents»«IF action.hasCSPEvents», «action.generateCSPEventSet»«ENDIF»|}'''
 
 	/**
-	 * Generates a CSP event set for a gap message set.
+	 * Generates a CSP event set for an extensional gap message set.
 	 * 
 	 * @param set  the message set for which we are generating CSP.
 	 * 
-	 * @return generated CSP for the gap message set, (less the set delimiters).
+	 * @return generated CSP for the gap message set.
 	 */
-	private def generateSet(
-		GapMessageSet set) '''«FOR m : set.messages SEPARATOR ', '»«m.generateCSPEventSet»«ENDFOR»'''
+	private def dispatch generateSet(ExtensionalGapMessageSet it) '''{|«generateSetContents»|}'''
 
 	/**
-	 * @return whether this message set is present (non-null and has messages).
+	 * Generates a CSP event set for a universe gap message set.
+	 * 
+	 * @param set  the message set for which we are generating CSP.
+	 * 
+	 * @return generated CSP for the gap message set.
 	 */
-	private def isPresent(GapMessageSet set) {
-		// TODO: check if this is actually necessary
-		// TODO: move to metamodel?
-		!(set?.messages.isNullOrEmpty)
-	}
+	private def dispatch generateSet(UniverseGapMessageSet it) '''Events'''
+
+	/**
+	 * Fallback for generating an event set for an unknown gap message set.
+	 * 
+	 * @param it  the message set.
+	 * 
+	 * @return generated CSP for the gap message set (less the set delimiters).
+	 */
+	private def dispatch generateSet(GapMessageSet it) '''{- UNKNOWN GAP MESSAGE SET: «it» -}'''
+
+	/**
+	 * Generates the inner list of CSP events for an extensional gap message set.
+	 * 
+	 * @param set  the message set for which we are generating CSP.
+	 * 
+	 * @return generated CSP for the gap message set (less the set delimiters).
+	 */
+	private def generateSetContents(
+		ExtensionalGapMessageSet it) '''«FOR m : messages SEPARATOR ', '»«m.generateCSPEventSet»«ENDFOR»'''
 
 }
