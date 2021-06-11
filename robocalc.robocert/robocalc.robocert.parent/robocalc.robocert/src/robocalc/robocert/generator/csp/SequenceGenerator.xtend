@@ -27,8 +27,9 @@ class SequenceGenerator implements SubsequenceGenerator {
 		exports
 			Sequence =
 				«body.generate»
+			«target.generateOpenTargetDef»
 			Target =
-				«target.target.generate»
+				«target.generateClosedTarget(null)»
 		endmodule
 	'''
 	

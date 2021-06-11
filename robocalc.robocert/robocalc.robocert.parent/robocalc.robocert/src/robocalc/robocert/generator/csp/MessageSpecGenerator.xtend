@@ -6,7 +6,7 @@ import robocalc.robocert.generator.ArrowDirection
 import robocalc.robocert.model.robocert.World
 import robocalc.robocert.model.robocert.Actor
 import robocalc.robocert.generator.utils.TargetExtensions
-import robocalc.robocert.model.robocert.TargetActor
+import robocalc.robocert.model.robocert.Target
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -56,7 +56,7 @@ class MessageSpecGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch specDirection(World from, TargetActor to) {
+	private def dispatch specDirection(World from, Target to) {
 		ArrowDirection::Input
 	}
 
@@ -66,7 +66,7 @@ class MessageSpecGenerator {
 	 * @param from  the from-actor.
 	 * @param to    the to-actor.
 	 */
-	private def dispatch specDirection(TargetActor from, World to) {
+	private def dispatch specDirection(Target from, World to) {
 		ArrowDirection::Output
 	}
 
@@ -91,11 +91,11 @@ class MessageSpecGenerator {
 	 */
 	private def namespaceFromPair(Actor from, Actor to) {
 		switch from {
-			TargetActor:
-				from.target.namespace
+			Target:
+				from.namespace
 			default:
 				switch to {
-					TargetActor: to.target.namespace
+					Target: to.namespace
 					default: "UNSUPPORTED_ACTORS"
 				}
 		}

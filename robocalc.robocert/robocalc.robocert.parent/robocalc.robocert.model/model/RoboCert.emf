@@ -62,7 +62,7 @@ class Sequence extends robochart.NamedElement {
 	/**
 	 * The target actor of the sequence diagram.
 	 */
-	val TargetActor[1]#sequence target;
+	val Target[1]#sequence target;
 	/**
 	 * The world actor of the sequence diagram.
 	 */
@@ -95,27 +95,19 @@ class World extends Actor {
 }
 
 /**
- * An actor referring to a target.
- *
- * This class serves mainly to attach a name to a target so it can be referred
- * to in arrows.
+ * A target of a sequence.
  */
-class TargetActor extends Actor {
+abstract class Target extends Actor {
 	/**
 	 * The sequence to which this actor is attached.
 	 */
 	ref Sequence[1]#target sequence;
-
+	
 	/**
-	 * The enclosed target.
+	 * An initial instantiation to be applied to the target.
+	 * Assertions may apply a further instantiation.
 	 */
-	val Target[1] target;
-}
-
-/**
- * A target of a sequence.
- */
-abstract class Target {
+	val TargetInstantiation[1] instantiation;
 }
 
 /**
@@ -126,32 +118,28 @@ class RCModuleTarget extends Target {
 }
 
 /**
- * A sequence target overriding constants on another sequence target.
+ * Specifies a (partial) instantiation of a target.
  */
-class OverrideTarget extends Target {
+class TargetInstantiation {
 	/**
-	 * The overridden target.
+	 * Any constant overrides.
 	 */
-	val Target[1] target;
-	/**
-	 * The overrides being applied.
-	 */
-	val ConstOverride[+] overrides;
+	val ConstAssignment[*] constants;
 }
 
 /**
  * A constant override.
  */
-class ConstOverride {
+class ConstAssignment {
 	// NOTE: this would ideally be a Map.Entry, but I couldn't get
 	// Xtend's serializer code generator to work with EMaps. 
 
 	/**
-	 * The constant being overridden.
+	 * The constant being assigned.
 	 */
 	ref robochart.Variable[1] key;
 	/**
-	 * The new value of the constant.
+	 * The expression containing the new value of the constant.
 	 */
 	val robochart.Expression[1] value;
 }
@@ -371,9 +359,9 @@ class SequenceAssertion extends Assertion {
 	 */
 	attr SequenceAssertionType[1] type;
 	/**
-	 * The target of the assertion, if different from the sequence's target.
+	 * Assertion-level instantiation applied to this sequence's target.
 	 */
-	val Target[?] customTarget;
+	val TargetInstantiation[1] instantiation;
 	/**
 	 * The model under which this assertion should be checked if converted to (untimed) CSP.
 	 * 

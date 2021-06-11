@@ -5,7 +5,6 @@ package robocalc.robocert.scoping
 
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import robocalc.robocert.model.robocert.ConstOverride
 import static robocalc.robocert.model.robocert.RobocertPackage.Literals.*
 import static extension org.eclipse.xtext.EcoreUtil2.getContainerOfType
 import org.eclipse.xtext.scoping.Scopes
@@ -13,6 +12,8 @@ import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.generator.utils.TargetExtensions
 import com.google.inject.Inject
 import org.eclipse.xtext.scoping.IScope
+import robocalc.robocert.model.robocert.ConstAssignment
+import robocalc.robocert.model.robocert.SequenceAssertion
 
 /**
  * This class contains custom scoping description.
@@ -28,17 +29,17 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	}
 	
 	/**
-	 * Special scoping for overrides in a constant override.
+	 * Special scoping for constants in a constant assignment.
 	 * 
 	 * @param context    the scoping context.
 	 * @param reference  the reference.
 	 * 
 	 * @return  the provided scope.
 	 */
-	private def dispatch getScopeInner(ConstOverride context, EReference reference) {
+	private def dispatch getScopeInner(ConstAssignment context, EReference reference) {
 		var IScope scope = null
-		if (reference == CONST_OVERRIDE__KEY) {
-			scope = context.constOverrideScope
+		if (reference == CONST_ASSIGNMENT__KEY) {
+			scope = context.constAssignmentScope
 		}
 		
 		scope ?: super.getScope(context, reference)	
@@ -56,8 +57,27 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 		super.getScope(context, reference)
 	}
 	
-	private def constOverrideScope(ConstOverride it) {
+	private def constAssignmentScope(ConstAssignment it) {
+		sequenceConstAssignmentScope ?: assertionConstAssignmentScope
+	}
+
+	/**
+	 * Tries to get the scope of a constant assignment by walking back to a
+	 * target actor, then retrieving its parametrisation.
+	 */
+	private def sequenceConstAssignmentScope(ConstAssignment it) {
+		// TODO(@MattWindsor91): this should be part of the metamodel, somehow.
 		getContainerOfType(Target)?.targetScope
+	}
+	
+	/**
+	 * Gets the target of a constant assignment by walking back to an
+	 * assertion, then retrieving its sequence's target's uninstantiated
+	 * constants.
+	 */
+	 private def assertionConstAssignmentScope(ConstAssignment it) {
+		// TODO(@MattWindsor91): this should be part of the metamodel, somehow.
+		getContainerOfType(SequenceAssertion)?.sequence?.target?.uninstantiatedTargetScope
 	}
 	
 	/**
@@ -69,5 +89,16 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	 */
 	private def targetScope(Target it) {
 		Scopes.scopeFor(constants.toIterable)
+	} 
+	
+	/**
+	 * Produces a scope containing any uninstantiated constants defined on a target.
+	 * 
+	 * @param it  the target in question.
+	 * 
+	 * @return  the target's constants as a scope.
+	 */
+	private def uninstantiatedTargetScope(Target it) {
+		Scopes.scopeFor(uninstantiatedConstants.toIterable)
 	} 
 }

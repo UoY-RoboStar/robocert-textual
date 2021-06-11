@@ -88,7 +88,7 @@ class AssertionGenerator {
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
 	private def generateTarget(SequenceAssertion it) {
-		customTarget?.generate ?: standardTarget
+		instantiated ? generateInstantiatedTarget : generateStandardTarget
 	}
 	
 	/**
@@ -96,8 +96,19 @@ class AssertionGenerator {
 	 * 
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
-	private def standardTarget(SequenceAssertion it)
+	private def generateStandardTarget(SequenceAssertion it)
 		'''«sequence.name»::Target'''
+
+	/**
+	 * Checks whether this sequence assertion has instantiations.
+	 */
+	private def isInstantiated(SequenceAssertion it) {
+		!instantiation.constants.empty
+	}
+	
+	private def generateInstantiatedTarget(SequenceAssertion it) {
+		sequence.target.generateClosedTarget(instantiation)
+	}
 
 	/**
 	 * @return the appropriate FDR model shorthand for this assertion.

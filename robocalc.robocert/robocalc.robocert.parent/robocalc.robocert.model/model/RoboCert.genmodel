@@ -104,6 +104,7 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceAssertion/sequence"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//SequenceAssertion/isNegated"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//SequenceAssertion/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceAssertion/targetOverrides"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//SequenceAssertion/model"/>
     </genClasses>
   </genPackages>

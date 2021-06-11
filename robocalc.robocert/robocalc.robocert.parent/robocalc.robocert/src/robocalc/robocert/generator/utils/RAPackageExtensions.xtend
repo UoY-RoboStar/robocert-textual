@@ -27,7 +27,7 @@ class RAPackageExtensions {
 	}
 
 	private def Iterator<NamedElement> getReferencedElements(Sequence it) {
-		target.target.targetElement
+		target.targetElement
 	}
 
 	private def dispatch Iterator<NamedElement> getTargetElement(RCModuleTarget it) {

@@ -50,7 +50,7 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'for' target=TargetActor ',' world=World body=Subsequence
+	'sequence' name=ID 'for' target=Target ',' world=World body=Subsequence
 ;
 
 /**
@@ -63,19 +63,15 @@ Subsequence:
 /**
  * The target actor of a sequence diagram.
  */
-TargetActor:
-	target=Target 'as' name=ID
+Target:
+	BasicTarget instantiation=TargetInstantiation 'as' name=ID
 ;
 
 /**
- * An actor of a sequence diagram.
+ * A target override in a sequence diagram.
  */
-Target:
-	SimpleTarget ('with' {OverrideTarget.target = current} ConstOverrideList)?
-;
-
-fragment ConstOverrideList *:
-	'{' (overrides += ConstOverride) (',' overrides += ConstOverride)* '}'
+TargetInstantiation:
+	{TargetInstantiation} ('with' '{' (constants += ConstAssignment) (',' constants += ConstAssignment)* '}')?
 ;
 
 /**
@@ -86,13 +82,16 @@ fragment AssignWords *:
 ;
 
 /**
- * A constant override.
+ * A constant assignment.
  */
-ConstOverride returns ConstOverride:
+ConstAssignment:
 	key=[Variable] AssignWords value=Expression
 ;
 
-SimpleTarget returns Target:
+/**
+ * A target of a sequence diagram.
+ */
+BasicTarget returns Target:
 	 'module' {RCModuleTarget} module=[RCModule|QualifiedName]
 ;
 
@@ -221,7 +220,7 @@ SequenceAssertion:
         | 'does' isNegated?='not' type=DoesNotSequenceAssertionType
         | type=DoesSequenceAssertionType
         )
-    	('on' customTarget=Target)?
+    instantiation=TargetInstantiation
 ;
 
 /**
