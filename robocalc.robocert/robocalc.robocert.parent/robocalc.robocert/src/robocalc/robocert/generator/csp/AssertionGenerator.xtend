@@ -96,8 +96,9 @@ class AssertionGenerator {
 	 * 
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
-	private def generateStandardTarget(SequenceAssertion it)
-		'''«sequence.name»::Target'''
+	private def generateStandardTarget(SequenceAssertion it) {
+		sequence.target.generateClosedTargetRef
+	}
 
 	/**
 	 * Checks whether this sequence assertion has instantiations.
@@ -107,7 +108,7 @@ class AssertionGenerator {
 	}
 	
 	private def generateInstantiatedTarget(SequenceAssertion it) {
-		sequence.target.generateClosedTarget(instantiation)
+		sequence.target.generateOpenTargetRef(instantiation)
 	}
 
 	/**
