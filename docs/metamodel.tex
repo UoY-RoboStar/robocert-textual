@@ -12,9 +12,9 @@
 \newcommand{\marrowaction}{\metaref{ArrowAction}}
 \newcommand{\mloopaction}{\metaref{LoopAction}}
 \newcommand{\mfinalaction}{\metaref{FinalAction}}
-\newcommand{\mloosegap}{\metaref{LooseGap}}
-\newcommand{\mstrictgap}{\metaref{StrictGap}}
 \newcommand{\mgapmessageset}{\metaref{GapMessageSet}}
+\newcommand{\mextensionalgapmessageset}{\metaref{ExtensionalGapMessageSet}}
+\newcommand{\muniversegapmessageset}{\metaref{UniverseGapMessageSet}}
 \newcommand{\mmessagespec}{\metaref{MessageSpec}}
 \newcommand{\marrowmessagespec}{\metaref{ArrowMessageSpec}}
 \newcommand{\mgapmessagespec}{\metaref{GapMessageSpec}}
@@ -58,7 +58,7 @@ types of content:
 \begin{itemize}
 \item
 	\msequence{}
-	(\cref{sec:metamodel-sequences})
+	(\cref{sec:metamodel-sequences}):
 	a sequence diagram;
 \item
 	\mcspfragment:
@@ -118,40 +118,36 @@ A \msequencestep{} is a single step in a \msubsequence.  It consists of a
 
 A \msequencegap{} represents a condition on any communication\footnote{In PSCs,
 this would correspond to \emph{intraMSG}s.} that can happen
-\emph{before} a \msequenceaction.  There are two types of gap, named by analogy
-to the presence or absence of a \emph{strict operator} in PSCs:
-
-\begin{itemize}
-\item
-	\mstrictgap, which forbids all such communication (inducing
-	a \emph{strict} ordering between two actions);
-\item
-	\mloosegap, which allows some or all such communication (inducing
-	a \emph{loose} ordering between two actions);
-\end{itemize}
-
-\paragraph{Strict gaps}
-
-A \mstrictgap{} contains nothing.
-\todo{Perhaps a strict gap can just be a loose gap with the allowed set held
-empty.  The current semantics of an empty allowed set (= universal set) doesn't
-permit this, though.}
-
-\paragraph{Loose gaps}
-
-A \mloosegap{} contains two \mgapmessageset s: one specifying the messages
+\emph{before} a \msequenceaction.  
+It contains two \mgapmessageset s: one specifying the messages
 \emph{allowed} to pass inside the gap, and another specifying the messages
-\emph{forbidden} to pass.  If empty, the \emph{allowed} set may be taken to be
-the universe \todo{this is somewhat inelegant, and prevents us unifying the
-two types of gap}.
+\emph{forbidden} to pass.\footnote{The \emph{forbidden} set is always an
+\mextensionalgapmessageset, as any gap with a universal
+\emph{forbidden} set would always be equivalent to one with an empty
+\emph{allowed} set.
+}
 
 \paragraph{Gap message sets}
 
-A \mgapmessageset{} is a list of zero or more \mgapmessagespec s, themselves
-a type of \mmessagespec{} (see \cref{sec:metamodel-messages}.
+A \mgapmessageset{} is an expression of the set of messages allowed or forbidden
+inside a \msequencegap.  There are two types of \mgapmessageset:
+
+\begin{itemize}
+\item
+	a \muniversegapmessageset{} represents the universal set containing 
+	all possible messages, and
+	captures a lack of specific restriction on
+	the \emph{allowed} set of a \msequencegap;
+\item	
+	an \mextensionalgapmessageset{} is a set (expressed as an unordered list) of
+	zero or more \mgapmessagespec s, themselves
+	a type of \mmessagespec{} (\cref{sec:metamodel-messages}).
+\end{itemize}
+
 There is not yet any meaningful extra data stored in
 \mgapmessagespec s that is not present in \mmessagespec s, but this is subject
 to change.
+
 
 \subsection{Actions}\label{sec:metamodel-sequences-actions}
 
