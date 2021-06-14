@@ -142,7 +142,7 @@ SequenceGap:
  */
 AllowSet returns GapMessageSet:
 	{ExtensionalGapMessageSet} 'in' GapMessageSetTail |
-	{UniverseGapMessageSet}
+	{UniverseGapMessageSet} ('in' 'universe')?
 ;
 
 /**
