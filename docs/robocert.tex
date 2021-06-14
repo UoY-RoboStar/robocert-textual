@@ -61,8 +61,10 @@
 	as,
 	end,
 	event,
+	except,
 	from,
 	for,
+	in,
 	loop,
 	module,
 	operation,
@@ -76,6 +78,12 @@
 	morecomment=[s]{/*}{*/},
 	morestring=[b]",
 }
+\lstdefinestyle{Example}{
+	title={\textsf{\footnotesize Textual syntax example}},
+	language=RoboCert,
+	frame=single,
+}
+
 \newcommand{\lquote}[1]{\text{`\lstinline[language=RoboCert]{#1}'}}
 
 \newcommand{\langname}{{\sffamily\slshape RoboCert}}
