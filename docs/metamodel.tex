@@ -248,13 +248,26 @@ explicitly capture deadlock, but currently so does \mfinalaction.}
 
 \paragraph{Final actions}
 
-A \mfinalaction{} represents the end of a sequence diagram, corresponding
-to a point in time where the sequence target has either terminated or stopped
-responding.  It primarily serves to allow a final \msequencegap{} to specify
+A \mfinalaction{} represents the end of a sequence diagram.  After a
+\mfinalaction, a sequence target may terminate correctly or deadlock, but may
+not accept further communications.
+
+\todo{Is the described behaviour (eg CSP STOP) right?}
+
+\todo{How does this interact with loops (eg \lquote{loop L \{ end \}})?}
+
+\todo{Could we express deadlocking also as \lquote{loop L \{\}} at some point?}
+
+\todo{Is the name appropriately descriptive?}
+
+\todo{Should the presence of this or an infinite loop be a well-formedness
+condition?  If not, then the semantics of a diagram missing one of these would
+be that it requires successful termination --- in which case, the name would
+probably need to change from \lquote{end}.}
+
+Note that the final \msequencegap{} before a \mfinalaction{} captures
 any permitted communications after the behaviour explicitly specified by the
 diagram has occurred.
-\todo{Is the termination behaviour correct here?  Are there any useful
-parallels between this and a hypothetical empty-bodied loop action?}
 
 
 \section{Message specifications and topics}\label{sec:metamodel-messages}
