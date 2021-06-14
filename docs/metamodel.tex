@@ -3,6 +3,7 @@
 % Metamodel references.
 \newcommand{\mnamedelement}{\metaref{NamedElement}}
 \newcommand{\mrapackage}{\metaref{RAPackage}}
+\newcommand{\mrcpackage}{\metaref{RCPackage}}
 \newcommand{\mbasicpackage}{\metaref{BasicPackage}}
 \newcommand{\msequence}{\metaref{Sequence}}
 \newcommand{\msubsequence}{\metaref{Subsequence}}
@@ -51,9 +52,11 @@ be replaced with PDFs.}
 
 \Cref{fig:metamodel-top} is the top-level metamodel diagram for \langname.
 
-Each \langname{} script contains an \mrapackage, which is a type of RoboStar
-\mbasicpackage.  Each \mrapackage{} can contain zero or more of each of these
-types of content:
+Each \langname{} script contains an \mrapackage,\footnote{\mrapackage{} stands
+for `RoboStar Assertions package'; we use this name because \mrcpackage{} is
+already used for RoboChart packages.}
+which is a type of RoboStar \mbasicpackage.
+Each \mrapackage{} can contain zero or more of each of these types of content:
 
 \begin{itemize}
 \item
