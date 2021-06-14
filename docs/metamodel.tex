@@ -20,8 +20,8 @@
 \newcommand{\marrowmessagespec}{\metaref{ArrowMessageSpec}}
 \newcommand{\mgapmessagespec}{\metaref{GapMessageSpec}}
 \newcommand{\mmessagetopic}{\metaref{MessageTopic}}
-\newcommand{\meventmessagetopic}{\metaref{EventMessageTopic}}
-\newcommand{\moperationmessagetopic}{\metaref{OperationMessageTopic}}
+\newcommand{\meventtopic}{\metaref{EventTopic}}
+\newcommand{\moperationtopic}{\metaref{OperationTopic}}
 \newcommand{\mcspfragment}{\metaref{CSPFragment}}
 \newcommand{\mnamedassertion}{\metaref{NamedAssertion}}
 \newcommand{\massertion}{\metaref{Assertion}}
@@ -30,11 +30,13 @@
 \newcommand{\mcspmodel}{\metaref{CSPModel}}
 \newcommand{\mworld}{\metaref{World}}
 \newcommand{\mactor}{\metaref{Actor}}
-\newcommand{\mtargetactor}{\metaref{TargetActor}}
 \newcommand{\mtarget}{\metaref{Target}}
+\newcommand{\mtargetinstantiation}{\metaref{TargetInstantiation}}
 \newcommand{\mrcmodule}{\metaref{RCModule}}
 \newcommand{\mrcmoduletarget}{\metaref{RCModuleTarget}}
 \newcommand{\moverridetarget}{\metaref{OverrideTarget}}
+\newcommand{\mvariable}{\metaref{Variable}}
+\newcommand{\mexpression}{\metaref{Expression}}
 
 This section introduces the abstract syntax (metamodel) of \langname.
 It is structured in a top-down manner, with each section introducing a group of
@@ -59,7 +61,7 @@ with those in this report.}
 
 \begin{figure}
 	\centering
-	\includegraphics[width=.8\textwidth]{diagrams/top.png}
+	\includegraphics[width=.85\textwidth]{diagrams/top.png}
 	\caption{Class diagram for the top of the \langname{} metamodel.}
 	\label{fig:metamodel-top}
 \end{figure}
@@ -108,10 +110,10 @@ sequence diagrams.
 
 \begin{lstlisting}[style=Example]
 sequence Example
-  for module ModuleName as M,  // target actor (RoboChart module)
-      world             as W   // world actor
+  for module ModuleName as M,  // RCModuleTarget actor
+      world             as W   // World actor
 {
-	anything until end  // subsequence
+    anything until end  // Subsequence
 }
 \end{lstlisting}
 
@@ -124,7 +126,7 @@ that contains:
 	containing the body of the diagram;
 \item
 	two \mactor s (\cref{sec:metamodel-actors}):
-	a \mtargetactor{} (\cref{ssec:metamodel-actors-target})
+	a \mtarget{} (\cref{ssec:metamodel-actors-target})
 	and a \mworld{} (\cref{ssec:metamodel-actors-world}).
 \end{itemize}
 
@@ -132,11 +134,11 @@ that contains:
 
 \begin{lstlisting}[style=Example]
 {
-	anything until operation O1() from M to W  // step
+    anything until operation O1() from M to W  // SequenceStep
 then
-	operation O2() from M to W                 // step
+    operation O2() from M to W                 // SequenceStep
 then
-	end                                        // step
+    end                                        // SequenceStep
 }
 \end{lstlisting}
 
@@ -149,8 +151,12 @@ may contain multiple nested \msubsequence s introduced by constructs such as
 \subsection{Steps}\label{ssec:metamodel-sequences-steps}
 
 \begin{lstlisting}[style=Example]
-anything until             // gap
-operation O() from M to W  // action
+anything until operation O() from M to W
+// SequenceStep with explicit SequenceGap and SequenceAction
+
+operation O() from M to W
+// SequenceStep with explicit SequenceAction only;
+// implicit SequenceGap with empty allow set
 \end{lstlisting}
 
 A \msequencestep{} is a single step in a \msubsequence.  It consists of a
@@ -161,11 +167,14 @@ A \msequencestep{} is a single step in a \msubsequence.  It consists of a
 
 \begin{lstlisting}[style=Example]
 anything
-	in     { operation O1() from M to W, operation O2() from M to W }  // allow set
-	except { operation O2() from M to W }                              // forbid set
+    in     { operation O1() from M to W   // allowed ExtensionalGapMessageSet
+           , operation O2() from M to W }
+    // a UniverseGapMessageSet is implied for the allow set
+    // if 'in {..}' is omitted;
 
-	// a universe set is implied for the allow set if 'in {..}' is omitted
-	// an empty extensional set is implied for the forbidden set if 'except {..}' is omitted
+    except { operation O2() from M to W } // forbidden ExtensionalGapMessageSet
+    // an empty ExtensionalGapMessageSet is implied for the forbidden set
+    // if 'except {..}' is omitted
 until // only permits O1
 \end{lstlisting}
 
@@ -205,13 +214,13 @@ to change.
 \subsection{Actions}\label{sec:metamodel-sequences-actions}
 
 \begin{lstlisting}[style=Example]
-operation O1() from M to W  // arrow action
+operation O1() from M to W  // ArrowAction
 
 loop L {
-	operation O2() from M to W
-}  // loop action (taking a subsequence)
+    operation O2() from M to W
+}  // LoopAction (taking a Subsequence)
 
-end  // final action
+end  // FinalAction
 \end{lstlisting}
 
 A \msequenceaction{} is an explicit communication or control flow construct in a
@@ -263,8 +272,10 @@ message specifications (`specs').
 \subsection{Message specifications}
 
 \begin{lstlisting}[style=Example]
-operation O1() from M to W  // spec with operation topic, from actor M to actor W
-event E        from W to M  // spec with event topic, from actor W to actor M
+operation O1() from M to W  // MessageSpec with OperationTopic
+                            //   from actor M to actor W
+event E        from W to M  // MessageSpec with EventTopic
+                            //   from actor W to actor M
 \end{lstlisting}
 
 A \mmessagespec{} is a specification on the types of communication that can
@@ -274,8 +285,9 @@ respectively.}  Each \mmessagespec{} contains:
 
 \begin{itemize}
 \item
-	references to two \mactor s, representing the \emph{to} and \emph{from}
-	edges of the communication;
+	references to two \mactor s (\cref{sec:metamodel-actors}),
+	capturing the source (\emph{from}) and destination (\emph{to})
+	of the communication;
 \item
 	the \mmessagetopic{} (\cref{ssec:metamodel-messages-topics}) specifying
 	the type of communication that the spec is capturing.
@@ -283,9 +295,14 @@ respectively.}  Each \mmessagespec{} contains:
 
 \subsection{Topics}\label{ssec:metamodel-messages-topics}
 
+\begin{lstlisting}[style=Example]
+operation O1() // OperationTopic
+event E        // EventTopic
+\end{lstlisting}
+
 A \mmessagetopic{} identifies the specific type of communication in a
 \mmessagespec{}.  There are currently two types of topic, corresponding to
-RoboChart operations (\moperationmessagetopic) and events (\meventmessagetopic).
+RoboChart operations (\moperationtopic) and events (\meventtopic).
 Each contains a reference to the signature of the respective construct.
 Parameterised operations and events are not yet supported \todo{this will
 change soon}.
@@ -304,34 +321,53 @@ change soon}.
 actors.
 
 An \mactor{} is a named participant in a sequence.  The names can be used to
-specify the direction of travel in \mmessagespec{}s.
+specify the source and recipient of communications in \mmessagespec{}s.
 As mentioned in
 \cref{sec:metamodel-sequences}, there are always two actors
-attached to a sequence: a \mtargetactor{} (\cref{ssec:metamodel-actors-target})
+attached to a sequence: a \mtarget{} (\cref{ssec:metamodel-actors-target})
 and a \mworld{} (\cref{ssec:metamodel-actors-world}).
 
-\subsection{Targets and target actors}\label{ssec:metamodel-actors-target}
+\subsection{Targets}\label{ssec:metamodel-actors-target}
 
-A \mtarget{} is an \emph{anonymous} specification of the part of a robotic
-system that serves as the focus for a particular sequence diagram.  There are
-presently two types of target, with more to appear later:
+\begin{lstlisting}[style=Example]
+module ModuleName as M
+// RCModuleTarget with implicit empty TargetInstantiation
+
+module ModuleName
+    with { SOME_CONSTANT set to 4, ANOTHER_CONSTANT set to 5 }
+    as M
+// RCModuleTarget with explicit TargetInstantiation
+\end{lstlisting}
+
+A \mtarget{} references the part of a robotic system that serves as the focus
+for a particular sequence diagram.  There is
+presently one type of target, with more to appear later:
 
 \begin{itemize}
 \item
-	a \mrcmoduletarget{} references a \mrcmodule;
-\item
-	an \moverridetarget{} wraps another \mtarget, overriding constant
-	definitions.
+	a \mrcmoduletarget{} references a \mrcmodule.
 \end{itemize}
 
-A \mtargetactor{} wraps a \mtarget{} with a name, making it suitable as an
-\mactor.  The separation between \mtarget{} and \mtargetactor{} allows for
-patterns like \moverridetarget{} to exist without introducing unnecessary names.
+All forms of \mtarget{} contain a \mtargetinstantiation{} (see below), which
+is always applied to any use of that target; assertions may further instantiate
+any constants left open by the target's \mtargetinstantiation.
+
+\paragraph{Instantiations}
+
+A \mtargetinstantiation{} instantiates some or all of the constants in the
+target's parametrisation.  It contains a list of key/value pairs where each key
+is a RoboChart \mvariable{} corresponding to a constant, and each value is a
+RoboChart \mexpression{} evaluated in an arbitrary \todo{check this} scope.
 
 \subsection{Worlds}\label{ssec:metamodel-actors-world}
 
-A \mworld{} is an \mactor{} that represents the `world' outside a sequence
-diagram's target.  \mworld s do not contain any data.
+\begin{lstlisting}[style=Example]
+world as W
+\end{lstlisting}
+
+A \mworld{} is an \mactor{} that represents the `world' outside a sequence's
+\mtarget.  \mworld s do not contain any data.
+
 
 \section{Assertions}\label{sec:metamodel-assertions}
 
@@ -345,9 +381,27 @@ diagram's target.  \mworld s do not contain any data.
 \Cref{fig:metamodel-assertions} depicts the part of the metamodel concerning
 assertions.
 
+\subsection{Top-level assertions and named assertions}
+
+\begin{lstlisting}[style=Example]
+assertion AssertionName:        // NamedAssertion...
+    SequenceName does not hold  // ...containing a SequenceAssertion
+\end{lstlisting}
+
 An \massertion{} is an \emph{anonymous} assertion statement.  Currently, there is
 only one type of assertion: a \msequenceassertion{}.  \todo{This will change
 when merging with the existing language, if not sooner.}
+
+A \mnamedassertion{} binds an \massertion{} to a name.
+
+\subsection{Sequence assertions}\label{ssec:metamodel-assertions-sequence}
+
+\begin{lstlisting}[style=Example]
+SequenceName holds           // positive 'holds' SequenceAssertion
+SequenceName does not hold   // negative 'holds' SequenceAssertion
+SequenceName is observed     // positive 'is observed' SequenceAssertion
+SequenceName is not observed // negative 'is observed' SequenceAssertion
+\end{lstlisting}
 
 A \msequenceassertion{} is an assertion about a particular \msequence{} with
 respect to a particular \mtarget.  By default, the \mtarget{} is that of the
@@ -363,4 +417,3 @@ target' (reverse refinement).  The assertion can be negated.  The choice of
 decided the best approach to allow the appropriate models in both timed and
 untimed modes.  Currently, everything is untimed, and this too will change.}
 
-A \mnamedassertion{} binds an \massertion{} to a name.
