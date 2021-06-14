@@ -1,6 +1,5 @@
-\documentclass[a4paper,11pt]{report}
+\documentclass[a4paper]{memoir}
 \usepackage[T1]{fontenc}
-\usepackage[a4paper,margin=1.5cm]{geometry}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -11,21 +10,46 @@
 \usepackage{listings}
 \usepackage{xcolor}
 % fonts
-\usepackage{libertine}
-\usepackage{inconsolata}
+\usepackage{mathptmx}
+\usepackage{tgadventor}
+\usepackage[scaled]{beramono}
 
 \usepackage{hyperref}
 \usepackage{cleveref}
 
 % Open question.
 \newcommand{\todo}[1]{\textcolor{orange}{(#1)}}
-\newcommand{\metaref}[1]{{\sffamily\slshape #1}}
+\newcommand{\metaref}[1]{{\fontfamily{qhv}\selectfont #1}}
 
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}
 
 \newcommand{\thead}[1]{\textbf{#1}}
 \newcommand{\tsubhead}[1]{\textit{#1}}
+
+\setlrmarginsandblock{2.5cm}{2cm}{*}
+\setulmarginsandblock{2cm}{*}{1}
+\setmarginnotes{0.25cm}{0.5cm}{1cm}
+\checkandfixthelayout
+
+
+\makepagestyle{sruled}
+\makeevenfoot {sruled}{}{}{}
+\makeoddfoot  {sruled}{}{}{}
+\makeheadrule {sruled}{\textwidth}{\normalrulethickness}
+\makeevenhead {sruled}{\sffamily\bfseries\leftmark}{}{\sffamily\thepage}
+\makeoddhead  {sruled}{\sffamily\thepage}{}{\sffamily\rightmark}
+
+\makepsmarks{sruled}{%
+   \nouppercaseheads
+   \createmark{chapter}{right}{shownumber}{}{. \space}
+   \createmark{section}{left}{shownumber}{}{. \space}
+   \createplainmark{toc}{both}{\contentsname}
+   \createplainmark{lof}{both}{\listfigurename}
+   \createplainmark{lot}{both}{\listtablename}
+   \createplainmark{bib}{both}{\bibname}
+   \createplainmark{index}{both}{\indexname}
+   \createplainmark{glossary}{both}{\glossaryname}}
 
 
 \lstset{
@@ -60,9 +84,15 @@
 \author{Matt Windsor}
 
 \begin{document}
+
+\headstyles{komalike}
+\chapterstyle{ell}
+\pagestyle{sruled}
+
 \maketitle
 
 \tableofcontents{}
+
 
 \section*{How to read this report}
 \input{readme}
