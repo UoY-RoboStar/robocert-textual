@@ -1,8 +1,7 @@
 %!TEX root=./robocert.tex
-\section{CSP semantics}
 
-This semantics borrows heavily from that of Lima et al. on the CML semantics of
-UML sequence diagrams.
+\newcommand{\tockcsp}{\emph{tock}-CSP}
+\newcommand{\cspm}{CSP\(_\text{M}\)}
 
 \newcommand{\interrupt}{\mathbin{\triangle}}
 \newcommand{\defeq}{\mathbin{\overset{\text{def}}=}}
@@ -10,7 +9,7 @@ UML sequence diagrams.
 % Metasyntactic variables.
 \newcommand{\anarrow}{a}
 \newcommand{\anevent}{e}
-\newcommand{\anlgap}{l}
+\newcommand{\agap}{g}
 \newcommand{\amsgset}{M}
 \newcommand{\aname}{n}
 \newcommand{\anop}{o}
@@ -23,7 +22,7 @@ UML sequence diagrams.
 
 \newcommand{\sema}[1]{\llbracket #1 \rrbracket}
 \newcommand{\stepsema}[1]{\sema{#1}^{\text{step}}}
-\newcommand{\lgapsema}[2]{\sema{#1}^{\text{lgap}}_{(#2)}}
+\newcommand{\gapsema}[2]{\sema{#1}^{\text{gap}}_{(#2)}}
 \newcommand{\actsema}[1]{\sema{#1}^{\text{act}}}
 \newcommand{\arrsema}[1]{\sema{#1}^{\text{arr}}}
 \newcommand{\loopsema}[2]{\sema{#1}^{\text{loop}}_{(#2)}}
@@ -32,6 +31,43 @@ UML sequence diagrams.
 \newcommand{\sseqsema}[1]{\sema{#1}^{\text{sseq}}}
 
 \newcommand{\eventsof}[1]{\mathsf{eventsOf}(#1)}
+
+This chapter formally captures the semantics of \langname{} in terms of its
+target languages:
+
+\begin{itemize}
+\item
+	\tockcsp;
+\item
+	\todo{PRISM};
+\item
+	\todo{Isabelle/UTP?}.
+\end{itemize}
+
+\section{\tockcsp{} semantics}
+
+This section introduces a semantics for \langname{} in the form of
+rewrite rules from \todo{a canonicalised form of?} the \langname{} textual
+syntax to a series of \emph{tock}-CSP processes.
+This semantics borrows heavily from that of Lima et al. on the CML semantics of
+UML sequence diagrams.
+
+The behaviour of the \langname{} generator is expected to conform to
+this semantics, except that:
+
+\begin{itemize}
+\item
+	The generator targets \cspm{} instead of CSP, and so \emph{may}
+	use semantically equivalent \cspm{} constructs where the CSP equivalents
+	are missing or not idiomatic;
+\item
+	The generator \emph{may} \todo{not yet but eventually} wrap processes in
+	timed sections to achieve the appropriate \tockcsp{} behaviours of
+	CSP operators;
+\item
+	The generator \emph{may} perform semantics-preserving optimisations,
+	such as substituting \(P\) for \(\Stop \interrupt P\).
+\end{itemize}
 
 \begin{table}
 	\centering
@@ -47,7 +83,7 @@ UML sequence diagrams.
 	\\
 	\(\asseq\) & subsequence
 	\\
-	\(\anlgap\) & loose gap
+	\(\agap\) & gap
 	\\
 	\(\anaction\) & action
 	\\
@@ -84,11 +120,12 @@ introduce bindings referred to in message specs; for instance,
 binds \lstinline[language=RoboCert]{M} to the module target,
 \lstinline[language=RoboCert]{Mod} to its module, and
 \lstinline[language=RoboCert]{W} to the world.
+\todo{add target introduction}
 
 \begin{align*}
 	\seqsema{\lquote{sequence}\ \aname\ \lquote{for}\ \atarget\ \lquote{,}\ \aworld\ \asseq}
 	\quad\defeq\quad&	
-	\sseqsema{\asseq}
+	\left(\aname \mathsf{::\!Sequence} = \sseqsema{\asseq}\right)
 \end{align*}
 
 \end{defn}
@@ -116,62 +153,111 @@ The semantics of a subsequence is a sequential composition of that of its steps.
 
 \begin{defn}[Steps]
 
-The semantics of a step is that of the action modified by any gap.
-The default `strict' gap (no communication allowed between
-this step and any previous step) does not affect the action at all.
+The semantics of a step is an unbounded loop over the events of its gap,
+interrupted by the action.\footnote{Note that the semantics of the gap depends
+on the action.  This is because, as seen in \(\gapsema{\agap}{\anaction}\),
+the events on which the action can interrupt the
+gap must be removed from the events of the gap to ensure the interrupt has the
+expected semantics.}
+
+If no explicit gap is provided, the semantics is equivalent to that of the gap
+declaring an empty \emph{allowed} set.
 
 \begin{align*}
-	\stepsema{\lquote{anything}\ \anlgap\ \lquote{until}\ \anaction}
+	\stepsema{\lquote{anything}\ \agap\ \lquote{until}\ \anaction}
 	\quad\defeq\quad&	
-	\mathsf{RUN}\left(\lgapsema{\anlgap}{\anaction}\right) \interrupt \actsema{\anaction}
-	\tag{loose gap}
+	\mathsf{RUN}\left(\gapsema{\agap}{\anaction}\right) \interrupt \actsema{\anaction}
+	\tag{explicit gap}
 \\
 	\stepsema{\anaction}
 	\quad\defeq\quad&	
-	\actsema{\anaction}
-	\tag{strict gap}
+	\stepsema{\lquote{anything in \{\} until}\ \anaction}
+	\tag{implicit empty gap}
 \end{align*}
 \end{defn}
 
 \subsection{Gaps}
 
-\begin{defn}[Loose gaps]
-	The semantics of a loose gap is the CSP event set corresponding to the
-	difference between the `allowed' set (or, if the set is empty,
-	\(\events\). and the union of the `forbidden' set and the set of any
-	events the action following the gap can initially communicate.
+\begin{defn}[Gaps]
+	The semantics of a gap is the CSP event set corresponding to the
+	difference between the \emph{allowed} set,
+	and the result of adding any events
+	the action following the gap can initially communicate to the
+	\emph{forbidden} set.
 
 \begin{align*}
-	\lgapsema{}{\anaction}
+	\gapsema{
+	\lquote{in}
+	\amsgset_\mathsf{allowed}
+	\lquote{except}
+	\amsgset_\mathsf{forbidden}
+	}{\anaction}
 	\quad\defeq\quad&
-	\events \setminus \eventsof{\anaction}
-	\tag{no sets}
-\\
-	\lgapsema{\lquote{except}\ \amsgset}{\anaction}
+	\msgsetsema{\amsgset_\mathsf{allowed}}
+	\setminus
+	\left(\msgsetsema{\amsgset_\mathsf{forbidden}} \cup \eventsof{\anaction}\right)
+	\tag{fully explicit}
+\\	
+\intertext{
+	In terms of the concrete syntax, if the
+	\emph{allowed} set is not explicitly
+	provided, it is assumed to be the universe; if the \emph{forbidden}
+	set is not explicitly provided, it is assumed to be the empty set.}
+	\gapsema{
+	\lquote{except}
+	\amsgset_\mathsf{forbidden}
+	}{\anaction}
 	\quad\defeq\quad&
-	\events \setminus \left(\msgsetsema{\amsgset} \cup \eventsof{\anaction}\right)
-	\tag{forbidden only}
-\\
-	\lgapsema{\lquote{in}\ \amsgset}{\anaction}
+	\gapsema{
+	\lquote{in universe except}
+	\ \amsgset_\mathsf{forbidden}
+	}{\anaction}
+	\tag{implicit \emph{allowed}}
+\\	
+	\gapsema{
+	\lquote{in}
+	\amsgset_\mathsf{allowed}
+	}{\anaction}
 	\quad\defeq\quad&
-	\msgsetsema{\amsgset} \setminus \eventsof{\anaction}
-	\tag{allowed only}
-\\
-	\lgapsema{\lquote{in}\ \amsgset_a\ \lquote{except}\ \amsgset_f}{\anaction}
+	\gapsema{
+	\lquote{in}
+	\ \amsgset_\mathsf{allowed}
+	\ \lquote{except \{\}}
+	}{\anaction}
+	\tag{implicit \emph{forbidden}}
+\\	
+	\gapsema{
+	}{\anaction}
 	\quad\defeq\quad&
-	\msgsetsema{\amsgset_a} \left(\msgsetsema{\amsgset_f} \cup \eventsof{\anaction}\right)
-	\tag{both}
+	\gapsema{
+	\lquote{in universe except \{\}}
+	}{\anaction}
+	\tag{fully implicit}
 \end{align*}
 \end{defn}
 
 \begin{defn}[Gap message sets]
-For now, the semantics of a gap message set depends on treating each message
+
+From \cref{ssec:metamodel-sequences-gaps}, note that gap message sets in the
+\emph{allowed} position can be either extensional or universe; we treat both
+using the same rule below.
+
+For now, the semantics of an extensional gap message set depends on treating each
+message
 spec as if it were an arrow message spec.  This will change when arrow and gap
 message specs diverge.
+\todo{abuse of notation in extensional rule?}
+
 \begin{align*}
+	\msgsetsema{\lquote{universe}}
+	\quad\defeq\quad&
+	\mathsf{Events}
+	\tag{universe}
+\\
 	\msgsetsema{\amsgset}
 	\quad\defeq\quad&
 	\bigcup_{\anarrow \in \amsgset} \bullet \arrsema{\anarrow}
+	\tag{extensional}
 \end{align*}
 \end{defn}
 
