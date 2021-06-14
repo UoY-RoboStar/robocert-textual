@@ -36,10 +36,24 @@
 \newcommand{\mrcmoduletarget}{\metaref{RCModuleTarget}}
 \newcommand{\moverridetarget}{\metaref{OverrideTarget}}
 
-This section discusses the abstract syntax (metamodel) of \langname.
+This section introduces the abstract syntax (metamodel) of \langname.
+It is structured in a top-down manner, with each section introducing a group of
+related \langname{} functionality.  Each section contains:
+
+\begin{itemize}
+\item
+	a class diagram representing the Ecore classes, enumerations, and other
+	components that make up the group being discussed;
+\item
+	descriptions of the components being shown in the class diagram;
+\item
+	where relevant, examples of the components in terms of the concrete
+	syntaxes of \langname.
+\end{itemize}
 
 \todo{Once I have a machine on which Sirius works properly, the diagrams should
-be replaced with PDFs.}
+be replaced with PDFs.  When this happens, the fonts should be aligned to agree
+with those in this report.}
 
 \section{Packages}\label{sec:metamodel-top}
 
@@ -78,7 +92,7 @@ Each \mrapackage{} can contain zero or more of each of these types of content:
 the same list at some point.}
 
 
-\section{Sequences}\label{sec:metamodel-sequences}
+\section{Sequences, subsequences, and steps}\label{sec:metamodel-sequences}
 
 \begin{figure}
 	\centering
@@ -89,6 +103,17 @@ the same list at some point.}
 
 \Cref{fig:metamodel-sequences} depicts the part of the metamodel concerning
 sequence diagrams.
+
+\subsection{Sequences}
+
+\begin{lstlisting}[style=Example]
+sequence Example
+  for module ModuleName as M,  // target actor (RoboChart module)
+      world             as W   // world actor
+{
+	anything until end  // subsequence
+}
+\end{lstlisting}
 
 A \msequence{} represents a single sequence diagram.  It is a \mnamedelement{}
 that contains:
@@ -105,6 +130,16 @@ that contains:
 
 \subsection{Subsequences}\label{ssec:metamodel-sequences-subsequences}
 
+\begin{lstlisting}[style=Example]
+{
+	anything until operation O1() from M to W  // step
+then
+	operation O2() from M to W                 // step
+then
+	end                                        // step
+}
+\end{lstlisting}
+
 A \msubsequence{} is a sequential composition of one or more \msequencestep s
 (\cref{ssec:metamodel-sequences-steps}).
 All \msequence s contain at least one \msubsequence{} at the top level, but
@@ -113,11 +148,26 @@ may contain multiple nested \msubsequence s introduced by constructs such as
 
 \subsection{Steps}\label{ssec:metamodel-sequences-steps}
 
+\begin{lstlisting}[style=Example]
+anything until             // gap
+operation O() from M to W  // action
+\end{lstlisting}
+
 A \msequencestep{} is a single step in a \msubsequence.  It consists of a
 \msequencegap{} (\cref{ssec:metamodel-sequences-gaps}) and a
 \msequenceaction{} (\cref{sec:metamodel-sequences-actions}).
 
 \subsection{Gaps}\label{ssec:metamodel-sequences-gaps}
+
+\begin{lstlisting}[style=Example]
+anything
+	in     { operation O1() from M to W, operation O2() from M to W }  // allow set
+	except { operation O2() from M to W }                              // forbid set
+
+	// a universe set is implied for the allow set if 'in {..}' is omitted
+	// an empty extensional set is implied for the forbidden set if 'except {..}' is omitted
+until // only permits O1
+\end{lstlisting}
 
 A \msequencegap{} represents a condition on any communication\footnote{In PSCs,
 this would correspond to \emph{intraMSG}s.} that can happen
@@ -154,6 +204,16 @@ to change.
 
 \subsection{Actions}\label{sec:metamodel-sequences-actions}
 
+\begin{lstlisting}[style=Example]
+operation O1() from M to W  // arrow action
+
+loop L {
+	operation O2() from M to W
+}  // loop action (taking a subsequence)
+
+end  // final action
+\end{lstlisting}
+
 A \msequenceaction{} is an explicit communication or control flow construct in a
 \msubsequence.  There are currently three types of action: arrow, loop, and
 final actions.
@@ -188,7 +248,7 @@ diagram has occurred.
 parallels between this and a hypothetical empty-bodied loop action?}
 
 
-\section{Message specifications}\label{sec:metamodel-messages}
+\section{Message specifications and topics}\label{sec:metamodel-messages}
 
 \begin{figure}
 	\centering
@@ -199,6 +259,13 @@ parallels between this and a hypothetical empty-bodied loop action?}
 
 \Cref{fig:metamodel-messages} depicts the part of the metamodel concerning
 message specifications (`specs').
+
+\subsection{Message specifications}
+
+\begin{lstlisting}[style=Example]
+operation O1() from M to W  // spec with operation topic, from actor M to actor W
+event E        from W to M  // spec with event topic, from actor W to actor M
+\end{lstlisting}
 
 A \mmessagespec{} is a specification on the types of communication that can
 happen during a gap (a \mgapmessagespec) or arrow (an \marrowmessagespec).\footnote{
