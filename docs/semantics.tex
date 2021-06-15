@@ -11,10 +11,14 @@
 \newcommand{\cspkw}[1]{\operatorname{\mathbf{#1}}}
 \newcommand{\runproc}[1]{\cspkw{Run}\left(#1\right)}
 \newcommand{\events}{\cspkw{Events}}
-% Metasyntactic variables.
+
+%
+% Metasyntactic variables
+%
 \newcommand{\anarrow}{a}
 \newcommand{\anevent}{e}
 \newcommand{\agap}{g}
+\newcommand{\amspec}{m}
 \newcommand{\amsgset}{M}
 \newcommand{\aloop}{l}
 \newcommand{\anop}{o}
@@ -24,19 +28,24 @@
 \newcommand{\atarget}{t}
 \newcommand{\aworld}{w}
 \newcommand{\anaction}{x}
+% Assertions
+\newcommand{\asasst}{\alpha_s}
+\newcommand{\amodel}{\mathcal{M}}
 
 \newcommand{\sema}[1]{\llbracket #1 \rrbracket}
 \newcommand{\stepsema}[1]{\sema{#1}^{\mathsf{step}}}
 \newcommand{\gapsema}[2]{\sema{#1}^{\mathsf{gap}}_{(#2)}}
 \newcommand{\actsema}[1]{\sema{#1}^{\mathsf{act}}}
-\newcommand{\arrsema}[1]{\sema{#1}^{\mathsf{arr}}}
+\newcommand{\mspecsema}[1]{\sema{#1}^{\mathsf{mspec}}}
 \newcommand{\loopsema}[1]{\sema{#1}^{\mathsf{loop}}}
 \newcommand{\msgsetsema}[1]{\sema{#1}^{\mathsf{mset}}}
 \newcommand{\seqsema}[1]{\sema{#1}^{\mathsf{seq}}}
 \newcommand{\sseqsema}[1]{\sema{#1}^{\mathsf{sseq}}}
+\newcommand{\asstsema}[1]{\sema{#1}^{\mathsf{sasst}}}
 
 \newcommand{\funcname}[1]{\mathsf{#1}}
 \newcommand{\eventsof}[1]{\funcname{events}(#1)}
+\newcommand{\seqnameOf}[1]{\funcname{seqName}(#1)}
 
 \newcommand{\field}[2]{#1.\funcname{#2}}
 
@@ -62,15 +71,19 @@ target languages:
 	\thead{Variable} & \thead{Meaning}
 	\\
 	\midrule
-	\(\agap\) & \msequencegap
-	\\
-	\(\astep\) & \msequencestep
+	\multicolumn{2}{l}{\tsubhead{Sequences}}
 	\\
 	\(\aseq\) & \msequence
 	\\
 	\(\asseq\) & \msubsequence
 	\\
+	\(\astep\) & \msequencestep
+	\\
+	\(\agap\) & \msequencegap
+	\\
 	\midrule
+	\multicolumn{2}{l}{\tsubhead{Actions (\cref{sec:metamodel-actions})}}
+	\\
 	\(\anaction\) & \msequenceaction
 	\\
 	\(\anarrow\) & \marrowaction
@@ -80,14 +93,27 @@ target languages:
 	\(\bot\) & \mfinalaction
 	\\
 	\midrule
+	\multicolumn{2}{l}{\tsubhead{Messages (\cref{sec:metamodel-messages})}}
+	\\
+	\(\amspec\) & \mmessagespec
+	\\
 	\(\universe\) & \muniversegapmessageset
 	\\
 	\(\amsgset\) & \mextensionalgapmessageset
 	\\
 	\midrule
+	\multicolumn{2}{l}{\tsubhead{Actors}}
+	\\
 	\(\atarget\) & \mtarget
 	\\
 	\(\aworld\) & \mworld
+	\\
+	\midrule
+	\multicolumn{2}{l}{\tsubhead{Assertions}}
+	\\
+	\(\asasst\) & \msequenceassertion
+	\\
+	\(\amodel\) & \mcspmodel
 	\\
 	\bottomrule
 	\end{tabular}
@@ -116,248 +142,4 @@ We also use the following notational conventions \todo{may need tweaking}:
 \end{itemize}
 
 \section{\tockcsp{} semantics}\label{sec:semantics-tockcsp}
-
-This section introduces a semantics for \langname{} in terms of
-\emph{tock}-CSP.
-This semantics borrows heavily from that of Lima et al. on the CML semantics of
-UML sequence diagrams.
-
-The behaviour of the \langname{} generator is expected to conform to
-this semantics, except that:
-
-\begin{itemize}
-\item
-	The generator targets \cspm{} instead of CSP, and so \emph{may}
-	use semantically equivalent \cspm{} constructs where the CSP equivalents
-	are missing or not idiomatic;
-\item
-	The generator \emph{may} \todo{not yet but eventually} wrap processes in
-	timed sections to achieve the appropriate \tockcsp{} behaviours of
-	CSP operators;
-\item
-	The generator \emph{may} perform semantics-preserving optimisations,
-	such as substituting \(P\) for \(\Stop \interrupt P\).
-\end{itemize}
-
-\subsection{Sequences}
-
-\begin{defn}[Sequence]
-
-The semantics of a sequence is, for now, that of its subsequence.
-
-This rule does not capture the fact that the target and world definitions
-introduce bindings referred to in message specs; for instance,
-\lstinline[language=RoboCert]{sequence X for module Mod as M, world as W}
-binds \lstinline[language=RoboCert]{M} to the module target,
-\lstinline[language=RoboCert]{Mod} to its module, and
-\lstinline[language=RoboCert]{W} to the world.
-\todo{add target introduction}
-%
-\begin{align*}
-	\seqsema{\aseq}
-\quad\defeq\quad&	
-\left(
-	\field{\aseq}{name} \cspnsop \text{Sequence} =
-		\sseqsema{\field{\aseq}{body}}
-\right)
-\end{align*}
-
-\end{defn}
-
-\begin{defn}[Subsequence]
-
-The semantics of a subsequence is a sequential composition of that of its steps.
-%
-\begin{align*}
-	\sseqsema{\asseq}
-	\quad\defeq\quad&	
-	\mathsf{Steps}(\field{\asseq}{body})
-\\
-	\mathsf{Steps}(\langle\astep\rangle)
-	\quad\defeq\quad&	
-	\stepsema{\astep}
-	\tag{base}
-\\
-	\mathsf{Steps}(\langle\astep\rangle\cat\mathbf{\astep})
-	\quad\defeq\quad&	
-	\stepsema{\astep} \circseq \mathsf{Steps}(\mathbf{\astep})
-	\tag{inductive}
-\end{align*}
-
-\end{defn}
-
-\subsection{Steps}
-
-\begin{defn}[Step]
-
-The semantics of a step is an unbounded loop over the events of its gap,
-interrupted by the action.\footnote{Note that the semantics of the gap depends
-on the action.  This is because, as seen in \(\gapsema{\agap}{\anaction}\),
-the events on which the action can interrupt the
-gap must be removed from the events of the gap to ensure the interrupt has the
-expected semantics.}
-%
-\begin{align*}
-	\stepsema{\astep}
-\quad\defeq\quad&	
-	\runproc{\gapsema{\field{\astep}{gap}}{\field{\astep}{action}}}
-	\interrupt \actsema{\field{\astep}{action}}
-\end{align*}
-\end{defn}
-
-\subsection{Gaps}
-
-\begin{defn}[Gaps]
-	The semantics of a gap is the CSP event set corresponding to the
-	difference between the \emph{allowed} set,
-	and the result of adding any events
-	the action following the gap can initially communicate to the
-	\emph{forbidden} set.
-%
-\begin{align*}
-	\gapsema{
-		\agap
-	}{\anaction}
-\quad\defeq\quad&
-	\msgsetsema{\field{\agap}{allowed}}
-	\setminus
-	\left(\msgsetsema{\field{\agap}{forbidden}} \cup \eventsof{\anaction}\right)
-\end{align*}
-\end{defn}
-
-\begin{defn}[Gap message sets]
-
-From \cref{ssec:metamodel-sequences-gaps}, note that gap message sets in the
-\emph{allowed} position can be either extensional or universe; we treat both
-using the same rule below.
-
-For now, the semantics of an extensional gap message set depends on treating each
-message
-spec as if it were an arrow message spec.  This will change when arrow and gap
-message specs diverge.
-%
-\begin{align*}
-	\msgsetsema{\universe}
-\quad\defeq\quad&
-	\events
-\tag{universe}
-\\
-	\msgsetsema{\amsgset}
-\quad\defeq\quad&
-	\bigcup \Set{\arrsema{\anarrow} | \anarrow \in \amsgset }
-\tag{extensional}
-\end{align*}
-\end{defn}
-
-\begin{defn}[CSP event sets]
-For now, the event set of an action is the prefix of an arrow action, or
-the empty set for any other actions.  This will change when the prefix becomes
-inexpressible as an event set.
-%
-\begin{align*}
-	\eventsof{\anarrow}
-	\quad\defeq\quad&
-	\Set{\arrsema{\anarrow}}
-	\tag{arrow}
-\\
-	\eventsof{\anaction}
-	\quad\defeq\quad&
-	\emptyset
-	\tag{anything else}
-\end{align*}
-\end{defn}
-
-\subsection{Actions}
-
-\begin{defn}[Actions]
-
-The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
-prefixing termination.  The semantics of a loop delegates to a separate rule
-over its label and subsequence.
-For now, a final action does not terminate.
-%
-\begin{align*}
-	\actsema{\anarrow}
-	\quad\defeq\quad&
-	\left(
-	\arrsema{\anarrow}
-	\then
-	\Skip
-	\right)
-	\tag{arrow action}
-\\
-	\actsema{\aloop}
-\quad\defeq\quad&
-	\loopsema{\aloop}
-\tag{loop action}
-\\
-	\actsema{\bot}
-\quad\defeq\quad&
-	\Stop
-\tag{final action}
-\end{align*}
-
-\end{defn}
-
-\begin{defn}[Arrows]
-
-The semantics of arrows depends on the topic of their message specs, and, for
-certain topics, the direction (inbound from world to target, or outbound from
-target to world).  For now, neither operations nor events can have arguments.
-
-\newcommand{\nsOf}[1]{\mathsf{ns}(#1)}
-\newcommand{\targetOf}[2]{\mathsf{target}(#1,#2)}
-\newcommand{\topicOf}[3]{\mathsf{topic}(#1,#2,#3)}
-
-Let \(\nsOf{\atarget}\) be the name of the module, controller, or state machine
-referred to by \(\atarget\).
-%
-\begin{align*}
-	\arrsema{\anarrow}
-\quad\defeq\quad&
-	\nsOf{\targetOf{\field{\anarrow}{from}}{\field{\anarrow}{to}}}
-	\cspnsop
-	\topicOf{\field{\anarrow}{topic}}{\field{\anarrow}{from}}{\field{\anarrow}{to}}
-\\
-	\targetOf{\aworld}{\atarget}
-\quad\defeq\quad&
-	\targetOf{\atarget}{\aworld}
-	\quad\defeq\quad
-	\atarget
-\\
-	\topicOf{\anop}{\atarget}{\aworld}
-\quad\defeq\quad&
-	\field{\anop}{name}\ \mathsf{Call}
-\\
-	\topicOf{\anevent}{\aworld}{\atarget}
-\quad\defeq\quad&
-	\field{\anevent}{name}.\mathsf{in}
-\\
-	\topicOf{\anevent}{\atarget}{\aworld}
-\quad\defeq\quad&
-	\field{\anevent}{name}.\mathsf{out}
-\end{align*}
-
-\end{defn}
-
-\begin{defn}[Loops]
-
-For now, only infinite loops exist, and their semantics is that of the loop
-subsequence placed in a recursive process.
-%
-\begin{align*}
-	\loopsema{\aloop}
-\quad\defeq\quad&
-	\circmu \mathsf{LOOP}_{\field{\aloop}{name}} \bullet
-	\left(
-		\sseqsema{\field{\aloop}{body}}
-		\circseq \mathsf{LOOP}_{\field{\aloop}{name}}
-	\right)
-	\tag{infinite loop}
-\end{align*}
-
-\end{defn}
-
-\subsection{Assertions}
-
-\todo{TODO}
+\input{semantics/tockcsp}

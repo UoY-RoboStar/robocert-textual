@@ -1,0 +1,326 @@
+%!TEX root=../robocert.tex
+
+This section introduces a semantics for \langname{} in terms of
+\emph{tock}-CSP.
+This semantics borrows heavily from that of Lima et al. on the CML semantics of
+UML sequence diagrams.
+
+The behaviour of the \langname{} generator is expected to conform to
+this semantics, except that:
+
+\begin{itemize}
+\item
+	The generator targets \cspm{} instead of CSP, and so \emph{may}
+	use semantically equivalent \cspm{} constructs where the CSP equivalents
+	are missing or not idiomatic;
+\item
+	The generator \emph{may} \todo{not yet but eventually} wrap processes in
+	timed sections to achieve the appropriate \tockcsp{} behaviours of
+	CSP operators;
+\item
+	The generator \emph{may} perform semantics-preserving optimisations,
+	such as substituting \(P\) for \(\Stop \interrupt P\).
+\end{itemize}
+
+\subsection{Packages}\label{ssec:semantics-tockcsp-top}
+
+The definitions here correspond to \cref{sec:metamodel-top}.
+
+\todo{TODO}
+
+\subsection{Sequences}\label{ssec:semantics-tockcsp-sequences}
+
+The definitions here correspond to \cref{sec:metamodel-sequences}.
+
+\begin{defn}[\msequence]
+
+The semantics of a \msequence{} is, for now, that of its subsequence.
+
+This rule does not capture the fact that the target and world definitions
+introduce bindings referred to in message specs; for instance,
+\lstinline[language=RoboCert]{sequence X for module Mod as M, world as W}
+binds \lstinline[language=RoboCert]{M} to the module target,
+\lstinline[language=RoboCert]{Mod} to its module, and
+\lstinline[language=RoboCert]{W} to the world.
+\todo{add target introduction}
+%
+\begin{align*}
+	\seqsema{\aseq}
+\quad\defeq\quad&	
+\left(
+	\seqnameOf{\aseq}{name} = \sseqsema{\field{\aseq}{body}}
+\right)
+\\
+	\seqnameOf{\aseq}
+\quad\defeq\quad&
+	\field{\aseq}{name} \cspnsop \text{Sequence}
+\end{align*}
+
+\end{defn}
+
+\begin{defn}[\msubsequence]
+
+The semantics of a \msubsequence{} is a sequential composition of that of its steps.
+%
+\begin{align*}
+	\sseqsema{\asseq}
+	\quad\defeq\quad&	
+	\mathsf{Steps}(\field{\asseq}{body})
+\\
+	\mathsf{Steps}(\langle\astep\rangle)
+	\quad\defeq\quad&	
+	\stepsema{\astep}
+	\tag{base}
+\\
+	\mathsf{Steps}(\langle\astep\rangle\cat\mathbf{\astep})
+	\quad\defeq\quad&	
+	\stepsema{\astep} \circseq \mathsf{Steps}(\mathbf{\astep})
+	\tag{inductive}
+\end{align*}
+
+\end{defn}
+
+\begin{defn}[\msequencestep]
+
+The semantics of a \msequencestep{} is an unbounded loop over the events of its
+\msequencegap, interrupted by the \msequenceaction.\footnote{Note that the semantics of the gap depends
+on the action.  This is because, as seen in \(\gapsema{\agap}{\anaction}\),
+the events on which the action can interrupt the
+gap must be removed from the events of the gap to ensure the interrupt has the
+expected semantics.}
+%
+\begin{align*}
+	\stepsema{\astep}
+\quad\defeq\quad&	
+	\runproc{\gapsema{\field{\astep}{gap}}{\field{\astep}{action}}}
+	\interrupt \actsema{\field{\astep}{action}}
+\end{align*}
+\end{defn}
+
+\begin{defn}[\msequencegap]
+	The semantics of a \msequencegap{} is the CSP event set corresponding to
+	the difference between the \emph{allowed} set,
+	and the result of extending the \emph{forbidden} set with any events
+	the action following the gap can initially communicate.
+%
+\begin{align*}
+	\gapsema{
+		\agap
+	}{\anaction}
+\quad\defeq\quad&
+	\msgsetsema{\field{\agap}{allowed}}
+	\setminus
+	\left(\msgsetsema{\field{\agap}{forbidden}} \cup \eventsof{\anaction}\right)
+\end{align*}
+\end{defn}
+
+\begin{defn}[CSP event sets]
+For now, the event set of an action is the prefix of an arrow action, or
+the empty set for any other actions.  This will change when the prefix becomes
+inexpressible as an event set.
+%
+\begin{align*}
+	\eventsof{\anarrow}
+	\quad\defeq\quad&
+	\Set{\mspecsema{\anarrow}}
+	\tag{arrow}
+\\
+	\eventsof{\anaction}
+	\quad\defeq\quad&
+	\emptyset
+	\tag{anything else}
+\end{align*}
+\end{defn}
+
+\begin{defn}[\mgapmessageset]
+
+Note that, per \cref{ssec:metamodel-sequences-gaps}, gap message sets in the
+\emph{allowed} position can be either \mextensionalgapmessageset s or
+\muniversegapmessageset s; we treat both using the same rule.
+%
+\begin{align*}
+	\msgsetsema{\universe}
+\quad\defeq\quad&
+	\events
+\tag{universe}
+\\
+\intertext{\todo{For now, the semantics of an \mextensionalgapmessageset{} depends on treating each
+message
+spec as if it were an \marrowmessagespec.  This will change when arrow and gap
+message specs diverge.}}
+	\msgsetsema{\amsgset}
+\quad\defeq\quad&
+	\bigcup \Set{\mspecsema{\amspec} | \amspec \in \amsgset }
+\tag{extensional}
+\end{align*}
+\end{defn}
+
+\subsection{Actions}\label{ssec:semantics-tockcsp-actions}
+
+The definitions here correspond to \cref{sec:metamodel-actions}.
+
+\begin{defn}[\msequenceaction]
+
+The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
+prefixing termination.  The semantics of a loop delegates to a separate rule
+over its label and subsequence.
+%
+\begin{align*}
+	\actsema{\anarrow}
+	\quad\defeq\quad&
+	\left(
+	\mspecsema{\anarrow}
+	\then
+	\Skip
+	\right)
+	\tag{arrow action}
+\\
+	\actsema{\aloop}
+\quad\defeq\quad&
+	\loopsema{\aloop}
+\tag{loop action}
+\\
+\intertext{For now, a \mfinalaction{} does not terminate.}
+	\actsema{\bot}
+\quad\defeq\quad&
+	\Stop
+\tag{final action}
+\end{align*}
+
+\end{defn}
+
+\begin{defn}[\mloopaction]
+
+For now, only infinite loops exist, and their semantics is that of the loop
+subsequence placed in a recursive process.
+%
+\begin{align*}
+	\loopsema{\aloop}
+\quad\defeq\quad&
+	\circmu \mathsf{LOOP}_{\field{\aloop}{name}} \bullet
+	\left(
+		\sseqsema{\field{\aloop}{body}}
+		\circseq \mathsf{LOOP}_{\field{\aloop}{name}}
+	\right)
+	\tag{infinite loop}
+\end{align*}
+
+\end{defn}
+
+\subsection{Messages}\label{ssec:semantics-tockcsp-messages}
+
+The definitions here correspond to \cref{sec:metamodel-messages}.
+
+\begin{defn}[\mmessagespec]
+
+The semantics of \mmessagespec s\footnote{For now, \mgapmessagespec s and
+\marrowmessagespec s are equivalent in semantics; this may change later on.}
+depends on the topic of their message specs,
+and, for certain topics, the direction (inbound from world to target, or
+outbound from target to world).  For now, neither operations nor events can have
+arguments.
+
+\newcommand{\nsOf}[1]{\mathsf{ns}(#1)}
+\newcommand{\targetOf}[2]{\mathsf{target}(#1,#2)}
+\newcommand{\topicOf}[3]{\mathsf{topic}(#1,#2,#3)}
+
+Let \(\nsOf{\atarget}\) be the name of the module, controller, or state machine
+referred to by \(\atarget\).
+%
+\begin{align*}
+	\mspecsema{\anarrow}
+\quad\defeq\quad&
+	\nsOf{\targetOf{\field{\anarrow}{from}}{\field{\anarrow}{to}}}
+	\cspnsop
+	\topicOf{\field{\anarrow}{topic}}{\field{\anarrow}{from}}{\field{\anarrow}{to}}
+\\
+	\targetOf{\aworld}{\atarget}
+\quad\defeq\quad&
+	\targetOf{\atarget}{\aworld}
+	\quad\defeq\quad
+	\atarget
+\\
+	\topicOf{\anop}{\atarget}{\aworld}
+\quad\defeq\quad&
+	\field{\anop}{name}\ \mathsf{Call}
+\\
+	\topicOf{\anevent}{\aworld}{\atarget}
+\quad\defeq\quad&
+	\field{\anevent}{name}.\mathsf{in}
+\\
+	\topicOf{\anevent}{\atarget}{\aworld}
+\quad\defeq\quad&
+	\field{\anevent}{name}.\mathsf{out}
+\end{align*}
+
+\end{defn}
+
+\subsection{Actors}
+
+The definitions here correspond to \cref{sec:metamodel-actors}.
+
+There are two rules for \mtarget{}s, corresponding to whether a
+\emph{definition} or a \emph{reference} is required for the
+\mtarget.\footnote{The CSP generator makes further distinction between
+\emph{open} and \emph{closed} targets, but the latter is an optimising
+implementation detail expressible in terms of the former.}
+The target definition applies the \mtargetinstantiation{} of the \mtarget{}
+to the parametric CSP process provided for it by the relevant semantics
+(for instance, we delegate to the \robochart{} semantics for the underlying
+\mrcmodule{} of a \mrcmoduletarget).
+
+\begin{defn}[\mtarget{} definition]
+	\todo{TODO}
+\end{defn}
+
+\begin{defn}[\mtarget{} reference]
+	\todo{TODO}
+\end{defn}
+\begin{defn}[\mtarget{} closed reference]
+	\todo{TODO}
+\end{defn}
+
+\begin{defn}[\mtarget{} closed definition]
+	\todo{TODO}
+\end{defn}
+
+\subsection{Assertions}
+
+The definitions here correspond to \cref{sec:metamodel-assertions}.
+
+\begin{defn}[\massertion]
+
+The only type of assertion so far is \msequenceassertion.
+
+\newcommand{\refop}[3]{\mathbin{\odot_{#1}^{(#2, #3)}}}
+
+\begin{align*}
+	\asstsema{\asasst}
+\quad\defeq\quad&
+	\seqnameOf{\field{\asasst}{sequence}}
+	\refop{\field{\asasst}{model}}{\field{\asasst}{isNegated}}{\field{\asasst}{type}}
+\\
+\intertext{The exact refinement operator depends on the assertion type and
+negation:}
+	\refop{\amodel}{\true}{\mathsf{holds}}
+\quad\defeq\quad&
+	\sqsubseteq_\amodel
+\tag{holds}
+\\
+	\refop{\amodel}{\false}{\mathsf{holds}}
+\quad\defeq\quad&
+	\not\sqsubseteq_\amodel
+\tag{does not hold}
+\\
+	\refop{\amodel}{\true}{\mathsf{isObserved}}
+\quad\defeq\quad&
+	\sqsupseteq_\amodel
+\tag{is observed}
+\\
+	\refop{\amodel}{\false}{\mathsf{isObserved}}
+\quad\defeq\quad&
+	\not\sqsupseteq_\amodel
+\tag{is not observed}
+\\
+\end{align*}
+\end{defn}
