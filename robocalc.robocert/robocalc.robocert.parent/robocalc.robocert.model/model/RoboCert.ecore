@@ -126,15 +126,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
         eType="#//TargetInstantiation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"
-        defaultValueLiteral="TRACES"/>
+        defaultValueLiteral="TICK_TOCK"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="SequenceAssertionType">
     <eLiterals name="HOLDS"/>
     <eLiterals name="IS_OBSERVED" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
-    <eLiterals name="TRACES"/>
-    <eLiterals name="FAILURES" value="1"/>
-    <eLiterals name="FAILURES_DIVERGENCES" value="2"/>
+    <eLiterals name="TICK_TOCK"/>
+    <eLiterals name="TRACES" value="1"/>
   </eClassifiers>
 </ecore:EPackage>

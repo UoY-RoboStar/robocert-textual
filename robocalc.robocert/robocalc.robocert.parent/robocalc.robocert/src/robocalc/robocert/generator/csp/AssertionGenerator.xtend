@@ -118,10 +118,8 @@ class AssertionGenerator {
 		switch asst.model {
 			case TRACES:
 				"T"
-			case FAILURES:
-				"F"
-			case FAILURES_DIVERGENCES:
-				"FD"
+			case TICK_TOCK:
+				"T" // TODO(@MattWindsor91): tick-tock model
 		}
 	}
 }

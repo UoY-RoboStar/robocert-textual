@@ -367,11 +367,11 @@ class SequenceAssertion extends Assertion {
 	 */
 	val TargetInstantiation[1] instantiation;
 	/**
-	 * The model under which this assertion should be checked if converted to (untimed) CSP.
+	 * The model under which this assertion should be checked under CSP.
 	 * 
 	 * TODO(@MattWindsor91): timed models, work out what to do with this actually.
 	 */
-	attr CSPModel[1] model = "TRACES";	
+	attr CSPModel[1] model = "TICK_TOCK";	
 }
 
 enum SequenceAssertionType {
@@ -391,7 +391,12 @@ enum SequenceAssertionType {
  * A CSP refinement model.
  */
 enum CSPModel {
+	/**
+	 * The timed tick-tock CSP model.
+	 */
+	TICK_TOCK;
+	/**
+	 * Traces refinement.
+	 */
 	TRACES;
-	FAILURES;
-	FAILURES_DIVERGENCES;
 }
