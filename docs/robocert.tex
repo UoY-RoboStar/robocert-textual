@@ -4,6 +4,7 @@
 
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{braket} % set-builder notation
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{stmaryrd}
@@ -11,6 +12,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 % fonts
+\usepackage{stix}
 \usepackage{tgtermes}
 % while we don't technically need to load Heros here (we only use it for
 % \metarefs), we do so to make sure it gets scaled.
@@ -129,21 +131,21 @@
 
 \part{Syntax}
 
-\chapter{Abstract syntax}
+\chapter{Abstract syntax}\label{cha:metamodel}
 \input{metamodel}
 
-\chapter{Textual syntax}
+\chapter{Textual syntax}\label{cha:textual}
 \todo{TODO}
 
-\chapter{Graphical syntax}
+\chapter{Graphical syntax}\label{cha:graphical}
 \todo{TODO}
 
 \part{Well-formedness and Semantics}
 
-\chapter{Well-formedness}
+\chapter{Well-formedness}\label{cha:wf}
 \todo{TODO}
 
-\chapter{Semantics}
+\chapter{Semantics}\label{cha:semantics}
 \input{semantics}
 
 \end{document}
