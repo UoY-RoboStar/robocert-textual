@@ -15,37 +15,55 @@
 %
 % Metasyntactic variables
 %
+\newcommand{\apkg}{P}
+\newcommand{\acsp}{f}
 \newcommand{\anarrow}{a}
 \newcommand{\anevent}{e}
 \newcommand{\agap}{g}
 \newcommand{\amspec}{m}
 \newcommand{\amsgset}{M}
+\newcommand{\aumsgset}{\amsgset_{\universe}}
+\newcommand{\anemsgset}{\amsgset_{e}}
 \newcommand{\aloop}{l}
 \newcommand{\anop}{o}
 \newcommand{\aseq}{\sigma}
 \newcommand{\asseq}{q}
 \newcommand{\astep}{s}
 \newcommand{\atarget}{t}
+\newcommand{\aninst}{\phi}
 \newcommand{\aworld}{w}
 \newcommand{\anaction}{x}
+\newcommand{\avar}{v}
 % Assertions
+\newcommand{\anasst}{\alpha}
 \newcommand{\asasst}{\alpha_s}
 \newcommand{\amodel}{\mathcal{M}}
 
-\newcommand{\sema}[1]{\llbracket #1 \rrbracket}
-\newcommand{\stepsema}[1]{\sema{#1}^{\mathsf{step}}}
-\newcommand{\gapsema}[2]{\sema{#1}^{\mathsf{gap}}_{(#2)}}
-\newcommand{\actsema}[1]{\sema{#1}^{\mathsf{act}}}
-\newcommand{\mspecsema}[1]{\sema{#1}^{\mathsf{mspec}}}
-\newcommand{\loopsema}[1]{\sema{#1}^{\mathsf{loop}}}
-\newcommand{\msgsetsema}[1]{\sema{#1}^{\mathsf{mset}}}
-\newcommand{\seqsema}[1]{\sema{#1}^{\mathsf{seq}}}
-\newcommand{\sseqsema}[1]{\sema{#1}^{\mathsf{sseq}}}
-\newcommand{\asstsema}[1]{\sema{#1}^{\mathsf{sasst}}}
+\newcommand{\sema}[2]{\llbracket #1 \rrbracket^{\mathsf{#2}}}
+\newcommand{\pkgsema}[1]{\sema{#1}{pkg}}
+\newcommand{\cspsema}[1]{\sema{#1}{csp}}
+\newcommand{\stepsema}[1]{\sema{#1}{step}}
+\newcommand{\gapsema}[2]{\sema{#1}{gap}_{(#2)}}
+\newcommand{\actsema}[1]{\sema{#1}{act}}
+\newcommand{\mspecsema}[1]{\sema{#1}{mspec}}
+\newcommand{\loopsema}[1]{\sema{#1}{loop}}
+\newcommand{\msgsetsema}[1]{\sema{#1}{mset}}
+\newcommand{\seqsema}[1]{\sema{#1}{seq}}
+\newcommand{\sseqsema}[1]{\sema{#1}{sseq}}
+\newcommand{\asstsema}[1]{\sema{#1}{asst}}
 
-\newcommand{\funcname}[1]{\mathsf{#1}}
-\newcommand{\eventsof}[1]{\funcname{events}(#1)}
+\newcommand{\ctargetsema}[1]{\sema{#1}{ctarget}}
+\newcommand{\otargetsema}[1]{\sema{#1}{otarget}}
+
+\newcommand{\ctargetRef}[1]{\funcname{ctargetRef}(#1)}
+\newcommand{\otargetRef}[2]{\funcname{otargetRef}(#1, #2)}
+\newcommand{\targetRef}[2]{\funcname{targetRef}(#1, #2)}
+
+\newcommand{\funcname}[1]{\ensuremath{\mathsf{#1}}}
+\newcommand{\eventsOf}[1]{\funcname{events}(#1)}
 \newcommand{\seqnameOf}[1]{\funcname{seqName}(#1)}
+\newcommand{\ctargetnameOf}[1]{\funcname{ctargetName}(#1)}
+\newcommand{\otargetnameOf}[1]{\funcname{otargetName}(#1)}
 
 \newcommand{\field}[2]{#1.\funcname{#2}}
 
@@ -66,12 +84,19 @@ target languages:
 \begin{table}
 	\centering
 
-	\begin{tabular}{rl}
+	\begin{tabular}{p{2em}p{11em}}
 	\toprule
-	\thead{Variable} & \thead{Meaning}
+	\thead{Var.} & \thead{Meaning}
 	\\
 	\midrule
-	\multicolumn{2}{l}{\tsubhead{Sequences}}
+	\multicolumn{2}{l}{\tsubhead{Packages (\cref{sec:metamodel-top})}}
+	\\
+	\(\apkg\) & \mrapackage
+	\\
+	\(\acsp\) & \mcspfragment
+	\\
+	\midrule
+	\multicolumn{2}{l}{\tsubhead{Sequences (\cref{sec:metamodel-sequences})}}
 	\\
 	\(\aseq\) & \msequence
 	\\
@@ -92,28 +117,43 @@ target languages:
 	\\
 	\(\bot\) & \mfinalaction
 	\\
+	\\
+	\bottomrule
+	\end{tabular}
+	\begin{tabular}{p{2em}p{11em}}
+	\toprule
+	\thead{Var.} & \thead{Meaning}
+	\\
 	\midrule
 	\multicolumn{2}{l}{\tsubhead{Messages (\cref{sec:metamodel-messages})}}
 	\\
 	\(\amspec\) & \mmessagespec
 	\\
-	\(\universe\) & \muniversegapmessageset
+	\(\amsgset\) & \mgapmessageset
 	\\
-	\(\amsgset\) & \mextensionalgapmessageset
+	\(\aumsgset\) & \muniversegapmessageset
+	\\
+	\(\anemsgset\) & \mextensionalgapmessageset
 	\\
 	\midrule
-	\multicolumn{2}{l}{\tsubhead{Actors}}
+	\multicolumn{2}{l}{\tsubhead{Actors (\cref{sec:metamodel-actors})}}
 	\\
 	\(\atarget\) & \mtarget
 	\\
 	\(\aworld\) & \mworld
 	\\
+	\(\aninst\) & \mtargetinstantiation
+	\\
+	\(\avar\) & \mvariable
+	\\
 	\midrule
-	\multicolumn{2}{l}{\tsubhead{Assertions}}
+	\multicolumn{2}{l}{\tsubhead{Assertions (\cref{sec:metamodel-assertions})}}
+	\\
+	\(\anasst\) & \massertion
 	\\
 	\(\asasst\) & \msequenceassertion
 	\\
-	\(\amodel\) & \mcspmodel
+	\(\amodel\) & \mcspmodel	
 	\\
 	\bottomrule
 	\end{tabular}
@@ -127,18 +167,22 @@ the abstract syntax in \cref{cha:metamodel} to the target notation.  Variables
 in the abstract syntax have an implicit type in the metamodel corresponding to
 one of the metasyntactic variables in \cref{tab:metasyntactic-variables}.
 
+For conciseness, we use elements of the Z notation throughout.
+\todo{is this ok?  does it need better explanation?}
+
 We also use the following notational conventions \todo{may need tweaking}:
 
 \begin{itemize}
 \item
-	\(\sema{-}_{\mathsf{name}}\) denotes a main semantic rule;
+	\(\sema{-}{name}\) denotes a main semantic rule;
 \item
 	\(\funcname{name}()\) denotes auxiliary semantic functions;
 \item
 	\(\field{x}{name}\) denotes a field of the metamodel object \(x\);
 \item
 	\(\text{Roman typeface}\) typically denotes a construct from the target
-	notation.
+	notation.  \todo{as mentioned in the front-matter, this doesn't work
+	very well}
 \end{itemize}
 
 \section{\tockcsp{} semantics}\label{sec:semantics-tockcsp}

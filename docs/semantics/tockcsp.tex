@@ -1,8 +1,8 @@
 %!TEX root=../robocert.tex
 
-This section introduces a semantics for \langname{} in terms of
-\emph{tock}-CSP.
-This semantics borrows heavily from that of Lima et al. on the CML semantics of
+This section introduces a \tockcsp{} semantics for \langname.
+\todo{Need to make sure it's actually \tockcsp, not CSP.}
+This semantics is inspired by that of Lima et al. on the CML semantics of
 UML sequence diagrams.
 
 The behaviour of the \langname{} generator is expected to conform to
@@ -22,11 +22,42 @@ this semantics, except that:
 	such as substituting \(P\) for \(\Stop \interrupt P\).
 \end{itemize}
 
+\todo{Some of the definitions are very loosely typed (as they are expanding from
+a metamodel to textual snippets of something halfway between \tockcsp{} and
+\cspm), and it'd be nice to fix that and/or give explicit result types.}
+
 \subsection{Packages}\label{ssec:semantics-tockcsp-top}
 
 The definitions here correspond to \cref{sec:metamodel-top}.
 
-\todo{TODO}
+\begin{defn}[\mrapackage]
+The semantics of \mrapackage{} is the concatenation of the semantics of its
+components, acquired by mapping the respective semantic functions through the
+component sequences.
+%
+\begin{align*}
+	\pkgsema{\apkg}
+\quad\defeq\quad&
+	(\cspsema{-} \circ (\field{\acsp}{cspFragments}))
+\cat
+	(\seqsema{-} \circ (\field{\acsp}{sequences}))
+\cat
+	(\asstsema{-} \circ (\field{\acsp}{assertion}))
+\end{align*}
+\end{defn}
+
+\begin{defn}[\mcspfragment]
+For now, the semantics of a CSP fragment is its contents directly interpreted
+as \tockcsp.  This will change later on; CSP fragments will eventually be bound
+to processes as in \robochart{} assertions.
+%
+\begin{align*}
+	\cspsema{\acsp}
+\quad\defeq\quad&
+	\field{\acsp}{contents}
+\end{align*}
+\end{defn}
+
 
 \subsection{Sequences}\label{ssec:semantics-tockcsp-sequences}
 
@@ -34,26 +65,32 @@ The definitions here correspond to \cref{sec:metamodel-sequences}.
 
 \begin{defn}[\msequence]
 
-The semantics of a \msequence{} is, for now, that of its subsequence.
-
-This rule does not capture the fact that the target and world definitions
-introduce bindings referred to in message specs; for instance,
-\lstinline[language=RoboCert]{sequence X for module Mod as M, world as W}
-binds \lstinline[language=RoboCert]{M} to the module target,
-\lstinline[language=RoboCert]{Mod} to its module, and
-\lstinline[language=RoboCert]{W} to the world.
-\todo{add target introduction}
+The semantics of a \msequence{} introduces three bindings: one for the
+definition of its \msubsequence, and one each for the open and closed forms of
+its \mtarget{} (\cref{ssec:semantics-tockcsp-actors}).
+\todo{this is a module in \cspm, can we define it this way in \tockcsp?}
 %
 \begin{align*}
 	\seqsema{\aseq}
 \quad\defeq\quad&	
-\left(
-	\seqnameOf{\aseq}{name} = \sseqsema{\field{\aseq}{body}}
-\right)
+\langle
+	\seqnameOf{\aseq}\ =\ \sseqsema{\field{\aseq}{body}}
+	, \otargetsema{\field{\aseq}{target}}
+	, \ctargetsema{\field{\aseq}{target}}\rangle
 \\
+\intertext{The semantics of assertions depends on the following names being
+available \todo{is this an implementation detail?}:}
 	\seqnameOf{\aseq}
 \quad\defeq\quad&
 	\field{\aseq}{name} \cspnsop \text{Sequence}
+\\
+	\otargetnameOf{\aseq}
+\quad\defeq\quad&
+	\field{\aseq}{name} \cspnsop \text{OpenTarget}
+\\
+	\ctargetnameOf{\aseq}
+\quad\defeq\quad&
+	\field{\aseq}{name} \cspnsop \text{Target}
 \end{align*}
 
 \end{defn}
@@ -65,17 +102,11 @@ The semantics of a \msubsequence{} is a sequential composition of that of its st
 \begin{align*}
 	\sseqsema{\asseq}
 	\quad\defeq\quad&	
-	\mathsf{Steps}(\field{\asseq}{body})
+	\funcname{steps}(\field{\asseq}{body})
 \\
-	\mathsf{Steps}(\langle\astep\rangle)
+	\funcname{steps}(\langle \astep_1, \dotsc, \astep_n \rangle)
 	\quad\defeq\quad&	
-	\stepsema{\astep}
-	\tag{base}
-\\
-	\mathsf{Steps}(\langle\astep\rangle\cat\mathbf{\astep})
-	\quad\defeq\quad&	
-	\stepsema{\astep} \circseq \mathsf{Steps}(\mathbf{\astep})
-	\tag{inductive}
+	\stepsema{\astep_1} \circseq \dotso \circseq \stepsema{\astep_n}
 \end{align*}
 
 \end{defn}
@@ -110,7 +141,7 @@ expected semantics.}
 \quad\defeq\quad&
 	\msgsetsema{\field{\agap}{allowed}}
 	\setminus
-	\left(\msgsetsema{\field{\agap}{forbidden}} \cup \eventsof{\anaction}\right)
+	\left(\msgsetsema{\field{\agap}{forbidden}} \cup \eventsOf{\anaction}\right)
 \end{align*}
 \end{defn}
 
@@ -120,12 +151,12 @@ the empty set for any other actions.  This will change when the prefix becomes
 inexpressible as an event set.
 %
 \begin{align*}
-	\eventsof{\anarrow}
+	\eventsOf{\anarrow}
 	\quad\defeq\quad&
 	\Set{\mspecsema{\anarrow}}
 	\tag{arrow}
 \\
-	\eventsof{\anaction}
+	\eventsOf{\anaction}
 	\quad\defeq\quad&
 	\emptyset
 	\tag{anything else}
@@ -139,7 +170,7 @@ Note that, per \cref{ssec:metamodel-sequences-gaps}, gap message sets in the
 \muniversegapmessageset s; we treat both using the same rule.
 %
 \begin{align*}
-	\msgsetsema{\universe}
+	\msgsetsema{\aumsgset}
 \quad\defeq\quad&
 	\events
 \tag{universe}
@@ -148,7 +179,7 @@ Note that, per \cref{ssec:metamodel-sequences-gaps}, gap message sets in the
 message
 spec as if it were an \marrowmessagespec.  This will change when arrow and gap
 message specs diverge.}}
-	\msgsetsema{\amsgset}
+	\msgsetsema{\anemsgset}
 \quad\defeq\quad&
 	\bigcup \Set{\mspecsema{\amspec} | \amspec \in \amsgset }
 \tag{extensional}
@@ -242,46 +273,157 @@ referred to by \(\atarget\).
 \\
 	\topicOf{\anop}{\atarget}{\aworld}
 \quad\defeq\quad&
-	\field{\anop}{name}\ \mathsf{Call}
+	\field{\anop}{name}\ \text{Call}
 \\
 	\topicOf{\anevent}{\aworld}{\atarget}
 \quad\defeq\quad&
-	\field{\anevent}{name}.\mathsf{in}
+	\field{\anevent}{name}.\text{in}
 \\
 	\topicOf{\anevent}{\atarget}{\aworld}
 \quad\defeq\quad&
-	\field{\anevent}{name}.\mathsf{out}
+	\field{\anevent}{name}.\text{out}
 \end{align*}
 
 \end{defn}
 
-\subsection{Actors}
+\subsection{Actors}\label{ssec:semantics-tockcsp-actors}
 
 The definitions here correspond to \cref{sec:metamodel-actors}.
 
-There are two rules for \mtarget{}s, corresponding to whether a
+\todo{This part might be overly low-level, I'm not sure.  It's
+maybe exposing a public interface between sequences and assertions, hence why
+it's in this semantics?}
+
+There are four rules for \mtarget{}s, corresponding to whether a
 \emph{definition} or a \emph{reference} is required for the
-\mtarget.\footnote{The CSP generator makes further distinction between
-\emph{open} and \emph{closed} targets, but the latter is an optimising
-implementation detail expressible in terms of the former.}
-The target definition applies the \mtargetinstantiation{} of the \mtarget{}
-to the parametric CSP process provided for it by the relevant semantics
-(for instance, we delegate to the \robochart{} semantics for the underlying
-\mrcmodule{} of a \mrcmoduletarget).
+\mtarget, and whether the target is \emph{open}
+(exposes as parameters any constants not otherwise defined) or
+\emph{closed} (delegates said parameters to names bound
+in its parent scope).  Assertions use the closed form if there is no
+assertion-level \mtargetinstantiation, and the open form in terms of the
+instantiation otherwise.
 
-\begin{defn}[\mtarget{} definition]
-	\todo{TODO}
+We assume three external functions bridging this semantics with that of
+\robochart{} etc. \todo{should we define these, or at least partially
+define them, here?}:
+
+\begin{itemize}
+\item
+	let \funcname{targetProcess} map a target to the parametric
+	process exposed by the relevant \tockcsp{} semantics (for instance,
+	we delegate to the \robochart{} semantics for the underlying
+	\mrcmodule{} of a \mrcmoduletarget);
+	\todo{doesn't account for the ID parameter in certain target
+	processes};
+\item
+	let \funcname{targetParams} map a target to the sequence of
+	constants in its parameterisation;
+\item
+	let \funcname{constName} map a constant to its name in the \robochart{}
+	instantiations file.
+\end{itemize}
+
+\begin{defn}[\mtarget{} open definition]
+
+The open definition produces a CSP process named
+\(\otargetnameOf{\field{\atarget}{sequence}}\), parameterised by the
+uninstantiated remainder of the process parameters of \(\atarget\), and
+defined as the process of \(\atarget\) with each argument filled as follows:
+for each parameter in the underlying target process, its
+target-level instantiation where present, and the corresponding outer
+parameter via \funcname{constName} where absent.
+
+\todo{Some type issues here, eg using \funcname{constName} as both a parameter
+and an expression}
+%
+\begin{align*}
+	\otargetsema{\atarget}
+\quad\defeq\quad&
+\begin{aligned}
+&
+	(\otargetnameOf{\field{\atarget}{sequence}})
+	\left(
+		\funcname{constName}\ \circ\ \funcname{uninstantiated}(\atarget)
+	\right)
+\\
+&
+	\quad=\quad
+	(\funcname{targetProcess}(\atarget))
+	\left(
+	\funcname{orOuter}(\field{\atarget}{instantiation})
+	\circ
+	\funcname{targetParams}(\atarget)
+	\right)
+\end{aligned}
+\\
+	\funcname{uninstantiated}(\atarget)
+\quad\defeq\quad&
+	\funcname{targetParams}(\atarget)
+	\filter
+	\left(\universe \setminus \ran \field{\aninst}{constants}\right)
+\\
+	\funcname{orOuter}(\aninst)
+\quad\defeq\quad&
+	\funcname{constName} \oplus \aninst
+\end{align*}
 \end{defn}
 
-\begin{defn}[\mtarget{} reference]
-	\todo{TODO}
-\end{defn}
-\begin{defn}[\mtarget{} closed reference]
-	\todo{TODO}
+\begin{defn}[\mtarget{} open reference]
+The semantics of an open reference is similar to the body of an open definition,
+as it distributes an instantiation across process parameters to yield arguments.
+In this case, we assume each name \(\funcname{constName}(\avar)\) resolves to an
+external default definition for constant \(\avar\).
+%
+\begin{align*}
+	\otargetRef{\atarget}{\aninst}
+\quad\defeq\quad&
+	(\otargetnameOf{\field{\atarget}{sequence}})
+	\left(
+	\funcname{orOuter}(\aninst)\ \circ\ \funcname{uninstantiated}(\atarget)
+	\right)
+\end{align*}
 \end{defn}
 
 \begin{defn}[\mtarget{} closed definition]
-	\todo{TODO}
+A closed definition encapsulates an open reference against the instantiation of
+the target itself; as the open target does not expose any of the parameters
+defined by this instantiation, this effectively leaves all exposed parameters
+set to their default values.
+\todo{This could theoretically be an empty instantiation too.}
+%
+\begin{align*}
+	\ctargetsema{\atarget}
+\quad\defeq\quad&
+	\ctargetnameOf{\field{\atarget}{sequence}}
+	\;=\;
+	\otargetRef{\atarget}{\field{\atarget}{instantiation}}
+\end{align*}
+\end{defn}
+
+\begin{defn}[\mtarget{} closed reference]
+A closed reference is the name assigned at \msequence{} level to the closed
+target process (since such processes have no parameters).
+%
+\begin{align*}
+\ctargetRef{\atarget}
+\quad\defeq\quad&
+\ctargetnameOf{\field{\atarget}{sequence}}
+\end{align*}
+\end{defn}
+
+Once we have the open and closed references, we can choose between them
+depending on whether an assertion \mtargetinstantiation{} is empty.
+
+\begin{defn}[\mtarget{} reference]
+\begin{align*}
+\targetRef{\atarget}{\aninst}
+\quad\defeq\quad
+\begin{cases}
+	\ctargetRef{\atarget} & \field{\aninst}{constants} = \emptyset
+	\\
+	\otargetRef{\atarget}{\aninst} & \text{otherwise}
+\end{cases}
+\end{align*}
 \end{defn}
 
 \subsection{Assertions}
@@ -290,15 +432,20 @@ The definitions here correspond to \cref{sec:metamodel-assertions}.
 
 \begin{defn}[\massertion]
 
-The only type of assertion so far is \msequenceassertion.
-
 \newcommand{\refop}[3]{\mathbin{\odot_{#1}^{(#2, #3)}}}
 
+The only type of assertion so far is \msequenceassertion.  The semantics of a
+\msequenceassertion{} relates the \msequence{} of the assertion to the
+\mtarget{} of the assertion.
+%
 \begin{align*}
 	\asstsema{\asasst}
 \quad\defeq\quad&
 	\seqnameOf{\field{\asasst}{sequence}}
+	\;
 	\refop{\field{\asasst}{model}}{\field{\asasst}{isNegated}}{\field{\asasst}{type}}
+	\;
+	\targetRef{\field{\field{\asasst}{sequence}}{target}}{\field{\asasst}{instantiation}}
 \\
 \intertext{The exact refinement operator depends on the assertion type and
 negation:}
