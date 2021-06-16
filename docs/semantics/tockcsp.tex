@@ -19,7 +19,7 @@ this semantics, except that:
 	CSP operators;
 \item
 	The generator \emph{may} perform semantics-preserving optimisations,
-	such as substituting \(P\) for \(\Stop \interrupt P\).
+	such as substituting \(P\) for \(\tlang{\Stop \interrupt{}}P\).
 \end{itemize}
 
 \todo{Some of the definitions are very loosely typed (as they are expanding from
@@ -34,6 +34,7 @@ The definitions here correspond to \cref{sec:metamodel-top}.
 The semantics of \mrapackage{} is the concatenation of the semantics of its
 components, acquired by mapping the respective semantic functions through the
 component sequences.
+\todo{This should really return one \tockcsp{} element, not a sequence of them.}
 %
 \begin{align*}
 	\pkgsema{\apkg}
@@ -82,15 +83,15 @@ its \mtarget{} (\cref{ssec:semantics-tockcsp-actors}).
 available \todo{is this an implementation detail?}:}
 	\seqnameOf{\aseq}
 \quad\defeq\quad&
-	\field{\aseq}{name} \cspnsop \text{Sequence}
+	\field{\aseq}{name} \tlang{{} \cspnsop \text{Sequence}}
 \\
 	\otargetnameOf{\aseq}
 \quad\defeq\quad&
-	\field{\aseq}{name} \cspnsop \text{OpenTarget}
+	\field{\aseq}{name} \tlang{{} \cspnsop \text{OpenTarget}}
 \\
 	\ctargetnameOf{\aseq}
 \quad\defeq\quad&
-	\field{\aseq}{name} \cspnsop \text{Target}
+	\field{\aseq}{name} \tlang{{} \cspnsop \text{Target}}
 \end{align*}
 
 \end{defn}
@@ -106,7 +107,7 @@ The semantics of a \msubsequence{} is a sequential composition of that of its st
 \\
 	\funcname{steps}(\langle \astep_1, \dotsc, \astep_n \rangle)
 	\quad\defeq\quad&	
-	\stepsema{\astep_1} \circseq \dotso \circseq \stepsema{\astep_n}
+	\stepsema{\astep_1} \tlang{\circseq} \dotso \tlang{\circseq} \stepsema{\astep_n}
 \end{align*}
 
 \end{defn}
@@ -123,8 +124,10 @@ expected semantics.}
 \begin{align*}
 	\stepsema{\astep}
 \quad\defeq\quad&	
-	\runproc{\gapsema{\field{\astep}{gap}}{\field{\astep}{action}}}
-	\interrupt \actsema{\field{\astep}{action}}
+	\tlang{
+		\runproc{\olang{\gapsema{\field{\astep}{gap}}{\field{\astep}{action}}}}
+		\interrupt \olang{\actsema{\field{\astep}{action}}}
+	}
 \end{align*}
 \end{defn}
 
@@ -133,15 +136,22 @@ expected semantics.}
 	the difference between the \emph{allowed} set,
 	and the result of extending the \emph{forbidden} set with any events
 	the action following the gap can initially communicate.
+	\todo{Should these set operations be done at CSP level?}
 %
 \begin{align*}
 	\gapsema{
 		\agap
 	}{\anaction}
 \quad\defeq\quad&
-	\msgsetsema{\field{\agap}{allowed}}
+\tlang{
+	\olang{\msgsetsema{\field{\agap}{allowed}}}
 	\setminus
-	\left(\msgsetsema{\field{\agap}{forbidden}} \cup \eventsOf{\anaction}\right)
+	\left(
+		\olang{\msgsetsema{\field{\agap}{forbidden}}}
+		\cup
+		\olang{\eventsOf{\anaction}}
+	\right)
+}
 \end{align*}
 \end{defn}
 
@@ -152,13 +162,13 @@ inexpressible as an event set.
 %
 \begin{align*}
 	\eventsOf{\anarrow}
-	\quad\defeq\quad&
-	\Set{\mspecsema{\anarrow}}
+\quad\defeq\quad&
+	\tlang{\Set{\olang{\mspecsema{\anarrow}}}}
 	\tag{arrow}
 \\
 	\eventsOf{\anaction}
-	\quad\defeq\quad&
-	\emptyset
+\quad\defeq\quad&
+	\tlang{\emptyset}
 	\tag{anything else}
 \end{align*}
 \end{defn}
@@ -172,16 +182,20 @@ Note that, per \cref{ssec:metamodel-sequences-gaps}, gap message sets in the
 \begin{align*}
 	\msgsetsema{\aumsgset}
 \quad\defeq\quad&
-	\events
+	\tlang{\events}
 \tag{universe}
 \\
-\intertext{\todo{For now, the semantics of an \mextensionalgapmessageset{} depends on treating each
+\intertext{\todo{For now, the semantics of an \mextensionalgapmessageset{} treats each
 message
 spec as if it were an \marrowmessagespec.  This will change when arrow and gap
-message specs diverge.}}
+message specs diverge.}\todo{The meta/object language distinction is messy here
+and I'm not sure how to handle it.}}
 	\msgsetsema{\anemsgset}
 \quad\defeq\quad&
-	\bigcup \Set{\mspecsema{\amspec} | \amspec \in \amsgset }
+	\tlang{\bigcup}
+	\Set{
+		\mspecsema{\amspec} | \amspec \in \field{\anemsgset}{messages}
+	}
 \tag{extensional}
 \end{align*}
 \end{defn}
@@ -198,12 +212,14 @@ over its label and subsequence.
 %
 \begin{align*}
 	\actsema{\anarrow}
-	\quad\defeq\quad&
+\quad\defeq\quad&
+	\tlang{
 	\left(
-	\mspecsema{\anarrow}
+	\olang{\mspecsema{\anarrow}}
 	\then
 	\Skip
 	\right)
+	}
 	\tag{arrow action}
 \\
 	\actsema{\aloop}
@@ -214,7 +230,7 @@ over its label and subsequence.
 \intertext{For now, a \mfinalaction{} does not terminate.}
 	\actsema{\bot}
 \quad\defeq\quad&
-	\Stop
+	\tlang{\Stop}
 \tag{final action}
 \end{align*}
 
@@ -228,12 +244,14 @@ subsequence placed in a recursive process.
 \begin{align*}
 	\loopsema{\aloop}
 \quad\defeq\quad&
-	\circmu \mathsf{LOOP}_{\field{\aloop}{name}} \bullet
+\tlang{
+	\circmu \mathsf{LOOP}_{\olang{\field{\aloop}{name}}} \bullet
 	\left(
-		\sseqsema{\field{\aloop}{body}}
-		\circseq \mathsf{LOOP}_{\field{\aloop}{name}}
+		\olang{\sseqsema{\field{\aloop}{body}}}
+		\circseq \mathsf{LOOP}_{\olang{\field{\aloop}{name}}}
 	\right)
-	\tag{infinite loop}
+}
+\tag{infinite loop}
 \end{align*}
 
 \end{defn}
@@ -262,7 +280,7 @@ referred to by \(\atarget\).
 	\mspecsema{\anarrow}
 \quad\defeq\quad&
 	\nsOf{\targetOf{\field{\anarrow}{from}}{\field{\anarrow}{to}}}
-	\cspnsop
+	\tlang{{}\cspnsop{}}
 	\topicOf{\field{\anarrow}{topic}}{\field{\anarrow}{from}}{\field{\anarrow}{to}}
 \\
 	\targetOf{\aworld}{\atarget}
@@ -273,15 +291,15 @@ referred to by \(\atarget\).
 \\
 	\topicOf{\anop}{\atarget}{\aworld}
 \quad\defeq\quad&
-	\field{\anop}{name}\ \text{Call}
+	\field{\anop}{name}\tlang{\text{Call}}
 \\
 	\topicOf{\anevent}{\aworld}{\atarget}
 \quad\defeq\quad&
-	\field{\anevent}{name}.\text{in}
+	\field{\anevent}{name}\tlang{.\text{in}}
 \\
 	\topicOf{\anevent}{\atarget}{\aworld}
 \quad\defeq\quad&
-	\field{\anevent}{name}.\text{out}
+	\field{\anevent}{name}\tlang{.\text{out}}
 \end{align*}
 
 \end{defn}
@@ -341,19 +359,25 @@ and an expression}
 \quad\defeq\quad&
 \begin{aligned}
 &
-	(\otargetnameOf{\field{\atarget}{sequence}})
+	\otargetnameOf{\field{\atarget}{sequence}}
+	\tlang{
 	\left(
-		\funcname{constName}\ \circ\ \funcname{uninstantiated}(\atarget)
+		\olang{\funcname{constName}\ \circ\ \funcname{uninstantiated}(\atarget)}
 	\right)
+	}
 \\
 &
-	\quad=\quad
-	(\funcname{targetProcess}(\atarget))
+	\tlang{\quad=\quad}
+	\funcname{targetProcess}(\atarget)
+	\tlang{
 	\left(
+	\olang{
 	\funcname{orOuter}(\field{\atarget}{instantiation})
 	\circ
 	\funcname{targetParams}(\atarget)
+	}
 	\right)
+	}
 \end{aligned}
 \\
 	\funcname{uninstantiated}(\atarget)
@@ -377,10 +401,14 @@ external default definition for constant \(\avar\).
 \begin{align*}
 	\otargetRef{\atarget}{\aninst}
 \quad\defeq\quad&
-	(\otargetnameOf{\field{\atarget}{sequence}})
+	\otargetnameOf{\field{\atarget}{sequence}}
+	\tlang{
 	\left(
+	\olang{
 	\funcname{orOuter}(\aninst)\ \circ\ \funcname{uninstantiated}(\atarget)
+	}
 	\right)
+	}
 \end{align*}
 \end{defn}
 
@@ -395,7 +423,7 @@ set to their default values.
 	\ctargetsema{\atarget}
 \quad\defeq\quad&
 	\ctargetnameOf{\field{\atarget}{sequence}}
-	\;=\;
+	\tlang{\;=\;}
 	\otargetRef{\atarget}{\field{\atarget}{instantiation}}
 \end{align*}
 \end{defn}
@@ -451,22 +479,22 @@ The only type of assertion so far is \msequenceassertion.  The semantics of a
 negation:}
 	\refop{\amodel}{\true}{\mathsf{holds}}
 \quad\defeq\quad&
-	\sqsubseteq_\amodel
+	\tlang{\sqsubseteq}_\amodel
 \tag{holds}
 \\
 	\refop{\amodel}{\false}{\mathsf{holds}}
 \quad\defeq\quad&
-	\not\sqsubseteq_\amodel
+	\tlang{\not\sqsubseteq}_\amodel
 \tag{does not hold}
 \\
 	\refop{\amodel}{\true}{\mathsf{isObserved}}
 \quad\defeq\quad&
-	\sqsupseteq_\amodel
+	\tlang{\sqsupseteq}_\amodel
 \tag{is observed}
 \\
 	\refop{\amodel}{\false}{\mathsf{isObserved}}
 \quad\defeq\quad&
-	\not\sqsupseteq_\amodel
+	\tlang{\not\sqsupseteq}_\amodel
 \tag{is not observed}
 \\
 \end{align*}

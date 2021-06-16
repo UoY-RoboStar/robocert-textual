@@ -1,5 +1,10 @@
 %!TEX root=./robocert.tex
 
+% Target language colouration
+\newcommand{\tlang}[1]{\textcolor{blue}{#1}}
+% Object language colouration (nested inside target language)
+\newcommand{\olang}[1]{\textcolor{black}{#1}}
+
 \newcommand{\tockcsp}{\emph{tock}-CSP}
 \newcommand{\cspm}{CSP\(_\text{M}\)}
 
@@ -163,16 +168,16 @@ target languages:
 \end{table}
 
 The semantics treatments in this section take the form of rewrite rules from
-the abstract syntax in \cref{cha:metamodel} to the target notation.  Variables
-in the abstract syntax have an implicit type in the metamodel corresponding to
-one of the metasyntactic variables in \cref{tab:metasyntactic-variables}.
-
-For conciseness, we use elements of the Z notation throughout.
+the abstract syntax in \cref{cha:metamodel} to some object language (for
+instance, \tockcsp).
+For conciseness, we use a meta-language based on the Z notation.
 \todo{is this ok?  does it need better explanation?}
-
 We also use the following notational conventions \todo{may need tweaking}:
 
 \begin{itemize}
+\item
+	\tlang{blue text} denotes a construct from the object
+	language; outside such text, assume use of the meta-language;
 \item
 	\(\sema{-}{name}\) denotes a main semantic rule;
 \item
@@ -180,9 +185,9 @@ We also use the following notational conventions \todo{may need tweaking}:
 \item
 	\(\field{x}{name}\) denotes a field of the metamodel object \(x\);
 \item
-	\(\text{Roman typeface}\) typically denotes a construct from the target
-	notation.  \todo{as mentioned in the front-matter, this doesn't work
-	very well}
+	variables in the meta-language have an implicit metamodel type
+	corresponding to one of the metasyntactic variables in
+	\cref{tab:metasyntactic-variables}.
 \end{itemize}
 
 \section{\tockcsp{} semantics}\label{sec:semantics-tockcsp}
