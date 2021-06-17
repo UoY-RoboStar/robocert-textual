@@ -126,5 +126,5 @@ class TargetGenerator {
 	}
 
 	private def generateNamedExpression(Expression it, Variable const,
-		TargetInstantiation instantiation) '''{- «const.name» -} «compileExpression(instantiation)»'''
+		TargetInstantiation instantiation) '''{- «const.constantId» -} «compileExpression(instantiation)»'''
 }
