@@ -2,7 +2,6 @@ package robocalc.robocert.generator.csp
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.MessageSpec
-import robocalc.robocert.generator.utils.TargetExtensions
 import robocalc.robocert.utils.MessageAnalysis
 
 /**

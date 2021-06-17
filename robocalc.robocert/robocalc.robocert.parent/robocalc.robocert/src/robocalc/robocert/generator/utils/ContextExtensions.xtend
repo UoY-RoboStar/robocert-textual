@@ -13,7 +13,7 @@ import com.google.common.collect.Iterators
 import circus.robocalc.robochart.BasicContext
 import circus.robocalc.robochart.VariableModifier
 import circus.robocalc.robochart.OperationSig
-import org.eclipse.xtext.xbase.lib.Functions.Function1
+import circus.robocalc.robochart.Event
 
 /**
  * Extension methods for dealing with RoboChart contexts.
@@ -36,29 +36,41 @@ class ContextExtensions {
 	}
 	
 	/**
+	 * Gets all events available in a context.
+	 * 
+	 * @param it  the context to search.
+	 * 
+	 * @returns all events on this context, and any interfaces it provides,
+	 *          uses, or requires.
+	 */
+	def Iterator<Event> allEvents(Context it) {
+		all[events.iterator]
+	}
+	
+	/**
 	 * Gets all operations available in a context.
 	 * 
 	 * @param it  the context to search.
 	 * 
-	 * @returns all constants on this context, and any interfaces it provides,
+	 * @returns all operations on this context, and any interfaces it provides,
 	 *          uses, or requires.
 	 */
 	def Iterator<OperationSig> allOperations(Context it) {
 		all[operations.iterator]
 	}
 	
-	private def<T> all(Context it, Function1<BasicContext, Iterator<T>> f) {
+	private def<T> all(Context it, (BasicContext) => Iterator<T> f) {
 		Iterators.concat(
 			allLocal(f),
-			RInterfaces.iterator.flatMap[f.apply(it)]
+			RInterfaces.iterator.flatMap(f)
 		)
 	}
 	
-	private def<T> allLocal(Context it, Function1<BasicContext, Iterator<T>> f) {
+	private def<T> allLocal(Context it, (BasicContext) => Iterator<T> f) {
 		Iterators.concat(
 			f.apply(it),
-			PInterfaces.iterator.flatMap[f.apply(it)],
-			interfaces.iterator.flatMap[f.apply(it)]
+			PInterfaces.iterator.flatMap(f),
+			interfaces.iterator.flatMap(f)
 		)		
 	}
 }

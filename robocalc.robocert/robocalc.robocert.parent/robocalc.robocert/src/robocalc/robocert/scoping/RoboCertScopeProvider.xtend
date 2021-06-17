@@ -11,10 +11,10 @@ import org.eclipse.xtext.scoping.Scopes
 import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.generator.utils.TargetExtensions
 import com.google.inject.Inject
-import org.eclipse.xtext.scoping.IScope
 import robocalc.robocert.model.robocert.ConstAssignment
 import robocalc.robocert.model.robocert.SequenceAssertion
 import robocalc.robocert.model.robocert.OperationTopic
+import robocalc.robocert.model.robocert.EventTopic
 
 /**
  * This class contains custom scoping description.
@@ -28,6 +28,23 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	
 	override getScope(EObject context, EReference reference) {
 		getScopeInner(context, reference) ?: super.getScope(context, reference)
+	}
+	
+	/**
+	 * Special scoping for events in an event topic.
+	 * 
+	 * The events in scope here are those that the 'from' of the message can
+	 * send to the 'to' of the message.
+	 * 
+	 * @param context    the scoping context.
+	 * @param reference  the reference.
+	 * 
+	 * @return  the provided scope (can be null).
+	 */
+	private def dispatch getScopeInner(EventTopic context, EReference reference) {
+		if (reference == EVENT_TOPIC__EVENT) {
+			context.eventScope
+		}
 	}
 
 	/**
