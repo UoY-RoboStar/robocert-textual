@@ -31,8 +31,9 @@ class ActionGeneratorImpl implements ActionGenerator {
 	 */
 	def dispatch generate(LoopAction it) '''
 		let
-			LOOP_«name» =
-		  		«body.generate»
+			LOOP_«name» = (
+				«body.generate»
+		  	); LOOP_«name»
 		within LOOP_«name»
 	'''
 
