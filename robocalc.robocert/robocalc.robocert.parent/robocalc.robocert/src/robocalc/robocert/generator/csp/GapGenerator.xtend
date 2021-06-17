@@ -7,6 +7,7 @@ import robocalc.robocert.model.robocert.GapMessageSet
 import robocalc.robocert.model.robocert.ExtensionalGapMessageSet
 import robocalc.robocert.model.robocert.UniverseGapMessageSet
 import robocalc.robocert.generator.utils.GapExtensions
+import com.google.common.collect.Iterators
 
 /**
  * Generates CSP for the gaps between actions.
@@ -62,7 +63,16 @@ class GapGenerator {
 	 * away from being extensional.
 	 */
 	private def generateForbidSet(SequenceGap it,
-		SequenceAction action) '''{|«forbidden.generateSetContents»«IF action.hasCSPEvents», «action.generateCSPEventSet»«ENDIF»|}'''
+		SequenceAction action) {
+		constructSet(generateForbidSetElements(action))
+	}
+
+	private def generateForbidSetElements(SequenceGap it, SequenceAction action) {
+		Iterators.concat(
+			forbidden.messages.iterator.map[generateCSPEventSet],
+			action.generateCSPEventSet
+		).toIterable
+	}
 
 	/**
 	 * Generates a CSP event set for an extensional gap message set.
@@ -71,7 +81,9 @@ class GapGenerator {
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	private def dispatch generateSet(ExtensionalGapMessageSet it) '''{|«generateSetContents»|}'''
+	private def dispatch generateSet(ExtensionalGapMessageSet it) {
+		constructSet(messages.map[generateCSPEventSet])
+	}
 
 	/**
 	 * Generates a CSP event set for a universe gap message set.
@@ -92,13 +104,11 @@ class GapGenerator {
 	private def dispatch generateSet(GapMessageSet it) '''{- UNKNOWN GAP MESSAGE SET: «it» -}'''
 
 	/**
-	 * Generates the inner list of CSP events for an extensional gap message set.
+	 * Wraps a pre-generated CSP set in the appropriate delimiters.
 	 * 
-	 * @param set  the message set for which we are generating CSP.
+	 * @param it  the iterable yielding the set for which we are generating CSP.
 	 * 
-	 * @return generated CSP for the gap message set (less the set delimiters).
+	 * @return generated CSP for the set.
 	 */
-	private def generateSetContents(
-		ExtensionalGapMessageSet it) '''«FOR m : messages SEPARATOR ', '»«m.generateCSPEventSet»«ENDFOR»'''
-
+	private def constructSet(Iterable<CharSequence> it) '''«FOR g : it BEFORE '{|' SEPARATOR ', ' AFTER '|}'»«g»«ENDFOR»'''
 }

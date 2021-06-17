@@ -3,6 +3,9 @@ package robocalc.robocert.generator.csp
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.model.robocert.ArrowAction
+import java.util.Iterator
+import java.util.Collections
+import com.google.common.collect.Iterators
 
 /**
  * Generates CSP event sets for actions.
@@ -16,10 +19,10 @@ class ActionCSPEventSetGenerator {
 	/**
 	 * Generates the CSP event set for an arrow action.
 	 * @param action  the action for which we are generating the event set.
-	 * @return  the event set (less the set delimiters).
+	 * @return  the event set as an iterator of generated elements.
 	 */
-	def dispatch CharSequence generateCSPEventSet(ArrowAction action) {
-		action.body.generateCSPEventSet
+	def dispatch Iterator<CharSequence> generateCSPEventSet(ArrowAction action) {
+		Iterators.singletonIterator(action.body.generateCSPEventSet)
 	}
 
 	/**
@@ -27,7 +30,9 @@ class ActionCSPEventSetGenerator {
 	 * @param action  the action for which we are generating the event set.
 	 * @return  nothing (empty set).
 	 */
-	def dispatch CharSequence generateCSPEventSet(SequenceAction action) ''''''
+	def dispatch Iterator<CharSequence> generateCSPEventSet(SequenceAction action) {
+		Collections.emptyIterator
+	}
 
 	// TODO: these extension methods should either move into the metamodel, or into a utilities class. 
 	/**
