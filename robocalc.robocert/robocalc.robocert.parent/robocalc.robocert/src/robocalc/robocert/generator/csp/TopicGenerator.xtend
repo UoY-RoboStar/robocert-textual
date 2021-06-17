@@ -23,7 +23,7 @@ class TopicGenerator {
 	 * 
 	 * @return generated CSP.
 	 */
-	def dispatch CharSequence generate(EventTopic it, MessageAnalysis analysis) '''«analysis.namespace»::«event.name».«analysis.direction»'''
+	def dispatch CharSequence generate(EventTopic it, MessageAnalysis analysis) '''«analysis.namespace»::«event.name».«analysis.cspDirection»'''
 
 	/**
 	 * Generates CSP for an operation topic.

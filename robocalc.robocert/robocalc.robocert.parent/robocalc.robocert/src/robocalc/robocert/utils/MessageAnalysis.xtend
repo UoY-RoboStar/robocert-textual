@@ -38,4 +38,17 @@ import org.eclipse.xtend.lib.annotations.Data
 		}
 		new MessageAnalysis(null, ArrowDirection::Unknown)
 	}
+	
+	/**
+	 * Gets the channel name in the CSP semantics for the direction.
+	 * 
+	 * @return  "in" for input, "out" for output, unspecified otherwise.
+	 */
+	def cspDirection() {
+		switch direction {
+			case Input: "in"
+			case Output: "out"
+			case Unknown: "UNKNOWN"
+		}
+	}
 }
