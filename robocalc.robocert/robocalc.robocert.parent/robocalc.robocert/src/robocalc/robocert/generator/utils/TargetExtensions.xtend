@@ -8,6 +8,7 @@ import java.util.Collections
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.TargetInstantiation
 import circus.robocalc.robochart.Expression
+import circus.robocalc.robochart.Context
 
 /**
  * Extension methods for dealing with targets.
@@ -70,7 +71,7 @@ class TargetExtensions {
 	/**
 	 * Looks up a constant in this instantiation and tries to return its value.
 	 * 
-	 * @param it  the instantiation.
+	 * @param it     the instantiation.
 	 * @param const  the constant to look for.
 	 * 
 	 * @return the value of the constant, or null if it isn't instantiated
@@ -78,5 +79,27 @@ class TargetExtensions {
 	 */
 	def Expression getConstant(TargetInstantiation it, Variable const) {
 		constants.findFirst[key == const]?.value
+	}
+	
+	/**
+	 * Gets the world from the perspective of a module target.
+	 * 
+	 * @param it  the module target in question.
+	 * 
+	 * @return the world, as an iterator over contexts.
+	 */
+	def dispatch Iterator<Context> world(RCModuleTarget it) {
+		module.world
+	}
+	
+	/**
+	 * Gets the fallback world.
+	 * 
+	 * @param it  the module target in question.
+	 * 
+	 * @return the world, as an iterator over contexts.
+	 */
+	def dispatch Iterator<Context> world(Target it) {
+		Collections.emptyIterator
 	}
 }

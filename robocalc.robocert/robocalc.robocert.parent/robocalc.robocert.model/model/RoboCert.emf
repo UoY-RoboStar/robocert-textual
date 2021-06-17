@@ -259,7 +259,7 @@ abstract class MessageSpec {
 	/**
 	 * The topic of the message.
 	 */
-	val MessageTopic[1] topic;
+	val MessageTopic[1]#spec topic;
 	/**
 	 * The source of the message.
 	 */
@@ -298,6 +298,10 @@ class GapMessageSpec extends MessageSpec {
  * A message topic.
  */
 abstract class MessageTopic {
+	/**
+	 * The parent message specification.
+	 */
+	ref MessageSpec[1]#topic spec;
 }
 
 /**

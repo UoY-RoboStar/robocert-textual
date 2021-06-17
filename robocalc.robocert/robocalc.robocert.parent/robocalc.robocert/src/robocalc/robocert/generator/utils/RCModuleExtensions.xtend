@@ -13,6 +13,7 @@ import circus.robocalc.robochart.Controller
 import com.google.inject.Inject
 import circus.robocalc.robochart.Variable
 import java.util.Iterator
+import circus.robocalc.robochart.Context
 
 /**
  * Extension methods for dealing with RoboChart modules.
@@ -35,6 +36,18 @@ class RCModuleExtensions {
 			platform.allLocalConstants,
 			controllers.iterator.flatMap[moduleParameterisation]
 		)
+	}
+	
+	/**
+	 * Gets the world from the perspective of a RoboChart module.
+	 * 
+	 * At time of writing, the world is the robotic platform only.
+	 * 
+	 * @param it  the RoboChart module
+	 * @return an iterator over the contexts making up the world.
+	 */
+	def Iterator<Context> world(RCModule it) {
+		Iterators.singletonIterator(platform)
 	}
 
 	/**

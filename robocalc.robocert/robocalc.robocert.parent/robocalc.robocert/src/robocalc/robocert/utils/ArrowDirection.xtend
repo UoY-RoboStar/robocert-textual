@@ -1,4 +1,4 @@
-package robocalc.robocert.generator
+package robocalc.robocert.utils
 
 /**
  * Directions of arrows in terms of the CSP semantics.

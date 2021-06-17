@@ -89,7 +89,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction"/>
   <eClassifiers xsi:type="ecore:EClass" name="MessageSpec" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" lowerBound="1" eType="#//MessageTopic"
-        containment="true"/>
+        containment="true" eOpposite="#//MessageTopic/spec"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" lowerBound="1" eType="#//Actor"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="to" lowerBound="1" eType="#//Actor"/>
   </eClassifiers>
@@ -101,7 +101,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
         eType="#//ExtensionalGapMessageSet" eOpposite="#//ExtensionalGapMessageSet/messages"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MessageTopic" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MessageTopic" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="spec" lowerBound="1" eType="#//MessageSpec"
+        eOpposite="#//MessageSpec/topic"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EventTopic" eSuperTypes="#//MessageTopic">
     <eStructuralFeatures xsi:type="ecore:EReference" name="event" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event"/>
   </eClassifiers>

@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import org.eclipse.xtext.scoping.IScope
 import robocalc.robocert.model.robocert.ConstAssignment
 import robocalc.robocert.model.robocert.SequenceAssertion
+import robocalc.robocert.model.robocert.OperationTopic
 
 /**
  * This class contains custom scoping description.
@@ -22,27 +23,47 @@ import robocalc.robocert.model.robocert.SequenceAssertion
  * on how and when to use it.
  */
 class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
+	@Inject extension TopicScopeExtensions
 	@Inject extension TargetExtensions
 	
 	override getScope(EObject context, EReference reference) {
-		getScopeInner(context, reference)
+		getScopeInner(context, reference) ?: super.getScope(context, reference)
+	}
+
+	/**
+	 * Special scoping for operations in an operation topic.
+	 * 
+	 * The operations in scope here are those that the 'from' of the message can
+	 * call on the 'to' of the message.
+	 * 
+	 * @param context    the scoping context.
+	 * @param reference  the reference.
+	 * 
+	 * @return  the provided scope (can be null).
+	 */
+	private def dispatch getScopeInner(OperationTopic context, EReference reference) {
+		if (reference == OPERATION_TOPIC__OPERATION) {
+			context.operationScope
+		}
 	}
 	
 	/**
 	 * Special scoping for constants in a constant assignment.
 	 * 
+	 * The constants in scope here are those available on the relevant target,
+	 * either found enclosing this constant assignment or indirectly through an
+	 * enclosing assertion (in which case, the only constants in scope are those
+	 * not fixed by the target's instantiation).
+	 * 
 	 * @param context    the scoping context.
 	 * @param reference  the reference.
 	 * 
-	 * @return  the provided scope.
+	 * @return  the provided scope (can be null).
 	 */
 	private def dispatch getScopeInner(ConstAssignment context, EReference reference) {
-		var IScope scope = null
 		if (reference == CONST_ASSIGNMENT__KEY) {
-			scope = context.constAssignmentScope
+			context.constAssignmentScope
 		}
-		
-		scope ?: super.getScope(context, reference)	
 	}
 	
 	/**
@@ -51,10 +72,9 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	 * @param context    the scoping context.
 	 * @param reference  the reference.
 	 * 
-	 * @return  the provided scope.
+	 * @return  null.
 	 */
 	private def dispatch getScopeInner(EObject context, EReference reference) {
-		super.getScope(context, reference)
 	}
 	
 	private def constAssignmentScope(ConstAssignment it) {

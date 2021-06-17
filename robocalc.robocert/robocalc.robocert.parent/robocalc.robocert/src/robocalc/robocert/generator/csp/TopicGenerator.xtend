@@ -1,39 +1,39 @@
 package robocalc.robocert.generator.csp
 
-import robocalc.robocert.generator.ArrowDirection
 import robocalc.robocert.model.robocert.EventTopic
 import robocalc.robocert.model.robocert.OperationTopic
 import robocalc.robocert.model.robocert.MessageTopic
+import robocalc.robocert.utils.MessageAnalysis
+import robocalc.robocert.generator.utils.TargetExtensions
+import javax.inject.Inject
 
 /**
  * Generates CSP for message topics.
  */
 class TopicGenerator {
+	@Inject extension TargetExtensions
+	
 	// TODO: parameters (if they go on topics rather than messages)
 	// NOTE: parameters might eventually introduce bindings
 	/**
 	 * Generates CSP for an event topic.
 	 * 
-	 * @param topic  the topic for which we are generating CSP.
-	 * @param dir    the direction of the message.
-	 * @param ns     the namespace of the component to which the sequence is attached.
+	 * @param it        the topic for which we are generating CSP.
+	 * @param analysis  the analysis of the message's target and direction.
 	 * 
 	 * @return generated CSP.
 	 */
-	def dispatch CharSequence generate(EventTopic topic, ArrowDirection dir,
-		String ns) '''«ns»::«topic.event.name».«dir»'''
+	def dispatch CharSequence generate(EventTopic it, MessageAnalysis analysis) '''«analysis.namespace»::«event.name».«analysis.direction»'''
 
 	/**
-	 * @return generated CSP for an operation topic.
+	 * Generates CSP for an operation topic.
 	 * 
-	 * @param topic  the topic for which we are generating CSP.
-	 * @param dir    the direction of the message.
-	 * @param ns     the namespace of the component to which the sequence is attached.
+	 * @param it        the topic for which we are generating CSP.
+	 * @param analysis  the analysis of the message's target and direction.
 	 * 
 	 * @return generated CSP.
 	 */
-	def dispatch CharSequence generate(OperationTopic topic, ArrowDirection dir,
-		String ns) '''«ns»::«topic.operation.name»Call'''
+	def dispatch CharSequence generate(OperationTopic it, MessageAnalysis analysis) '''«analysis.namespace»::«operation.name»Call'''
 
 	/**
 	 * Fallback for generating a topic when we don't recognise the actors
@@ -41,12 +41,14 @@ class TopicGenerator {
 	 * 
 	 * Getting here suggests validation isn't working properly.
 	 * 
-	 * @param topic  the topic for which we are generating CSP.
-	 * @param from   the from-actor.
-	 * @param to     the to-actor.
+	 * @param it        the topic for which we are generating CSP.
+	 * @param analysis  the analysis of the message's target and direction.
 	 * 
 	 * @return generated CSP.
 	 */
-	def dispatch CharSequence generate(MessageTopic topic, ArrowDirection dir,
-		String ns) '''{- unsupported topic: topic=«topic» dir=«dir» -} tock'''
+	def dispatch CharSequence generate(MessageTopic it, MessageAnalysis analysis) '''{- unsupported topic: topic=«it» -} tock'''
+		
+	private def getNamespace(MessageAnalysis it) {
+		target?.namespace ?: "NO_TARGET"
+	}
 }
