@@ -21,8 +21,14 @@ class RAPackage extends robochart.BasicPackage {
 	 * TODO: these will likely go away once we have a way of resolving files.
 	 */
 	val CSPFragment[*] cspFragments;
+	/**
+	 * Any sequence diagrams in this package.
+	 */
 	val Sequence[*] sequences;
-	val NamedAssertion[*] assertions;
+	/**
+	 * Any assertions in this package.
+	 */
+	val Assertion[*] assertions;
 }
 
 //
@@ -331,23 +337,9 @@ class OperationTopic extends MessageTopic {
 // ASSERTIONS
 //
 /**
- * An assertion that has been given a name.
+ * An assertion.
  */
-class NamedAssertion extends robochart.NamedElement {
-	/**
-	 * The body containing the part of the assertion that can vary.
-	 */
-	val Assertion[1]#parent body;
-}
-
-/**
- * An assertion body.
- */
-abstract class Assertion {
-	/**
-	 * The parent named assertion.
-	 */
-	ref NamedAssertion[1]#body parent;
+abstract class Assertion extends robochart.NamedElement {
 }
 
 /**

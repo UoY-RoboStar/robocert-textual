@@ -2,7 +2,6 @@ package robocalc.robocert.generator.csp
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.SequenceAssertion
-import robocalc.robocert.model.robocert.NamedAssertion
 import robocalc.robocert.model.robocert.Assertion
 
 /**
@@ -14,9 +13,9 @@ class AssertionGenerator {
 	/**
 	 * @return generated CSP for the assertion.
 	 */
-	def CharSequence generate(NamedAssertion it) '''
+	def CharSequence generate(Assertion it) '''
 		-- Assertion «name»
-		«body.generateBody»
+		«generateBody»
 	'''
 
 	/**
@@ -36,7 +35,7 @@ class AssertionGenerator {
 	 * @param asst  the assertion for which we are generating CSP.
 	 * @return generated CSP for one sequence assertion body.
 	 */
-	private def dispatch generateBody(Assertion asst) ''''''
+	private def dispatch generateBody(Assertion asst) '''-- skipped (not a CSP assertion)'''
 
 	/**
 	 * Generates CSP for the left-hand side of an assertion.

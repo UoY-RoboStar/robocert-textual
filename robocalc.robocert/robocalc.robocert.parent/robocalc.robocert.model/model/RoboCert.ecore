@@ -15,7 +15,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" upperBound="-1"
         eType="#//Sequence" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" upperBound="-1"
-        eType="#//NamedAssertion" containment="true"/>
+        eType="#//Assertion" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
@@ -112,14 +112,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NamedAssertion" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Assertion"
-        containment="true" eOpposite="#//Assertion/parent"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Assertion" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//NamedAssertion" eOpposite="#//NamedAssertion/body"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Assertion" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAssertion" eSuperTypes="#//Assertion">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
         eType="#//Sequence"/>
