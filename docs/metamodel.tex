@@ -23,7 +23,6 @@
 \newcommand{\meventtopic}{\metaref{EventTopic}}
 \newcommand{\moperationtopic}{\metaref{OperationTopic}}
 \newcommand{\mcspfragment}{\metaref{CSPFragment}}
-\newcommand{\mnamedassertion}{\metaref{NamedAssertion}}
 \newcommand{\massertion}{\metaref{Assertion}}
 \newcommand{\msequenceassertion}{\metaref{SequenceAssertion}}
 \newcommand{\msequenceassertiontype}{\metaref{SequenceAssertionType}}
@@ -84,9 +83,9 @@ Each \mrapackage{} can contain zero or more of each of these types of content:
 	a CSP fragment, currently not bound to a particular process
 	\todo{this will change};
 \item
-	\mnamedassertion{}
+	\massertion{}
 	(\cref{sec:metamodel-assertions}):
-	a named assertion, currently over sequence diagrams only
+	an assertion, currently over sequence diagrams only
 	\todo{more types of assertion will appear};
 \end{itemize}
 
@@ -420,18 +419,9 @@ world as W
 \Cref{fig:metamodel-assertions} depicts the part of the metamodel concerning
 assertions.
 
-\subsection{\mnamedassertion}
-
-A \mnamedassertion{} binds an \massertion{} to a name.
-
-\begin{lstlisting}[style=Example]
-assertion AssertionName:        // NamedAssertion...
-    SequenceName does not hold  // ...containing a SequenceAssertion
-\end{lstlisting}
-
 \subsection{\massertion}
 
-An \massertion{} is an \emph{anonymous} assertion statement.  Currently, there is
+An \massertion{} is an named assertion statement.  Currently, there is
 only one type of assertion: a \msequenceassertion{}.  \todo{This will change
 when merging with the existing language, if not sooner.}
 
@@ -451,11 +441,11 @@ target' (reverse refinement).  The assertion can be negated.  The choice of
 traces refinement.  This will change.}
 
 \begin{lstlisting}[style=Example]
-SequenceName holds           // positive 'holds' SequenceAssertion
-SequenceName does not hold   // negative 'holds' SequenceAssertion
-SequenceName is observed     // positive 'is observed' SequenceAssertion
-SequenceName is not observed // negative 'is observed' SequenceAssertion
+assertion A: SequenceName holds           // positive 'holds' SequenceAssertion
+assertion B: SequenceName does not hold   // negative 'holds' SequenceAssertion
+assertion C: SequenceName is observed     // positive 'is observed' SequenceAssertion
+assertion D: SequenceName is not observed // negative 'is observed' SequenceAssertion
 
-SequenceName holds with { CONSTANT set to 5 }
+assertion E: SequenceName holds with { CONSTANT set to 5 }
 // example of SequenceAssertion with custom TargetInstantiation
 \end{lstlisting}
