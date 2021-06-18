@@ -1,9 +1,9 @@
 %!TEX root=./robocert.tex
 
 % Target language colouration
-\newcommand{\tlang}[1]{\textcolor{blue}{#1}}
+\newcommand{\tlang}[1]{\textcolor{gray}{\boxed{#1}}}
 % Object language colouration (nested inside target language)
-\newcommand{\olang}[1]{\textcolor{black}{#1}}
+\newcommand{\olang}[1]{\boxed{\textcolor{black}{#1}}}
 
 \newcommand{\tockcsp}{\emph{tock}-CSP}
 \newcommand{\cspm}{CSP\(_\text{M}\)}
@@ -91,7 +91,7 @@ target languages:
 
 	\begin{tabular}{p{2em}p{11em}}
 	\toprule
-	\thead{Var.} & \thead{Meaning}
+	\thead{Var.} & \thead{Type}
 	\\
 	\midrule
 	\multicolumn{2}{l}{\tsubhead{Packages (\cref{sec:metamodel-top})}}
@@ -127,7 +127,7 @@ target languages:
 	\end{tabular}
 	\begin{tabular}{p{2em}p{11em}}
 	\toprule
-	\thead{Var.} & \thead{Meaning}
+	\thead{Var.} & \thead{Type}
 	\\
 	\midrule
 	\multicolumn{2}{l}{\tsubhead{Messages (\cref{sec:metamodel-messages})}}
