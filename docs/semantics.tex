@@ -37,7 +37,8 @@
 \newcommand{\atarget}{t}
 \newcommand{\aninst}{\phi}
 \newcommand{\aworld}{w}
-\newcommand{\anaction}{x}
+\newcommand{\anaction}{\alpha}
+\newcommand{\anexpr}{x}
 \newcommand{\avar}{v}
 % Assertions
 \newcommand{\anasst}{\alpha}
@@ -48,6 +49,7 @@
 \newcommand{\pkgsema}[1]{\sema{#1}{pkg}}
 \newcommand{\cspsema}[1]{\sema{#1}{csp}}
 \newcommand{\stepsema}[1]{\sema{#1}{step}}
+\newcommand{\exprsema}[2]{\sema{#1}{expr}_{(#2)}}
 \newcommand{\gapsema}[2]{\sema{#1}{gap}_{(#2)}}
 \newcommand{\actsema}[1]{\sema{#1}{act}}
 \newcommand{\mspecsema}[1]{\sema{#1}{mspec}}
@@ -57,8 +59,7 @@
 \newcommand{\sseqsema}[1]{\sema{#1}{sseq}}
 \newcommand{\asstsema}[1]{\sema{#1}{asst}}
 
-\newcommand{\ctargetsema}[1]{\sema{#1}{ctarget}}
-\newcommand{\otargetsema}[1]{\sema{#1}{otarget}}
+\newcommand{\targetsema}[2]{\sema{#1}{target}_{(#2)}}
 
 \newcommand{\ctargetRef}[1]{\funcname{ctargetRef}(#1)}
 \newcommand{\otargetRef}[2]{\funcname{otargetRef}(#1, #2)}
@@ -83,6 +84,11 @@ target languages:
 \item
 	\todo{Isabelle/UTP?}.
 \end{itemize}
+
+Each semantics captures \massertion s as the top-level definition, with all
+objects reachable from the assertions translated in-line.  As a
+consequence, we do not capture organisational details such as \mrapackage s,
+or any distinction between references to objects and their definitions.
 
 \section{How to read this section}
 
@@ -151,6 +157,8 @@ target languages:
 	\\
 	\(\avar\) & \mvariable
 	\\
+	\(\anexpr\) & \mexpression
+	\\
 	\midrule
 	\multicolumn{2}{l}{\tsubhead{Assertions (\cref{sec:metamodel-assertions})}}
 	\\
@@ -176,8 +184,9 @@ We also use the following notational conventions \todo{may need tweaking}:
 
 \begin{itemize}
 \item
-	\tlang{blue text} denotes a construct from the object
-	language; outside such text, assume use of the meta-language;
+	\tlang{\text{boxed shaded text}} denotes a construct from the object
+	language; outside such text, or \tlang{\olang{\text{inside nested boxes}}},
+	assume use of the meta-language;
 \item
 	\(\sema{-}{name}\) denotes a main semantic rule;
 \item
