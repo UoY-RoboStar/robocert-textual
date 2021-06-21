@@ -9,6 +9,8 @@ import robocalc.robocert.generator.csp.ActionGenerator
 import robocalc.robocert.generator.csp.ActionGeneratorImpl
 import robocalc.robocert.generator.csp.SubsequenceGenerator
 import robocalc.robocert.generator.csp.SequenceGenerator
+import org.eclipse.xtext.naming.IQualifiedNameConverter
+import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -24,5 +26,13 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	
 	def Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
 		SequenceGenerator
-	}	
+	}
+	
+	/**
+	 * Binds the RoboChart name converter
+	 * (so that qualified names are '::'-delimited).
+	 */
+	def Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
+		RoboChartQualifiedNameConverter
+	}
 }

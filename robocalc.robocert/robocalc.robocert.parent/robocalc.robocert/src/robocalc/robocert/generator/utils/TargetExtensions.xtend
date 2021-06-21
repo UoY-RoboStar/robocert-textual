@@ -16,6 +16,7 @@ import circus.robocalc.robochart.Context
 class TargetExtensions {
 	// TODO(@MattWindsor91): move some of these to the metamodel?
 	@Inject extension RCModuleExtensions
+	@Inject extension VariableExtensions
 
 	/**
 	 * Gets the constants for a module target.
@@ -23,7 +24,7 @@ class TargetExtensions {
 	 * @return an iterator of all constants defined on this target's module.
 	 */
 	def dispatch getConstants(RCModuleTarget it) {
-		module.parameterisation
+		module?.parameterisation ?: Collections.emptyIterator
 	}
 
 	/**
@@ -64,8 +65,8 @@ class TargetExtensions {
 	 * @return an iterator of uninstantiated constant names.
 	 */
 	def Iterator<Variable> uninstantiatedConstants(Target it) {
-		val instantiated = instantiation.constants.map[key].toSet
-		constants.filter[!instantiated.contains(it)]
+		val instantiated = instantiation.constants.map[key.constantKey].toSet
+		constants.filter[!instantiated.contains(constantKey)]
 	}
 
 	/**
@@ -78,7 +79,27 @@ class TargetExtensions {
 	 *         in this instantiation.
 	 */
 	def Expression getConstant(TargetInstantiation it, Variable const) {
-		constants.findFirst[key == const]?.value
+		constants.findFirst[const.constantEqual(key)]?.value
+	}
+	
+	/**
+	 * @return equality testing such that two constants should compare equal
+	 * if, and only if, they are referencing the same object.
+	 */
+	private def constantEqual(Variable it, Variable other) {
+		// The normal RoboChart equality test compares by name, which doesn't
+		// account for the variables being defined in different contexts.
+		constantKey == other.constantKey
+	}
+	
+	/**
+	 * @return a stringification of the given constant so as to be useful for
+	 * equality testing in the presence of multiple instances of constants with
+	 * the same name but possibly different contexts.
+	 */
+	private def constantKey(Variable it) {
+		// We toString because CharSequences don't compare equal properly.		
+		constantId.toString
 	}
 	
 	/**

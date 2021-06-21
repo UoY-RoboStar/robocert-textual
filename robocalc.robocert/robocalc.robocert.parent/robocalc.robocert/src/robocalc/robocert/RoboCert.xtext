@@ -85,7 +85,7 @@ fragment AssignWords *:
  * A constant assignment.
  */
 ConstAssignment:
-	key=[Variable] AssignWords value=Expression
+	key=[Variable|QualifiedName] AssignWords value=Expression
 ;
 
 /**
