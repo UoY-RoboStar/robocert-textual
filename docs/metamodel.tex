@@ -37,6 +37,7 @@
 \newcommand{\mvariable}{\metaref{Variable}}
 \newcommand{\mexpression}{\metaref{Expression}}
 \newcommand{\margument}{\metaref{Argument}}
+\newcommand{\mnonbindingargument}{\metaref{NonBindingArgument}}
 \newcommand{\mexpressionargument}{\metaref{ExpressionArgument}}
 \newcommand{\mrestargument}{\metaref{RestArgument}}
 
@@ -342,6 +343,34 @@ operation O1() // OperationTopic
 event E        // EventTopic
 \end{lstlisting}
 
+\subsection{\margument}\label{ssec:metamodel-messages-arguments}
+
+A \margument{} is a pattern that specifies (and possibly binds) one or more
+arguments in
+a message.  There are two types of argument:
+
+\begin{itemize}
+\item
+	\mexpressionargument, which specifies that the argument is equal to the
+	value of a particular \robochart{} expression;
+	\todo{the CSP generator doesn't yet properly protect against this being
+	an expression not expressible as a prefix}
+\item
+	\mrestargument, which matches all following arguments and permits them to
+	be any value.
+	\todo{This mainly exists because it's very easy to specify in CSP.  Ideally
+	we'll have something that allows wildcards on arbitrary parameters, in
+	which case this might be confusing to have also.}
+\end{itemize}
+
+All \margument s, at time of writing, are forms of \mnonbindingargument{} and
+can therefore appear in \mgapmessagespec s.  This will change when binding
+arguments are introduced.
+
+\begin{lstlisting}[style=Example]
+42  // ExpressionArgument containing integer literal
+... // RestArgument
+\end{lstlisting}
 
 \section{Actors}\label{sec:metamodel-actors}
 
