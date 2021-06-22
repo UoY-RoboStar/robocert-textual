@@ -11,6 +11,10 @@ import robocalc.robocert.generator.csp.SubsequenceGenerator
 import robocalc.robocert.generator.csp.SequenceGenerator
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter
+import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom
+import circus.robocalc.robochart.RoboChartFactory
+import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.impl.RobocertFactoryImpl
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -35,4 +39,20 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	def Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
 		RoboChartQualifiedNameConverter
 	}
+	
+	/**
+	 * Binds the RoboCert factory.
+	 */
+	def Class<? extends RobocertFactory> bindRobocertFactory() {
+		// TODO(@MattWindsor91): bind a custom impl eventually
+		// TODO(@MattWindsor91): is this the right way to do this?
+		RobocertFactoryImpl
+	}	
+	
+	/**
+	 * Binds the RoboChart custom factory.
+	 */
+	def Class<? extends RoboChartFactory> bindRoboChartFactory() {
+		RoboChartFactoryImplCustom
+	}	
 }

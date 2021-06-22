@@ -171,31 +171,45 @@ fragment GapMessageSetTail *:
  * An arrow message specification.
  */
 ArrowMessageSpec:
-	// Fragments don't seem to work for these...
-	topic=MessageTopic 'from' from=[Actor] 'to' to=[Actor]
+	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? FromTo
 ;
 
 /**
  * A gap message specification.
  */
 GapMessageSpec:
-	topic=MessageTopic 'from' from=[Actor] 'to' to=[Actor]
+	topic=MessageTopic ('(' (arguments+=NonBindingArgument (',' arguments+=NonBindingArgument)*)? ')')? FromTo
+;
+
+/**
+ * An argument pattern.
+ */
+Argument:
+	NonBindingArgument
+;
+
+/**
+ * An argument that doesn't introduce a binding.
+ */
+NonBindingArgument:
+	ExpressionArgument |
+	{RestArgument} '...'
+;
+
+ExpressionArgument:
+	expr=Expression
+;
+
+fragment FromTo *:
+	'from' from=[Actor] 'to' to=[Actor]
 ;
 
 /**
  * A message topic.
  */
 MessageTopic:
-	'event' {EventTopic} event=[Event|QualifiedName] ArgList |
-	'operation' {OperationTopic} operation=[OperationSig|QualifiedName] ArgList
-;
-
-/**
- * An event or operation argument list.
- */
-fragment ArgList:
-	// need arguments
-	('(' ')')?
+	'event' {EventTopic} event=[Event|QualifiedName] |
+	'operation' {OperationTopic} operation=[OperationSig|QualifiedName]
 ;
 
 /**

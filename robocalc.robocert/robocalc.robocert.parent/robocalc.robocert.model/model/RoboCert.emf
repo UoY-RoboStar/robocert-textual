@@ -11,6 +11,10 @@ package robocert;
 
 import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
 
+//
+// TOP LEVEL
+//
+
 /**
  * A RoboCert package.
  */
@@ -31,9 +35,6 @@ class RAPackage extends robochart.BasicPackage {
 	val Assertion[*] assertions;
 }
 
-//
-// CSP FRAGMENTS
-//
 /**
  * A fragment of CSP-M.
  */
@@ -47,17 +48,6 @@ class CSPFragment {
 //
 // SEQUENCES
 //
-
-/**
- * A sequence of steps, forming part or all of a sequence diagram.
- */
-class Subsequence {
-	/**
-	 * The steps contained within the subsequence.
-	 * There is always at least one step.
-	 */
-	val SequenceStep[+]#parent steps;
-}
 
 /**
  * A sequence diagram.
@@ -78,6 +68,86 @@ class Sequence extends robochart.NamedElement {
 	 */
 	val Subsequence[1] body;
 }
+
+/**
+ * A sequence of steps, forming part or all of a sequence diagram.
+ */
+class Subsequence {
+	/**
+	 * The steps contained within the subsequence.
+	 * There is always at least one step.
+	 */
+	val SequenceStep[+]#parent steps;
+}
+
+/**
+ * A single step in a subsequence.
+ */
+class SequenceStep {
+	/**
+	 * The parent subsequence of this step.
+	 */
+	ref Subsequence[1]#steps parent;
+
+	/**
+	 * The specification of what can happen in the 'gap' before the step.
+	 */
+	val SequenceGap[1] gap;
+
+	/**
+	 * The component inside the sequence step.
+	 */
+	val SequenceAction[1] action;
+}
+
+/**
+ * A specification of which internal communications can happen before a
+ * sequence step.
+ *
+ * Gaps may permit implicit communications between actions, according to the
+ * allowed and forbidden message sets.  An empty allow set, for instance,
+ * permits no communications. 
+ */
+class SequenceGap {
+	/**
+	 * The messages allowed by this gap.
+	 */
+	val GapMessageSet[1] allowed;
+
+	/**
+	 * The messages forbidden by this gap.
+	 *
+	 * It makes little sense to have a universal forbidden set, so we permit only an
+	 * extensional set here.
+	 */
+	val ExtensionalGapMessageSet[1] forbidden;
+}
+
+/**
+ * A set of gap message specs, used in loose sequence gaps.
+ */
+abstract class GapMessageSet {
+}
+
+/**
+ * A message set that extensionally enumerates allowed or forbidden messages.
+ */
+class ExtensionalGapMessageSet extends GapMessageSet {
+	/**
+	 * The message specifications held by this message set.
+	 */
+	!ordered val GapMessageSpec[*]#parent messages;
+}
+
+/**
+ * A message set that includes all messages.
+ */
+class UniverseGapMessageSet extends GapMessageSet {
+}
+
+//
+// ACTORS
+//
 
 /**
  * An actor in a sequence.
@@ -150,70 +220,9 @@ class ConstAssignment {
 	val robochart.Expression[1] value;
 }
 
-/**
- * A single step in a subsequence.
- */
-class SequenceStep {
-	/**
-	 * The parent subsequence of this step.
-	 */
-	ref Subsequence[1]#steps parent;
-
-	/**
-	 * The specification of what can happen in the 'gap' before the step.
-	 */
-	val SequenceGap[1] gap;
-
-	/**
-	 * The component inside the sequence step.
-	 */
-	val SequenceAction[1] action;
-}
-
-/**
- * A specification of which internal communications can happen before a
- * sequence step.
- *
- * Gaps may permit implicit communications between actions, according to the
- * allowed and forbidden message sets.  An empty allow set, for instance,
- * permits no communications. 
- */
-class SequenceGap {
-	/**
-	 * The messages allowed by this gap.
-	 */
-	val GapMessageSet[1] allowed;
-
-	/**
-	 * The messages forbidden by this gap.
-	 *
-	 * It makes little sense to have a universal forbidden set, so we permit only an
-	 * extensional set here.
-	 */
-	val ExtensionalGapMessageSet[1] forbidden;
-}
-
-/**
- * A set of gap message specs, used in loose sequence gaps.
- */
-abstract class GapMessageSet {
-}
-
-/**
- * A message set that extensionally enumerates allowed or forbidden messages.
- */
-class ExtensionalGapMessageSet extends GapMessageSet {
-	/**
-	 * The message specifications held by this message set.
-	 */
-	!ordered val GapMessageSpec[*]#parent messages;
-}
-
-/**
- * A message set that includes all messages.
- */
-class UniverseGapMessageSet extends GapMessageSet {
-}
+//
+// ACTIONS
+//
 
 /**
  * An action in a sequence diagram.
@@ -255,7 +264,7 @@ class FinalAction extends SequenceAction {
 }
 
 //
-// Message specs
+// MESSAGES
 //
 
 /**
@@ -284,6 +293,11 @@ class ArrowMessageSpec extends MessageSpec {
 	 * The parent of the arrow.
 	 */
 	ref ArrowAction[1]#body parent;
+	
+	/**
+	 * The argument list for the message.
+	 */
+	val Argument[*] arguments;
 }
 
 /**
@@ -294,11 +308,12 @@ class GapMessageSpec extends MessageSpec {
 	 * The parent gap message set.
 	 */
 	ref ExtensionalGapMessageSet[1]#messages parent;
+	
+	/**
+	 * The argument list for the message.  Cannot bind.
+	 */
+	val NonBindingArgument[*] arguments;
 }
-
-//
-// Message topics
-//
 
 /**
  * A message topic.
@@ -318,7 +333,6 @@ class EventTopic extends MessageTopic {
 	 * The name of the event.
 	 */
 	ref robochart.Event[1] event;
-// TODO: parameter
 }
 
 /**
@@ -333,9 +347,40 @@ class OperationTopic extends MessageTopic {
 // TODO: parameters
 }
 
+/**
+ * An argument pattern.
+ */
+abstract class Argument {
+}
+
+/**
+ * An argument pattern that doesn't make any bindings.
+ *
+ * Only non-binding arguments can appear in gaps.
+ */
+abstract class NonBindingArgument extends Argument {
+}
+
+/**
+ * An argument pattern specifying an expression.
+ */
+class ExpressionArgument extends NonBindingArgument {
+	/**
+	 * The expression in question.
+	 */
+	val robochart.Expression[1] expr;
+}
+
+/**
+ * An argument pattern specifying that all following arguments are unbound.
+ */ 
+class RestArgument extends NonBindingArgument {
+}
+
 //
 // ASSERTIONS
 //
+
 /**
  * An assertion.
  */
@@ -370,6 +415,9 @@ class SequenceAssertion extends Assertion {
 	attr CSPModel[1] model = "TICK_TOCK";	
 }
 
+/**
+ * Types of sequence assertion.
+ */
 enum SequenceAssertionType {
 	/**
 	 * The sequence holds over the target
