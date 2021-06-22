@@ -1,0 +1,68 @@
+%!TEX root=./robocert.tex
+
+This section contains well-formedness rules for the metamodel in
+\cref{cha:metamodel}.
+
+\todo{These are informal at the moment.}
+
+\section{Packages}\label{sec:wf-top}
+
+These rules concern the definitions in \cref{sec:metamodel-top}.
+
+\section{Sequences}\label{sec:wf-sequences}
+
+These rules concern the definitions in \cref{sec:metamodel-sequences}.
+
+\section{Actions}\label{sec:wf-actions}
+
+These rules concern the definitions in \cref{sec:metamodel-actions}.
+
+\section{Messages}\label{sec:wf-messages}
+
+These rules concern the definitions in \cref{sec:metamodel-messages}.
+
+\subsection{\mmessagespec}
+
+\paragraph{Actors}
+
+\begin{enumerate}
+\item
+	Exactly one of the from-- and to-actors of a message spec \rfcmust{} 
+	be a \mtarget.
+	\todo{unenforced}
+\item
+	Exactly one of the from-- and to-actors of a message spec \rfcmust{} 
+	be a \mworld.
+	\todo{unenforced}
+\end{enumerate}
+
+\paragraph{Arguments}
+
+\begin{enumerate}
+\item
+	\mrestargument{} \rfcmustnot{} appear anywhere other than as the last
+	argument in the list.
+	\todo{unenforced}
+\item
+	Argument lists \rfcmust{} either end in a \mrestargument, or
+	contain exactly as many arguments as the \mmessagetopic{} of the spec
+	has parameters.  (An \meventtopic{} is considered to have 1 parameter
+	if typed, and 0 otherwise.)
+	\todo{unenforced}
+\item
+	Argument lists \rfcmustnot{} contain more non-\mrestargument{}
+	arguments than the \mmessagetopic{} of the spec has parameters.
+	\todo{unenforced}
+\item
+	\mexpressionargument s \rfcshould{} be literals.  This is a temporary
+	limitation, and will be lifted when the CSP generator improves.
+	\todo{unenforced}
+\end{enumerate}
+
+\section{Actors}\label{sec:wf-actors}
+
+These rules concern the definitions in \cref{sec:metamodel-actors}.
+
+\section{Assertions}\label{sec:wf-assertions}
+
+These rules concern the definitions in \cref{sec:metamodel-assertions}.

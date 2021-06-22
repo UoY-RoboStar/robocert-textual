@@ -23,6 +23,20 @@
 \usepackage{hyperref}
 \usepackage{cleveref}
 
+% RFC 2119 keywords
+\newcommand{\rfckw}[1]{\textbf{#1}}
+\newcommand{\rfcmust}{\rfckw{must}}
+\newcommand{\rfcmustnot}{\rfckw{must not}}
+\newcommand{\rfcrequired}{\rfckw{required}}
+\newcommand{\rfcshall}{\rfckw{shall}}
+\newcommand{\rfcshallnot}{\rfckw{shall not}}
+\newcommand{\rfcshould}{\rfckw{should}}
+\newcommand{\rfcshouldnot}{\rfckw{should not}}
+\newcommand{\rfcrecommended}{\rfckw{recommended}}
+\newcommand{\rfcnotrecommended}{\rfckw{not recommended}}
+\newcommand{\rfcmay}{\rfckw{may}}
+\newcommand{\rfcoptional}{\rfckw{optional}}
+
 % Open question.
 \newcommand{\todo}[1]{\textcolor{orange}{(#1)}}
 
@@ -145,7 +159,7 @@
 \part{Well-formedness and Semantics}
 
 \chapter{Well-formedness}\label{cha:wf}
-\todo{TODO}
+\input{wf}
 
 \chapter{Semantics}\label{cha:semantics}
 \input{semantics}
