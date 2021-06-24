@@ -28,6 +28,9 @@
         containment="true" eOpposite="#//World/sequence"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
+        upperBound="2" eType="#//Actor" changeable="false" volatile="true" transient="true"
+        derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Subsequence">
     <eStructuralFeatures xsi:type="ecore:EReference" name="steps" lowerBound="1" upperBound="-1"
@@ -46,14 +49,22 @@
         eType="#//GapMessageSet" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="forbidden" lowerBound="1"
         eType="#//ExtensionalGapMessageSet" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" transient="true" derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GapMessageSet" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GapMessageSet" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" transient="true" derived="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExtensionalGapMessageSet" eSuperTypes="#//GapMessageSet">
     <eStructuralFeatures xsi:type="ecore:EReference" name="messages" ordered="false"
         upperBound="-1" eType="#//GapMessageSpec" containment="true" eOpposite="#//GapMessageSpec/parent"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UniverseGapMessageSet" eSuperTypes="#//GapMessageSet"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="anySequence" eType="#//Sequence"
+        changeable="false" volatile="true" transient="true" derived="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="World" eSuperTypes="#//Actor">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
         eType="#//Sequence" eOpposite="#//Sequence/world"/>

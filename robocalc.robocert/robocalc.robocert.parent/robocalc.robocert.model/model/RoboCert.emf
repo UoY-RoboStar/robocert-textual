@@ -67,6 +67,11 @@ class Sequence extends robochart.NamedElement {
 	 * The top-level subsequence of the sequence diagram.
 	 */
 	val Subsequence[1] body;
+
+	/**
+	 * Picks up both actors of the sequence diagram.
+	 */
+	derived volatile transient readonly ref Actor[2] actors;
 }
 
 /**
@@ -121,12 +126,27 @@ class SequenceGap {
 	 * extensional set here.
 	 */
 	val ExtensionalGapMessageSet[1] forbidden;
+
+	/**
+	 * Does this sequence gap allow messages to occur?
+	 * 
+	 * At time of writing, this means that is there at least one message in the
+	 * allows set.
+	 */
+	derived readonly transient attr boolean active;
 }
 
 /**
  * A set of gap message specs, used in loose sequence gaps.
  */
 abstract class GapMessageSet {
+	/**
+	 * Whether this message set has messages.
+	 *
+	 * For instance, universal gap message sets are always active, but
+	 * extensional ones may be if no messages are held.
+	 */
+	derived readonly transient attr boolean active;
 }
 
 /**
@@ -158,6 +178,10 @@ class UniverseGapMessageSet extends GapMessageSet {
  * diagram itself, but the target may also name an external RoboChart entity.
  */
 abstract class Actor extends robochart.NamedElement {
+	/**
+	 * Typically expands to the target's sequence parameter.
+	 */
+	derived volatile transient readonly ref Sequence[0..1] anySequence;
 }
 
 /**

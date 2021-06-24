@@ -6,7 +6,6 @@ import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.model.robocert.GapMessageSet
 import robocalc.robocert.model.robocert.ExtensionalGapMessageSet
 import robocalc.robocert.model.robocert.UniverseGapMessageSet
-import robocalc.robocert.generator.utils.GapExtensions
 import com.google.common.collect.Iterators
 
 /**
@@ -15,7 +14,6 @@ import com.google.common.collect.Iterators
 class GapGenerator {
 	@Inject extension ActionCSPEventSetGenerator
 	@Inject extension MessageSpecGenerator
-	@Inject extension GapExtensions
 
 	/**
 	 * Generates CSP for a gap.
@@ -26,7 +24,7 @@ class GapGenerator {
 	 * @return the generated CSP.
 	 */
 	def generate(SequenceGap it, SequenceAction action) '''
-	«IF allowsMessages»RUN(
+	«IF isActive»RUN(
 		«generateEventSet(action)»
 	) /\ «ENDIF»'''
 
@@ -49,7 +47,7 @@ class GapGenerator {
 	 *         forbidden set or one event in the action's CSP events.
 	 */
 	private def hasForbidSet(SequenceGap it, SequenceAction action) {
-		forbidden.hasMessages || action.hasCSPEvents
+		forbidden.isActive || action.hasCSPEvents
 	}
 
 	/**
