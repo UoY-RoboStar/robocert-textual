@@ -254,9 +254,6 @@ operation O1() from M to W
 A \mloopaction{} is a \emph{named} infinite loop.  \todo{Breaking and perhaps
 other forms of loop are forthcoming.}  Each \mloopaction{} contains one
 \msubsequence{} of steps to repeat indefinitely.
-\todo{If \mloopaction s could contain zero \msubsequence s, or \msubsequence s
-could contain zero \msequencestep s, they could
-explicitly capture deadlock, but currently so does \mfinalaction.}
 
 \begin{lstlisting}[style=Example]
 loop L {
@@ -271,10 +268,6 @@ A \mfinalaction{} represents the end of a sequence diagram.  After a
 not accept further communications.
 
 \todo{Is the described behaviour (eg CSP STOP) right?}
-
-\todo{How does this interact with loops (eg \lquote{loop L \{ end \}})?}
-
-\todo{Could we express deadlocking also as \lquote{loop L \{\}} at some point?}
 
 \todo{Is the name appropriately descriptive?}
 
@@ -356,8 +349,8 @@ a message.  There are two types of argument:
 	\todo{the CSP generator doesn't yet properly protect against this being
 	an expression not expressible as a prefix}
 \item
-	\mrestargument, which matches all following arguments and permits them to
-	be any value.
+	\mrestargument, which matches \emph{all} following arguments and permits
+	them to be any value.
 	\todo{This mainly exists because it's very easy to specify in CSP.  Ideally
 	we'll have something that allows wildcards on arbitrary parameters, in
 	which case this might be confusing to have also.}

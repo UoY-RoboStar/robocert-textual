@@ -50,8 +50,10 @@ These rules concern the definitions in \cref{sec:metamodel-messages}.
 	if typed, and 0 otherwise.)
 	\todo{unenforced}
 \item
-	Argument lists \rfcmustnot{} contain more non-\mrestargument{}
+	Argument lists \rfcmustnot{} contain more
 	arguments than the \mmessagetopic{} of the spec has parameters.
+	As this includes \mrestargument, this means that \mrestargument{} cannot
+	appear if all parameters already have arguments.
 	\todo{unenforced}
 \item
 	\mexpressionargument s \rfcshould{} be literals.  This is a temporary

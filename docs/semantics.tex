@@ -1,9 +1,9 @@
 %!TEX root=./robocert.tex
 
 % Target language colouration
-\newcommand{\tlang}[1]{\textcolor{gray}{\boxed{#1}}}
+\newcommand{\tlang}[1]{\textcolor{TColor}{\boxed{#1}}}
 % Object language colouration (nested inside target language)
-\newcommand{\olang}[1]{\boxed{\textcolor{black}{#1}}}
+\newcommand{\olang}[1]{\boxed{\textcolor{ZedColor}{#1}}}
 
 \newcommand{\tockcsp}{\emph{tock}-CSP}
 \newcommand{\cspm}{CSP\(_\text{M}\)}
@@ -129,6 +129,7 @@ or any distinction between references to objects and their definitions.
 	\(\bot\) & \mfinalaction
 	\\
 	\\
+	\\
 	\bottomrule
 	\end{tabular}
 	\begin{tabular}{p{2em}p{11em}}
@@ -179,20 +180,27 @@ The semantics treatments in this section take the form of rewrite rules from
 the abstract syntax in \cref{cha:metamodel} to some object language (for
 instance, \tockcsp).
 For conciseness, we use a meta-language based on the Z notation.
-\todo{is this ok?  does it need better explanation?}
-We also use the following notational conventions \todo{may need tweaking}:
+We also use the following notational conventions:
 
 \begin{itemize}
-\item
-	\tlang{\text{boxed shaded text}} denotes a construct from the object
-	language; outside such text, or \tlang{\olang{\text{inside nested boxes}}},
-	assume use of the meta-language;
 \item
 	\(\sema{-}{name}\) denotes a main semantic rule;
 \item
 	\(\funcname{name}()\) denotes auxiliary semantic functions;
 \item
 	\(\field{x}{name}\) denotes a field of the metamodel object \(x\);
+\item
+	\tlang{\text{boxed shaded text}} denotes a construct from the object
+	language; outside such text, or \tlang{\olang{\text{inside nested boxes}}},
+	assume use of the meta-language.  For example, consider the \tockcsp{}
+	construct:
+	\[\tlang{
+		\runproc{\olang{\gapsema{\field{\astep}{gap}}{\field{\astep}{action}}}}
+		\interrupt \olang{\actsema{\field{\astep}{action}}}
+	}\]
+	Here, \(\runproc{}\) and \(\interrupt\) are part of \tockcsp, while
+	\(\actsema{\field{\astep}{action}}\) is an semantic operation on the
+	\langname{} metamodel.
 \item
 	variables in the meta-language have an implicit metamodel type
 	corresponding to one of the metasyntactic variables in
