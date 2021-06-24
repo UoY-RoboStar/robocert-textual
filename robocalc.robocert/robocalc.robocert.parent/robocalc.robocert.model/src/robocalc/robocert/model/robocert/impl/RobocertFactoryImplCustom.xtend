@@ -27,6 +27,13 @@ class RobocertFactoryImplCustom extends RobocertFactoryImpl {
 	override createSequence() {
 		new SequenceImplCustom
 	}
+		
+	/**
+	 * @return a custom form of SubsequenceImpl.
+	 */
+	override createSubsequence() {
+		new SubsequenceImplCustom
+	}
 	
 	/**
 	 * @return a custom form of ExtensionalGapMessageSetImpl.

@@ -83,6 +83,11 @@ class Subsequence {
 	 * There is always at least one step.
 	 */
 	val SequenceStep[+]#parent steps;
+	
+	/**
+	 * The parent sequence.
+	 */
+	derived volatile transient readonly ref Sequence[0..1] sequence;
 }
 
 /**
@@ -97,12 +102,12 @@ class SequenceStep {
 	/**
 	 * The specification of what can happen in the 'gap' before the step.
 	 */
-	val SequenceGap[1] gap;
+	val SequenceGap[1]#step gap;
 
 	/**
 	 * The component inside the sequence step.
 	 */
-	val SequenceAction[1] action;
+	val SequenceAction[1]#step action;
 }
 
 /**
@@ -114,6 +119,11 @@ class SequenceStep {
  * permits no communications. 
  */
 class SequenceGap {
+	/**
+	 * The step containing this gap.
+	 */
+	ref SequenceStep[1]#gap step;
+
 	/**
 	 * The messages allowed by this gap.
 	 */
@@ -133,7 +143,7 @@ class SequenceGap {
 	 * At time of writing, this means that is there at least one message in the
 	 * allows set.
 	 */
-	derived readonly transient attr boolean active;
+	derived volatile readonly transient attr boolean active;
 }
 
 /**
@@ -146,7 +156,7 @@ abstract class GapMessageSet {
 	 * For instance, universal gap message sets are always active, but
 	 * extensional ones may be if no messages are held.
 	 */
-	derived readonly transient attr boolean active;
+	derived volatile readonly transient attr boolean active;
 }
 
 /**
@@ -252,6 +262,10 @@ class ConstAssignment {
  * An action in a sequence diagram.
  */
 abstract class SequenceAction {
+	/**
+	 * The step containing this action.
+	 */
+	ref SequenceStep[1]#action step;
 }
 
 /**
