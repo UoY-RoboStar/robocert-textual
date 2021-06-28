@@ -45,7 +45,7 @@ The only type of assertion so far is \msequenceassertion.  The semantics of a
 	\;
 	\refop{\field{\asasst}{model}}{\field{\asasst}{isNegated}}{\field{\asasst}{type}}
 	\;
-	\targetRef{\field{\field{\asasst}{sequence}}{target}}{\field{\asasst}{instantiation}}
+	\targetsema{\field{\field{\asasst}{sequence}}{target}}{\field{\asasst}{instantiation}}
 \end{align*}
 
 The exact refinement operator depends on the assertion type and negation:
@@ -160,7 +160,7 @@ inexpressible as an event set.
 \begin{align*}
 	\eventsOf{\anarrow}
 \quad\defeq\quad&
-	\tlang{\Set{\olang{\mspecsema{\anarrow}}}}
+	\tlang{\Set{\olang{\emspecsema{\anarrow}}}}
 	\tag{arrow}
 \\
 	\eventsOf{\anaction}
@@ -182,10 +182,7 @@ Note that, per \cref{ssec:metamodel-sequences-gaps}, gap message sets in the
 	\tlang{\events}
 \tag{universe}
 \\
-\intertext{\todo{For now, the semantics of an \mextensionalgapmessageset{} treats each
-message
-spec as if it were an \marrowmessagespec.  This will change when arrow and gap
-message specs diverge.}\todo{The meta/object language distinction is messy here
+\intertext{\todo{The meta/object language distinction is messy here
 and I'm not sure how to handle it.}}
 	\msgsetsema{\anemsgset}
 \quad\defeq\quad&
@@ -193,7 +190,7 @@ and I'm not sure how to handle it.}}
 	\bigcup
 \olang{
 	\Set{
-		\mspecsema{\amspec} | \amspec \in \field{\anemsgset}{messages}
+		\emspecsema{\amspec} | \amspec \in \field{\anemsgset}{messages}
 	}
 }
 }
@@ -216,7 +213,7 @@ over its label and subsequence.
 \quad\defeq\quad&
 	\tlang{
 	\left(
-	\olang{\mspecsema{\anarrow}}
+	\olang{\pmspecsema{\anarrow}}
 	\then
 	\Skip
 	\right)
@@ -261,31 +258,57 @@ subsequence placed in a recursive process.
 
 The definitions here correspond to \cref{sec:metamodel-messages}.
 
-\todo{As of 22 Jun, this is outdated with respect to arguments.}
+There are two distinct semantic rules for \mmessagespec s.  One is used whenever
+we expand the \mmessagespec{} into an event set, and handles `rest' arguments
+by implicitly quantifying over the missing parameters.  The other is used when
+expanding to a prefix, and introduces explicit discards for the missing
+parameters.  \todo{The two forms will diverge further when we introduce
+parameter binding.}
 
-\begin{defn}[\mmessagespec]
+\begin{defn}[\mmessagespec{} as an event set]
 
-The semantics of \mmessagespec s\footnote{For now, \mgapmessagespec s and
-\marrowmessagespec s are equivalent in semantics; this may change later on.}
-depends on the topic of their message specs,
+We expand \mmessagespec s into event-set form in two stages: expanding
+any non-`rest' arguments with \funcname{withArgs}, then expanding the channel
+reference using \funcname{msgChan}.
+%
+\begin{align*}
+	\emspecsema{\amspec}
+\quad\defeq\quad&
+\funcname{withArgs}\left(\field{\amspec}{arguments}, \amspec\right)
+\\
+	\funcname{withArgs}\left(\amspec, \anarglist\cat\langle\anexprarg\rangle\right)
+\quad\defeq\quad&
+\tlang{
+	\olang{\funcname{withArgs}\left(\amspec, \anarglist\right)}
+	!\olang{\exprsema{\anexprarg}{\amspec}}
+}
+\tag{expression argument}
+\\
+	\funcname{withArgs}\left(\amspec, \anarglist\cat\langle\arestarg\rangle\right)
+\quad\defeq\quad&
+	\funcname{withArgs}\left(\amspec, \anarglist\right)
+\tag{rest argument}
+\\
+	\funcname{withArgs}\left(\amspec, \langle\rangle\right)
+\quad\defeq\quad&
+	\funcname{msgChan}\left(\amspec\right)
+\tag{end of arguments}
+\end{align*}
+The expansion of the message channel
+depends on the message topic
 and, for certain topics, the direction (inbound from world to target, or
-outbound from target to world).  For now, neither operations nor events can have
-arguments.
-
+outbound from target to world).
 \newcommand{\nsOf}[1]{\mathsf{ns}(#1)}
 \newcommand{\targetOf}[2]{\mathsf{target}(#1,#2)}
 \newcommand{\topicOf}[3]{\mathsf{topic}(#1,#2,#3)}
-
-Let \(\nsOf{\atarget}\) be the name of the module, controller, or state machine
-referred to by \(\atarget\).
 %
 \begin{align*}
-	\mspecsema{\anarrow}
+	\funcname{msgChan}(\amspec)
 \quad\defeq\quad&
 \tlang{
-	\olang{\nsOf{\targetOf{\field{\anarrow}{from}}{\field{\anarrow}{to}}}}
+	\olang{\nsOf{\targetOf{\field{\amspec}{from}}{\field{\amspec}{to}}}}
 	{}\cspnsop{}
-	\olang{\topicOf{\field{\anarrow}{topic}}{\field{\anarrow}{from}}{\field{\anarrow}{to}}}
+	\olang{\topicOf{\field{\amspec}{topic}}{\field{\amspec}{from}}{\field{\amspec}{to}}}
 }
 \\
 	\targetOf{\aworld}{\atarget}
@@ -299,45 +322,71 @@ referred to by \(\atarget\).
 \tlang{
 	\olang{\field{\anop}{name}}\text{Call}
 }
+\tag{operation; always outbound}
 \\
 	\topicOf{\anevent}{\aworld}{\atarget}
 \quad\defeq\quad&
 	\tlang{\olang{\field{\anevent}{name}}\text{.in}}
+\tag{inbound event}
 \\
 	\topicOf{\anevent}{\atarget}{\aworld}
 \quad\defeq\quad&
 	\tlang{\olang{\field{\anevent}{name}}\text{.out}}
+\tag{outbound event}
 \end{align*}
+\end{defn}
 
+\newcommand{\paramsOf}[1]{\funcname{params}(#1)}
+\newcommand{\beforeRest}[1]{\funcname{beforeRest}(#1)}
+
+\begin{defn}[\mmessagespec{} as a prefix]
+
+To expand a \mmessagespec{} into a prefix, we take the event set expansion and
+\todo{for now} \emph{pad} it with wildcard inputs for each topic parameter
+left unmatched at the point of any \mrestargument.
+%
+\begin{align*}
+	\pmspecsema{\amspec}
+\quad\defeq\quad&
+	\funcname{pad}\left(\emspecsema{\amspec}, \funcname{padding}(\amspec)\right)
+\\
+	\funcname{pad}(x, 0)
+\quad\defeq\quad&
+	x
+\tag{base case}
+\\
+	\funcname{pad}(x, n)
+\quad\defeq\quad&
+\tlang{
+	\olang{\funcname{pad}(x, n-1)}?\_
+}
+\tag{inductive case}
+\\
+	\funcname{padding}(\amspec)
+\quad\defeq\quad&
+	\#(\paramsOf{\field{\amspec}{topic}}) - \beforeRest{\field{\amspec}{arguments}}
+\\
+	\beforeRest{\langle\rangle}
+\quad\defeq\quad&
+	0
+\tag{base case}
+\\
+	\beforeRest{\langle \arestarg \rangle \cat \anarglist}
+\quad\defeq\quad&
+	0
+\tag{rest argument}
+\\
+	\beforeRest{\langle \anarg \rangle \cat \anarglist}
+\quad\defeq\quad&
+	1 + \beforeRest{\anarglist}
+\tag{non-rest argument}
+\end{align*}
 \end{defn}
 
 \subsection{Actors}\label{ssec:semantics-tockcsp-actors}
 
 The definitions here correspond to \cref{sec:metamodel-actors}.
 
-We assume external functions bridging this semantics with that of
-\robochart{} etc. \todo{should we define these, or at least partially
-define them, here?}:
-
-\begin{itemize}
-\item
-	let \funcname{targetProcess} map a target to the parametric
-	process exposed by the relevant \tockcsp{} semantics (for instance,
-	we delegate to the \robochart{} semantics for the underlying
-	\mrcmodule{} of a \mrcmoduletarget);
-	\todo{doesn't account for the ID parameter in certain target
-	processes};
-\item
-	let \funcname{targetParams} map a target to the sequence of
-	constants in its parameterisation;
-\item
-	let \funcname{constName} map a constant to its name in the \robochart{}
-	instantiations file;
-\item
-	let \(\exprsema{\anexpr}{\atarget}\) be the expression semantics of 
-	\(\anexpr\) in the context of \(\atarget\).  The expression semantics
-	is external to this semantics, but is largely that of Z.
-\end{itemize}
 
 \begin{defn}[\mtarget]
 
@@ -359,16 +408,16 @@ as follows:
 \end{itemize}
 %
 \begin{align*}
-	\targetsema{\atarget}
+	\targetsema{\atarget}{\aninst}
 \quad\defeq\quad&
 \tlang{
 	\olang{\funcname{targetProcess}(\atarget)}
 	\left(
-		\olang{\funcname{instantiate}\ \circ\ \funcname{targetParams}(\atarget)}
+		\olang{\exprsema{-}{\atarget}\ \circ\ \funcname{instantiate}(\aninst)\ \circ\ \funcname{targetParams}(\atarget)}
 	\right)
 }
 \\
-	\funcname{instantiate}(\atarget, \aninst)
+	\funcname{instantiate}(\aninst, \atarget)
 \quad\defeq\quad&
 	\funcname{constName}
 	\oplus
