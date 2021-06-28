@@ -14,8 +14,8 @@ class RoboCertOutputConfigurationProvider implements IOutputConfigurationProvide
 		// TODO: PRISM gen
 		
 		var defaultOutput = new OutputConfiguration(IFileSystemAccess2.DEFAULT_OUTPUT) => [
-			description = "CSP Folder"
-    		outputDirectory = "./csp-gen";
+			description = "tock-CSP Folder"
+    		outputDirectory = "./csp-gen/timed";
     		overrideExistingResources = true;
     		createOutputDirectory = true;
     		cleanUpDerivedResources = true;

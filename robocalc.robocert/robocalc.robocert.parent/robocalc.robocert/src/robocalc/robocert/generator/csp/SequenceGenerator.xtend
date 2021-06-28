@@ -25,12 +25,14 @@ class SequenceGenerator implements SubsequenceGenerator {
 	def CharSequence generate(Sequence it) '''
 		module «name»
 		exports
+		Timed(OneStep) {
 			Sequence =
 				«body.generate»
 
 			«target.generateOpenTargetDef»
 
 			«target.generateClosedTargetDef»
+		}
 		endmodule
 	'''
 	
