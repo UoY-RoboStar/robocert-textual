@@ -44,7 +44,7 @@ class ActionGeneratorImpl implements ActionGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def dispatch generate(FinalAction it) '''STOP''' // TODO: decide whether this should be 'STOP' or 'SKIP'
+	def dispatch generate(FinalAction it) '''SKIP'''
 
 	/**
 	 * Generates fallback CSP for an unsupported action.
