@@ -263,18 +263,11 @@ loop L {
 
 \subsection{\mfinalaction}
 
-A \mfinalaction{} represents the end of a sequence diagram.  After a
-\mfinalaction, a sequence target may terminate correctly or deadlock, but may
-not accept further communications.
-
-\todo{Is the described behaviour (eg CSP STOP) right?}
-
-\todo{Is the name appropriately descriptive?}
-
-\todo{Should the presence of this or an infinite loop be a well-formedness
-condition?  If not, then the semantics of a diagram missing one of these would
-be that it requires successful termination --- in which case, the name would
-probably need to change from \lquote{end}.}
+A \mfinalaction{} captures the successful termination of a sequence diagram.
+A diagram with a \mfinalaction{} specifies a complete sequence of behaviour
+from the \mtarget{} initialising to the \mtarget{} terminating.  Conversely,
+sequence diagrams without \mfinalaction s capture partial specifications of
+behaviour, or the behaviour of \mtarget s that do not terminate.
 
 Note that the final \msequencegap{} before a \mfinalaction{} captures
 any permitted communications after the behaviour explicitly specified by the

@@ -17,6 +17,14 @@ These rules concern the definitions in \cref{sec:metamodel-sequences}.
 
 These rules concern the definitions in \cref{sec:metamodel-actions}.
 
+\begin{enumerate}
+\item
+	A \msequence{} \rfcmustnot{} contain more than one \mfinalaction.
+\item
+	Any \mfinalaction{} \rfcmust{} be the last action in the topmost
+	\msubsequence{} of a \msequence.
+\end{enumerate}
+
 \section{Messages}\label{sec:wf-messages}
 
 These rules concern the definitions in \cref{sec:metamodel-messages}.
