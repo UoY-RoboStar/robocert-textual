@@ -41,6 +41,10 @@
 \newcommand{\mexpressionargument}{\metaref{ExpressionArgument}}
 \newcommand{\mrestargument}{\metaref{RestArgument}}
 
+% Fragments of graphical syntax examples.
+\newcommand{\egworld}{W}
+\newcommand{\egtarget}{\gnamedtarget{M}{AModule}}
+
 This section introduces the abstract syntax (metamodel) of \langname.
 It is structured in a top-down manner, with each section introducing a group of
 related \langname{} functionality.  Each section contains:
@@ -126,7 +130,7 @@ that contains:
 
 \begin{lstlisting}[style=Example]
 sequence Example
-  for module ModuleName as M,  // RCModuleTarget actor
+  for module AModule as M,  // RCModuleTarget actor
       world             as W   // World actor
 {
     anything until end  // Subsequence
@@ -245,9 +249,30 @@ the sequence specified by the diagram.  Each \marrowaction{} wraps one
 containing the specification proper.
 \todo{Eventually these will bind arguments.}
 
+\begin{figure}[h]
+
+\begin{subfigure}[t]{0.38\textwidth}
 \begin{lstlisting}[style=Example]
 operation O1() from M to W
 \end{lstlisting}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.58\textwidth}
+\gsecaption
+\centering
+\begin{tikzpicture}
+\matrix[diagram]{
+    \node[rcmodule](mstart) {\egtarget}; & \node[world](wstart) {\egworld}; \\
+	\coordinate(mo); & \coordinate(wo); \\
+	\coordinate(mend); & \coordinate(wend); \\
+};
+\draw[lifeline] (mstart) -- (mo) -- (mend);
+\draw[lifeline] (wstart) -- (wo) -- (wend);
+\draw (mo) edge[oarrow, "O1()"] (wo);
+\end{tikzpicture}
+\end{subfigure}
+
+\end{figure}
 
 \subsection{\mloopaction}
 
@@ -273,10 +298,29 @@ Note that the final \msequencegap{} before a \mfinalaction{} captures
 any permitted communications after the behaviour explicitly specified by the
 diagram has occurred.
 
+\begin{figure}[h]
+
+\begin{subfigure}[t]{0.38\textwidth}
 \begin{lstlisting}[style=Example]
 end
 \end{lstlisting}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.58\textwidth}
+\gsecaption
+\centering
+\begin{tikzpicture}
+\matrix[diagram]{
+	\node[rcmodule](mstart) {\egtarget}; & \node[world](wstart) {\egworld}; \\
+	\coordinate(mend); & \coordinate(wend); \\
+};
+\draw[lifeline] (mstart) -- (mend);
+\draw[lifeline] (wstart) -- (wend);
+\draw (mend) edge[final] (wend);
+\end{tikzpicture}
+\end{subfigure}
 
+\end{figure}
 
 \section{Messages}\label{sec:metamodel-messages}
 
@@ -308,12 +352,36 @@ respectively.}  Each \mmessagespec{} contains:
 	the type of communication that the spec is capturing.
 \end{itemize}
 
+\begin{figure}[h]
+
+\begin{subfigure}[t]{0.38\textwidth}
 \begin{lstlisting}[style=Example]
-operation O1() from M to W  // MessageSpec with OperationTopic
-                            //   from actor M to actor W
-event E        from W to M  // MessageSpec with EventTopic
-                            //   from actor W to actor M
+operation O1() from M to W
+// MessageSpec with OperationTopic
+
+event E        from W to M
+// MessageSpec with EventTopic
 \end{lstlisting}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.58\textwidth}
+\gsecaption
+\centering
+\begin{tikzpicture}
+\matrix[diagram]{
+    \node[rcmodule](mstart) {\egtarget}; & \node[world](wstart) {\egworld}; \\
+	\coordinate(mo); & \coordinate(wo); \\
+	\coordinate(me); & \coordinate(we); \\
+	\coordinate(mend); & \coordinate(wend); \\
+};
+\draw[lifeline] (wstart) -- (wo) -- (we) -- (wend);
+\draw[lifeline] (mstart) -- (mo) -- (me) -- (mend);
+\draw (mo) edge[oarrow, "O1()"'] (wo);
+\draw (we) edge[earrow, "E"] (me);
+\end{tikzpicture}
+\end{subfigure}
+
+\end{figure}
 
 \subsection{\mmessagetopic}\label{ssec:metamodel-messages-topics}
 
@@ -395,10 +463,10 @@ is always applied to any use of that target; assertions may further instantiate
 any constants left open by the target's \mtargetinstantiation.
 
 \begin{lstlisting}[style=Example]
-module ModuleName as M
+module AModule as M
 // RCModuleTarget with implicit empty TargetInstantiation
 
-module ModuleName
+module AModule
     with { SOME_CONSTANT set to 4, ANOTHER_CONSTANT set to 5 }
     as M
 // RCModuleTarget with explicit TargetInstantiation

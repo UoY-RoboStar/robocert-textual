@@ -6,11 +6,14 @@
 \usepackage{amsthm}
 \usepackage{braket} % set-builder notation
 \usepackage{booktabs}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{stmaryrd}
 \usepackage{circus}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{tikz}
 % fonts
 \usepackage{stix}
 \usepackage{tgtermes}
@@ -25,6 +28,32 @@
 
 \colorlet{ZedColor}{black}
 \colorlet{TColor}{gray!70!white}
+
+% Setup for the graphical syntax.
+\newcommand{\annotation}[1]{\(\langle\!\langle\text{#1}\rangle\!\rangle\)}
+\newcommand{\osigil}{\annotation{op}}
+\newcommand{\esigil}{\annotation{event}}
+\usetikzlibrary{arrows.meta,positioning,quotes}
+\tikzset{
+actor/.style={draw, rectangle, thick},
+world/.style={actor, font={\annotation{world}\;}},
+target/.style={actor},
+rcmodule/.style={target, font={\annotation{module}\;}},
+lifeline/.style={dashed, thick},
+diagram/.style={row sep=1.8em, column sep=9em},
+arrow/.style={->, thick},
+oarrow/.style={arrow, font={\small\osigil\quad}},
+earrow/.style={arrow, font={\small\esigil\quad}},
+final/.style={dotted, thick, "end"},
+}
+% Typesets a named target.
+\newcommand{\gnamedtarget}[2]{#1: #2}
+\newcommand{\gsecaption}{
+	\captionsetup{
+		labelformat=empty,
+		font={small,sf}
+	}
+	\caption{Graphical syntax example \todo{draft}}}
 
 % RFC 2119 keywords
 \newcommand{\rfckw}[1]{\textbf{#1}}
@@ -77,7 +106,6 @@
    \createplainmark{bib}{both}{\bibname}
    \createplainmark{index}{both}{\indexname}
    \createplainmark{glossary}{both}{\glossaryname}}
-
 
 \lstset{
 	basicstyle={\small\ttfamily}	
