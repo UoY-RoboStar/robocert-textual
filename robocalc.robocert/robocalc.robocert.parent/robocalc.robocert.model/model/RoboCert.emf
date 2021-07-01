@@ -64,6 +64,10 @@ class Sequence extends robochart.NamedElement {
 	 */
 	val World[1]#sequence world;
 	/**
+	 * Any message sets named on the sequence.
+	 */
+	val NamedMessageSet[*]#sequence messageSets;
+	/**
 	 * The top-level subsequence of the sequence diagram.
 	 */
 	val Subsequence[1] body;
@@ -127,15 +131,12 @@ class SequenceGap {
 	/**
 	 * The messages allowed by this gap.
 	 */
-	val GapMessageSet[1] allowed;
+	val MessageSet[1] allowed;
 
 	/**
 	 * The messages forbidden by this gap.
-	 *
-	 * It makes little sense to have a universal forbidden set, so we permit only an
-	 * extensional set here.
 	 */
-	val ExtensionalGapMessageSet[1] forbidden;
+	val MessageSet[1] forbidden;
 
 	/**
 	 * Does this sequence gap allow messages to occur?
@@ -147,22 +148,49 @@ class SequenceGap {
 }
 
 /**
- * A set of gap message specs, used in loose sequence gaps.
+ * A defined and named message set.
  */
-abstract class GapMessageSet {
+class NamedMessageSet extends robochart.NamedElement {
+	/**
+	 * The sequence on which this message set is defined.
+	 */
+	ref Sequence#messageSets sequence;
+
+	/**
+	 * The inner message set.
+	 */
+	val MessageSet[1] set;
+}
+
+/**
+ * A set of gap message specifications.
+ */
+abstract class MessageSet {
 	/**
 	 * Whether this message set has messages.
 	 *
-	 * For instance, universal gap message sets are always active, but
-	 * extensional ones may be if no messages are held.
+	 * For instance, universal message sets are always active, but
+	 * extensional ones may be if no messages are held, and
+	 * reference sets are active iff their referred-to sets are.
 	 */
 	derived volatile readonly transient attr boolean active;
 }
 
 /**
+ * A message set that is, itself, a reference to a previously named message
+ * set.
+ */
+class RefMessageSet extends MessageSet {
+	/**
+	 * The message set being named.
+	 */
+	ref NamedMessageSet[1] set;
+}
+
+/**
  * A message set that extensionally enumerates allowed or forbidden messages.
  */
-class ExtensionalGapMessageSet extends GapMessageSet {
+class ExtensionalMessageSet extends MessageSet {
 	/**
 	 * The message specifications held by this message set.
 	 */
@@ -172,7 +200,7 @@ class ExtensionalGapMessageSet extends GapMessageSet {
 /**
  * A message set that includes all messages.
  */
-class UniverseGapMessageSet extends GapMessageSet {
+class UniverseMessageSet extends MessageSet {
 }
 
 //
@@ -343,9 +371,9 @@ class ArrowMessageSpec extends MessageSpec {
  */
 class GapMessageSpec extends MessageSpec {
 	/**
-	 * The parent gap message set.
+	 * The parent message set.
 	 */
-	ref ExtensionalGapMessageSet[1]#messages parent;
+	ref ExtensionalMessageSet[1]#messages parent;
 	
 	/**
 	 * The argument list for the message.  Cannot bind.

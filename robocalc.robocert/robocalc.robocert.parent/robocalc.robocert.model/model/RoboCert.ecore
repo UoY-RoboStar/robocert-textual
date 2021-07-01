@@ -26,6 +26,8 @@
         eType="#//Target" containment="true" eOpposite="#//Target/sequence"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="world" lowerBound="1" eType="#//World"
         containment="true" eOpposite="#//World/sequence"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messageSets" upperBound="-1"
+        eType="#//NamedMessageSet" containment="true" eOpposite="#//NamedMessageSet/sequence"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
@@ -50,21 +52,30 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//SequenceStep"
         eOpposite="#//SequenceStep/gap"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allowed" lowerBound="1"
-        eType="#//GapMessageSet" containment="true"/>
+        eType="#//MessageSet" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="forbidden" lowerBound="1"
-        eType="#//ExtensionalGapMessageSet" containment="true"/>
+        eType="#//MessageSet" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GapMessageSet" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="NamedMessageSet" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"
+        eOpposite="#//Sequence/messageSets"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//MessageSet"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MessageSet" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ExtensionalGapMessageSet" eSuperTypes="#//GapMessageSet">
+  <eClassifiers xsi:type="ecore:EClass" name="RefMessageSet" eSuperTypes="#//MessageSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//NamedMessageSet"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtensionalMessageSet" eSuperTypes="#//MessageSet">
     <eStructuralFeatures xsi:type="ecore:EReference" name="messages" ordered="false"
         upperBound="-1" eType="#//GapMessageSpec" containment="true" eOpposite="#//GapMessageSpec/parent"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UniverseGapMessageSet" eSuperTypes="#//GapMessageSet"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UniverseMessageSet" eSuperTypes="#//MessageSet"/>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="anySequence" eType="#//Sequence"
         changeable="false" volatile="true" transient="true" derived="true"/>
@@ -119,7 +130,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GapMessageSpec" eSuperTypes="#//MessageSpec">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//ExtensionalGapMessageSet" eOpposite="#//ExtensionalGapMessageSet/messages"/>
+        eType="#//ExtensionalMessageSet" eOpposite="#//ExtensionalMessageSet/messages"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
         eType="#//NonBindingArgument" containment="true"/>
   </eClassifiers>
