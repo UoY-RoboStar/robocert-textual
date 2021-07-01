@@ -1,0 +1,74 @@
+%!TEX root=../robocert.tex
+
+\begin{table}[tb]
+	\caption{Comparison of \langname{} abstract syntax with other notations.}
+	\label{tab:metamodel-comparison}
+	\centering
+
+\begin{tabular}{p{8em}p{8em}p{8em}p{16em}}
+\toprule
+	\thead{\langname} & \thead{UML2} & \thead{PSC} & \thead{Comments} \\
+
+\midrule
+\multicolumn{4}{l}{\tsubhead{Top~(\ref{sec:metamodel-top})}}
+\\
+
+\midrule
+\multicolumn{4}{l}{\tsubhead{Sequences~(\ref{sec:metamodel-sequences})}}
+\\
+
+	\msequencegap
+		& n/a
+		& Strict operator, constraints
+		&
+		Gaps are similar to past unwanted message constraints, but
+		allow the set of \emph{permitted} messages to be restricted;
+		this subsumes the strict operator.
+	\\
+
+\midrule
+\multicolumn{4}{l}{\tsubhead{Actions~(\ref{sec:metamodel-actions})}}
+\\
+
+\midrule
+\multicolumn{4}{l}{\tsubhead{Messages~(\ref{sec:metamodel-messages})}}
+\\
+
+	\mgapmessageset
+		& n/a
+		& constraint set
+		&
+	\\
+
+
+\midrule
+\multicolumn{4}{l}{\tsubhead{Actors~(\ref{sec:metamodel-actors})}}
+\\
+
+	\mactor
+		& lifeline
+		& lifeline
+		&
+		Always fixed at two in \langname: a \mtarget{} and a \mworld{}.
+	\\
+
+\midrule
+\multicolumn{4}{l}{\tsubhead{Assertions~(\ref{sec:metamodel-assertions})}}
+\\
+
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{tab:metamodel-comparison} compares aspects of the \langname{} abstract syntax to the
+corresponding features in:
+
+\begin{itemize}
+\item
+	UML 2.0 sequence diagrams (including the MARTE profile for timing
+	constraints);
+\item
+	Property Sequence Chart~\cite{psc};
+\item
+	\todo{more}
+\end{itemize}
