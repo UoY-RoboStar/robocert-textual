@@ -50,7 +50,9 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'for' target=Target ',' world=World body=Subsequence
+	'sequence' name=ID 'for' target=Target ',' world=World
+	('with' messageSets += NamedMessageSet)*
+	body=Subsequence
 ;
 
 /**
@@ -140,31 +142,38 @@ SequenceGap:
 /**
  * A gap message set that defaults to being universal, but may be filtered with 'in {...}'.
  */
-AllowSet returns GapMessageSet:
-	{ExtensionalGapMessageSet} 'in' GapMessageSetTail |
-	{UniverseGapMessageSet} ('in' 'universe')?
+AllowSet returns MessageSet:
+	'in' MessageSet | {UniverseMessageSet}
 ;
 
 /**
  * A gap message set that defaults to being empty, but may be extended with 'except {...}'.
  */
-ForbidSet returns ExtensionalGapMessageSet:
-	{ExtensionalGapMessageSet} ('except' GapMessageSetTail)?
+ForbidSet returns MessageSet:
+	'except' MessageSet | EmptySet
 ;
 
 /**
  * Pseudo-rule that pulls both gap message sets to empty if we don't see an
  * explicit rule.
  */
-EmptySet returns ExtensionalGapMessageSet:
-	{ExtensionalGapMessageSet}
+EmptySet returns ExtensionalMessageSet:
+	{ExtensionalMessageSet}
 ;
 
 /**
  * The common part of a gap message set.
  */
-fragment GapMessageSetTail *:
-	'{' messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '}'
+MessageSet:
+	{UniverseMessageSet} 'universe' |
+	{ExtensionalMessageSet} '{' messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '}'
+;
+
+/**
+ * A named message set.
+ */
+NamedMessageSet:
+	'message' 'set' name=ID ':' set=MessageSet
 ;
 
 /**

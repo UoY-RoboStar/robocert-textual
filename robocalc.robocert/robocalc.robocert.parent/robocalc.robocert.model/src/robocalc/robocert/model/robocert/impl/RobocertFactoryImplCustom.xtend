@@ -36,17 +36,17 @@ class RobocertFactoryImplCustom extends RobocertFactoryImpl {
 	}
 	
 	/**
-	 * @return a custom form of ExtensionalGapMessageSetImpl.
+	 * @return a custom form of ExtensionalMessageSetImpl.
 	 */
-	override createExtensionalGapMessageSet() {
-		new ExtensionalGapMessageSetImplCustom
+	override createExtensionalMessageSet() {
+		new ExtensionalMessageSetImplCustom
 	}
 	
 	/**
-	 * @return a custom form of UniverseGapMessageSetImpl.
+	 * @return a custom form of UniverseMessageSetImpl.
 	 */
-	override createUniverseGapMessageSet() {
-		new UniverseGapMessageSetImplCustom
+	override createUniverseMessageSet() {
+		new UniverseMessageSetImplCustom
 	}
 	
 	/**

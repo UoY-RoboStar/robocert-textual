@@ -11,12 +11,12 @@ import org.eclipse.xtext.testing.InjectWith
 import org.junit.jupiter.api.^extension.ExtendWith
 
 /**
- * Tests any custom functionality on ExtensionalGapMessageSets, and also tests
+ * Tests any custom functionality on ExtensionalMessageSets, and also tests
  * that the factory resolves it correctly.
  */
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
-class ExtensionalGapMessageSetImplCustomTest {
+class ExtensionalMessageSetImplCustomTest {
 	@Inject RobocertFactory rf
 
 	/**
@@ -25,7 +25,7 @@ class ExtensionalGapMessageSetImplCustomTest {
 	 */
 	@Test
 	def testIsActive_Empty() {
-		rf.createExtensionalGapMessageSet.active.assertFalse
+		rf.createExtensionalMessageSet.active.assertFalse
 	}
 	
 	/**
@@ -34,7 +34,7 @@ class ExtensionalGapMessageSetImplCustomTest {
 	 */
 	@Test
 	def testIsActive_NonEmpty() {
-		val mset = rf.createExtensionalGapMessageSet=>[
+		val mset = rf.createExtensionalMessageSet=>[
 			messages.add(rf.createGapMessageSpec)
 		]
 		mset.active.assertTrue

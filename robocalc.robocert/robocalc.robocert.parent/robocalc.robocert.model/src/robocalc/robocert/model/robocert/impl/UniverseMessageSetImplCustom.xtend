@@ -1,9 +1,9 @@
 package robocalc.robocert.model.robocert.impl
 
 /**
- * Adds derived operation definitions to ExtensionalGapMessageSetImpl.
+ * Adds derived operation definitions to UniverseMessageSetImpl.
  */
-class UniverseGapMessageSetImplCustom extends UniverseGapMessageSetImpl {
+class UniverseMessageSetImplCustom extends UniverseMessageSetImpl {
 	/**
 	 * Universe gap messages sets are always active.
 	 * 

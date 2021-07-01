@@ -10,12 +10,12 @@ import org.eclipse.xtext.testing.InjectWith
 import org.junit.jupiter.api.^extension.ExtendWith
 
 /**
- * Tests any custom functionality on UniversalGapMessageSets, and also tests
+ * Tests any custom functionality on UniversalMessageSets, and also tests
  * that the factory resolves it correctly.
  */
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
-class UniverseGapMessageSetImplCustomTest {
+class UniverseMessageSetImplCustomTest {
 	@Inject RobocertFactory rf
 
 	/**
@@ -24,6 +24,6 @@ class UniverseGapMessageSetImplCustomTest {
 	 */
 	@Test
 	def testIsActive() {
-		rf.createUniverseGapMessageSet.active.assertTrue
+		rf.createUniverseMessageSet.active.assertTrue
 	}
 }

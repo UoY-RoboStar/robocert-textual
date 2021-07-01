@@ -1,9 +1,9 @@
 package robocalc.robocert.model.robocert.impl
 
 /**
- * Adds derived operation definitions to ExtensionalGapMessageSetImpl.
+ * Adds derived operation definitions to ExtensionalMessageSetImpl.
  */
-class ExtensionalGapMessageSetImplCustom extends ExtensionalGapMessageSetImpl {
+class ExtensionalMessageSetImplCustom extends ExtensionalMessageSetImpl {
 	/**
 	 * Extensional gap messages sets are active if non-empty.
 	 * 
