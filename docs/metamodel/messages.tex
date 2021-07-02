@@ -8,7 +8,46 @@
 
 \Cref{fig:metamodel-messages} depicts the part of the metamodel concerning
 messages between actors.  Messages are introduced into a sequence diagram
-in \mgapmessageset s and \marrowaction s.
+in \mmessageset s and \marrowaction s.
+
+\subsection{\mmessageset}\label{ssec:metamodel-messages-sets}
+
+A \mmessageset{} is an expression of the set of messages allowed or forbidden
+inside a \msequencegap.  There are two types of \mmessageset:
+
+\begin{itemize}
+\item
+  a \muniversemessageset{} represents the universal set containing 
+  all possible messages, and
+  captures a lack of specific restriction on
+  the \emph{allowed} set of a \msequencegap;
+\item	
+  an \mextensionalmessageset{} is a set (expressed as an unordered list) of
+  zero or more \mgapmessagespec s, themselves
+  a type of \mmessagespec{} (\cref{sec:metamodel-messages});
+\item
+  a \mrefmessageset{} refers to a \mnamedmessageset{} attached to the
+  sequence.
+\end{itemize}
+
+There is not yet any meaningful extra data stored in
+\mgapmessagespec s that is not present in \mmessagespec s, but this is subject
+to change.
+
+\begin{lstlisting}[style=Example]
+universe                        // UniverseMessageSet
+{ operation O1() from M to W }  // ExtensionalMessageSet
+message set S                   // RefMessageSet
+\end{lstlisting}
+
+\subsection{\mnamedmessageset}\label{ssec:metamodel-messages-named-sets}
+
+A \mnamedmessageset{} attaches a name to a \mmessageset, so that it can be reused
+inside a \msequence.
+
+\begin{lstlisting}[style=Example]
+message set S: { operation O1() from M to W }
+\end{lstlisting}
 
 \subsection{\mmessagespec}
 
@@ -100,3 +139,8 @@ arguments are introduced.
 42  // ExpressionArgument containing integer literal
 ... // RestArgument
 \end{lstlisting}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../robocert"
+%%% End:

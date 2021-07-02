@@ -170,34 +170,6 @@ inexpressible as an event set.
 \end{align*}
 \end{defn}
 
-\begin{defn}[\mgapmessageset]
-
-Note that, per \cref{ssec:metamodel-sequences-gaps}, gap message sets in the
-\emph{allowed} position can be either \mextensionalgapmessageset s or
-\muniversegapmessageset s; we treat both using the same rule.
-%
-\begin{align*}
-	\msgsetsema{\aumsgset}
-\quad\defeq\quad&
-	\tlang{\events}
-\tag{universe}
-\\
-\intertext{\todo{The meta/object language distinction is messy here
-and I'm not sure how to handle it.}}
-	\msgsetsema{\anemsgset}
-\quad\defeq\quad&
-\tlang{
-	\bigcup
-\olang{
-	\Set{
-		\emspecsema{\amspec} | \amspec \in \field{\anemsgset}{messages}
-	}
-}
-}
-\tag{extensional}
-\end{align*}
-\end{defn}
-
 \subsection{Actions}\label{ssec:semantics-tockcsp-actions}
 
 The definitions here correspond to \cref{sec:metamodel-actions}.
@@ -256,6 +228,32 @@ subsequence placed in a recursive process.
 \subsection{Messages}\label{ssec:semantics-tockcsp-messages}
 
 The definitions here correspond to \cref{sec:metamodel-messages}.
+
+\begin{defn}[\mmessageset]
+
+TODO
+%
+\begin{align*}
+	\msgsetsema{\aumsgset}
+\quad\defeq\quad&
+	\tlang{\events}
+\tag{universe}
+\\
+\intertext{\todo{The meta/object language distinction is messy here
+and I'm not sure how to handle it.}}
+	\msgsetsema{\anemsgset}
+\quad\defeq\quad&
+\tlang{
+	\bigcup
+\olang{
+	\Set{
+		\emspecsema{\amspec} | \amspec \in \field{\anemsgset}{messages}
+	}
+}
+}
+\tag{extensional}
+\end{align*}
+\end{defn}
 
 There are two distinct semantic rules for \mmessagespec s.  One is used whenever
 we expand the \mmessagespec{} into an event set, and handles `rest' arguments
@@ -426,3 +424,8 @@ as follows:
 \end{align*}
 \end{defn}
 
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../robocert"
+%%% End:

@@ -68,53 +68,23 @@ operation O() from M to W
 
 \subsection{\msequencegap}\label{ssec:metamodel-sequences-gaps}
 
-A \msequencegap{} represents a condition on any communication\footnote{In PSCs,
-this would correspond to \emph{intraMSG}s.} that can happen
-\emph{before} a \msequenceaction.  
-It contains two \mgapmessageset s: one specifying the messages
-\emph{allowed} to pass inside the gap, and another specifying the messages
-\emph{forbidden} to pass.\footnote{The \emph{forbidden} set is always an
-\mextensionalgapmessageset, as any gap with a universal
-\emph{forbidden} set would always be equivalent to one with an empty
-\emph{allowed} set.
-}
+A \msequencegap{} represents a condition on any
+communication\footnote{In PSCs, this would correspond to
+  \emph{intraMSG}s.} that can happen \emph{before} a \msequenceaction.
+It contains two \mmessageset s (\cref{ssec:metamodel-messages-sets}):
+one specifying the messages \emph{allowed} to pass inside the gap, and
+another specifying the messages \emph{forbidden} to pass.
 
 \begin{lstlisting}[style=Example]
 anything
-    in     { operation O1() from M to W   // allowed ExtensionalGapMessageSet
+    in     { operation O1() from M to W   // allowed ExtensionalMessageSet
            , operation O2() from M to W }
-    // a UniverseGapMessageSet is implied for the allow set
+    // a UniverseMessageSet is implied for the allow set
     // if 'in {..}' is omitted;
 
-    except { operation O2() from M to W } // forbidden ExtensionalGapMessageSet
-    // an empty ExtensionalGapMessageSet is implied for the forbidden set
+    except { operation O2() from M to W } // forbidden ExtensionalMessageSet
+    // an empty ExtensionalMessageSet is implied for the forbidden set
     // if 'except {..}' is omitted
 until // only permits O1
-\end{lstlisting}
-
-\subsection{\mgapmessageset}\label{ssec:metamodel-sequences-gap-message-sets}
-
-A \mgapmessageset{} is an expression of the set of messages allowed or forbidden
-inside a \msequencegap.  There are two types of \mgapmessageset:
-
-\begin{itemize}
-\item
-	a \muniversegapmessageset{} represents the universal set containing 
-	all possible messages, and
-	captures a lack of specific restriction on
-	the \emph{allowed} set of a \msequencegap;
-\item	
-	an \mextensionalgapmessageset{} is a set (expressed as an unordered list) of
-	zero or more \mgapmessagespec s, themselves
-	a type of \mmessagespec{} (\cref{sec:metamodel-messages}).
-\end{itemize}
-
-There is not yet any meaningful extra data stored in
-\mgapmessagespec s that is not present in \mmessagespec s, but this is subject
-to change.
-
-\begin{lstlisting}[style=Example]
-    universe                        // UniverseGapMessageSet
-    { operation O1() from M to W }  // ExtensionalGapMessageSet
 \end{lstlisting}
 
