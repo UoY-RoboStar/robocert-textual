@@ -10,7 +10,7 @@ class SubsequenceImplCustom extends SubsequenceImpl {
 	/**
 	 * @return the parent sequence of this subsequence.
 	 */
-	override getSequence() {
+	override basicGetSequence() {
 		for (var EObject ec = this.eContainer; ec !== null; ec = ec.eContainer) {
 			switch ec {
 				Sequence: return ec

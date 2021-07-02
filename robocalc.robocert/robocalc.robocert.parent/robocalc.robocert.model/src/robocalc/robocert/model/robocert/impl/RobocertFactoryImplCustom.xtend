@@ -50,6 +50,13 @@ class RobocertFactoryImplCustom extends RobocertFactoryImpl {
 	}
 	
 	/**
+	 * @return a custom form of RefMessageSetImpl.
+	 */
+	override createRefMessageSet() {
+		new RefMessageSetImplCustom
+	}
+	
+	/**
 	 * @return a custom form of SequenceGapImpl.
 	 */
 	override createSequenceGap() {

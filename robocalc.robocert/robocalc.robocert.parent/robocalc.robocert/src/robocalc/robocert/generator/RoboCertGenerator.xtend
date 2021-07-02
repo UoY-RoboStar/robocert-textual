@@ -7,13 +7,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import robocalc.robocert.model.robocert.Sequence
-import robocalc.robocert.model.robocert.Assertion
-import robocalc.robocert.model.robocert.CSPFragment
-import robocalc.robocert.generator.csp.SequenceGenerator
-import robocalc.robocert.generator.csp.AssertionGenerator
 import com.google.inject.Inject
-import robocalc.robocert.generator.csp.ImportGenerator
 import org.eclipse.xtext.EcoreUtil2
 
 /**

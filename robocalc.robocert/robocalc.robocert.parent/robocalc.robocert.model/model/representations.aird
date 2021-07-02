@@ -27,7 +27,7 @@
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="RoboCert.ecore#/"/>
       </ownedRepresentationDescriptors>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_wJmLoNsQEeuTO4js3GS2GQ" name="Assertions" repPath="#_wJk9gNsQEeuTO4js3GS2GQ" changeId="d0d1c852-d56e-44df-a534-66b0d0638edf">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_wJmLoNsQEeuTO4js3GS2GQ" name="Assertions" repPath="#_wJk9gNsQEeuTO4js3GS2GQ" changeId="a1c6a599-7ea4-405e-9abf-bc1305211676">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="RoboCert.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -3481,6 +3481,7 @@
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_0A7plNsQEeuTO4js3GS2GQ" description="_0A7pkdsQEeuTO4js3GS2GQ" routingStyle="manhattan" strokeColor="0,0,0">
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_0A7pltsQEeuTO4js3GS2GQ" showIcon="false">
           <customFeatures>labelSize</customFeatures>
+          <labelFormat>bold</labelFormat>
         </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="_0A7pldsQEeuTO4js3GS2GQ" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>

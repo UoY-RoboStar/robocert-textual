@@ -165,8 +165,9 @@ EmptySet returns ExtensionalMessageSet:
  * The common part of a gap message set.
  */
 MessageSet:
-	{UniverseMessageSet} 'universe' |
-	{ExtensionalMessageSet} '{' messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '}'
+	'universe' {UniverseMessageSet} |
+	'{' {ExtensionalMessageSet} messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '}' |
+	'message' 'set' {RefMessageSet} set=[NamedMessageSet]
 ;
 
 /**
