@@ -14,9 +14,8 @@
       <genEnumLiterals ecoreEnumLiteral="RoboCert.ecore#//SequenceAssertionType/IS_OBSERVED"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="RoboCert.ecore#//CSPModel">
+      <genEnumLiterals ecoreEnumLiteral="RoboCert.ecore#//CSPModel/TICK_TOCK"/>
       <genEnumLiterals ecoreEnumLiteral="RoboCert.ecore#//CSPModel/TRACES"/>
-      <genEnumLiterals ecoreEnumLiteral="RoboCert.ecore#//CSPModel/FAILURES"/>
-      <genEnumLiterals ecoreEnumLiteral="RoboCert.ecore#//CSPModel/FAILURES_DIVERGENCES"/>
     </genEnums>
     <genClasses ecoreClass="RoboCert.ecore#//RAPackage">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//RAPackage/cspFragments"/>
@@ -26,49 +25,65 @@
     <genClasses ecoreClass="RoboCert.ecore#//CSPFragment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//CSPFragment/contents"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//Subsequence">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//Subsequence/steps"/>
-    </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//Sequence">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//Sequence/target"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//Sequence/world"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//Sequence/messageSets"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//Sequence/body"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//Sequence/actors"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="RoboCert.ecore#//Actor"/>
-    <genClasses ecoreClass="RoboCert.ecore#//World">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//World/sequence"/>
-    </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//TargetActor">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//TargetActor/sequence"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//TargetActor/target"/>
-    </genClasses>
-    <genClasses image="false" ecoreClass="RoboCert.ecore#//Target"/>
-    <genClasses ecoreClass="RoboCert.ecore#//RCModuleTarget">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//RCModuleTarget/module"/>
-    </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//OverrideTarget">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//OverrideTarget/target"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//OverrideTarget/overrides"/>
-    </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//ConstOverride">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ConstOverride/key"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ConstOverride/value"/>
+    <genClasses ecoreClass="RoboCert.ecore#//Subsequence">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//Subsequence/steps"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//Subsequence/sequence"/>
     </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//SequenceStep">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceStep/parent"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceStep/gap"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceStep/action"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="RoboCert.ecore#//SequenceGap"/>
-    <genClasses ecoreClass="RoboCert.ecore#//StrictGap"/>
-    <genClasses ecoreClass="RoboCert.ecore#//LooseGap">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//LooseGap/allowed"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//LooseGap/forbidden"/>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//SequenceGap">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceGap/step"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceGap/allowed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceGap/forbidden"/>
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//SequenceGap/active"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//GapMessageSet">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//GapMessageSet/messages"/>
+    <genClasses ecoreClass="RoboCert.ecore#//NamedMessageSet">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//NamedMessageSet/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//NamedMessageSet/set"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="RoboCert.ecore#//SequenceAction"/>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//MessageSet">
+      <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//MessageSet/active"/>
+    </genClasses>
+    <genClasses ecoreClass="RoboCert.ecore#//RefMessageSet">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//RefMessageSet/set"/>
+    </genClasses>
+    <genClasses ecoreClass="RoboCert.ecore#//ExtensionalMessageSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ExtensionalMessageSet/messages"/>
+    </genClasses>
+    <genClasses ecoreClass="RoboCert.ecore#//UniverseMessageSet"/>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//Actor">
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//Actor/anySequence"/>
+    </genClasses>
+    <genClasses ecoreClass="RoboCert.ecore#//World">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//World/sequence"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//Target">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//Target/sequence"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//Target/instantiation"/>
+    </genClasses>
+    <genClasses ecoreClass="RoboCert.ecore#//RCModuleTarget">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//RCModuleTarget/module"/>
+    </genClasses>
+    <genClasses ecoreClass="RoboCert.ecore#//TargetInstantiation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//TargetInstantiation/constants"/>
+    </genClasses>
+    <genClasses ecoreClass="RoboCert.ecore#//ConstAssignment">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ConstAssignment/key"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ConstAssignment/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//SequenceAction">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceAction/step"/>
+    </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//ArrowAction">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ArrowAction/body"/>
     </genClasses>
@@ -83,28 +98,33 @@
     </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//ArrowMessageSpec">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//ArrowMessageSpec/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ArrowMessageSpec/arguments"/>
     </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//GapMessageSpec">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//GapMessageSpec/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//GapMessageSpec/arguments"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="RoboCert.ecore#//MessageTopic"/>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//MessageTopic">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//MessageTopic/spec"/>
+    </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//EventTopic">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//EventTopic/event"/>
     </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//OperationTopic">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//OperationTopic/operation"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//NamedAssertion">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//NamedAssertion/body"/>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//Argument"/>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//NonBindingArgument"/>
+    <genClasses ecoreClass="RoboCert.ecore#//ExpressionArgument">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ExpressionArgument/expr"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//Assertion">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//Assertion/parent"/>
-    </genClasses>
+    <genClasses ecoreClass="RoboCert.ecore#//RestArgument"/>
+    <genClasses ecoreClass="RoboCert.ecore#//Assertion"/>
     <genClasses ecoreClass="RoboCert.ecore#//SequenceAssertion">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceAssertion/sequence"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//SequenceAssertion/isNegated"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//SequenceAssertion/type"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceAssertion/targetOverrides"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceAssertion/instantiation"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//SequenceAssertion/model"/>
     </genClasses>
   </genPackages>
