@@ -231,27 +231,37 @@ The definitions here correspond to \cref{sec:metamodel-messages}.
 
 \begin{defn}[\mmessageset]
 
-TODO
+  The semantics of a message set is the universal event set for \muniversemessageset s;
+  the expansion of the given \mgapmessagespec s for \mextensionalmessageset s;
+  and the semantics of the referred-to set for \mrefmessageset s.
 %
 \begin{align*}
-	\msgsetsema{\aumsgset}
-\quad\defeq\quad&
-	\tlang{\events}
-\tag{universe}
-\\
-\intertext{\todo{The meta/object language distinction is messy here
-and I'm not sure how to handle it.}}
-	\msgsetsema{\anemsgset}
-\quad\defeq\quad&
-\tlang{
-	\bigcup
-\olang{
-	\Set{
-		\emspecsema{\amspec} | \amspec \in \field{\anemsgset}{messages}
-	}
-}
-}
-\tag{extensional}
+  \msgsetsema{\aumsgset}
+  \quad\defeq\quad
+  &
+    \tlang{\events}
+    \tag{universe}
+  \\
+  \intertext{\todo{The meta/object language distinction is messy here
+  and I'm not sure how to handle it.}}
+  \msgsetsema{\anemsgset}
+  \quad\defeq\quad
+  &
+    \tlang{
+    \bigcup
+    \olang{
+    \Set{
+    \emspecsema{\amspec} | \amspec \in \field{\anemsgset}{messages}
+    }
+    }
+    }
+    \tag{extensional}
+  \\
+  \msgsetsema{\armsgset}
+  \quad\defeq\quad
+  &
+    \msgsetsema{\field{\field{\armsgset}{set}}{set}}
+    \tag{reference}
 \end{align*}
 \end{defn}
 
