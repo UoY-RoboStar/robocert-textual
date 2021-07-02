@@ -4,18 +4,16 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.SequenceGap
 import robocalc.robocert.model.robocert.SequenceAction
 import com.google.common.collect.Iterators
-import robocalc.robocert.model.robocert.ExtensionalMessageSet
-import robocalc.robocert.model.robocert.UniverseMessageSet
-import robocalc.robocert.model.robocert.MessageSet
 import java.util.Iterator
 import java.util.Collections
+import robocalc.robocert.model.robocert.MessageSpec
+import robocalc.robocert.model.robocert.ArrowAction
 
 /**
  * Generates CSP for the gaps between actions.
  */
 class GapGenerator {
-	@Inject extension ActionCSPEventSetGenerator
-	@Inject extension MessageSpecGenerator
+	@Inject extension MessageSetGenerator
 
 	/**
 	 * Generates CSP for a gap.
@@ -49,7 +47,7 @@ class GapGenerator {
 	 *         forbidden set or one event in the action's CSP events.
 	 */
 	private def hasForbidSet(SequenceGap it, SequenceAction action) {
-		forbidden.isActive || action.hasCSPEvents
+		forbidden.isActive || action.hasMessageSpecs
 	}
 
 	/**
@@ -60,7 +58,7 @@ class GapGenerator {
 	 * @return the generated CSP sequence.
 	 */
 	private def generateAllowSet(SequenceGap it) {
-		allowed.generateSet(Collections.emptyIterator)
+		allowed.generate(Collections.emptyList)
 	}
 
 	/**
@@ -76,50 +74,23 @@ class GapGenerator {
 	 * @return the generated CSP sequence.
 	 */
 	private def generateForbidSet(SequenceGap it, SequenceAction action) {
-		forbidden.generateSet(action.generateCSPEventSet)
+		forbidden.generate(action.messageSpecs.toList)
+	}
+	
+	private def dispatch hasMessageSpecs(ArrowAction it) {
+		true
 	}
 
-	/**
-	 * Generates a CSP event set for an extensional gap message set.
-	 * 
-	 * @param it      the sequence gap in question.
-	 * @param action  the action after the gap.
-	 * 
-	 * @return generated CSP for the gap message set.
-	 */
-	private def dispatch generateSet(ExtensionalMessageSet it, Iterator<CharSequence> extra) {
-		constructSet(Iterators.concat(
-			messages.iterator.map[generateCSPEventSet],
-			extra
-		).toIterable)
+	private def dispatch hasMessageSpecs(SequenceAction it) {
+		false
+	}
+	
+	private def dispatch Iterator<MessageSpec> messageSpecs(ArrowAction it) {
+		Iterators.singletonIterator(body)
 	}
 
-	/**
-	 * Generates a CSP event set for a universe gap message set.
-	 * 
-	 * @param it     the message set for which we are generating CSP.
-	 * @param extra  any extra events to add to the set (ignored here).
-	 * 
-	 * @return generated CSP for the gap message set.
-	 */
-	private def dispatch generateSet(UniverseMessageSet it, Iterator<CharSequence> extra) '''Events'''
+	private def dispatch Iterator<MessageSpec> messageSpecs(SequenceAction it) {
+		Collections.emptyIterator
+	}
 
-	/**
-	 * Fallback for generating an event set for an unknown gap message set.
-	 * 
-	 * @param it  the message set.
-	 * 
-	 * @return generated CSP for the gap message set (less the set delimiters).
-	 */
-	private def dispatch generateSet(MessageSet it, Iterator<CharSequence> extra) '''{- UNKNOWN MESSAGE SET: «it» -}'''
-
-	/**
-	 * Wraps a pre-generated CSP set in the appropriate delimiters.
-	 * 
-	 * @param it  the iterable yielding the set for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the set.
-	 */
-	private def constructSet(
-		Iterable<CharSequence> it) '''«FOR g : it BEFORE '{|' SEPARATOR ', ' AFTER '|}'»«g»«ENDFOR»'''
 }

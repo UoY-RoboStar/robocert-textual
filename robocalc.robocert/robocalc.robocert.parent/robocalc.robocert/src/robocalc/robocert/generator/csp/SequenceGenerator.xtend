@@ -11,10 +11,9 @@ import robocalc.robocert.model.robocert.Subsequence
 class SequenceGenerator implements SubsequenceGenerator {
 	@Inject extension ActionGenerator
 	@Inject extension GapGenerator
+	@Inject extension MessageSetGenerator
 	@Inject extension TargetGenerator
 
-	// TODO: handle timed vs untimed CSP
-	// TODO: consider moving some of the extension methods into the model
 	/**
 	 * Generates CSP for a sequence.
 	 * 
@@ -25,12 +24,14 @@ class SequenceGenerator implements SubsequenceGenerator {
 	def CharSequence generate(Sequence it) '''
 		module «name»
 		exports
+		«messageSets.generateNamedSets»
+		
 		Timed(OneStep) {
 			Sequence =
 				«body.generate»
 
+			-- Target definitions
 			«target.generateOpenTargetDef»
-
 			«target.generateClosedTargetDef»
 		}
 		endmodule
