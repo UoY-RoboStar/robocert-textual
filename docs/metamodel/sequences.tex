@@ -1,7 +1,7 @@
 %!TEX root=../robocert.tex
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\textwidth]{diagrams/Sequences}
+	\includegraphics[width=\textwidth]{diagrams/Sequences}
 	\caption{Class diagram for the part of the \langname{} metamodel dealing with sequences.}
 	\label{fig:metamodel-sequences}
 \end{figure}
@@ -9,25 +9,46 @@
 \Cref{fig:metamodel-sequences} depicts the part of the metamodel concerning
 sequence diagrams and their high-level structure.
 
-\subsection{\msequence}
+\subsection{\msequencegroup}
 
-A \msequence{} represents a sequence diagram.  It is a \mnamedelement{}
-that contains:
+A \msequencegroup{} is a top-level container for sequence diagrams.
+It is a \mnamedelement{} that contains:
 
 \begin{itemize}
 \item
-	a \msubsequence{} (\cref{ssec:metamodel-sequences-subsequences})
-	containing the body of the diagram;
+  two \mactor s (\cref{sec:metamodel-actors}):
+  a \mtarget{} (\cref{ssec:metamodel-actors-target})
+  and a \mworld{} (\cref{ssec:metamodel-actors-world});
 \item
-	two \mactor s (\cref{sec:metamodel-actors}):
-	a \mtarget{} (\cref{ssec:metamodel-actors-target})
-	and a \mworld{} (\cref{ssec:metamodel-actors-world}).
+  zero or more \mnamedmessageset{}s (\cref{ssec:metamodel-messages-named-sets});
+\item
+  zero or more \msequence{} (\cref{ssec:metamodel-sequences-sequences}).
 \end{itemize}
 
 \begin{lstlisting}[style=Example]
+sequence group Group
+  for module M: AModule,  // RCModuleTarget actor
+      world  W            // World actor
+{
+  message set M1: universe
+  
+  sequence Example1 {
+    anything until end
+  }
+  sequence Example2 {
+    anything until end
+  }
+}
+\end{lstlisting}
+
+\subsection{\msequence}\label{ssec:metamodel-sequences-sequences}
+
+A \msequence{} represents a sequence diagram.  It is a \mnamedelement{}
+that contains a \msubsequence{} (\cref{ssec:metamodel-sequences-subsequences})
+capturing the body of the diagram.
+
+\begin{lstlisting}[style=Example]
 sequence Example
-  for module AModule as M,  // RCModuleTarget actor
-      world          as W   // World actor
 {
     anything until end  // Subsequence
 }

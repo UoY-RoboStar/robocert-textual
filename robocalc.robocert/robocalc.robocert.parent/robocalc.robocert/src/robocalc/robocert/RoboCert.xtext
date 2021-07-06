@@ -75,7 +75,7 @@ Subsequence:
  * The target actor of a sequence diagram.
  */
 Target:
-	BasicTarget instantiation=TargetInstantiation 'as' name=ID
+	BasicTarget instantiation=TargetInstantiation
 ;
 
 /**
@@ -103,14 +103,14 @@ ConstAssignment:
  * A target of a sequence diagram.
  */
 BasicTarget returns Target:
-	 'module' {RCModuleTarget} module=[RCModule|QualifiedName]
+	 'module' {RCModuleTarget} name=ID ':' module=[RCModule|QualifiedName]
 ;
 
 /**
  * The world actor of a sequence diagram.
  */
 World:
-	'world' 'as' name=ID
+	'world' name=ID
 ;
 
 // The basic trace is 'X then X then X... end'.  We can change to weak

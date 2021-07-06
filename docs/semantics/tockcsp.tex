@@ -10,16 +10,16 @@ this semantics, except that:
 
 \begin{itemize}
 \item
-	The generator targets \cspm{} instead of CSP, and so \emph{may}
-	use semantically equivalent \cspm{} constructs where the CSP equivalents
-	are missing or not idiomatic;
+  The generator targets \cspm{} instead of CSP, and so \emph{may}
+  use semantically equivalent \cspm{} constructs where the CSP equivalents
+  are missing or not idiomatic;
 \item
-	The generator \emph{must} \todo{not yet but eventually} wrap processes in
-	timed sections to achieve the appropriate \tockcsp{} behaviours of
-	CSP operators;
+  The generator \emph{must} \todo{not yet but eventually} wrap processes in
+  timed sections and prioritisations to achieve the appropriate \tockcsp{} behaviours of
+  CSP operators;
 \item
-	The generator \emph{may} perform semantics-preserving optimisations,
-	such as substituting \(P\) for \(\tlang{\Stop \interrupt \olang{P}}\).
+  The generator \emph{may} perform semantics-preserving optimisations,
+  such as substituting \(P\) for \(\tlang{\Stop \interrupt \olang{P}}\).
 \end{itemize}
 
 \todo{Some of the definitions are very loosely typed (as they are expanding from
@@ -410,8 +410,7 @@ as follows:
 	the bound expression; else
 \item
 	use the \(\funcname{constName}\) of the constant, under the assumption
-	that it will later bind to a fallback instantiation for the constant
-	\todo{review this - it seems strange}.
+	that it will later bind to a fallback instantiation for the constant.
 \end{itemize}
 %
 \begin{align*}

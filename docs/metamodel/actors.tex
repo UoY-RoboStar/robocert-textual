@@ -34,12 +34,11 @@ is always applied to any use of that target; assertions may further instantiate
 any constants left open by the target's \mtargetinstantiation.
 
 \begin{lstlisting}[style=Example]
-module AModule as M
+module M: AModule
 // RCModuleTarget with implicit empty TargetInstantiation
 
-module AModule
+module M: AModule
     with { SOME_CONSTANT set to 4, ANOTHER_CONSTANT set to 5 }
-    as M
 // RCModuleTarget with explicit TargetInstantiation
 \end{lstlisting}
 
@@ -48,7 +47,7 @@ module AModule
 A \mtargetinstantiation{} instantiates some or all of the constants in the
 target's parametrisation.  It contains a list of key/value pairs where each key
 is a RoboChart \mvariable{} corresponding to a constant, and each value is a
-RoboChart \mexpression{} evaluated in an arbitrary \todo{check this} scope.
+RoboChart \mexpression{} (evaluated in an empty~\todo{check this} scope).
 
 \begin{lstlisting}[style=Example]
 { SOME_CONSTANT set to 4, ANOTHER_CONSTANT set to 5 }
@@ -60,7 +59,7 @@ A \mworld{} is an \mactor{} that represents the `world' outside a sequence's
 \mtarget.  \mworld s do not contain any data.
 
 \begin{lstlisting}[style=Example]
-world as W
+world W
 \end{lstlisting}
 
 %%% Local Variables:

@@ -101,10 +101,9 @@ event E        from W to M
 
 A \mmessagetopic{} identifies the specific type of communication in a
 \mmessagespec{}.  There are currently two types of topic, corresponding to
-\robochart{} operations (\moperationtopic) and events (\meventtopic).
+\robochart{} operations (\moperationtopic) and events (\meventtopic)
+\todo{variable topics will arrive later on; \ghissue{24}}.
 Each contains a reference to the signature of the respective construct.
-Parameterised operations and events are not yet supported \todo{this will
-change}.
 
 \begin{lstlisting}[style=Example]
 operation O1() // OperationTopic
@@ -113,27 +112,40 @@ event E        // EventTopic
 
 \subsection{\margument}\label{ssec:metamodel-messages-arguments}
 
-A \margument{} is a pattern that specifies (and possibly binds) one or more
+An \margument{} is a pattern that specifies (and possibly binds) one or more
 arguments in
 a message.  There are two types of argument:
 
 \begin{itemize}
 \item
-	\mexpressionargument, which specifies that the argument is equal to the
-	value of a particular \robochart{} expression;
-	\todo{the CSP generator doesn't yet properly protect against this being
-	an expression not expressible as a prefix}
+  \mexpressionargument, which specifies that the argument is equal to the
+  value of a particular \robochart{} expression;
+  \todo{the \langname{} CSP generator doesn't yet properly protect against this being
+    an expression not expressible as a prefix}
 \item
-	\mrestargument, which matches \emph{all} following arguments and permits
-	them to be any value.
-	\todo{This mainly exists because it's very easy to specify in CSP.  Ideally
-	we'll have something that allows wildcards on arbitrary parameters, in
-	which case this might be confusing to have also.}
+  \mrestargument, which matches \emph{all} following arguments and permits
+  them to be any value.
+  \todo{This mainly exists because it's very easy to specify in CSP.  Ideally
+    we'll have something that allows wildcards on arbitrary parameters, in
+    which case this might be confusing to have also.}
 \end{itemize}
+
+\margument s that introduce bindings \todo{which do not exist
+  yet \todo{\ghissue{12}}} may only appear in \marrowmessagespec s.
+This is because bindings are only visible during the main body of a
+sequence.
+Consequently, any arguments that appear in
+\mgapmessagespec s must be subclasses of \mnonbindingargument.
+
+must not introduce bindings, as
+any bindings that could be introduced would not 
+and
+this is represented by the 
 
 All \margument s, at time of writing, are forms of \mnonbindingargument{} and
 can therefore appear in \mgapmessagespec s.  This will change when binding
-arguments are introduced.
+arguments are introduced
+\todo{\ghissue{12}}.
 
 \begin{lstlisting}[style=Example]
 42  // ExpressionArgument containing integer literal
