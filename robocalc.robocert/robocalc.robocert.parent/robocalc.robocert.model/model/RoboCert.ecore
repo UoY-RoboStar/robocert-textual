@@ -12,8 +12,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="RAPackage" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//BasicPackage">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cspFragments" upperBound="-1"
         eType="#//CSPFragment" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" upperBound="-1"
-        eType="#//Sequence" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequenceGroups" upperBound="-1"
+        eType="#//SequenceGroup" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" upperBound="-1"
         eType="#//Assertion" containment="true"/>
   </eClassifiers>
@@ -21,15 +21,28 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceGroup" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
-        eType="#//Target" containment="true" eOpposite="#//Target/sequence"/>
+        eType="#//Target" containment="true" eOpposite="#//Target/group"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="world" lowerBound="1" eType="#//World"
-        containment="true" eOpposite="#//World/sequence"/>
+        containment="true" eOpposite="#//World/group"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="messageSets" upperBound="-1"
-        eType="#//NamedMessageSet" containment="true" eOpposite="#//NamedMessageSet/sequence"/>
+        eType="#//NamedMessageSet" containment="true" eOpposite="#//NamedMessageSet/group"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" upperBound="-1"
+        eType="#//Sequence" containment="true" eOpposite="#//Sequence/group"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
+        upperBound="2" eType="#//Actor" changeable="false" volatile="true" transient="true"
+        derived="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
+        eOpposite="#//SequenceGroup/sequences"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="#//Target" changeable="false" volatile="true" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="world" lowerBound="1" eType="#//World"
+        changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
         upperBound="2" eType="#//Actor" changeable="false" volatile="true" transient="true"
         derived="true"/>
@@ -59,8 +72,8 @@
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedMessageSet" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"
-        eOpposite="#//Sequence/messageSets"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//SequenceGroup"
+        eOpposite="#//SequenceGroup/messageSets"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//MessageSet"
         containment="true"/>
   </eClassifiers>
@@ -77,16 +90,16 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UniverseMessageSet" eSuperTypes="#//MessageSet"/>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="anySequence" eType="#//Sequence"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="anyGroup" eType="#//SequenceGroup"
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="World" eSuperTypes="#//Actor">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
-        eType="#//Sequence" eOpposite="#//Sequence/world"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
+        eOpposite="#//SequenceGroup/world"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Actor">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
-        eType="#//Sequence" eOpposite="#//Sequence/target"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
+        eOpposite="#//SequenceGroup/target"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
         eType="#//TargetInstantiation" containment="true"/>
   </eClassifiers>

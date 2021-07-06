@@ -19,8 +19,8 @@ class RoboCertFormatter extends RoboChartFormatter {
 		for (cSPFragment : rAPackage.cspFragments) {
 			cSPFragment.format
 		}
-		for (sequence : rAPackage.sequences) {
-			sequence.format
+		for (sequenceGroup : rAPackage.sequenceGroups) {
+			sequenceGroup.format
 		}
 		for (assertion : rAPackage.assertions) {
 			assertion.format

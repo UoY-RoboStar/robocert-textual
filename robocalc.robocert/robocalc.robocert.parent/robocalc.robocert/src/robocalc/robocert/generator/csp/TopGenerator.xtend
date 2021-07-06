@@ -3,7 +3,7 @@ package robocalc.robocert.generator.csp
 import org.eclipse.emf.ecore.resource.Resource
 import robocalc.robocert.model.robocert.CSPFragment
 import robocalc.robocert.model.robocert.Assertion
-import robocalc.robocert.model.robocert.Sequence
+import robocalc.robocert.model.robocert.SequenceGroup
 import com.google.inject.Inject
 
 /**
@@ -32,7 +32,7 @@ class TopGenerator {
 		-- Sequences
 		--
 		
-		«resource.generateSequences»
+		«resource.generateSequenceGroups»
 		
 		--
 		-- Assertions
@@ -79,9 +79,9 @@ class TopGenerator {
 	 * 
 	 * @param resource  the top-level property model.
 	 */
-	private def generateSequences(Resource resource) '''
-		«FOR seq : resource.allContents.filter(Sequence).toIterable»
-			«seq.generate»
+	private def generateSequenceGroups(Resource resource) '''
+		«FOR group : resource.allContents.filter(SequenceGroup).toIterable»
+			«group.generateGroup»
 		«ENDFOR»
 	'''
 

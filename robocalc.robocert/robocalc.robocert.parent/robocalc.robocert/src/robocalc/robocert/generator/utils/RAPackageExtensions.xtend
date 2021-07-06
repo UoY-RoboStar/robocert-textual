@@ -6,7 +6,7 @@ import circus.robocalc.robochart.NamedElement
 import robocalc.robocert.model.robocert.RCModuleTarget
 import com.google.common.collect.Iterators
 import robocalc.robocert.model.robocert.Target
-import robocalc.robocert.model.robocert.Sequence
+import robocalc.robocert.model.robocert.SequenceGroup
 import java.util.Collections
 
 /**
@@ -22,11 +22,11 @@ class RAPackageExtensions {
 	 * @returns an iterator of named elements.
 	 */
 	def Iterator<NamedElement> getReferencedElements(RAPackage it) {
-		sequences.iterator.flatMap[referencedElements]
+		sequenceGroups.iterator.flatMap[referencedElements]
 		// TODO(@MattWindsor91): do we need anything else?
 	}
 
-	private def Iterator<NamedElement> getReferencedElements(Sequence it) {
+	private def Iterator<NamedElement> getReferencedElements(SequenceGroup it) {
 		target.targetElement
 	}
 

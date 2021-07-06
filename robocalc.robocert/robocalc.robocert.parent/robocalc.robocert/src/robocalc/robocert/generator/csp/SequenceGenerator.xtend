@@ -4,9 +4,10 @@ import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.SequenceStep
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Subsequence
+import robocalc.robocert.model.robocert.SequenceGroup
 
 /**
- * A generator that emits untimed CSP for sequences and subsequences.
+ * A generator that emits CSP for sequences and subsequences.
  */
 class SequenceGenerator implements SubsequenceGenerator {
 	@Inject extension ActionGenerator
@@ -15,26 +16,43 @@ class SequenceGenerator implements SubsequenceGenerator {
 	@Inject extension TargetGenerator
 
 	/**
-	 * Generates CSP for a sequence.
+	 * Generates CSP for a sequence group.
 	 * 
-	 * @param it  the sequence for which we are generating CSP.
+	 * @param it  the sequence group for which we are generating CSP.
 	 * 
-	 * @return CSP for this generator's sequence.
+	 * @return CSP for the sequence group.
 	 */
-	def CharSequence generate(Sequence it) '''
+	def CharSequence generateGroup(SequenceGroup it) '''
 		module «name»
+			-- target «target»
+			-- world «world»
 		exports
-		«messageSets.generateNamedSets»
-		
-		Timed(OneStep) {
-			Sequence =
-				«body.generate»
+			«messageSets.generateNamedSets»
 
 			-- Target definitions
-			«target.generateOpenTargetDef»
-			«target.generateClosedTargetDef»
-		}
+			Timed(OneStep) {
+				«target.generateOpenTargetDef»
+				«target.generateClosedTargetDef»
+			}
+			
+			«sequences.generateSequences»
 		endmodule
+	'''
+
+	private def CharSequence generateSequences(Iterable<Sequence> sequences) '''
+		«IF sequences.empty»
+			-- No sequences defined in this group
+		«ELSE»
+			module Sequences
+			exports
+				Timed(OneStep) {
+					«FOR sequence : sequences»
+						«sequence.name» =
+							«sequence.body.generate»
+					«ENDFOR»
+				}
+			endmodule
+		«ENDIF»
 	'''
 	
 	/**
@@ -49,6 +67,16 @@ class SequenceGenerator implements SubsequenceGenerator {
 			«step.generateStep»
 		«ENDFOR»
 	'''
+
+	/**
+	 * Generates a fully qualified reference to a sequence.
+	 * 
+	 * @param it  the sequence for which we are generating a reference.
+	 * 
+	 * @return a qualified name for it.
+	 */
+	def CharSequence generateName(Sequence it)
+		'''«group.name»::Sequences::«name»'''
 
 	/**
 	 * Generates CSP for one sequence step.

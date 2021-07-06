@@ -20,6 +20,13 @@ class RobocertFactoryImplCustom extends RobocertFactoryImpl {
 	override createWorld() {
 		new WorldImplCustom
 	}
+
+	/**
+	 * @return a custom form of SequenceGroupImpl.
+	 */
+	override createSequenceGroup() {
+		new SequenceGroupImplCustom
+	}
 	
 	/**
 	 * @return a custom form of SequenceImpl.

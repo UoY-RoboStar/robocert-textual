@@ -9,6 +9,7 @@ import robocalc.robocert.model.robocert.Assertion
  */
 class AssertionGenerator {
 	@Inject extension TargetGenerator;
+	@Inject extension SequenceGenerator;
 
 	/**
 	 * @return generated CSP for the assertion.
@@ -79,7 +80,7 @@ class AssertionGenerator {
 	 * @param it  the assertion for which we are generating CSP.
 	 */
 	private def generateSeqRef(SequenceAssertion it)
-		'''«sequence.name»::Sequence'''
+		'''«sequence.generateName»'''
 
 	/**
 	 * @return generated CSP for the target of one assertion.

@@ -8,15 +8,23 @@ import org.eclipse.emf.common.util.BasicEList
  */
 class SequenceImplCustom extends SequenceImpl {
 	/**
-	 * Re-points actors to resolve to the sequence's target and world
-	 * (in that order).
-	 * 
-	 * @return the target's actors.
+	 * Delegates to the sequence's group's target.
+	 */	
+	override basicGetTarget() {
+		group?.target
+	}
+
+	/**
+	 * Delegates to the sequence's group's world.
+	 */	
+	override basicGetWorld() {
+		group?.world
+	}
+	
+	/**
+	 * Delegates to the sequence's group's actors.
 	 */	
 	override getActors() {
-		new BasicEList => [
-			add(target)
-			add(world)
-		]
+		group?.actors ?: new BasicEList
 	}
 }

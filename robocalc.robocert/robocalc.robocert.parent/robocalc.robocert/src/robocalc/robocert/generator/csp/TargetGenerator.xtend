@@ -24,14 +24,11 @@ class TargetGenerator {
 	 * either from the target's instantiation or from
 	 * the top-level instantiations.csp file.
 	 * 
-	 * Note that the returned sequence isn't qualified; if calling this from
-	 * outside the sequence, qualify with 'sequence.name::'.
-	 * 
 	 * @param it  the target for which we are generating a closed form.
 	 * 
 	 * @return CSP referencing the 'closed' form of this target.
 	 */
-	def CharSequence generateClosedTargetRef(Target it) '''«sequence.name»::Target'''
+	def CharSequence generateClosedTargetRef(Target it) '''«group.name»::Target'''
 
 	/**
 	 * Generates a process definition for the 'closed' form of this target.
@@ -61,7 +58,7 @@ class TargetGenerator {
 	 * @return generated CSP for the 'open' form of a sequence's target.
 	 */
 	def CharSequence generateOpenTargetRef(Target it, TargetInstantiation instantiation) '''
-		«sequence.name»::«generateOpenTargetSig(instantiation)»
+		«group.name»::«generateOpenTargetSig(instantiation)»
 	'''
 
 	/**

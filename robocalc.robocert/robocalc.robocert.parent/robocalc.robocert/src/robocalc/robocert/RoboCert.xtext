@@ -10,7 +10,7 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
  */
 RAPackage:
 	( cspFragments += CSPFragment
-	| sequences += Sequence
+	| sequenceGroups += SequenceGroup
 	| assertions += Assertion
 	)*;
 
@@ -35,24 +35,33 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * 
  * 0) Should sequence diagram assertions be part of the assertions production,
  *    or separate as with probabilistic assertions?
- * 1) Should the context of the diagram be part of its definition, or part of
- *    the assertion (eg 'assertion X: MODULE satisfies DIAGRAM')?
- * 2) When the actors in a diagram are the platform and the design, what should
+ * 1) When the actors in a diagram are the platform and the design, what should
  *    the design be called?  Currently it's 'module', which may be confusing.
- * 3) Is the given way to describe PSP scopes appropriate?
- * 4) How do we describe strict vs weak ordering?  Which should be implicit?
+ * 2) Is the given way to describe PSP scopes appropriate?
+ * 3) How do we describe strict vs weak ordering?  Which should be implicit?
  *    Right now, strict ordering is explicit all the way to the end, when
  *    we default to weak ordering - a bit strange.
- * 5) How do we describe timing properties?
+ * 4) How do we describe timing properties?
  */
+
+/**
+ * A sequence diagram group.
+ * 
+ * Sequence diagram groups contain a target and world, and then a mix of
+ * sequences and message sets.
+ */
+SequenceGroup:
+	'sequence' 'group' name=ID 'for' target=Target ',' world=World
+	'{'
+	(sequences+=Sequence | messageSets += NamedMessageSet)*
+	'}'
+;
 
 /**
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID 'for' target=Target ',' world=World
-	('with' messageSets += NamedMessageSet)*
-	body=Subsequence
+	'sequence' name=ID body=Subsequence
 ;
 
 /**
@@ -245,7 +254,7 @@ fragment AssertionName *:
  */
 SequenceAssertion:
 	AssertionName
-	sequence=[Sequence]
+	sequence=[Sequence|QualifiedName]
 		( 'is' isNegated?='not' type=IsSequenceAssertionType
         | 'does' isNegated?='not' type=DoesNotSequenceAssertionType
         | type=DoesSequenceAssertionType

@@ -26,9 +26,9 @@ class RAPackage extends robochart.BasicPackage {
 	 */
 	val CSPFragment[*] cspFragments;
 	/**
-	 * Any sequence diagrams in this package.
+	 * Any sequence groups in this package.
 	 */
-	val Sequence[*] sequences;
+	val SequenceGroup[*] sequenceGroups;
 	/**
 	 * Any assertions in this package.
 	 */
@@ -50,28 +50,58 @@ class CSPFragment {
 //
 
 /**
+ * A collection of sequence diagrams between a given target and world.
+ */
+class SequenceGroup extends robochart.NamedElement {
+	/**
+	 * The target actor of the sequence group.
+	 */
+	val Target[1]#group target;
+	/**
+	 * The world actor of the sequence group.
+	 */
+	val World[1]#group world;
+	/**
+	 * Any message sets named on the sequence group.
+	 */
+	val NamedMessageSet[*]#group messageSets;	
+	/**
+	 * The sequences inside this sequence group.
+	 */
+	val Sequence[*]#group sequences;
+	/**
+	 * Picks up both actors of the sequence diagram.
+	 */
+	derived volatile transient readonly ref Actor[2] actors;
+}
+
+/**
  * A sequence diagram.
  *
  * Well-formed sequence diagrams end with a final or infinite loop action.
  */
 class Sequence extends robochart.NamedElement {
 	/**
-	 * The target actor of the sequence diagram.
+	 * The group to which this sequence belongs.
 	 */
-	val Target[1]#sequence target;
-	/**
-	 * The world actor of the sequence diagram.
-	 */
-	val World[1]#sequence world;
-	/**
-	 * Any message sets named on the sequence.
-	 */
-	val NamedMessageSet[*]#sequence messageSets;
+	ref SequenceGroup[1]#sequences group;
 	/**
 	 * The top-level subsequence of the sequence diagram.
 	 */
 	val Subsequence[1] body;
 
+	//
+	// Derived properties
+	//
+
+	/**
+	 * Picks up the target of this sequence diagram.
+	 */
+	derived volatile transient readonly ref Target[1] target;
+	/**
+	 * Picks up the world of this sequence diagram.
+	 */
+	derived volatile transient readonly ref World[1] world;
 	/**
 	 * Picks up both actors of the sequence diagram.
 	 */
@@ -152,9 +182,9 @@ class SequenceGap {
  */
 class NamedMessageSet extends robochart.NamedElement {
 	/**
-	 * The sequence on which this message set is defined.
+	 * The sequence group on which this message set is defined.
 	 */
-	ref Sequence#messageSets sequence;
+	ref SequenceGroup#messageSets group;
 
 	/**
 	 * The inner message set.
@@ -217,9 +247,9 @@ class UniverseMessageSet extends MessageSet {
  */
 abstract class Actor extends robochart.NamedElement {
 	/**
-	 * Typically expands to the target's sequence parameter.
+	 * Typically expands to the target's sequence group parameter.
 	 */
-	derived volatile transient readonly ref Sequence[0..1] anySequence;
+	derived volatile transient readonly ref SequenceGroup[0..1] anyGroup;
 }
 
 /**
@@ -227,9 +257,9 @@ abstract class Actor extends robochart.NamedElement {
  */
 class World extends Actor {
 	/**
-	 * The sequence to which this actor is attached.
+	 * The sequence group to which this actor is attached.
 	 */
-	ref Sequence[1]#world sequence;
+	ref SequenceGroup[1]#world group;
 }
 
 /**
@@ -237,9 +267,9 @@ class World extends Actor {
  */
 abstract class Target extends Actor {
 	/**
-	 * The sequence to which this actor is attached.
+	 * The sequence group to which this actor is attached.
 	 */
-	ref Sequence[1]#target sequence;
+	ref SequenceGroup[1]#target group;
 	
 	/**
 	 * An initial instantiation to be applied to the target.

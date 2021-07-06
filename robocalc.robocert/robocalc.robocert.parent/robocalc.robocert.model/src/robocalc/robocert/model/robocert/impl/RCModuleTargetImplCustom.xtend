@@ -5,12 +5,12 @@ package robocalc.robocert.model.robocert.impl
  */
 class RCModuleTargetImplCustom extends RCModuleTargetImpl {
 	/**
-	 * Re-points anySequence to resolve to the target's bidirectional sequence
+	 * Re-points anyGroup to resolve to the target's bidirectional group
 	 * relation.
 	 * 
-	 * @return the target's sequence.
+	 * @return the target's group.
 	 */
-	override basicGetAnySequence() {
-		sequence
+	override basicGetAnyGroup() {
+		group
 	}
 }
