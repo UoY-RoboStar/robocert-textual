@@ -371,14 +371,33 @@ abstract class MessageSpec {
 	 * The topic of the message.
 	 */
 	val MessageTopic[1]#spec topic;
+	
+	/**
+	 * The direction of the message.
+	 */
+	attr MessageDirection[1] direction;
+	
+	//
+	// Derived references
+	//
+	//
+	
+	/**
+	 * The target of the message.
+	 *
+	 * If the message is outbound, this will be the 'from' of the message;
+	 * else, the 'to'.
+	 */
+	derived transient readonly volatile ref Target[1] target;
+	
 	/**
 	 * The source of the message.
 	 */
-	ref Actor[1] from;
+	derived transient readonly volatile ref Actor[1] from;
 	/**
-	 * The target of the message.
+	 * The destination of the message.
 	 */
-	ref Actor[1] to;
+	derived transient readonly volatile ref Actor[1] to;
 }
 
 /**
@@ -441,6 +460,20 @@ class OperationTopic extends MessageTopic {
 	ref robochart.OperationSig[1] operation;
 // TODO: check whether this should be Operation instead
 // TODO: parameters
+}
+
+/**
+ * The direction of a message.
+ */
+enum MessageDirection {
+	/**
+	 * Heading in from world to target.
+	 */
+	INBOUND;
+	/**
+	 * Heading out from target to world.
+	 */
+	OUTBOUND;
 }
 
 /**

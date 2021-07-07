@@ -2,7 +2,6 @@ package robocalc.robocert.generator.csp
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.MessageSpec
-import robocalc.robocert.utils.MessageAnalysis
 import robocalc.robocert.model.robocert.GapMessageSpec
 import robocalc.robocert.model.robocert.Argument
 import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
@@ -12,6 +11,8 @@ import java.util.Collections
 import java.util.List
 import robocalc.robocert.model.robocert.RestArgument
 import robocalc.robocert.generator.utils.TopicExtensions
+import robocalc.robocert.generator.utils.TargetExtensions
+import robocalc.robocert.model.robocert.MessageDirection
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -19,6 +20,7 @@ import robocalc.robocert.generator.utils.TopicExtensions
 class MessageSpecGenerator {
 	@Inject extension TopicExtensions
 	@Inject extension TopicGenerator
+	@Inject extension TargetExtensions
 	@Inject extension ExpressionGenerator
 
 	/**
@@ -41,11 +43,9 @@ class MessageSpecGenerator {
 	def generatePrefix(ArrowMessageSpec it)
 		'''«generateHeader»«arguments.generateArguments»«generateFiller»'''
 	
-	private def generateHeader(MessageSpec spec) {
-		// NOTE: we might need to consider from/to at a more sophisticated
-		// level than just boiling them down to 'in'/'out' eventually.
-		spec.topic.generate(MessageAnalysis.analyse(spec))		
-	}
+	private def generateHeader(MessageSpec it)
+		'''«target.namespace»::«topic.generate»«IF topic.hasDirection».«direction.cspDir»«ENDIF»'''
+
 	
 	private def<T extends Argument> generateArguments(Iterable<T> it)
 		'''«FOR x: it»«x.generateArgument»«ENDFOR»'''
@@ -57,7 +57,7 @@ class MessageSpecGenerator {
 		'''«FOR x: parametersToFill.toIterable»?_«ENDFOR»'''
 	
 	private def parametersToFill(ArrowMessageSpec it) {
-		val amount = arguments.takeWhile[!(it instanceof RestArgument)].length()
+		val amount = arguments.takeWhile[!(it instanceof RestArgument)].length
 		topic.params.drop(amount)
 	}
 	
@@ -118,5 +118,16 @@ class MessageSpecGenerator {
 	 */	
 	private def dispatch getArgumentsIfAny(MessageSpec it) {
 		Collections.emptyList
+	}
+		
+	def private cspDir(MessageDirection it) {
+		switch(it) {
+			case INBOUND:
+				"in"
+			case OUTBOUND:
+				"out"
+			default:
+				"??"
+		}
 	}
 }

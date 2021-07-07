@@ -68,5 +68,19 @@ class RobocertFactoryImplCustom extends RobocertFactoryImpl {
 	 */
 	override createSequenceGap() {
 		new SequenceGapImplCustom
+	}
+	
+	/**
+	 * @return a custom form of ArrowMessageSpecImpl.
+	 */
+	override createArrowMessageSpec() {
+		new ArrowMessageSpecImplCustom
+	}
+	
+	/**
+	 * @return a custom form of GapMessageSpecImpl.
+	 */
+	override createGapMessageSpec() {
+		new GapMessageSpecImplCustom
 	}	
 }

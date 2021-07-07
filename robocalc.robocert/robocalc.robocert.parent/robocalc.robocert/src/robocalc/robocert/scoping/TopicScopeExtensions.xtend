@@ -4,7 +4,6 @@ import robocalc.robocert.model.robocert.OperationTopic
 import org.eclipse.xtext.scoping.IScope
 import robocalc.robocert.generator.utils.TargetExtensions
 import com.google.inject.Inject
-import robocalc.robocert.utils.MessageAnalysis
 import robocalc.robocert.generator.utils.ContextExtensions
 import org.eclipse.xtext.scoping.Scopes
 import circus.robocalc.robochart.Context
@@ -43,7 +42,9 @@ class TopicScopeExtensions {
 	}
 	
 	private def scope(MessageTopic it, (Context) => Iterator<EObject> selector) {
-		val set = MessageAnalysis.analyse(spec).target?.world?.flatMap(selector)?.toSet;
+		// TODO(@MattWindsor91): need to work out what to do with inbound operations;
+		// can they ever happen?
+		val set = spec?.target?.world?.flatMap(selector)?.toSet;
 		if (set !== null) {
 			Scopes.scopeFor(set)
 		}

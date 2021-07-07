@@ -132,8 +132,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="MessageSpec" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" lowerBound="1" eType="#//MessageTopic"
         containment="true" eOpposite="#//MessageTopic/spec"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="from" lowerBound="1" eType="#//Actor"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="to" lowerBound="1" eType="#//Actor"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="direction" lowerBound="1"
+        eType="#//MessageDirection"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="#//Target" changeable="false" volatile="true" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" lowerBound="1" eType="#//Actor"
+        changeable="false" volatile="true" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="to" lowerBound="1" eType="#//Actor"
+        changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArrowMessageSpec" eSuperTypes="#//MessageSpec">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
@@ -157,6 +163,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="OperationTopic" eSuperTypes="#//MessageTopic">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="MessageDirection">
+    <eLiterals name="INBOUND"/>
+    <eLiterals name="OUTBOUND" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Argument" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="NonBindingArgument" abstract="true"

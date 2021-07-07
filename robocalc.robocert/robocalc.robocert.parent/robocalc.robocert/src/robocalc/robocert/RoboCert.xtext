@@ -190,14 +190,19 @@ NamedMessageSet:
  * An arrow message specification.
  */
 ArrowMessageSpec:
-	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? FromTo
+	 direction=MessageDirection topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')?
 ;
 
 /**
  * A gap message specification.
  */
 GapMessageSpec:
-	topic=MessageTopic ('(' (arguments+=NonBindingArgument (',' arguments+=NonBindingArgument)*)? ')')? FromTo
+	 direction=MessageDirection topic=MessageTopic ('(' (arguments+=NonBindingArgument (',' arguments+=NonBindingArgument)*)? ')')?
+;
+
+enum MessageDirection:
+	INBOUND='<-' |
+	OUTBOUND='->'
 ;
 
 /**
@@ -217,10 +222,6 @@ NonBindingArgument:
 
 ExpressionArgument:
 	expr=Expression
-;
-
-fragment FromTo *:
-	'from' from=[Actor] 'to' to=[Actor]
 ;
 
 /**
