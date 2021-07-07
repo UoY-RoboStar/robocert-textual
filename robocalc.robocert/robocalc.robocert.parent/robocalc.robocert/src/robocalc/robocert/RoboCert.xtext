@@ -137,8 +137,31 @@ SequenceStep:
  */
 SequenceAction:
 	{ArrowAction} body=ArrowMessageSpec |
-	'loop' {LoopAction} name=ID body=Subsequence |
+	LoopAction |
 	'end' {FinalAction}
+;
+
+/**
+ * A loop.
+ * 
+ * Without a specification, loops will iterate forever.
+ */
+LoopAction:
+	'loop' {LoopAction} name=ID (':' bound=LoopBound | bound=InfiniteLoopBound) body=Subsequence
+;
+
+/**
+ * A loop bound.
+ */
+LoopBound:
+	InfiniteLoopBound |
+	'exactly' {DefiniteLoopBound} times=Expression 'times' |
+	'at' 'least' {LowerLoopBound} lowerTimes=Expression 'times' |
+	'between' {RangeLoopBound} lowerTimes=Expression 'and' upperTimes=Expression 'times'
+;
+
+InfiniteLoopBound:
+	'forever' {InfiniteLoopBound}
 ;
 
 /**

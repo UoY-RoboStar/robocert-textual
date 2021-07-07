@@ -10,7 +10,7 @@ import robocalc.robocert.model.robocert.LoopAction
  * Top-level CSP generator for sequence actions.
  */
 class ActionGeneratorImpl implements ActionGenerator {
-	@Inject extension SequenceGenerator
+	@Inject extension LoopGenerator
 	@Inject extension MessageSpecGenerator
 
 	/**
@@ -29,13 +29,7 @@ class ActionGeneratorImpl implements ActionGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def dispatch generate(LoopAction it) '''
-		let
-			LOOP_«name» = (
-				«body.generate»
-		  	); LOOP_«name»
-		within LOOP_«name»
-	'''
+	def dispatch generate(LoopAction it) '''«generateLoop»'''
 
 	/**
 	 * Generates CSP for a final action.

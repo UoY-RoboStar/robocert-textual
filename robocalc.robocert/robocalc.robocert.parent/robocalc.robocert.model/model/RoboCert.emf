@@ -343,12 +343,79 @@ class ArrowAction extends SequenceAction {
  * also as a target for any break actions.
  */
 class LoopAction extends robochart.NamedElement, SequenceAction {
+	/**
+	 * The loop bound.
+	 */
+	val LoopBound[1] bound;
+
 	// TODO: conditionals
 	// TODO: break
 	/**
 	 * The body of the loop.
 	 */
 	val Subsequence[1] body;
+}
+
+/**
+ * A bound on the number of iterations the loop can make.
+ */
+abstract class LoopBound {
+}
+
+/**
+ * A loop bound that makes the loop execute infinitely until otherwise
+ * broken.
+ */
+class InfiniteLoopBound extends LoopBound {
+}
+
+/**
+ * A loop bound that executes a specific number of times.
+ *
+ * Corresponds to UML2 loop(times).
+ */
+class DefiniteLoopBound extends LoopBound {
+	/**
+	 * The number of times the loop must execute, unless prematurely
+	 * broken.
+	 * Evaluated once only.
+	 */
+ 	val robochart.Expression[1] times;
+}
+
+/**
+ * A loop bound that executes a nondeterministic number of times that
+ * is at least a lower bound.
+ *
+ * Corresponds to UML2 loop(lowerTimes, *).
+ */
+class LowerLoopBound extends LoopBound {
+	/**
+	 * The number of times the loop must execute at least, unless
+	 * prematurely broken.
+	 * Evaluated once only.
+	 */
+ 	val robochart.Expression[1] lowerTimes;
+}
+
+/**
+ * A loop bound that executes a nondeterministic number of times between
+ * two bounds.
+ *
+ * Corresponds to UML2 loop(lowerTimes, upperTimes).
+ */
+class RangeLoopBound extends LoopBound {
+	/**
+	 * The lower number of times the loop must execute, unless
+	 * prematurely broken.
+	 * Evaluated once only.	 
+	 */
+	val robochart.Expression[1] lowerTimes;
+	/**
+	 * The upper number of times the loop must execute.
+	 * Evaluated once only.
+	 */
+	val robochart.Expression[1] upperTimes;
 }
 
 /**

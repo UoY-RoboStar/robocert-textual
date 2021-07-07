@@ -21,7 +21,7 @@ class TopGenerator {
 	 */
 	def CharSequence generate(Resource resource) '''
 		«resource.generateImports»
-		
+
 		--
 		-- CSP fragments
 		--

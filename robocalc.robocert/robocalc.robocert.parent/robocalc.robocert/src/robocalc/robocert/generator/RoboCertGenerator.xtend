@@ -21,8 +21,20 @@ class RoboCertGenerator extends AbstractGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		// Needed to make sure that imports in any RoboChart packages
 		// referenced by this assertion file get picked up.
-		EcoreUtil2.resolveAll(resource.resourceSet);
+		EcoreUtil2.resolveAll(resource.resourceSet)
 		
-		fsa.generateFile('assertions.csp', csp.generate(resource));
+		fsa.generateImport
+		fsa.generateFile('assertions.csp', csp.generate(resource))
 	}
+	
+	def private generateImport(IFileSystemAccess2 fsa) {
+		fsa.generateFile('defs/'+ROBOCERT_DEFS_NAME, importResourceStream)
+	}
+	
+	def importResourceStream() {
+		class.classLoader.getResourceAsStream("lib/semantics/"+ROBOCERT_DEFS_NAME)
+	}
+	
+
+	static String ROBOCERT_DEFS_NAME = "robocert_defs.csp"
 }
