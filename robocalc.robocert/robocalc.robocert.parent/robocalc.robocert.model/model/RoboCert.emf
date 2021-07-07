@@ -245,7 +245,7 @@ class UniverseMessageSet extends MessageSet {
  * everything connected to the target.  They are bound to names used in the
  * diagram itself, but the target may also name an external RoboChart entity.
  */
-abstract class Actor extends robochart.NamedElement {
+abstract class Actor {
 	/**
 	 * Typically expands to the target's sequence group parameter.
 	 */

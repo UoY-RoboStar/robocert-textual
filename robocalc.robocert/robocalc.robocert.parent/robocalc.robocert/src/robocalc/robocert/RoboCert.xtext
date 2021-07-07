@@ -51,7 +51,7 @@ terminal CSP_CODE: 'csp-begin' -> 'csp-end';
  * sequences and message sets.
  */
 SequenceGroup:
-	'sequence' 'group' name=ID 'for' target=Target ',' world=World
+	'sequence' 'group' name=ID ':' target=Target '->' world=World
 	'{'
 	(sequences+=Sequence | messageSets += NamedMessageSet)*
 	'}'
@@ -103,14 +103,14 @@ ConstAssignment:
  * A target of a sequence diagram.
  */
 BasicTarget returns Target:
-	 'module' {RCModuleTarget} name=ID ':' module=[RCModule|QualifiedName]
+	 'module' {RCModuleTarget} module=[RCModule|QualifiedName]
 ;
 
 /**
  * The world actor of a sequence diagram.
  */
 World:
-	'world' name=ID
+	'world' {World}
 ;
 
 // The basic trace is 'X then X then X... end'.  We can change to weak
