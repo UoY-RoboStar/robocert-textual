@@ -30,13 +30,13 @@
 \colorlet{TColor}{gray!70!white}
 
 % Setup for the graphical syntax.
-\newcommand{\annotation}[1]{\(\langle\!\langle\text{#1}\rangle\!\rangle\)}
-\newcommand{\osigil}{\annotation{op}}
+\newcommand{\annotation}[1]{\(\footnotesize\langle\!\langle\text{#1}\rangle\!\rangle\)}
+\newcommand{\osigil}{\annotation{operation}}
 \newcommand{\esigil}{\annotation{event}}
 \usetikzlibrary{arrows.meta,positioning,quotes}
 \tikzset{
 actor/.style={draw, rectangle, thick},
-world/.style={actor, font={\annotation{world}\;}},
+world/.style={actor},%, font={\annotation{world}\;}},
 target/.style={actor},
 rcmodule/.style={target, font={\annotation{module}\;}},
 lifeline/.style={dashed, thick},
@@ -46,8 +46,6 @@ oarrow/.style={arrow, font={\small\osigil\quad}},
 earrow/.style={arrow, font={\small\esigil\quad}},
 final/.style={dotted, thick, "end"},
 }
-% Typesets a named target.
-\newcommand{\gnamedtarget}[2]{#1: #2}
 \newcommand{\gsecaption}{
 	\captionsetup{
 		labelformat=empty,

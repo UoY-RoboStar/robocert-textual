@@ -126,28 +126,28 @@
                 <path d="M538 114 L612 114 L612 132 L538 132 L538 114 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath19">
-                <path d="M499 137 L628 137 L628 155 L499 155 L499 137 Z"/>
+                <path d="M499 137 L649 137 L649 155 L499 155 L499 137 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath20">
-                <path d="M499 137 L630 137 L630 155 L499 155 L499 137 Z"/>
+                <path d="M499 137 L651 137 L651 155 L499 155 L499 137 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath21">
-                <path d="M499 153 L604 153 L604 171 L499 171 L499 153 Z"/>
+                <path d="M499 153 L628 153 L628 171 L499 171 L499 153 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath22">
-                <path d="M499 153 L606 153 L606 171 L499 171 L499 153 Z"/>
+                <path d="M499 153 L630 153 L630 171 L499 171 L499 153 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath23">
-                <path d="M499 169 L599 169 L599 187 L499 187 L499 169 Z"/>
+                <path d="M499 169 L604 169 L604 187 L499 187 L499 169 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath24">
-                <path d="M499 169 L601 169 L601 187 L499 187 L499 169 Z"/>
+                <path d="M499 169 L606 169 L606 187 L499 187 L499 169 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath25">
-                <path d="M499 185 L649 185 L649 203 L499 203 L499 185 Z"/>
+                <path d="M499 185 L599 185 L599 203 L499 203 L499 185 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath26">
-                <path d="M499 185 L651 185 L651 203 L499 203 L499 185 Z"/>
+                <path d="M499 185 L601 185 L601 203 L499 203 L499 185 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath27">
                 <path d="M499 201 L598 201 L598 219 L499 219 L499 201 Z"/>
@@ -372,7 +372,7 @@ C8hKibhsf36wizahDgBzKT61uf8SjQAAAABJRU5ErkJggg==" xlink:type="simple"
                    xlink:actuate="onLoad" height="16" preserveAspectRatio="none"
                    xlink:show="embed"/>
             <text x="519" xml:space="preserve" y="149"
-                  clip-path="url(#clipPath20)" stroke="none"> body : Subsequence</text>
+                  clip-path="url(#clipPath20)" stroke="none"> group : SequenceGroup</text>
             <image x="500" y="154" clip-path="url(#clipPath21)" width="16"
                    xmlns:xlink="http://www.w3.org/1999/xlink"
                    xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAqUlEQVR42mNgGAWM
@@ -382,20 +382,19 @@ gjdX6YFxhSsvw5YFPWCnv3jzhAGnC4qzMrF6gYPlH5wN0kyfaJK0L8MbK0yUaKa9
 C8hKibhsf36wizahDgBzKT61uf8SjQAAAABJRU5ErkJggg==" xlink:type="simple"
                    xlink:actuate="onLoad" height="16" preserveAspectRatio="none"
                    xlink:show="embed"/>
-            <text x="519" y="165" clip-path="url(#clipPath22)"
-                  fill="rgb(39,76,114)" stroke="none" xml:space="preserve"> /target : Target</text>
-            <image xmlns:xlink="http://www.w3.org/1999/xlink"
-                   stroke="rgb(39,76,114)" width="16" xlink:show="embed"
-                   xlink:type="simple" fill="rgb(39,76,114)"
-                   clip-path="url(#clipPath23)" preserveAspectRatio="none"
-                   height="16" x="500" y="170"
+            <text x="519" xml:space="preserve" y="165"
+                  clip-path="url(#clipPath22)" stroke="none"> body : Subsequence</text>
+            <image x="500" y="170" clip-path="url(#clipPath23)" width="16"
+                   xmlns:xlink="http://www.w3.org/1999/xlink"
                    xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAqUlEQVR42mNgGAWM
 6AJza/T/49OQ3HKR0T8k7v/GNYvAelnQFfz4w8SQ3LgAq+bLR04xMLSkgtnmDk7/
 Tx7Yx4hhwNdfGEIMvm3XwTTzl+8MPgkl/xm+vGKQEJEBG8KErvgz0ID//1nBmIEB
 gjdX6YFxhSsvw5YFPWCnv3jzhAGnC4qzMrF6gYPlH5wN0kyfaJK0L8MbK0yUaKa9
-C8hKibhsf36wizahDgBzKT61uf8SjQAAAABJRU5ErkJggg==" xlink:actuate="onLoad"/>
+C8hKibhsf36wizahDgBzKT61uf8SjQAAAABJRU5ErkJggg==" xlink:type="simple"
+                   xlink:actuate="onLoad" height="16" preserveAspectRatio="none"
+                   xlink:show="embed"/>
             <text x="519" y="181" clip-path="url(#clipPath24)"
-                  fill="rgb(39,76,114)" stroke="none" xml:space="preserve"> /world : World</text>
+                  fill="rgb(39,76,114)" stroke="none" xml:space="preserve"> /target : Target</text>
             <image xmlns:xlink="http://www.w3.org/1999/xlink"
                    stroke="rgb(39,76,114)" width="16" xlink:show="embed"
                    xlink:type="simple" fill="rgb(39,76,114)"
@@ -406,17 +405,18 @@ C8hKibhsf36wizahDgBzKT61uf8SjQAAAABJRU5ErkJggg==" xlink:actuate="onLoad"/>
 Tx7Yx4hhwNdfGEIMvm3XwTTzl+8MPgkl/xm+vGKQEJEBG8KErvgz0ID//1nBmIEB
 gjdX6YFxhSsvw5YFPWCnv3jzhAGnC4qzMrF6gYPlH5wN0kyfaJK0L8MbK0yUaKa9
 C8hKibhsf36wizahDgBzKT61uf8SjQAAAABJRU5ErkJggg==" xlink:actuate="onLoad"/>
-            <text x="519" xml:space="preserve" y="197"
-                  clip-path="url(#clipPath26)" stroke="none"> group : SequenceGroup</text>
-            <image x="500" y="202" clip-path="url(#clipPath27)" width="16"
-                   xmlns:xlink="http://www.w3.org/1999/xlink"
+            <text x="519" y="197" clip-path="url(#clipPath26)"
+                  fill="rgb(39,76,114)" stroke="none" xml:space="preserve"> /world : World</text>
+            <image xmlns:xlink="http://www.w3.org/1999/xlink"
+                   stroke="rgb(39,76,114)" width="16" xlink:show="embed"
+                   xlink:type="simple" fill="rgb(39,76,114)"
+                   clip-path="url(#clipPath27)" preserveAspectRatio="none"
+                   height="16" x="500" y="202"
                    xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAArElEQVR42mNgGAWM
 6AJza/T/49OQ3HKR0T8k7v/GNYvAelnQFfz4w8SQ3LgAq+bLR04xMLSkgtnmDk7/
 Tx7Yx4hhwNdfGEIMvm3XwTTzl+8MPgkl/xm+vGKQEJEBG8KErvgz0ID//1nBmIEB
 gjdX6YFxhSsvw5YFPWCnv3jzhAGnC4qzMrF6gYPlH5wN0kybWEAGkvZl8Bh5frCL
-dBuRDUBmIwMmSr0w8AZQDABsuTzq1jWRSAAAAABJRU5ErkJggg==" xlink:type="simple"
-                   xlink:actuate="onLoad" height="16" preserveAspectRatio="none"
-                   xlink:show="embed"/>
+dBuRDUBmIwMmSr0w8AZQDABsuTzq1jWRSAAAAABJRU5ErkJggg==" xlink:actuate="onLoad"/>
             <text x="519" y="213" clip-path="url(#clipPath28)"
                   fill="rgb(39,76,114)" stroke="none" xml:space="preserve"> /actors : Actor</text>
             <line clip-path="url(#clipPath29)" fill="none" x1="496" x2="652"

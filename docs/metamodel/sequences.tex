@@ -26,9 +26,9 @@ It is a \mnamedelement{} that contains:
 \end{itemize}
 
 \begin{lstlisting}[style=Example]
-sequence group Group
-  for module M: AModule,  // RCModuleTarget actor
-      world  W            // World actor
+sequence group Group:
+  module AModule  // RCModuleTarget actor
+  -> world        // World actor
 {
   message set M1: universe
   
@@ -64,11 +64,11 @@ may contain multiple nested \msubsequence s introduced by constructs such as
 
 \begin{lstlisting}[style=Example]
 {
-    anything until operation O1() from M to W  // SequenceStep
+    anything until -> operation O1()  // SequenceStep
 then
-    operation O2() from M to W                 // SequenceStep
+    -> operation O2()                 // SequenceStep
 then
-    end                                        // SequenceStep
+    end                               // SequenceStep
 }
 \end{lstlisting}
 
@@ -79,10 +79,10 @@ A \msequencestep{} is a single step in a \msubsequence.  It consists of a
 \msequenceaction{} (\cref{sec:metamodel-actions}).
 
 \begin{lstlisting}[style=Example]
-anything until operation O() from M to W
+anything until -> operation O()
 // SequenceStep with explicit SequenceGap and SequenceAction
 
-operation O() from M to W
+-> operation O()
 // SequenceStep with explicit SequenceAction only;
 // implicit SequenceGap with empty allow set
 \end{lstlisting}
@@ -98,15 +98,14 @@ another specifying the messages \emph{forbidden} to pass.
 
 \begin{lstlisting}[style=Example]
 anything
-    in     { operation O1() from M to W   // allowed ExtensionalMessageSet
-           , operation O2() from M to W }
-    // a UniverseMessageSet is implied for the allow set
-    // if 'in {..}' is omitted;
+    in message set MS
+    // allowed RefMessageSet
+    // 'in universe' is implied if no 'in SET' is given
 
-    except { operation O2() from M to W } // forbidden ExtensionalMessageSet
-    // an empty ExtensionalMessageSet is implied for the forbidden set
-    // if 'except {..}' is omitted
-until // only permits O1
+    except {| -> operation O2() |}
+    // forbidden ExtensionalMessageSet
+    // 'except {||}' is implied if no 'except SET' is given
+until
 \end{lstlisting}
 
 %%% Local Variables:

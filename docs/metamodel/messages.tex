@@ -35,9 +35,9 @@ There is not yet any meaningful extra data stored in
 to change.
 
 \begin{lstlisting}[style=Example]
-universe                        // UniverseMessageSet
-{ operation O1() from M to W }  // ExtensionalMessageSet
-message set S                   // RefMessageSet
+universe                 // UniverseMessageSet
+{| -> operation O1() |}  // ExtensionalMessageSet
+message set S            // RefMessageSet
 \end{lstlisting}
 
 \subsection{\mnamedmessageset}\label{ssec:metamodel-messages-named-sets}
@@ -46,7 +46,7 @@ A \mnamedmessageset{} attaches a name to a \mmessageset, so that it can be reuse
 inside a \msequence.
 
 \begin{lstlisting}[style=Example]
-message set S: { operation O1() from M to W }
+message set S: {| -> operation O1() |}
 \end{lstlisting}
 
 \subsection{\mmessagespec}
@@ -58,23 +58,28 @@ respectively.}  Each \mmessagespec{} contains:
 
 \begin{itemize}
 \item
-	references to two \mactor s (\cref{sec:metamodel-actors}),
-	capturing the source (\emph{from}) and destination (\emph{to})
-	of the communication;
+  a \mmessagedirection; \emph{outbound} from \mtarget{} to \mworld,
+  or \emph{inbound} from \mworld to \mtarget;
 \item
-	the \mmessagetopic{} (\cref{ssec:metamodel-messages-topics}) specifying
-	the type of communication that the spec is capturing.
+  the \mmessagetopic{} (\cref{ssec:metamodel-messages-topics}) specifying
+  the type of communication that the spec is capturing.
 \end{itemize}
+
+It is possible to infer the \mtarget{} and \mworld{} related by a
+\mmessagespec{} through its containing \msequencegroup.  From these
+and the \mmessagedirection, we can further infer the source (`from')
+and destination (`to') \mactor s.  The target, from, and to actors are
+available in EMF as derived references.
 
 \begin{figure}[h]
 
 \begin{subfigure}[t]{0.38\textwidth}
 \begin{lstlisting}[style=Example]
-operation O1() from M to W
-// MessageSpec with OperationTopic
+-> operation O1()
+// outbound MessageSpec with OperationTopic
 
-event E        from W to M
-// MessageSpec with EventTopic
+<- event E
+// inbound MessageSpec with EventTopic
 \end{lstlisting}
 \end{subfigure}
 \hfill
