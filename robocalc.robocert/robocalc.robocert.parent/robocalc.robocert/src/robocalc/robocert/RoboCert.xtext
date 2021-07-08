@@ -147,21 +147,24 @@ SequenceAction:
  * Without a specification, loops will iterate forever.
  */
 LoopAction:
-	'loop' {LoopAction} name=ID (':' bound=LoopBound | bound=InfiniteLoopBound) body=Subsequence
+	'loop' {LoopAction} name=ID (':' bound=LoopBound | bound=SilentInfiniteLoopBound) body=Subsequence
 ;
 
 /**
  * A loop bound.
  */
 LoopBound:
-	InfiniteLoopBound |
+	'forever' {InfiniteLoopBound} |
 	'exactly' {DefiniteLoopBound} times=Expression 'times' |
 	'at' 'least' {LowerLoopBound} lowerTimes=Expression 'times' |
 	'between' {RangeLoopBound} lowerTimes=Expression 'and' upperTimes=Expression 'times'
 ;
 
-InfiniteLoopBound:
-	'forever' {InfiniteLoopBound}
+/**
+ * Used to default to an infinite loop bound if none is explicitly given.
+ */
+SilentInfiniteLoopBound returns LoopBound:
+	{InfiniteLoopBound}
 ;
 
 /**
