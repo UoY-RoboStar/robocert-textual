@@ -1,0 +1,54 @@
+% listings setup for the RoboCert textual notation.
+
+\lstset{
+  basicstyle={\small\ttfamily}	
+}
+\lstdefinelanguage{RoboCert}{
+  morekeywords={
+    and,
+    anything,
+    as,
+    assertion,
+    at,
+    between,
+    does,
+    end,
+    event,
+    exactly,
+    except,
+    from,
+    for,
+    forever,
+    group,
+    hold,
+    holds,
+    in,
+    least,
+    loop,
+    message,
+    module,
+    not,
+    observed,
+    operation,
+    sequence,
+    set,
+    universe,
+    times,
+    then,
+    to,
+    until,
+    world,
+  },
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+}
+\lstdefinestyle{Example}{
+  title={\textsf{\footnotesize Textual syntax example}},
+  language=RoboCert,
+  frame=lines,
+}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../robocert"
+%%% End:

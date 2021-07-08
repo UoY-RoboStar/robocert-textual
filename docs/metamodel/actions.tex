@@ -23,15 +23,14 @@ the sequence specified by the diagram.  Each \marrowaction{} wraps one
 containing the specification proper.
 \todo{Eventually these will bind arguments.}
 
-\begin{figure}[h]
-
-\begin{subfigure}[t]{0.38\textwidth}
+\begin{figure}[h!]
+\begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 -> operation O1()
 \end{lstlisting}
 \end{subfigure}
 \hfill
-\begin{subfigure}[t]{0.58\textwidth}
+\begin{subfigure}[t]{\eggraphicalwidth}
 \gsecaption
 \centering
 \begin{tikzpicture}
@@ -50,15 +49,120 @@ containing the specification proper.
 
 \subsection{\mloopaction}
 
-A \mloopaction{} is a \emph{named} infinite loop.  \todo{Breaking and perhaps
-other forms of loop are forthcoming.}  Each \mloopaction{} contains one
+% Shorthand for introducing the loop action diagram matrix.
+\newcommand{\egloopmatrix}{
+  \node[rcmodule](mstart) {\egtarget}; \pgfmatrixnextcell \node[world](wstart) {\egworld}; \\
+  \coordinate(mls); \pgfmatrixnextcell \coordinate(wls); \\
+  \coordinate(mo); \pgfmatrixnextcell \coordinate(wo); \\
+  \coordinate(mle); \pgfmatrixnextcell \coordinate(wle); \\
+}
+% Draws the entire loop diagram with the given loop bound header.
+\newcommand{\egloopdiagram}[1]{
+  \matrix[diagram]{\egloopmatrix};
+  \draw[lifeline] (mstart) -- (mls) -- (mo) -- (mle);
+  \draw[lifeline] (wstart) -- (wls) -- (wo) -- (wle);
+  \draw (mo) edge[oarrow, "O1()"] (wo);
+  \gloop{mls}{wls}{mle}{wle}{L}{#1}
+}
+
+A \mloopaction{} is a \emph{named} loop.  Each \mloopaction{} contains one
 \msubsequence{} of steps to repeat indefinitely.
 
+The number of times a \mloopaction{} will iterate \todo{breaking forthcoming}
+depends on its attached \mloopbound{}.  Each bound is in terms of
+\mexpression{}s that are evaluated \emph{only once}, before the execution
+of the loop.
+
+\paragraph{\minfiniteloopbound}
+A \minfiniteloopbound{} states that the loop executes an infinite
+number of times.
+
+\begin{figure}[h!]
+\begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
-loop L {
-    -> operation O2()  // Subsequence
-}  // infinite LoopAction
+loop L : forever { // or 'loop L {'
+    -> operation O1()
+}
 \end{lstlisting}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{\eggraphicalwidth}
+  \gsecaption
+  \centering
+  \begin{tikzpicture}
+    \egloopdiagram{\gloopinfinite}
+  \end{tikzpicture}
+\end{subfigure}
+\end{figure}
+
+\paragraph{\mdefiniteloopbound}
+A \mdefiniteloopbound{} states that the loop executes exactly the
+number of times given in the bound.
+
+\begin{figure}[h!]
+\begin{subfigure}[t]{\egtextwidth}
+\begin{lstlisting}[style=Example]
+loop L : exactly 4 times {
+    -> operation O1()
+}
+\end{lstlisting}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{\eggraphicalwidth}
+  \gsecaption
+  \centering
+  \begin{tikzpicture}
+    \egloopdiagram{\gloopdefinite{4}}
+  \end{tikzpicture}
+\end{subfigure}
+\end{figure}
+
+\paragraph{\mlowerloopbound}
+A \mlowerloopbound{} states that the loop executes at least the
+number of times given in the bound, but may nondeterministically
+choose to execute any number of times in addition.
+
+\begin{figure}[h!]
+\begin{subfigure}[t]{\egtextwidth}
+\begin{lstlisting}[style=Example]
+loop L : at least 5 times {
+    -> operation O1()
+}
+\end{lstlisting}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{\eggraphicalwidth}
+  \gsecaption
+  \centering
+  \begin{tikzpicture}
+    \egloopdiagram{\glooplower{5}}
+  \end{tikzpicture}
+\end{subfigure}
+\end{figure}
+
+\paragraph{\mrangeloopbound}
+A \mrangeloopbound{} behaves as a \mlowerloopbound, but states that
+the loop will not execute any more times than the given upper bound.
+Note that if the bounds are the same, the semantics is equivalent
+to that of a \mdefiniteloopbound{}.
+
+\begin{figure}[h!]
+\begin{subfigure}[t]{\egtextwidth}
+\begin{lstlisting}[style=Example]
+loop L : between 3 and 6 times {
+    -> operation O1()
+}
+\end{lstlisting}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{\eggraphicalwidth}
+  \gsecaption
+  \centering
+  \begin{tikzpicture}
+    \egloopdiagram{\glooprange{3}{6}}
+  \end{tikzpicture}
+\end{subfigure}
+\end{figure}
 
 \subsection{\mfinalaction}
 
@@ -74,13 +178,13 @@ diagram has occurred.
 
 \begin{figure}[h]
 
-\begin{subfigure}[t]{0.38\textwidth}
+\begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 end
 \end{lstlisting}
 \end{subfigure}
 \hfill
-\begin{subfigure}[t]{0.58\textwidth}
+\begin{subfigure}[t]{\eggraphicalwidth}
 \gsecaption
 \centering
 \begin{tikzpicture}
@@ -90,7 +194,7 @@ end
 };
 \draw[lifeline] (mstart) -- (mend);
 \draw[lifeline] (wstart) -- (wend);
-\draw (mend) edge[final] (wend);
+\gfinal{mend}{wend}
 \end{tikzpicture}
 \end{subfigure}
 

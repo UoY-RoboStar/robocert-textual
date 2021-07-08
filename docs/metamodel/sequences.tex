@@ -47,12 +47,33 @@ A \msequence{} represents a sequence diagram.  It is a \mnamedelement{}
 that contains a \msubsequence{} (\cref{ssec:metamodel-sequences-subsequences})
 capturing the body of the diagram.
 
-\begin{lstlisting}[style=Example]
-sequence Example
-{
-    anything until end  // Subsequence
+\begin{figure}[h!]
+
+  \begin{subfigure}[t]{\egtextwidth}
+    \begin{lstlisting}[style=Example]
+sequence Example {
+  anything until end  // Subsequence
 }
-\end{lstlisting}
+    \end{lstlisting}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{\eggraphicalwidth}
+    \gsecaption
+    \centering
+    \begin{tikzpicture}
+      \matrix[diagram]{
+        \node[rcmodule](mstart) {\egtarget}; & \node[world](wstart) {\egworld}; \\
+	\coordinate(mend); & \coordinate(wend); \\
+      };
+      \gseq{wstart}{mstart}{wend}{mend}{Example}
+      \draw[lifeline] (wstart) -- (wend);
+      \draw[lifeline] (mstart) -- (mend);
+      \gfinal{mend}{wend}
+      \ggapout{mend}{\guniverse}
+    \end{tikzpicture}
+  \end{subfigure}
+
+\end{figure}
 
 \subsection{\msubsequence}\label{ssec:metamodel-sequences-subsequences}
 
@@ -62,15 +83,45 @@ All \msequence s contain exactly one \msubsequence{} at the top level, but
 may contain multiple nested \msubsequence s introduced by constructs such as
 \mloopaction s.
 
-\begin{lstlisting}[style=Example]
+\begin{figure}[h!]
+
+  \begin{subfigure}[t]{\egtextwidth}
+    \begin{lstlisting}[style=Example]
 {
-    anything until -> operation O1()  // SequenceStep
-then
-    -> operation O2()                 // SequenceStep
-then
-    end                               // SequenceStep
+  anything until -> operation O1()
+  // ^ SequenceStep
+  then -> operation O2()
+  // ^ SequenceStep
+  then end
+  // ^ SequenceStep
 }
-\end{lstlisting}
+    \end{lstlisting}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{\eggraphicalwidth}
+    \gsecaption
+    \centering
+    \begin{tikzpicture}
+      \matrix[diagram]{
+        \node[rcmodule](mstart) {\egtarget}; & \node[world](wstart) {\egworld}; \\
+	\coordinate(mo1); & \coordinate(wo1); \\
+	\coordinate(mo2); & \coordinate(wo2); \\
+	\coordinate(mend); & \coordinate(wend); \\
+      };
+      \gseq{wstart}{mstart}{wend}{mend}{Example}
+      \draw[lifeline] (mstart) -- (mo1) -- (mo2) -- (mend);
+      \draw[lifeline] (wstart) -- (wo1) -- (wo2) -- (wend);
+
+      \goperation{mo1}{wo1}{O1()}
+      \ggapout{mo1}{\guniverse}
+      \goperation{mo2}{wo2}{O2()}
+      
+      \gfinal{mend}{wend}
+
+    \end{tikzpicture}
+  \end{subfigure}
+
+\end{figure}
 
 \subsection{\msequencestep}\label{ssec:metamodel-sequences-steps}
 
@@ -96,17 +147,44 @@ It contains two \mmessageset s (\cref{ssec:metamodel-messages-sets}):
 one specifying the messages \emph{allowed} to pass inside the gap, and
 another specifying the messages \emph{forbidden} to pass.
 
-\begin{lstlisting}[style=Example]
-anything
-    in message set MS
-    // allowed RefMessageSet
-    // 'in universe' is implied if no 'in SET' is given
+\begin{figure}[h!]
 
-    except {| -> operation O2() |}
-    // forbidden ExtensionalMessageSet
-    // 'except {||}' is implied if no 'except SET' is given
+  \begin{subfigure}[c]{\egtextwidth}
+    \begin{lstlisting}[style=Example]
+anything
+in message set MS
+except {| -> operation O2() |}
 until
+
+anything in message set MS until
+// implicit 'except {||}'
+
+anything until
+// implicit 'in universe {||}'
 \end{lstlisting}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[c]{\eggraphicalwidth}
+    \gsecaption
+    \centering
+    \begin{tikzpicture}
+      \matrix[diagram, column sep=15em]{
+        \coordinate(m1); & \coordinate(w1); \\
+        \coordinate(m2); & \coordinate(w2); \\
+        \coordinate(m3); & \coordinate(w3); \\
+      };
+      \draw[dotted] (m1) -- (w1);
+      \ggapout{m1}{\gdiff{\grefset{MS}}\gextset{\text{\lstinline[language=RoboCert]{-> operation O2()}}}}
+      
+      \draw[dotted] (m2) -- (w2);
+      \ggapin{w2}{\grefset{MS}}
+      
+      \draw[dotted] (m3) -- (w3);
+      \ggapout{m3}{\guniverse}
+    \end{tikzpicture}
+  \end{subfigure}
+
+\end{figure}
 
 %%% Local Variables:
 %%% mode: latex

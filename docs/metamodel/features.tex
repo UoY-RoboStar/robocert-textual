@@ -6,7 +6,7 @@
   \label{tab:metamodel-comparison}
   \centering
 
-  \begin{tabular}{p{8em}p{9em}p{9em}p{15em}}
+  \begin{tabular}{p{8em}p{8em}p{8em}p{16em}}
     \toprule
     \thead{\langname}
     & \thead{UML2}
@@ -26,9 +26,10 @@
     & n/a
     & Strict operator, \insp{constraints}
     &
-      Gaps are similar to past-unwanted-message constraints, but
-      allow the set of \emph{permitted} messages to be restricted;
-      this subsumes the strict operator.  We do not cover
+      Gaps resemble past-unwanted-message constraints, but
+      allow restricting the set of \emph{allowed} messages;
+      this subsumes the strict operator.  Graphical syntax is a slight
+      modification of PSC syntax.  We do not cover
       future-unwanted-message or chain constraints.  Currently, all
       ordering is assumed strict unless modified by a gap; this
       deviates from PSC \emph{and} some readings of UML.
@@ -45,10 +46,10 @@
       to UML.
     \\
 
-    \mloopmessagespec
+    \mloopaction
     & \insp{loop combined fragment}
     & loop operator
-    & \todo{upper and lower bounds}
+    & \mloopbound s inspired by those permitted by UML.
     \\
       
     \midrule

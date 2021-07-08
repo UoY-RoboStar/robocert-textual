@@ -71,9 +71,9 @@ and the \mmessagedirection, we can further infer the source (`from')
 and destination (`to') \mactor s.  The target, from, and to actors are
 available in EMF as derived references.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 
-\begin{subfigure}[t]{0.38\textwidth}
+\begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 -> operation O1()
 // outbound MessageSpec with OperationTopic
@@ -83,7 +83,7 @@ available in EMF as derived references.
 \end{lstlisting}
 \end{subfigure}
 \hfill
-\begin{subfigure}[t]{0.58\textwidth}
+\begin{subfigure}[t]{\eggraphicalwidth}
 \gsecaption
 \centering
 \begin{tikzpicture}
@@ -95,8 +95,8 @@ available in EMF as derived references.
 };
 \draw[lifeline] (wstart) -- (wo) -- (we) -- (wend);
 \draw[lifeline] (mstart) -- (mo) -- (me) -- (mend);
-\draw (mo) edge[oarrow, "O1()"'] (wo);
-\draw (we) edge[earrow, "E"] (me);
+\draw (mo) edge[oarrow, "O1()"] (wo);
+\draw (we) edge[earrow, "E"'] (me);
 \end{tikzpicture}
 \end{subfigure}
 

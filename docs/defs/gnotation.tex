@@ -1,0 +1,100 @@
+% TikZ setup for the RoboCert graphical notation.
+% 
+% This can likely be removed if and when we bring Sirius (or any other
+% specifier) up.
+
+\newcommand{\gkeywordfont}{\sffamily\bfseries}
+\newcommand{\gkeyword}[1]{{\gkeywordfont #1}}
+\newcommand{\osigil}{\gkeyword{operation}}
+\newcommand{\esigil}{\gkeyword{event}}
+
+\tikzset{
+  actor/.style={draw, rectangle, minimum width=7em, align=center, minimum height=1.8em, fill={black!10!white}},
+  world/.style={actor, font={\gkeyword{world}}},
+  target/.style={actor},
+  rcmodule/.style={target, font={\gkeyword{module}\;}},
+  lifeline/.style={dashed, thick},
+  diagram/.style={row sep=1.8em, column sep=8em},
+  arrow/.style={->, thick},
+  oarrow/.style={arrow, font={\small\osigil\;}},
+  earrow/.style={arrow, font={\small\esigil\;}},
+  final/.style={dotted, thick, font={\small\gkeywordfont}, "end"},
+  cfbox/.style={draw},
+  cfheader/.style={trapezium, draw, fill={black!10!white}, trapezium left angle=90, trapezium right angle=300},
+  gap/.style={circle, inner sep=0, minimum size=6pt, fill=black}
+}
+\newcommand{\gsecaption}{
+  \captionsetup{
+    labelformat=empty,
+    font={small,sf}
+  }
+  \caption{Graphical syntax example \todo{draft}}}
+
+\newcommand{\gchpad}{2em}
+\newcommand{\gcvpad}{0.5em}
+
+% Gap notation
+% #1: location node
+% #2: set expression
+\newcommand{\ggapout}[2]{
+  \node[gap,"\scriptsize\(#2\)" above right] at (#1) {};
+}
+\newcommand{\ggapin}[2]{
+  \node[gap,"\scriptsize\(#2\)" above left] at (#1) {};
+}
+\newcommand{\gdiff}[2]{#1\setminus#2}
+\newcommand{\guniverse}{\ast}
+\newcommand{\gextset}[1]{\{\!\mid#1\mid\!\}}
+\newcommand{\gemptyset}{\gextset{}}
+\newcommand{\grefset}[1]{\text{#1}}
+
+% Combined fragment
+% #1: top-left
+% #2: top-right
+% #3: bottom-left
+% #4: bottom-right
+% #5: pad factor
+% #6: fragment header
+% #7: node name
+\newcommand{\gcfrag}[7]{
+  \node[cfbox, fit=(#1) (#2) (#3) (#4), inner sep=#5] (#7) {};
+  \node[cfheader,anchor=top left corner] at (#7.north west) {#6};
+}
+
+% Sequence diagram
+% #1: top-left (module)
+% #2: top-right (world)
+% #3: bottom-left
+% #4: bottom-right
+% #5: sequence name
+\newcommand{\gseq}[5]{\gcfrag{#1}{#2}{#3}{#4}{2em}{\gkeyword{sd} #5}{sd#5}}
+
+% Loop
+% #1: top-left
+% #2: top-right
+% #3: bottom-left
+% #4: bottom-right
+% #5: loop name
+% #6: loop header
+\newcommand{\gloop}[6]{\gcfrag{#1}{#2}{#3}{#4}{1em}{\gkeyword{loop}#6 #5}{loop#5}}
+
+% Loop bounds
+% These follow UML for now.
+\newcommand{\gloopinfinite}{}
+\newcommand{\gloopdefinite}[1]{(#1)}
+\newcommand{\glooprange}[2]{(#1, #2)}
+\newcommand{\glooplower}[1]{\glooprange{#1}{\(\ast\)}}
+
+% #1: LHS
+% #2: RHS
+% #3: label
+\newcommand{\goperation}[3]{\draw (#1) edge[oarrow,"#3"] (#2);}
+
+% #1: LHS
+% #2: RHS
+\newcommand{\gfinal}[2]{\draw (#1) edge[final] (#2);}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../robocert"
+%%% End:
