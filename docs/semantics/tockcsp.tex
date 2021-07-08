@@ -205,24 +205,85 @@ over its label and subsequence.
 
 \end{defn}
 
-\begin{defn}[\mloopaction]
+\newcommand{\iloop}[1]{\text{Loop}(#1)}
+\newcommand{\nloop}[1]{\text{Loop}_\sqcap(#1)}
+\newcommand{\dloop}[2]{\text{Loop}_d(#1, #2)}
+\newcommand{\lloop}[2]{\text{Loop}_l(#1, #2)}
+\newcommand{\uloop}[2]{\text{Loop}_u(#1, #2)}
+\newcommand{\rloop}[3]{\text{Loop}_r(#1, #2, #3)}
 
-For now, only infinite loops exist, and their semantics is that of the loop
-subsequence placed in a recursive process.
+\begin{defn}[\mloopaction]  
+For now, the semantics of a loop is that of the loop
+subsequence hoisted into an auxiliary loop-running process (defined
+below).
+\todo{define the symbols used here}
 %
 \begin{align*}
-	\loopsema{\aloop}
-\quad\defeq\quad&
-\tlang{
-	\circmu \mathsf{LOOP}_{\olang{\field{\aloop}{name}}} \bullet
-	\left(
-		\olang{\sseqsema{\field{\aloop}{body}}}
-		\circseq \mathsf{LOOP}_{\olang{\field{\aloop}{name}}}
-	\right)
-}
-\tag{infinite loop}
+  \loopsema{\aloop}
+  \quad\defeq\quad
+  &
+    \funcname{runner}(\field{\aloop}{bound}, \sseqsema{\field{\aloop}{body}})
+  \\
+  \funcname{runner}(\infty, P)
+  \quad\defeq\quad
+  & \tlang{\iloop{\olang{P}}}
+    \tag{infinite loops}
+  \\
+  \funcname{runner}(n, P)
+  \quad\defeq\quad
+  & \tlang{\dloop{\olang{\exprsema{n}{\emptyset}}}{\olang{P}}}
+    \tag{definite-bound loops}
+  \\
+  \funcname{runner}((l, \ast), P)
+  \quad\defeq\quad
+  & \tlang{\lloop{\olang{\exprsema{l}{\emptyset}}}{\olang{P}}}
+    \tag{lower-bound loops}
+  \\
+  \funcname{runner}((l, u), P)
+  \quad\defeq\quad
+  & \tlang{\rloop{\olang{\exprsema{l}{\emptyset}}}{\olang{\exprsema{u}{\emptyset}}}{\olang{P}}}
+    \tag{range-bound loops}
+  \\  
 \end{align*}
 
+\end{defn}
+
+\begin{defn}[Auxiliary loop processes]
+
+We can define the loop processes used above in CSP as follows:
+%
+\begin{align*}
+  \iloop{P}
+  \quad\defeq\quad
+  & P \circseq \iloop{P}
+    \tag{infinite}
+  \\
+  \nloop{P}
+  \quad\defeq\quad
+  & \Skip \sqcap \left(P \circseq \nloop{P}\right)
+    \tag{nondeterministic}
+  \\  
+  \dloop{n}{P}
+  \quad\defeq\quad
+  & \Skip \triangleleft n \leq 0 \triangleright \left(P \circseq \dloop{n-1}{P}\right)
+    \tag{definite}
+  \\
+  \uloop{n}{P}
+  \quad\defeq\quad
+  & \Skip \triangleleft n \leq 0 \triangleright \left(\Skip \sqcap \left(P \circseq \uloop{n-1}{P}\right)\right)
+    \tag{upper-bound}
+  \\
+  \lloop{n}{P}
+  \quad\defeq\quad
+  & \dloop{n}{P} \circseq \nloop{P}
+    \tag{lower-bound}
+  \\
+  \rloop{l}{u}{P}
+  \quad\defeq\quad
+  & \lloop{l}{P} \circseq \uloop{u - l}{P}
+    \tag{range}
+  \\
+\end{align*}
 \end{defn}
 
 \subsection{Messages}\label{ssec:semantics-tockcsp-messages}
