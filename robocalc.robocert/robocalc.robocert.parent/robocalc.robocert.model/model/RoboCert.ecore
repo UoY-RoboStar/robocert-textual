@@ -53,17 +53,19 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceStep">
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceStep" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
         eType="#//Subsequence" eOpposite="#//Subsequence/steps"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ActionStep" eSuperTypes="#//SequenceStep">
     <eStructuralFeatures xsi:type="ecore:EReference" name="gap" lowerBound="1" eType="#//SequenceGap"
         containment="true" eOpposite="#//SequenceGap/step"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="1"
         eType="#//SequenceAction" containment="true" eOpposite="#//SequenceAction/step"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceGap">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//SequenceStep"
-        eOpposite="#//SequenceStep/gap"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//ActionStep"
+        eOpposite="#//ActionStep/gap"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allowed" lowerBound="1"
         eType="#//MessageSet" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="forbidden" lowerBound="1"
@@ -116,18 +118,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//SequenceStep"
-        eOpposite="#//SequenceStep/action"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ArrowAction" eSuperTypes="#//SequenceAction">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//ArrowMessageSpec"
-        containment="true" eOpposite="#//ArrowMessageSpec/parent"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopAction" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//SequenceAction">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
-        containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StepWithBody" abstract="true" eSuperTypes="#//SequenceStep">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//StepWithBody">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="deadline" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//StepWithBody">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true"/>
@@ -148,6 +149,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="upperTimes" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//ActionStep"
+        eOpposite="#//ActionStep/action"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArrowAction" eSuperTypes="#//SequenceAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//ArrowMessageSpec"
+        containment="true" eOpposite="#//ArrowMessageSpec/parent"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction"/>
   <eClassifiers xsi:type="ecore:EClass" name="MessageSpec" abstract="true">

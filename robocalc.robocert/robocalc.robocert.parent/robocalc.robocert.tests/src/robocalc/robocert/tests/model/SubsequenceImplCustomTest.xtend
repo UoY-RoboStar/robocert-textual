@@ -41,11 +41,8 @@ class SubsequenceImplCustomTest {
 		
 		val seq = rf.createSequence => [
 			body = rf.createSubsequence => [
-				steps.add(rf.createSequenceStep => [
-					gap = rf.createSequenceGap
-					action = rf.createLoopAction => [
-						body = sseq
-					]
+				steps.add(rf.createLoopStep => [
+					body = sseq
 				])
 			]
 		]

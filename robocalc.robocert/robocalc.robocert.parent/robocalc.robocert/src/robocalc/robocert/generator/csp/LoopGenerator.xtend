@@ -6,7 +6,7 @@ import robocalc.robocert.model.robocert.LowerLoopBound
 import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.DefiniteLoopBound
 import robocalc.robocert.model.robocert.RangeLoopBound
-import robocalc.robocert.model.robocert.LoopAction
+import robocalc.robocert.model.robocert.LoopStep
 import robocalc.robocert.model.robocert.LoopBound
 
 /**
@@ -26,7 +26,7 @@ class LoopGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generateLoop(LoopAction it) '''«bound.generateBound»(
+	def generateLoop(LoopStep it) '''«bound.generateBound»(
 		«body.generate»
 	)'''
 	

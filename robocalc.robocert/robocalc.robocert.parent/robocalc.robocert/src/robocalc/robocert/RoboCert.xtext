@@ -129,7 +129,9 @@ World:
  * A step in a sequence diagram.
  */
 SequenceStep:
-	gap=SequenceGap action=SequenceAction
+	DeadlineStep |
+	LoopStep |
+	{ActionStep} gap=SequenceGap action=SequenceAction
 ;
 
 /**
@@ -137,8 +139,14 @@ SequenceStep:
  */
 SequenceAction:
 	{ArrowAction} body=ArrowMessageSpec |
-	LoopAction |
 	'end' {FinalAction}
+;
+
+/**
+ * A deadline block.
+ */
+DeadlineStep:
+	'deadline' {DeadlineStep} name=ID ':' 'within' deadline=Expression ('unit'|'units') body=Subsequence
 ;
 
 /**
@@ -146,8 +154,8 @@ SequenceAction:
  * 
  * Without a specification, loops will iterate forever.
  */
-LoopAction:
-	'loop' {LoopAction} name=ID (':' bound=LoopBound | bound=SilentInfiniteLoopBound) body=Subsequence
+LoopStep:
+	'loop' {LoopStep} name=ID (':' bound=LoopBound | bound=SilentInfiniteLoopBound) body=Subsequence
 ;
 
 /**

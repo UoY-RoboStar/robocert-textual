@@ -5,13 +5,15 @@ import robocalc.robocert.model.robocert.SequenceStep
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Subsequence
 import robocalc.robocert.model.robocert.SequenceGroup
+import robocalc.robocert.model.robocert.DeadlineStep
+import robocalc.robocert.model.robocert.LoopStep
+import robocalc.robocert.model.robocert.ActionStep
 
 /**
  * A generator that emits CSP for sequences and subsequences.
  */
 class SequenceGenerator implements SubsequenceGenerator {
-	@Inject extension ActionGenerator
-	@Inject extension GapGenerator
+	@Inject extension StepGenerator
 	@Inject extension MessageSetGenerator
 	@Inject extension TargetGenerator
 
@@ -64,7 +66,7 @@ class SequenceGenerator implements SubsequenceGenerator {
 	 */
 	override CharSequence generate(Subsequence it) '''
 		«FOR step : steps SEPARATOR ';'»
-			«step.generateStep»
+			«step.generate»
 		«ENDFOR»
 	'''
 
@@ -78,12 +80,5 @@ class SequenceGenerator implements SubsequenceGenerator {
 	def CharSequence generateName(Sequence it)
 		'''«group.name»::Sequences::«name»'''
 
-	/**
-	 * Generates CSP for one sequence step.
-	 * 
-	 * @param it  the step for which we are generating CSP.
-	 * 
-	 * @return generated CSP for one sequence step.
-	 */
-	private def generateStep(SequenceStep it) '''(«gap.generate(action)»«action.generate»)'''
+
 }

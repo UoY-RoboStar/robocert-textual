@@ -15,6 +15,8 @@ import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom
 import circus.robocalc.robochart.RoboChartFactory
 import robocalc.robocert.model.robocert.RobocertFactory
 import robocalc.robocert.model.robocert.impl.RobocertFactoryImplCustom
+import robocalc.robocert.generator.csp.StepGeneratorImpl
+import robocalc.robocert.generator.csp.StepGenerator
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -30,6 +32,10 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	
 	def Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
 		SequenceGenerator
+	}
+	
+	def Class<? extends StepGenerator> bindStepGenerator() {
+		StepGeneratorImpl
 	}
 	
 	/**

@@ -127,26 +127,31 @@ class Subsequence {
 /**
  * A single step in a subsequence.
  */
-class SequenceStep {
+abstract class SequenceStep {
 	/**
 	 * The parent subsequence of this step.
 	 */
 	ref Subsequence[1]#steps parent;
+}
 
+/**
+ * A sequence step containing a primitive action.
+ */
+class ActionStep extends SequenceStep {
 	/**
-	 * The specification of what can happen in the 'gap' before the step.
+	 * The specification of what can happen in the 'gap' before the action.
 	 */
 	val SequenceGap[1]#step gap;
 
 	/**
-	 * The component inside the sequence step.
+	 * The action proper.
 	 */
 	val SequenceAction[1]#step action;
 }
 
 /**
  * A specification of which internal communications can happen before a
- * sequence step.
+ * sequence action.
  *
  * Gaps may permit implicit communications between actions, according to the
  * allowed and forbidden message sets.  An empty allow set, for instance,
@@ -156,7 +161,7 @@ class SequenceGap {
 	/**
 	 * The step containing this gap.
 	 */
-	ref SequenceStep[1]#gap step;
+	ref ActionStep[1]#gap step;
 
 	/**
 	 * The messages allowed by this gap.
@@ -313,36 +318,41 @@ class ConstAssignment {
 }
 
 //
-// ACTIONS
+// CONTROL FLOW
 //
 
 /**
- * An action in a sequence diagram.
+ * A sequence step that contains exactly one body.
+ *
+ * Often, but not always, these will be (what UML would call) combined
+ * fragments.
  */
-abstract class SequenceAction {
+abstract class StepWithBody extends SequenceStep {
 	/**
-	 * The step containing this action.
+	 * The body of the action.
 	 */
-	ref SequenceStep[1]#action step;
+	val Subsequence[1] body;
 }
 
 /**
- * A communicating action in a sequence diagram.
+ * A step containing one or more sequence elements alongside a deadline
+ * for all of those elements to terminate, expressed in time units.
  */
-class ArrowAction extends SequenceAction {
+class DeadlineStep extends robochart.NamedElement, StepWithBody {
 	/**
-	 * The body of the arrow.
+	 * The deadline, expressed as a number of time units after the start of the
+	 * block.
 	 */
-	val ArrowMessageSpec[1]#parent body;
+	val robochart.Expression[1] deadline;
 }
 
 /**
- * An action containing one or more sequence elements in loop.
+ * A step containing one or more sequence elements in loop.
  *
  * A loop action has a name; this is used both in its semantic elaboration and
  * also as a target for any break actions.
  */
-class LoopAction extends robochart.NamedElement, SequenceAction {
+class LoopStep extends robochart.NamedElement, StepWithBody {
 	/**
 	 * The loop bound.
 	 */
@@ -350,10 +360,6 @@ class LoopAction extends robochart.NamedElement, SequenceAction {
 
 	// TODO: conditionals
 	// TODO: break
-	/**
-	 * The body of the loop.
-	 */
-	val Subsequence[1] body;
 }
 
 /**
@@ -416,6 +422,31 @@ class RangeLoopBound extends LoopBound {
 	 * Evaluated once only.
 	 */
 	val robochart.Expression[1] upperTimes;
+}
+
+
+//
+// ACTIONS
+//
+
+/**
+ * An action in a sequence diagram.
+ */
+abstract class SequenceAction {
+	/**
+	 * The step containing this action.
+	 */
+	ref ActionStep[1]#action step;
+}
+
+/**
+ * A communicating action in a sequence diagram.
+ */
+class ArrowAction extends SequenceAction {
+	/**
+	 * The body of the arrow.
+	 */
+	val ArrowMessageSpec[1]#parent body;
 }
 
 /**

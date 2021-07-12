@@ -66,7 +66,7 @@ class MessageSpecFactory {
 	 */
 	def private gapParent() {
 		val gap = rcert.createSequenceGap => [
-			step = rcert.createSequenceStep => [ parent = sseq ]
+			step = rcert.createActionStep => [ parent = sseq ]
 			allowed = rcert.createUniverseMessageSet
 		]
 		rcert.createExtensionalMessageSet => [
@@ -77,7 +77,7 @@ class MessageSpecFactory {
 		
 	def private arrowParent() {
 		rcert.createArrowAction => [
-			step = rcert.createSequenceStep => [
+			step = rcert.createActionStep => [
 				gap = rcert.createSequenceGap
 				parent = sseq
 			]
