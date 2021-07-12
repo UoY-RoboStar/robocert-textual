@@ -226,6 +226,9 @@ GapMessageSpec:
 	 direction=MessageDirection topic=MessageTopic ('(' (arguments+=NonBindingArgument (',' arguments+=NonBindingArgument)*)? ')')?
 ;
 
+/**
+ * The direction of a message.
+ */
 enum MessageDirection:
 	INBOUND='<-' |
 	OUTBOUND='->'

@@ -24,10 +24,8 @@ class AssertionGenerator {
 	 * 
 	 * @param it  the assertion for which we are generating CSP.
 	 */
-	private def dispatch generateBody(SequenceAssertion it)
-		'''
-			assert«IF isNegated» not«ENDIF» «generateLeft» [«generateModel»= «generateRight»
-		'''
+	private def dispatch generateBody(
+		SequenceAssertion it) '''assert«IF isNegated» not«ENDIF» «generateLeft» [T= «generateRight»«generateTauPriority»'''
 
 	/**
 	 * Catch-all case for when we are asked to generate CSP for an assertion
@@ -51,8 +49,7 @@ class AssertionGenerator {
 				generateSeqRef
 			case IS_OBSERVED:
 				generateTarget
-			default:
-				'''{- UNSUPPORTED LHS: «type» -} STOP'''
+			default: '''{- UNSUPPORTED LHS: «type» -} STOP'''
 		}
 	}
 
@@ -69,8 +66,7 @@ class AssertionGenerator {
 				generateTarget
 			case IS_OBSERVED:
 				generateSeqRef
-			default:
-				'''{- UNSUPPORTED RHS: «type» -} STOP'''
+			default: '''{- UNSUPPORTED RHS: «type» -} STOP'''
 		}
 	}
 
@@ -79,8 +75,7 @@ class AssertionGenerator {
 	 * 
 	 * @param it  the assertion for which we are generating CSP.
 	 */
-	private def generateSeqRef(SequenceAssertion it)
-		'''«sequence.generateName»'''
+	private def generateSeqRef(SequenceAssertion it) '''«sequence.generateName»'''
 
 	/**
 	 * @return generated CSP for the target of one assertion.
@@ -88,9 +83,10 @@ class AssertionGenerator {
 	 * @param asst  the assertion for which we are generating CSP.
 	 */
 	private def generateTarget(SequenceAssertion it) {
+		// TODO(@MattWindsor91): add context for tick-tock (also to seqref)
 		instantiated ? generateInstantiatedTarget : generateStandardTarget
 	}
-	
+
 	/**
 	 * @return generated CSP for the standard target of one assertion.
 	 * 
@@ -106,20 +102,16 @@ class AssertionGenerator {
 	private def isInstantiated(SequenceAssertion it) {
 		!instantiation.constants.empty
 	}
-	
+
 	private def generateInstantiatedTarget(SequenceAssertion it) {
 		sequence.target.generateOpenTargetRef(instantiation)
 	}
 
 	/**
-	 * @return the appropriate FDR model shorthand for this assertion.
+	 * @return the appropriate FDR tau priority pragma for this assertion.
 	 */
-	private def generateModel(SequenceAssertion asst) {
-		switch asst.model {
-			case TRACES:
-				"T"
-			case TICK_TOCK:
-				"T" // TODO(@MattWindsor91): tick-tock model
-		}
+	private def generateTauPriority(SequenceAssertion it) {
+		// TODO(@MattWindsor91): don't do this in tick-tock?
+		''' :[tau priority]: {tock}'''
 	}
 }

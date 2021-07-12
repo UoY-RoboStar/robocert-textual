@@ -38,7 +38,7 @@ class ActionGeneratorImpl implements ActionGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def dispatch generate(FinalAction it) '''SKIP'''
+	def dispatch generate(FinalAction it) '''SKIP_ANYTIME'''
 
 	/**
 	 * Generates fallback CSP for an unsupported action.
