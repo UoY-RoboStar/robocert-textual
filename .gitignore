@@ -26,3 +26,15 @@ src-gen/
 xtend-gen/
 target/
 bin/
+
+# backups
+*~
+*.old
+# LaTeX outputs
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+# PDFs (both LaTeX outputs and Sirius diagrams)
+*.pdf
