@@ -25,6 +25,6 @@ class DeadlineGenerator {
 		(
 			«body.generate»
 		),
-		{- time units -} «deadline.compileExpression(it)»
+		{- time units -} «units.compileExpression(it)»
 	)'''
 }

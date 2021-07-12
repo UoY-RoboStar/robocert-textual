@@ -123,8 +123,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//StepWithBody">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="deadline" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//StepWithBody">
@@ -159,6 +158,10 @@
         containment="true" eOpposite="#//ArrowMessageSpec/parent"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="WaitAction" eSuperTypes="#//SequenceAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+        containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageSpec" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" lowerBound="1" eType="#//MessageTopic"
         containment="true" eOpposite="#//MessageTopic/spec"/>

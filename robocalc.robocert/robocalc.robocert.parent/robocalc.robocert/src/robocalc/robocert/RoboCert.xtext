@@ -139,6 +139,7 @@ SequenceStep:
  */
 SequenceAction:
 	{ArrowAction} body=ArrowMessageSpec |
+	'wait' {WaitAction} 'for'? units=TimeUnits |
 	'end' {FinalAction}
 ;
 
@@ -146,7 +147,14 @@ SequenceAction:
  * A deadline block.
  */
 DeadlineStep:
-	'deadline' {DeadlineStep} name=ID ':' 'within' deadline=Expression ('unit'|'units') body=Subsequence
+	'deadline' {DeadlineStep} name=ID ':' 'within' units=TimeUnits body=Subsequence
+;
+
+/**
+ * A time unit expression.
+ */
+TimeUnits returns Expression:
+	Expression 'time'? ('unit' | 'units')
 ;
 
 /**

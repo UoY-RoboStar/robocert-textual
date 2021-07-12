@@ -343,7 +343,7 @@ class DeadlineStep extends robochart.NamedElement, StepWithBody {
 	 * The deadline, expressed as a number of time units after the start of the
 	 * block.
 	 */
-	val robochart.Expression[1] deadline;
+	val robochart.Expression[1] units;
 }
 
 /**
@@ -455,6 +455,18 @@ class ArrowAction extends SequenceAction {
  * This exists mainly to allow a sequence gap at the end of the diagram.
  */
 class FinalAction extends SequenceAction {
+}
+
+/**
+ * An action representing a wait for some amount of time units.
+ */
+class WaitAction extends SequenceAction {
+	/**
+	 * The number of units to wait.
+	 */
+	val robochart.Expression[1] units;
+	
+	// TODO(@MattWindsor91): nondeterministic waits
 }
 
 //
