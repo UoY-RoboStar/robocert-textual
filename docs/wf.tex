@@ -3,7 +3,7 @@
 This section contains well-formedness rules for the metamodel in
 \cref{cha:metamodel}.
 
-\todo{These are informal at the moment.}
+\todo{These are informal at the moment, and not checked by the validator.}
 
 \section{Packages}\label{sec:wf-top}
 
@@ -19,10 +19,28 @@ These rules concern the definitions in \cref{sec:metamodel-actions}.
 
 \begin{enumerate}
 \item
-	A \msequence{} \rfcmustnot{} contain more than one \mfinalaction.
+  A \msequence{} \rfcmustnot{} contain more than one \mfinalaction.
+  \todo{I keep getting confused as to what the purpose of
+    \mfinalaction s is - this and the next rule might not be needed.}
 \item
-	Any \mfinalaction{} \rfcmust{} be the last action in the topmost
-	\msubsequence{} of a \msequence.
+  Any \mfinalaction{} \rfcmust{} be the last action in the topmost
+  \msubsequence{} of a \msequence.
+\item
+  Any \msequencestep{} that has an active gap (one that can permit messages)
+  \rfcmust{} have an action with known events.  This is:
+  \begin{enumerate}
+  \item \marrowaction;
+  \item \mfinalaction;
+  \item \mloopaction{} with a lower iteration bound of \(1\) and an
+    initial \msequencestep{} with an inactive gap and an action with
+    known events;
+  \item \todo{other fragments}.
+  \end{enumerate}
+  \todo{It may be easier to restrict gaps in the metamodel so that
+    they can only appear on \marrowaction, \mfinalaction, or a
+    deadline section starting with one of those two. I'm not sure of
+    any situation where we'd want a gap going into anything else, and
+    it might complicate Sirius.}
 \end{enumerate}
 
 \section{Messages}\label{sec:wf-messages}
