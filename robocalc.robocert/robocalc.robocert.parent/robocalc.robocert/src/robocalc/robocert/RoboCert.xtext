@@ -218,7 +218,7 @@ EmptySet returns ExtensionalMessageSet:
 MessageSet:
 	'universe' {UniverseMessageSet} |
 	'{|' {ExtensionalMessageSet} messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '|}' |
-	'message' 'set' {RefMessageSet} set=[NamedMessageSet]
+	'message'? 'set' {RefMessageSet} set=[NamedMessageSet]
 ;
 
 /**
@@ -274,7 +274,7 @@ ExpressionArgument:
  */
 MessageTopic:
 	'event' {EventTopic} event=[Event|QualifiedName] |
-	'operation' {OperationTopic} operation=[OperationSig|QualifiedName]
+	('op'|'operation') {OperationTopic} operation=[OperationSig|QualifiedName]
 ;
 
 /**
