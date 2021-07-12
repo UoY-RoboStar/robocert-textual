@@ -17,17 +17,18 @@ I greatly appreciate any suggestions, comments, and issues.
 (This example will go out of date fairly quickly as the language improves.)
 
 ```
-sequence ExampleSeq
-  for module ExampleRobot as R, world as W {	
-    anything except { operation deviceOn() from D to P } until
-      operation deviceOff() from D to P
-    then anything except { operation deviceOff() from D to P } until
-      operation deviceOn() from D to P
+sequence group Example: module ExampleRobot -> world {
+  sequence Seq {
+    anything except {| -> operation deviceOn() |} until
+      -> operation deviceOff()
+    then anything except {| -> operation deviceOff() |} until
+      -> operation deviceOn()
     then anything until
       end
+  }
 }
-assertion Foo: ExampleSeq is not observed
-assertion Bar: ExampleSeq holds
+assertion Foo: Example::Seq is not observed
+assertion Bar: Example::Seq holds
 ```
 
 ## Layout
@@ -36,7 +37,7 @@ Packages are subject to renaming and moving at any time.
 
 - `robocalc.robocert.model` is the metamodel for the sequence diagram language.
 - `robocalc.robocert` is the textual (Xtext) language for the above metamodel.
-- Everything else is, generally, artefacts derived from `robocalc.robocert`
+- Everything else is, generally, artefacts derived from `robocalc.robocert`.
 
 ## Dependencies
 
