@@ -33,8 +33,14 @@ bin/
 # LaTeX outputs
 *.aux
 *.bbl
+*.bcf
 *.blg
+*.idx
+*.ilg
+*.ind
 *.out
+*.ptc
+*.run.xml
 *.toc
 # PDFs (both LaTeX outputs and Sirius diagrams)
 *.pdf

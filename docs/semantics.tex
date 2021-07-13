@@ -29,12 +29,16 @@
 % Sequences
 \newcommand{\aseq}{\sigma}
 \newcommand{\asseq}{q}
+% Steps
 \newcommand{\astep}{s}
+\newcommand{\anastep}{s_a}
+\newcommand{\adeadline}{d}
+\newcommand{\aloop}{l}
 \newcommand{\agap}{g}
 % Actions
 \newcommand{\anaction}{a}
 \newcommand{\anarrow}{\rho}
-\newcommand{\aloop}{l}
+\newcommand{\await}{w}
 % Messages
 \newcommand{\amspec}{m}
 \newcommand{\amsgset}{M}
@@ -108,7 +112,7 @@ or any distinction between references to objects and their definitions.
 \begin{table}
   \centering
 
-  \begin{tabular}{p{2em}p{10.5em}}
+  \begin{tabular}{p{1.3em}p{9em}}
     \toprule
     \thead{Var.}
     & \thead{Type}
@@ -122,7 +126,7 @@ or any distinction between references to objects and their definitions.
     \\
     \bottomrule
   \end{tabular}
-  \begin{tabular}{p{2em}p{10.5em}}
+  \begin{tabular}{p{1.3em}p{9em}}
     \toprule
     \thead{Var.}
     & \thead{Type}
@@ -141,12 +145,16 @@ or any distinction between references to objects and their definitions.
     \\
     \(\asseq\) & \msubsequence
     \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Steps (\cref{sec:metamodel-steps})}}
+    \\
     \(\astep\) & \msequencestep
+    \\
+    \(\anastep\) & \mactionstep                 
     \\
     \(\agap\) & \msequencegap
     \\
-    \midrule
-    \multicolumn{2}{l}{\tsubhead{Steps (\cref{sec:metamodel-steps})}}
+    \(\adeadline\) & \mdeadlinestep
     \\
     \(\aloop\) & \mloopstep
     \\
@@ -157,15 +165,14 @@ or any distinction between references to objects and their definitions.
     \\
     \(\anarrow\) & \marrowaction
     \\
+    \(\await\) & \mwaitaction
+    \\
     \(\bot\) & \mfinalaction
-    \\
-    \\
-    \\
     \\
     \\
     \bottomrule
   \end{tabular}
-  \begin{tabular}{p{2em}p{10.5em}}
+  \begin{tabular}{p{1.3em}p{9em}}
     \toprule
     \thead{Var.}
     & \thead{Type}
@@ -182,6 +189,9 @@ or any distinction between references to objects and their definitions.
     \(\anemsgset\) & \mextensionalmessageset
     \\
     \(\armsgset\) & \mrefmessageset
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Arguments}}
     \\
     \(\anarg\) & \margument
     \\

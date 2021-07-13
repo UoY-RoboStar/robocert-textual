@@ -1,27 +1,17 @@
-\documentclass[a4paper]{memoir}
-\usepackage[T1]{fontenc}
-\usepackage{microtype}
+\documentclass[11pt]{book}
 
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{circus}
+\input{structure}
+
 \usepackage{braket} % set-builder notation
 \usepackage{booktabs}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage{graphicx}
 \usepackage{stmaryrd}
-\usepackage{circus}
+
 \usepackage{listings}
-\usepackage{xcolor}
-\usepackage{tikz}
-% fonts
-\usepackage{stix}
-\usepackage{tgtermes}
-% while we don't technically need to load Heros here (we only use it for
-% \metarefs), we do so to make sure it gets scaled.
-\usepackage[scale=0.88]{tgheros}
-\usepackage[scale=0.88]{tgadventor}
-\usepackage[scaled]{beramono}
 
 \usepackage{hyperref}
 \usepackage{cleveref}
@@ -56,57 +46,69 @@
 \newcommand{\langname}{{\sffamily\itshape RoboCert}}
 \newcommand{\robochart}{{\sffamily\itshape RoboChart}}
 
-\theoremstyle{definition}
-\newtheorem{defn}{Definition}
-
 \newcommand{\thead}[1]{\textbf{#1}}
 \newcommand{\tsubhead}[1]{\textit{#1}}
 
-\setlrmarginsandblock{2.5cm}{2cm}{*}
-\setulmarginsandblock{2cm}{*}{1}
-\setmarginnotes{0.25cm}{0.5cm}{1cm}
-\checkandfixthelayout
-
-\setsecnumdepth{subsection}
-
-\makepagestyle{sruled}
-\makeevenfoot {sruled}{}{}{}
-\makeoddfoot  {sruled}{}{}{}
-\makeheadrule {sruled}{\textwidth}{\normalrulethickness}
-\makeevenhead {sruled}{\sffamily\thepage}{}{\sffamily\rightmark}
-\makeoddhead  {sruled}{\sffamily\bfseries\leftmark}{}{\sffamily\thepage}
-
-\makepsmarks{sruled}{%
-   \nouppercaseheads
-   \createmark{chapter}{left}{shownumber}{}{. \space}
-   \createmark{section}{right}{shownumber}{}{. \space}
-   \createplainmark{toc}{both}{\contentsname}
-   \createplainmark{lof}{both}{\listfigurename}
-   \createplainmark{lot}{both}{\listtablename}
-   \createplainmark{bib}{both}{\bibname}
-   \createplainmark{index}{both}{\indexname}
-   \createplainmark{glossary}{both}{\glossaryname}}
 
 \title{\langname{} Reference Manual}
 \author{Matt Windsor}
 
 \begin{document}
 
-\headstyles{komalike}
-\chapterstyle{madsen}
-\pagestyle{sruled}
-
 \frontmatter
 
-\begin{titlingpage}
-\aliaspagestyle{titlingpage}{plain}
-\setlength{\droptitle}{30pt}
-\maketitle
-\end{titlingpage}
+%
+% TITLE PAGE
+%
 
-\tableofcontents{}
+\begingroup                                                                     
+\makeatletter
+\thispagestyle{empty} % Suppress headers and footers on the title page
+\begin{tikzpicture}[remember picture,overlay]
+  \draw (current page.center) node [fill=ocre!30!white,fill opacity=0.6,text opacity=1,inner sep=1cm]{
+    \Huge\centering\bfseries\sffamily\parbox[c][][t]{\paperwidth}{\centering \@title\\[15pt] % Book title
+      {\Large Draft of \@date}\\[20pt] % Subtitle
+      {\huge \@author}}}; % Author name
+\end{tikzpicture}
+\makeatother
+\vfill
+\endgroup
 
-\clearpage
+%
+% COPYRIGHT PAGE
+%
+
+\newpage
+~\vfill
+\thispagestyle{empty}
+
+\noindent \textsc{www.cs.york.ac.uk/robostar}\\
+
+\noindent Licensed under the Creative Commons
+Attribution-NonCommercial 3.0 Unported License (the ``License''). You
+may not use this file except in compliance with the License. You may
+obtain a copy of the License at
+\url{http://creativecommons.org/licenses/by-nc/3.0}. Unless required
+by applicable law or agreed to in writing, software distributed under
+the License is distributed on an \textsc{``as is'' basis, without
+  warranties or conditions of any kind}, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.\\
+
+
+%
+% TABLE OF CONTENTS
+%
+
+\usechapterimagefalse
+\pagestyle{empty} % Disable headers and footers for the following pages         
+\tableofcontents % Print the table of contents itself                           
+\cleardoublepage % Forces the first chapter to start on an odd page so it's on the right side of the book
+\pagestyle{fancy} % Enable headers and footers again    
+
+%
+% FRONT MATTER
+%
 
 \chapter*{How to read this manual}
 \input{readme}
@@ -132,7 +134,15 @@
 \chapter{Semantics}\label{cha:semantics}
 \input{semantics}
 
-\bibliographystyle{plain}
-\bibliography{robocert.bib}
+\appendix
+
+\stopcontents
+
+\chapter*{Credits}\label{cha:credits}
+\input{credits}
+
+\chapter*{Bibliography}
+\addcontentsline{toc}{chapter}{\textcolor{ocre}{Bibliography}}
+\printbibliography[heading=bibempty]
 
 \end{document}

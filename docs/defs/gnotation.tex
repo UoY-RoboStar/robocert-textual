@@ -8,22 +8,26 @@
 \newcommand{\osigil}{\gkeyword{op}}
 \newcommand{\esigil}{\gkeyword{event}}
 
+% Shading used for various parts of the graphical notation.
+% Colour to be used very sparingly here.
+\colorlet{gshading}{ocre!20}
+
 \tikzset{
-  actor/.style={draw, rectangle, minimum width=7em, align=center, minimum height=1.8em, fill={black!10!white}},
-  world/.style={actor, font={\gkeyword{world}}},
+  actor/.style={draw, rectangle, minimum width=7em, align=center, minimum height=1.8em, fill={gshading}},
+  world/.style={actor, font={\small\gkeyword{world}}},
   target/.style={actor},
-  rcmodule/.style={target, font={\gkeyword{module}\;}},
+  rcmodule/.style={target, font={\small\gkeyword{module}\;}},
   lifeline/.style={dashed, thick},
   deadline/.style={solid, font={\footnotesize}},
   deadlinespan/.style={latex-latex},
   diagram/.style={row sep=1.7em, column sep=4em},
   arrow/.style={->, thick},
-  oarrow/.style={arrow, font={\small\osigil\;}},
-  earrow/.style={arrow, font={\small\esigil\;}},
-  final/.style={dotted, thick, font={\small\gkeywordfont}, "end"},
-  wait/.style={dotted, thick, font={\small}},
+  oarrow/.style={arrow, font={\scriptsize\osigil\;}},
+  earrow/.style={arrow, font={\scriptsize\esigil\;}},
+  final/.style={dotted, thick, font={\scriptsize\gkeywordfont}, "end"},
+  wait/.style={dotted, thick, font={\scriptsize}},
   cfbox/.style={draw},
-  cfheader/.style={trapezium, draw, fill={black!10!white}, trapezium left angle=90, trapezium right angle=300},
+  cfheader/.style={trapezium, draw, font={\small}, fill={gshading}, trapezium left angle=90, trapezium right angle=300},
   gap/.style={circle, inner sep=0, minimum size=6pt, fill=black}
 }
 \newcommand{\gsecaption}{

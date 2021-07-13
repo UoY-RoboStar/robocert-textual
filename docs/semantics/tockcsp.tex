@@ -30,7 +30,7 @@ a metamodel to textual snippets of something halfway between \tockcsp{} and
 
 The definitions here correspond to \cref{sec:metamodel-assertions}.
 
-\begin{defn}[\massertion]
+\begin{definition}[\massertion]
 
 \newcommand{\refop}[3]{\mathbin{\odot_{#1}^{(#2, #3)}}}
 
@@ -68,14 +68,14 @@ The exact refinement operator depends on the assertion type and negation:
 	\tlang{\not\sqsupseteq_{\olang{\amodel}}}
 \\
 \end{align*}
-\end{defn}
+\end{definition}
 
 
 \subsection{Sequences}\label{ssec:semantics-tockcsp-sequences}
 
 The definitions here correspond to \cref{sec:metamodel-sequences}.
 
-\begin{defn}[\msequence]
+\begin{definition}[\msequence]
 
 The semantics of a \msequence{} is that of its subsequence
 \todo{eventually, in parallel with its memory}.
@@ -86,9 +86,9 @@ The semantics of a \msequence{} is that of its subsequence
 	\sseqsema{\field{\aseq}{body}}
 \end{align*}
 
-\end{defn}
+\end{definition}
 
-\begin{defn}[\msubsequence]
+\begin{definition}[\msubsequence]
 
 The semantics of a \msubsequence{} is a sequential composition of that of its steps.
 %
@@ -108,11 +108,11 @@ The semantics of a \msubsequence{} is a sequential composition of that of its st
 	}
 \end{align*}
 
-\end{defn}
+\end{definition}
 
 \todo{\msequencestep}
 
-\begin{defn}[\mactionstep]
+\begin{definition}[\mactionstep]
 
 The semantics of a \mactionstep{} is an unbounded loop over the events of its
 \msequencegap, interrupted by the \msequenceaction.\footnote{Note that the semantics of the gap depends
@@ -129,9 +129,9 @@ expected semantics.}
 		\interrupt \olang{\actsema{\field{\astep}{action}}}
 	}
 \end{align*}
-\end{defn}
+\end{definition}
 
-\begin{defn}[\msequencegap]
+\begin{definition}[\msequencegap]
 	The semantics of a \msequencegap{} is the CSP event set corresponding to
 	the difference between the \emph{allowed} set,
 	and the result of extending the \emph{forbidden} set with any events
@@ -152,9 +152,9 @@ expected semantics.}
 	\right)
 }
 \end{align*}
-\end{defn}
+\end{definition}
 
-\begin{defn}[CSP event sets]
+\begin{definition}[CSP event sets]
 For now, the event set of an action is the prefix of an arrow action, or
 the empty set for any other actions.  This will change when the prefix becomes
 inexpressible as an event set.
@@ -170,13 +170,13 @@ inexpressible as an event set.
 	\tlang{\emptyset}
 	\tag{anything else}
 \end{align*}
-\end{defn}
+\end{definition}
 
 \subsection{Actions}\label{ssec:semantics-tockcsp-actions}
 
 The definitions here correspond to \cref{sec:metamodel-actions}.
 
-\begin{defn}[\msequenceaction]
+\begin{definition}[\msequenceaction]
 
 The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
 prefixing termination.  The semantics of a loop delegates to a separate rule
@@ -205,7 +205,7 @@ over its label and subsequence.
 \tag{final action}
 \end{align*}
 
-\end{defn}
+\end{definition}
 
 \newcommand{\iloop}[1]{\text{Loop}(#1)}
 \newcommand{\nloop}[1]{\text{Loop}_\sqcap(#1)}
@@ -214,7 +214,7 @@ over its label and subsequence.
 \newcommand{\uloop}[2]{\text{Loop}_u(#1, #2)}
 \newcommand{\rloop}[3]{\text{Loop}_r(#1, #2, #3)}
 
-\begin{defn}[\mloopstep]  
+\begin{definition}[\mloopstep]  
 For now, the semantics of a loop is that of the loop
 subsequence hoisted into an auxiliary loop-running process (defined
 below).
@@ -248,9 +248,9 @@ below).
   \\  
 \end{align*}
 
-\end{defn}
+\end{definition}
 
-\begin{defn}[Auxiliary loop processes]
+\begin{definition}[Auxiliary loop processes]
 
 We can define the loop processes used above in CSP as follows:
 %
@@ -286,13 +286,13 @@ We can define the loop processes used above in CSP as follows:
     \tag{range}
   \\
 \end{align*}
-\end{defn}
+\end{definition}
 
 \subsection{Messages}\label{ssec:semantics-tockcsp-messages}
 
 The definitions here correspond to \cref{sec:metamodel-messages}.
 
-\begin{defn}[\mmessageset]
+\begin{definition}[\mmessageset]
 
   The semantics of a message set is the universal event set for \muniversemessageset s;
   the expansion of the given \mgapmessagespec s for \mextensionalmessageset s;
@@ -326,7 +326,7 @@ The definitions here correspond to \cref{sec:metamodel-messages}.
     \msgsetsema{\field{\field{\armsgset}{set}}{set}}
     \tag{reference}
 \end{align*}
-\end{defn}
+\end{definition}
 
 There are two distinct semantic rules for \mmessagespec s.  One is used whenever
 we expand the \mmessagespec{} into an event set, and handles `rest' arguments
@@ -335,7 +335,7 @@ expanding to a prefix, and introduces explicit discards for the missing
 parameters.  \todo{The two forms will diverge further when we introduce
 parameter binding.}
 
-\begin{defn}[\mmessagespec{} as an event set]
+\begin{definition}[\mmessagespec{} as an event set]
 
 We expand \mmessagespec s into event-set form in two stages: expanding
 any non-`rest' arguments with \funcname{withArgs}, then expanding the channel
@@ -404,12 +404,12 @@ outbound from target to world).
 	\tlang{\olang{\field{\anevent}{name}}\text{.out}}
 \tag{outbound event}
 \end{align*}
-\end{defn}
+\end{definition}
 
 \newcommand{\paramsOf}[1]{\funcname{params}(#1)}
 \newcommand{\beforeRest}[1]{\funcname{beforeRest}(#1)}
 
-\begin{defn}[\mmessagespec{} as a prefix]
+\begin{definition}[\mmessagespec{} as a prefix]
 
 To expand a \mmessagespec{} into a prefix, we take the event set expansion and
 \todo{for now} \emph{pad} it with wildcard inputs for each topic parameter
@@ -451,14 +451,14 @@ left unmatched at the point of any \mrestargument.
 	1 + \beforeRest{\anarglist}
 \tag{non-rest argument}
 \end{align*}
-\end{defn}
+\end{definition}
 
 \subsection{Actors}\label{ssec:semantics-tockcsp-actors}
 
 The definitions here correspond to \cref{sec:metamodel-actors}.
 
 
-\begin{defn}[\mtarget]
+\begin{definition}[\mtarget]
 
 The semantics of a target is the parametric process generated for that
 target by the relevant external semantics, with constant parameters instantiated
@@ -494,7 +494,7 @@ as follows:
 	\oplus
 	\field{\aninst}{constants}
 \end{align*}
-\end{defn}
+\end{definition}
 
 
 %%% Local Variables:
