@@ -217,8 +217,16 @@ EmptySet returns ExtensionalMessageSet:
  */
 MessageSet:
 	'universe' {UniverseMessageSet} |
-	'{|' {ExtensionalMessageSet} messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '|}' |
+	ExtensionalMessageSet |
 	'message'? 'set' {RefMessageSet} set=[NamedMessageSet]
+;
+
+/**
+ * An extensional message set (including singleton message sets).
+ */
+ExtensionalMessageSet:
+	'{|' {ExtensionalMessageSet} messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '|}' |
+	messages+=GapMessageSpec
 ;
 
 /**
