@@ -110,9 +110,11 @@ The semantics of a \msubsequence{} is a sequential composition of that of its st
 
 \end{defn}
 
-\begin{defn}[\msequencestep]
+\todo{\msequencestep}
 
-The semantics of a \msequencestep{} is an unbounded loop over the events of its
+\begin{defn}[\mactionstep]
+
+The semantics of a \mactionstep{} is an unbounded loop over the events of its
 \msequencegap, interrupted by the \msequenceaction.\footnote{Note that the semantics of the gap depends
 on the action.  This is because, as seen in \(\gapsema{\agap}{\anaction}\),
 the events on which the action can interrupt the
@@ -212,7 +214,7 @@ over its label and subsequence.
 \newcommand{\uloop}[2]{\text{Loop}_u(#1, #2)}
 \newcommand{\rloop}[3]{\text{Loop}_r(#1, #2, #3)}
 
-\begin{defn}[\mloopaction]  
+\begin{defn}[\mloopstep]  
 For now, the semantics of a loop is that of the loop
 subsequence hoisted into an auxiliary loop-running process (defined
 below).

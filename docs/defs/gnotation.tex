@@ -5,7 +5,7 @@
 
 \newcommand{\gkeywordfont}{\sffamily\bfseries}
 \newcommand{\gkeyword}[1]{{\gkeywordfont #1}}
-\newcommand{\osigil}{\gkeyword{operation}}
+\newcommand{\osigil}{\gkeyword{op}}
 \newcommand{\esigil}{\gkeyword{event}}
 
 \tikzset{
@@ -14,11 +14,14 @@
   target/.style={actor},
   rcmodule/.style={target, font={\gkeyword{module}\;}},
   lifeline/.style={dashed, thick},
-  diagram/.style={row sep=1.8em, column sep=8em},
+  deadline/.style={solid, font={\footnotesize}},
+  deadlinespan/.style={latex-latex},
+  diagram/.style={row sep=1.7em, column sep=4em},
   arrow/.style={->, thick},
   oarrow/.style={arrow, font={\small\osigil\;}},
   earrow/.style={arrow, font={\small\esigil\;}},
   final/.style={dotted, thick, font={\small\gkeywordfont}, "end"},
+  wait/.style={dotted, thick, font={\small}},
   cfbox/.style={draw},
   cfheader/.style={trapezium, draw, fill={black!10!white}, trapezium left angle=90, trapezium right angle=300},
   gap/.style={circle, inner sep=0, minimum size=6pt, fill=black}
@@ -93,6 +96,22 @@
 % #1: LHS
 % #2: RHS
 \newcommand{\gfinal}[2]{\draw (#1) edge[final] (#2);}
+
+% #1: LHS
+% #2: RHS
+% #3: units expression
+\newcommand{\gwait}[3]{\draw (#1) edge[wait,"\gkeyword{wait}(#3)"] (#2);}
+
+\newcommand{\gdeadlineoffset}{4em}
+% #1: World top
+% #2: World bottom
+% #3: Deadline name
+% #4: Deadline amount
+\newcommand{\gdeadline}[4]{
+  \draw (#1) edge[deadline,"@#3"] ($(#1) + (\gdeadlineoffset, 0)$);
+  \draw ($(#1) + (\gdeadlineoffset, 0)$) edge[deadlinespan] ($(#2) + (\gdeadlineoffset, 0)$);
+  \draw ($(#2) + (\gdeadlineoffset, 0)$) edge[deadline,"{#3..#3+#4}"] (#2);
+}
 
 %%% Local Variables:
 %%% mode: latex

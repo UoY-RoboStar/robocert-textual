@@ -106,106 +106,112 @@ or any distinction between references to objects and their definitions.
 \section{How to read this section}
 
 \begin{table}
-	\centering
+  \centering
 
-	\begin{tabular}{p{2em}p{10.5em}}
-	\toprule
-	\thead{Var.} & \thead{Type}
-	\\
-	\midrule
-	\multicolumn{2}{l}{\tsubhead{\robochart{} imports}}
-	\\
-	\(\avar\) & \mvariable
-	\\
-	\(\anexpr\) & \mexpression
-	\\
-	\bottomrule
-	\end{tabular}
-	\begin{tabular}{p{2em}p{10.5em}}
-	\toprule
-	\thead{Var.} & \thead{Type}
-	\\
-	\midrule
-	\multicolumn{2}{l}{\tsubhead{Packages (\cref{sec:metamodel-top})}}
-	\\
-	\(\apkg\) & \mrapackage
-	\\
-	\(\acsp\) & \mcspfragment
-	\\
-	\midrule
-	\multicolumn{2}{l}{\tsubhead{Sequences (\cref{sec:metamodel-sequences})}}
-	\\
-	\(\aseq\) & \msequence
-	\\
-	\(\asseq\) & \msubsequence
-	\\
-	\(\astep\) & \msequencestep
-	\\
-	\(\agap\) & \msequencegap
-	\\
-	\midrule
-	\multicolumn{2}{l}{\tsubhead{Actions (\cref{sec:metamodel-actions})}}
-	\\
-	\(\anaction\) & \msequenceaction
-	\\
-	\(\anarrow\) & \marrowaction
-	\\
-	\(\aloop\) & \mloopaction
-	\\
-	\(\bot\) & \mfinalaction
-	\\
-	\\
-          \\
-          \\
-	\\
-	\bottomrule
-	\end{tabular}
-	\begin{tabular}{p{2em}p{10.5em}}
-	\toprule
-	\thead{Var.} & \thead{Type}
-	\\
-	\midrule
-	\multicolumn{2}{l}{\tsubhead{Messages (\cref{sec:metamodel-messages})}}
-	\\
-	\(\amspec\) & \mmessagespec
-	\\
-	\(\amsgset\) & \mmessageset
-	\\
-	\(\aumsgset\) & \muniversemessageset
-	\\
-	\(\anemsgset\) & \mextensionalmessageset
-        \\
-        \(\armsgset\) & \mrefmessageset
-	\\
-	\(\anarg\) & \margument
-	\\
-	\(\anexprarg\) & \mexpressionargument
-	\\
-	\(\arestarg\) & \mrestargument
-	\\
-	\midrule
-	\multicolumn{2}{l}{\tsubhead{Actors (\cref{sec:metamodel-actors})}}
-	\\
-	\(\atarget\) & \mtarget
-	\\
-	\(\aworld\) & \mworld
-	\\
-	\(\aninst\) & \mtargetinstantiation
-	\\
-	\midrule
-	\multicolumn{2}{l}{\tsubhead{Assertions (\cref{sec:metamodel-assertions})}}
-	\\
-	\(\anasst\) & \massertion
-	\\
-	\(\asasst\) & \msequenceassertion
-	\\
-	\(\amodel\) & \mcspmodel	
-	\\
-	\bottomrule
-	\end{tabular}
-
-	\caption{Metasyntactic variables.}
-	\label{tab:metasyntactic-variables}
+  \begin{tabular}{p{2em}p{10.5em}}
+    \toprule
+    \thead{Var.}
+    & \thead{Type}
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{\robochart{} imports}}
+    \\
+    \(\avar\) & \mvariable
+    \\
+    \(\anexpr\) & \mexpression
+    \\
+    \bottomrule
+  \end{tabular}
+  \begin{tabular}{p{2em}p{10.5em}}
+    \toprule
+    \thead{Var.}
+    & \thead{Type}
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Packages (\cref{sec:metamodel-top})}}
+    \\
+    \(\apkg\) & \mrapackage
+    \\
+    \(\acsp\) & \mcspfragment
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Sequences (\cref{sec:metamodel-sequences})}}
+    \\
+    \(\aseq\) & \msequence
+    \\
+    \(\asseq\) & \msubsequence
+    \\
+    \(\astep\) & \msequencestep
+    \\
+    \(\agap\) & \msequencegap
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Steps (\cref{sec:metamodel-steps})}}
+    \\
+    \(\aloop\) & \mloopstep
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Actions (\cref{sec:metamodel-actions})}}
+    \\
+    \(\anaction\) & \msequenceaction
+    \\
+    \(\anarrow\) & \marrowaction
+    \\
+    \(\bot\) & \mfinalaction
+    \\
+    \\
+    \\
+    \\
+    \\
+    \bottomrule
+  \end{tabular}
+  \begin{tabular}{p{2em}p{10.5em}}
+    \toprule
+    \thead{Var.}
+    & \thead{Type}
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Messages (\cref{sec:metamodel-messages})}}
+    \\
+    \(\amspec\) & \mmessagespec
+    \\
+    \(\amsgset\) & \mmessageset
+    \\
+    \(\aumsgset\) & \muniversemessageset
+    \\
+    \(\anemsgset\) & \mextensionalmessageset
+    \\
+    \(\armsgset\) & \mrefmessageset
+    \\
+    \(\anarg\) & \margument
+    \\
+    \(\anexprarg\) & \mexpressionargument
+    \\
+    \(\arestarg\) & \mrestargument
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Actors (\cref{sec:metamodel-actors})}}
+    \\
+    \(\atarget\) & \mtarget
+    \\
+    \(\aworld\) & \mworld
+    \\
+    \(\aninst\) & \mtargetinstantiation
+    \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Assertions (\cref{sec:metamodel-assertions})}}
+    \\
+    \(\anasst\) & \massertion
+    \\
+    \(\asasst\) & \msequenceassertion
+    \\
+    \(\amodel\) & \mcspmodel	
+    \\
+    \bottomrule
+  \end{tabular}
+  
+  \caption{Metasyntactic variables.}
+  \label{tab:metasyntactic-variables}
 \end{table}
 
 The semantics treatments in this section take the form of rewrite rules from

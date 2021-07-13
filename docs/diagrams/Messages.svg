@@ -642,7 +642,7 @@
                 <path d="M806 358 L817 358 L817 369 L806 369 L806 358 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath152">
-                <path d="M791 166 L859 166 L859 183 L791 183 L791 166 Z"/>
+                <path d="M790 166 L861 166 L861 183 L790 183 L790 166 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath153">
                 <path d="M852 158 L862 158 L862 167 L852 167 L852 158 Z"/>
@@ -1482,8 +1482,9 @@ C8hKibhsf36wizahDgBzKT61uf8SjQAAAABJRU5ErkJggg==" xlink:actuate="onLoad"/>
                   y1="74" y2="162" stroke="rgb(114,159,207)"/>
             <line clip-path="url(#clipPath122)" fill="none" x1="813" x2="860"
                   y1="162" y2="162" stroke="rgb(114,159,207)"/>
-            <text x="792" y="178" clip-path="url(#clipPath152)"
-                  fill="rgb(39,76,114)" stroke="none" xml:space="preserve">[1..1] /target</text>
+            <text x="791" y="178" clip-path="url(#clipPath152)"
+                  fill="rgb(39,76,114)" stroke="none" font-weight="bold"
+                  xml:space="preserve">[1..1] /target</text>
             <line clip-path="url(#clipPath153)" fill="none" x1="853" x2="860"
                   y1="165" y2="162" stroke="rgb(114,159,207)"/>
             <line clip-path="url(#clipPath153)" fill="none" x1="860" x2="853"

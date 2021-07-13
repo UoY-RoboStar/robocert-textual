@@ -35,9 +35,10 @@ There is not yet any meaningful extra data stored in
 to change.
 
 \begin{lstlisting}[style=Example]
-universe                 // UniverseMessageSet
-{| -> operation O1() |}  // ExtensionalMessageSet
-message set S            // RefMessageSet
+universe                  // UniverseMessageSet
+{| ->op O1(), ->op O2 |}  // ExtensionalMessageSet
+->op O1()                 // singleton ExtensionalMessageSet
+set S                     // RefMessageSet
 \end{lstlisting}
 
 \subsection{\mnamedmessageset}\label{ssec:metamodel-messages-named-sets}
@@ -46,7 +47,7 @@ A \mnamedmessageset{} attaches a name to a \mmessageset, so that it can be reuse
 inside a \msequence.
 
 \begin{lstlisting}[style=Example]
-message set S: {| -> operation O1() |}
+message set S: {| ->op O1(), ->op O2 |}
 \end{lstlisting}
 
 \subsection{\mmessagespec}
@@ -75,10 +76,10 @@ available in EMF as derived references.
 
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
--> operation O1()
+->op O1()
 // outbound MessageSpec with OperationTopic
 
-<- event E
+<-event E
 // inbound MessageSpec with EventTopic
 \end{lstlisting}
 \end{subfigure}
@@ -111,8 +112,8 @@ A \mmessagetopic{} identifies the specific type of communication in a
 Each contains a reference to the signature of the respective construct.
 
 \begin{lstlisting}[style=Example]
-operation O1() // OperationTopic
-event E        // EventTopic
+op O1()  // OperationTopic
+event E  // EventTopic
 \end{lstlisting}
 
 \subsection{\margument}\label{ssec:metamodel-messages-arguments}
@@ -141,11 +142,6 @@ This is because bindings are only visible during the main body of a
 sequence.
 Consequently, any arguments that appear in
 \mgapmessagespec s must be subclasses of \mnonbindingargument.
-
-must not introduce bindings, as
-any bindings that could be introduced would not 
-and
-this is represented by the 
 
 All \margument s, at time of writing, are forms of \mnonbindingargument{} and
 can therefore appear in \mgapmessagespec s.  This will change when binding

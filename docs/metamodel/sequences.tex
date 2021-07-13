@@ -78,22 +78,19 @@ sequence Example {
 \subsection{\msubsequence}\label{ssec:metamodel-sequences-subsequences}
 
 A \msubsequence{} is a sequential composition of one or more \msequencestep s
-(\cref{ssec:metamodel-sequences-steps}).
+(\cref{sec:metamodel-steps}).
 All \msequence s contain exactly one \msubsequence{} at the top level, but
-may contain multiple nested \msubsequence s introduced by constructs such as
-\mloopaction s.
+may contain multiple nested \msubsequence s introduced by control-flow
+\msequencestep s.
 
 \begin{figure}[h!]
 
   \begin{subfigure}[t]{\egtextwidth}
     \begin{lstlisting}[style=Example]
 {
-  anything until -> operation O1()
-  // ^ SequenceStep
-  then -> operation O2()
-  // ^ SequenceStep
-  then end
-  // ^ SequenceStep
+  anything until ->op O1() // SequenceStep
+  then           ->op O2() // SequenceStep
+  then end                 // SequenceStep
 }
     \end{lstlisting}
   \end{subfigure}
@@ -123,68 +120,6 @@ may contain multiple nested \msubsequence s introduced by constructs such as
 
 \end{figure}
 
-\subsection{\msequencestep}\label{ssec:metamodel-sequences-steps}
-
-A \msequencestep{} is a single step in a \msubsequence.  It consists of a
-\msequencegap{} (\cref{ssec:metamodel-sequences-gaps}) and a
-\msequenceaction{} (\cref{sec:metamodel-actions}).
-
-\begin{lstlisting}[style=Example]
-anything until -> operation O()
-// SequenceStep with explicit SequenceGap and SequenceAction
-
--> operation O()
-// SequenceStep with explicit SequenceAction only;
-// implicit SequenceGap with empty allow set
-\end{lstlisting}
-
-\subsection{\msequencegap}\label{ssec:metamodel-sequences-gaps}
-
-A \msequencegap{} represents a condition on any
-communication\footnote{In PSCs, this would correspond to
-  \emph{intraMSG}s.} that can happen \emph{before} a \msequenceaction.
-It contains two \mmessageset s (\cref{ssec:metamodel-messages-sets}):
-one specifying the messages \emph{allowed} to pass inside the gap, and
-another specifying the messages \emph{forbidden} to pass.
-
-\begin{figure}[h!]
-
-  \begin{subfigure}[c]{\egtextwidth}
-    \begin{lstlisting}[style=Example]
-anything
-in message set MS
-except {| -> operation O2() |}
-until
-
-anything in message set MS until
-// implicit 'except {||}'
-
-anything until
-// implicit 'in universe {||}'
-\end{lstlisting}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[c]{\eggraphicalwidth}
-    \gsecaption
-    \centering
-    \begin{tikzpicture}
-      \matrix[diagram, column sep=15em]{
-        \coordinate(m1); & \coordinate(w1); \\
-        \coordinate(m2); & \coordinate(w2); \\
-        \coordinate(m3); & \coordinate(w3); \\
-      };
-      \draw[dotted] (m1) -- (w1);
-      \ggapout{m1}{\gdiff{\grefset{MS}}\gextset{\text{\lstinline[language=RoboCert]{-> operation O2()}}}}
-      
-      \draw[dotted] (m2) -- (w2);
-      \ggapin{w2}{\grefset{MS}}
-      
-      \draw[dotted] (m3) -- (w3);
-      \ggapout{m3}{\guniverse}
-    \end{tikzpicture}
-  \end{subfigure}
-
-\end{figure}
 
 %%% Local Variables:
 %%% mode: latex
