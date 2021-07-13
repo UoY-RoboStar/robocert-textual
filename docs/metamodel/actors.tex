@@ -1,20 +1,19 @@
 %!TEX root=../robocert.tex
-\begin{figure}
+\begin{figure}[htb]
 	\centering
 	\includegraphics[width=\textwidth]{diagrams/Actors}
 	\caption{Class diagram for the part of the \langname{} metamodel dealing with actors.}
 	\label{fig:metamodel-actors}
 \end{figure}
 
-\Cref{fig:metamodel-actors} depicts the part of the metamodel concerning
-actors.
-
-\subsection{\mactor}
-
-An \mactor{} is a participant in a sequence.
-\cref{sec:metamodel-sequences}, there are always two actors
+\noindent
+Actors (\mactor{}) capture communication participants in a sequence.
+Per \cref{sec:metamodel-sequences}, there are always two actors
 attached to a sequence: a \mtarget{} (\cref{ssec:metamodel-actors-target})
 and a \mworld{} (\cref{ssec:metamodel-actors-world}).
+
+\Cref{fig:metamodel-actors} depicts the part of the metamodel concerning
+actors.
 
 \subsection{\mtarget}\label{ssec:metamodel-actors-target}
 
@@ -27,7 +26,7 @@ presently one type of target, with more to appear later:
 	a \mrcmoduletarget{} references a \mrcmodule.
 \end{itemize}
 
-All forms of \mtarget{} contain a \mtargetinstantiation{} (see below), which
+Each \mtarget{} contains a \mtargetinstantiation{} (see below), which
 is always applied to any use of that target; assertions may further instantiate
 any constants left open by the target's \mtargetinstantiation.
 
@@ -54,7 +53,7 @@ RoboChart \mexpression{} (evaluated in an empty~\todo{check this} scope).
 \subsection{\mworld}\label{ssec:metamodel-actors-world}
 
 A \mworld{} is an \mactor{} that represents the `world' outside a sequence's
-\mtarget.  \mworld s do not contain any data.
+\mtarget.  \mworld s contain no data.
 
 \begin{lstlisting}[style=Example]
 world

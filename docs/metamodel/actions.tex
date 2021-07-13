@@ -13,11 +13,14 @@ A \msequenceaction{} is a construct in a \msubsequence{} that, informally,
 represents an activity on the sequence diagram that takes time to perform.
 (Formally speaking, most \msequenceaction s are instantaneous but
 allow time to pass immediately beforehand.)
+There are three types of action:
+\begin{itemize}
+\item \marrowaction{} (\cref{ssec:metamodel-actions-arrows});
+\item \mwaitaction{} (\cref{ssec:metamodel-actions-waits});
+\item \mfinalaction{} (\cref{ssec:metamodel-actions-final});
+\end{itemize}
 
-There are currently three types of action: arrow, wait, and
-final actions.
-
-\subsection{\marrowaction}
+\subsection{\marrowaction}\label{ssec:metamodel-actions-arrows}
 
 An \marrowaction\footnote{The name signifies both that the actions resemble
 PSC \emph{arrowMSG} specifications, and also that they correspond to arrows in
@@ -27,7 +30,7 @@ Each \marrowaction{} wraps one
 containing the specification proper.
 \todo{Eventually these will bind arguments.}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 ->op O1()
@@ -51,19 +54,20 @@ containing the specification proper.
 
 \end{figure}
 
-\subsection{\mwaitaction}
+\subsection{\mwaitaction}\label{ssec:metamodel-actions-waits}
 
 A \mwaitaction{} represents a pause for a specific number of time
 units.
+\todo{nondeterministic wait}
 
+\begin{remark}
 The effect of a \msequencegap{} on a \mwaitaction{} is perhaps subtle:
 the gap remains active until the wait has concluded.  For instance,
 a wait for \(3\) time units allows any communication on the gap to
 occur for \(3\) time units.
+\end{remark} 
 
-\todo{nondeterministic wait}
-
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 wait for 3 units
@@ -87,7 +91,7 @@ wait for 3 units
 
 \end{figure}
 
-\subsection{\mfinalaction}
+\subsection{\mfinalaction}\label{ssec:metamodel-actions-final}
 
 A \mfinalaction{} captures the eventual successful termination of a
 sequence diagram.  A diagram with a \mfinalaction{} specifies a
@@ -96,9 +100,11 @@ complete sequence of behaviour from the \mtarget{} initialising to the
 \mfinalaction s capture partial specifications of behaviour, or the
 behaviour of \mtarget s that do not terminate.
 
-Note that the final \msequencegap{} before a \mfinalaction{} captures
+\begin{remark}
+The final \msequencegap{} before a \mfinalaction{} captures
 any permitted communications after the behaviour explicitly specified by the
 diagram has occurred.
+\end{remark}
 
 \begin{figure}[h!]
 

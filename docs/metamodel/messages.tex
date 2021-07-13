@@ -1,19 +1,24 @@
 %!TEX root=../robocert.tex
-\begin{figure}
+\begin{figure}[htb]
 	\centering
 	\includegraphics[width=\textwidth]{diagrams/Messages}
 	\caption{Class diagram for the part of the \langname{} metamodel dealing with messages.}
 	\label{fig:metamodel-messages}
 \end{figure}
 
+\noindent
+Messages are introduced into a sequence diagram
+in \mmessageset s and \marrowaction s.  They capture the various forms of
+communication in \robochart: events, operations, and \todo{eventually}
+variables.
+
 \Cref{fig:metamodel-messages} depicts the part of the metamodel concerning
-messages between actors.  Messages are introduced into a sequence diagram
-in \mmessageset s and \marrowaction s.
+messages between actors.
 
 \subsection{\mmessageset}\label{ssec:metamodel-messages-sets}
 
-A \mmessageset{} is an expression of the set of messages allowed or forbidden
-inside a \msequencegap.  There are two types of \mmessageset:
+A \mmessageset{} expresses a set of messages allowed or forbidden
+inside a \msequencegap.  There are three types of \mmessageset:
 
 \begin{itemize}
 \item
@@ -60,7 +65,7 @@ respectively.}  Each \mmessagespec{} contains:
 \begin{itemize}
 \item
   a \mmessagedirection; \emph{outbound} from \mtarget{} to \mworld,
-  or \emph{inbound} from \mworld to \mtarget;
+  or \emph{inbound} from \mworld{} to \mtarget;
 \item
   the \mmessagetopic{} (\cref{ssec:metamodel-messages-topics}) specifying
   the type of communication that the spec is capturing.
@@ -72,7 +77,7 @@ and the \mmessagedirection, we can further infer the source (`from')
 and destination (`to') \mactor s.  The target, from, and to actors are
 available in EMF as derived references.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
@@ -105,8 +110,8 @@ available in EMF as derived references.
 
 \subsection{\mmessagetopic}\label{ssec:metamodel-messages-topics}
 
-A \mmessagetopic{} identifies the specific type of communication in a
-\mmessagespec{}.  There are currently two types of topic, corresponding to
+A \mmessagetopic{} identifies the type of communication in a
+\mmessagespec{}.  There are two types of topic, corresponding to
 \robochart{} operations (\moperationtopic) and events (\meventtopic)
 \todo{variable topics will arrive later on; \ghissue{24}}.
 Each contains a reference to the signature of the respective construct.

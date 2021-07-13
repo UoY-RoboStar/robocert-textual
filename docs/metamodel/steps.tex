@@ -1,29 +1,40 @@
 %!TEX root=../robocert.tex
-\begin{figure}
+\begin{figure}[htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{diagrams/Steps}
 	\caption{Class diagram for the part of the \langname{} metamodel dealing with steps.}
 	\label{fig:metamodel-steps}
 \end{figure}
 
+\noindent
+Steps (\msequencestep) are elements of
+\msubsequence s.  They represent both communications and control flow, and
+can themselves contain \msubsequence s.  There are three types of
+step:
+
+\begin{itemize}
+\item \mdeadlinestep{} (\cref{ssec:metamodel-steps-deadline});
+\item \mloopstep{} (\cref{ssec:metamodel-steps-loop});
+\item \mactionstep{} (\cref{ssec:metamodel-steps-action});
+\end{itemize}
+
 \Cref{fig:metamodel-actions} depicts the part of the metamodel concerning
 sequence steps.
 
-A \msequencestep{} is a construct on the body of the sequence diagram.
-
-
-\subsection{\mdeadlinestep}
+\subsection{\mdeadlinestep}\label{ssec:metamodel-steps-deadline}
 
 A \mdeadlinestep{} asserts that a \msubsequence{} terminates within
 a given number of time units.  \todo{is this definitely a deadline?}
-It takes a name (which is currently only
-relevant in the graphical notation), and an expression that must
+It takes a name (currently only
+used in the graphical notation), and an expression that must
 evaluate to a natural number of time units.
 
+\begin{remark}
 To specify that all actions in a \msubsequence{} must occur
 immediately, use a deadline of \(0\).
+\end{remark}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 deadline T : within 3 units {
@@ -51,7 +62,7 @@ deadline T : within 3 units {
 \end{figure}
 
 
-\subsection{\mloopstep}
+\subsection{\mloopstep}\label{ssec:metamodel-steps-loop}
 
 % Shorthand for introducing the loop action diagram matrix.
 \newcommand{\egloopmatrix}{
@@ -69,9 +80,7 @@ deadline T : within 3 units {
   \gloop{mls}{wls}{mle}{wle}{L}{#1}
 }
 
-A \mloopstep{} is a named loop.  Each \mloopstep{} contains one
-\msubsequence{} of steps to repeat indefinitely.
-
+A \mloopstep{} is a named loop over a \msubsequence{} of steps.
 The number of times a \mloopstep{} will iterate \todo{breaking forthcoming}
 depends on its attached \mloopbound{}.  Each bound is in terms of
 \mexpression{}s that are evaluated \emph{only once}, before the execution
@@ -81,7 +90,7 @@ of the loop.
 A \minfiniteloopbound{} states that the loop executes an infinite
 number of times.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 loop L : forever { // or 'loop L {'
@@ -103,7 +112,7 @@ loop L : forever { // or 'loop L {'
 A \mdefiniteloopbound{} states that the loop executes exactly the
 number of times given in the bound.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 loop L : exactly 4 times {
@@ -150,7 +159,7 @@ the loop will not execute any more times than the given upper bound.
 Note that if the bounds are the same, the semantics is equivalent
 to that of a \mdefiniteloopbound{}.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
 loop L : between 3 and 6 times {
@@ -170,9 +179,11 @@ loop L : between 3 and 6 times {
 
 \subsection{\mactionstep}\label{ssec:metamodel-steps-action}
 
-A \mactionstep{} is a single step in a \msubsequence.  It consists of a
-\msequencegap{} (\cref{ssec:metamodel-steps-gaps}) and a
-\msequenceaction{} (\cref{sec:metamodel-actions}).
+A \mactionstep{} contains a specification of a
+\msequenceaction{} (\cref{sec:metamodel-actions}), as well as
+a \msequencegap{} (\cref{ssec:metamodel-steps-gaps})
+capturing any communications implicitly allowed to happen
+before the action.
 
 \begin{lstlisting}[style=Example]
 anything until ->op O()
@@ -192,8 +203,7 @@ It contains two \mmessageset s (\cref{ssec:metamodel-messages-sets}):
 one specifying the messages \emph{allowed} to pass inside the gap, and
 another specifying the messages \emph{forbidden} to pass.
 
-\begin{figure}[h!]
-
+\begin{figure}[H]
   \begin{subfigure}[c]{\egtextwidth}
     \begin{lstlisting}[style=Example]
 anything in set MS except ->op O2() until
@@ -225,7 +235,6 @@ anything until
       \ggapout{m3}{\guniverse}
     \end{tikzpicture}
   \end{subfigure}
-
 \end{figure}
 
 %%% Local Variables:
