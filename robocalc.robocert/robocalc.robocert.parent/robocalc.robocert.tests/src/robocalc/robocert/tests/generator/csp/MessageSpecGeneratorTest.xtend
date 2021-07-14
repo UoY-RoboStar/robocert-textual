@@ -10,6 +10,7 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import static extension org.junit.Assert.assertEquals
 import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.tests.util.MessageSpecFactory
+import robocalc.robocert.tests.util.CspNormaliser
 
 /**
  * Tests the message spec CSP generator.
@@ -19,6 +20,7 @@ import robocalc.robocert.tests.util.MessageSpecFactory
 class MessageSpecGeneratorTest {
 	@Inject extension MessageSpecGenerator
 	@Inject extension MessageSpecFactory
+	@Inject extension CspNormaliser
 
 	/**
 	 * Tests prefix generation of an arrow message set concerning an integer event
@@ -56,9 +58,6 @@ class MessageSpecGeneratorTest {
 	def void generateCSPEventSetIntEventArrowWithInt() {
 		"test::event.out.56".assertEquals(intEvent.topic.arrowSpec(MessageDirection::OUTBOUND, intArg(56)).generateCSPEventSet.tidy)
 	}
-		
-	def private String tidy(CharSequence it) {
-		toString.strip.replaceAll("  *", " ")
-	}
+
 
 }

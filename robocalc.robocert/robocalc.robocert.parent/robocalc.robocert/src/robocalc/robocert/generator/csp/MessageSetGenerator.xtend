@@ -46,13 +46,12 @@ class MessageSetGenerator {
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(RefMessageSet it, Iterable<MessageSpec> extra) '''
-	«IF extra.empty»
+	def dispatch generate(RefMessageSet it, Iterable<MessageSpec> extra)
+	'''«IF extra.empty»
 		«set.generateName»
 	«ELSE»
 		union(«set.generateName», «constructSet(extra)»)
-	«ENDIF»
-	'''
+	«ENDIF»'''
 
 	/**
 	 * Fallback for generating an event set for an unknown gap message set.
@@ -101,5 +100,5 @@ class MessageSetGenerator {
 	 * @return generated CSP for the set.
 	 */
 	private def constructSet(
-		Iterable<MessageSpec> it) '''«FOR g : it BEFORE '{|' SEPARATOR ', ' AFTER '|}'»«g.generateCSPEventSet»«ENDFOR»'''
+		Iterable<MessageSpec> it) '''{|«FOR g : it SEPARATOR ', '»«g.generateCSPEventSet»«ENDFOR»|}'''
 }

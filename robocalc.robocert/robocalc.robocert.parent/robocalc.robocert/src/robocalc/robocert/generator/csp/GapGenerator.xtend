@@ -23,32 +23,7 @@ class GapGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generate(SequenceGap it, SequenceAction action) '''
-	«IF isActive»RUN(
-			«generateEventSet(action)»
-	) /\ «ENDIF»'''
-
-	private def generateEventSet(SequenceGap it, SequenceAction action) '''
-		«IF hasForbidSet(action)»
-			diff(«generateAllowSet», «generateForbidSet(action)»)
-		«ELSE»
-			«generateAllowSet»
-		«ENDIF»
-	'''
-
-	/**
-	 * Does this sequence gap need to exclude messages when preceding the
-	 * given action?
-	 * 
-	 * @param it      the sequence gap in question.
-	 * @param action  the action after the gap.
-	 * 
-	 * @return true if, and only if, there is at least one message in the
-	 *         forbidden set or one event in the action's CSP events.
-	 */
-	private def hasForbidSet(SequenceGap it, SequenceAction action) {
-		forbidden.isActive || action.hasMessageSpecs
-	}
+	def generate(SequenceGap it, SequenceAction action) '''«IF isActive»gap(«generateAllowSet», «generateForbidSet(action)») /\ «ENDIF»'''
 
 	/**
 	 * Generates a CSP event set for a gap's allow set.
@@ -75,14 +50,6 @@ class GapGenerator {
 	 */
 	private def generateForbidSet(SequenceGap it, SequenceAction action) {
 		forbidden.generate(action.messageSpecs.toList)
-	}
-	
-	private def dispatch hasMessageSpecs(ArrowAction it) {
-		true
-	}
-
-	private def dispatch hasMessageSpecs(SequenceAction it) {
-		false
 	}
 	
 	private def dispatch Iterator<MessageSpec> messageSpecs(ArrowAction it) {

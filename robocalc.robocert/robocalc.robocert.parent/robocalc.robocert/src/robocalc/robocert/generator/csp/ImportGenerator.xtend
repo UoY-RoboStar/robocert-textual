@@ -55,8 +55,9 @@ class ImportGenerator {
 	 * @return  an iterator of import filenames.
 	 */
 	private def standardImports() {
-		// TODO(@MattWindsor91): remove instantiations.csp eventually?
-		Iterators.forArray(#["defs/timed_definitions.csp", "defs/robochart_defs.csp", "defs/core_defs.csp", "defs/robocert_defs.csp", "instantiations.csp"])
+		// robocert_defs is included by this generator, and transitively
+		// includes most of the RoboChart prelude.
+		Iterators.forArray(#["defs/robocert_defs.csp", "instantiations.csp"])
 	}
 
 	/**

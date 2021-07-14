@@ -1,13 +1,9 @@
 package robocalc.robocert.generator.csp
 
 import robocalc.robocert.model.robocert.Sequence
-import robocalc.robocert.model.robocert.SequenceStep
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Subsequence
 import robocalc.robocert.model.robocert.SequenceGroup
-import robocalc.robocert.model.robocert.DeadlineStep
-import robocalc.robocert.model.robocert.LoopStep
-import robocalc.robocert.model.robocert.ActionStep
 
 /**
  * A generator that emits CSP for sequences and subsequences.
