@@ -166,7 +166,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" lowerBound="1" eType="#//MessageTopic"
         containment="true" eOpposite="#//MessageTopic/spec"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="direction" lowerBound="1"
-        eType="#//MessageDirection"/>
+        eType="#//MessageDirection" defaultValueLiteral="OUTBOUND"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target" changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" lowerBound="1" eType="#//Actor"

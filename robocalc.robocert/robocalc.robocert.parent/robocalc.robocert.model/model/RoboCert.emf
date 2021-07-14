@@ -485,7 +485,7 @@ abstract class MessageSpec {
 	/**
 	 * The direction of the message.
 	 */
-	attr MessageDirection[1] direction;
+	attr MessageDirection[1] direction = "OUTBOUND";
 	
 	//
 	// Derived references
