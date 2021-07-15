@@ -1,110 +1,7 @@
 % !TEX root=../robocert.tex
 \newcommand{\insp}[1]{\textbf{#1}}
 
-\begin{table}[tb]
-  \caption{Comparison of \langname{} concepts with other notations.}
-  \label{tab:metamodel-comparison}
-  \centering
-
-  \begin{tabular}{p{8em}p{7em}p{7em}p{12em}}
-    \toprule
-    \thead{\langname}
-    & \thead{UML2}
-    & \thead{PSC}
-    & \thead{Comments}
-    \\
-
-    \midrule
-    \multicolumn{4}{l}{\tsubhead{Top~(\ref{sec:metamodel-top})}}
-    \\
-
-    \midrule
-    \multicolumn{4}{l}{\tsubhead{Sequences~(\ref{sec:metamodel-sequences})}}
-    \\
-
-    \msequencegap
-    & n/a
-    & Strict operator, \insp{constraints}
-    &
-      Gaps resemble past-unwanted-message constraints, but
-      allow restricting the set of \emph{allowed} messages;
-      this subsumes the strict operator.  Graphical syntax is a slight
-      modification of PSC syntax.  We do not cover
-      future-unwanted-message or chain constraints.  Currently, all
-      ordering is assumed strict unless modified by a gap; this
-      deviates from PSC \emph{and} some readings of UML.
-    \\
-    
-    \midrule
-    \multicolumn{4}{l}{\tsubhead{Actions~(\ref{sec:metamodel-actions})}}
-    \\
-
-    \marrowaction
-    & \insp{message occurrence specification}
-    & regular message
-    & Arrows are named for the PSC \emph{arrowMSG} concept but are closer
-      to UML.
-    \\
-
-    \mdeadlinestep
-    & \insp{MARTE time annotations}
-    & n/a
-    & \todo{write this}
-    \\
-      
-    
-    \mloopstep
-    & \insp{loop combined fragment}
-    & loop operator
-    & \mloopbound s inspired by those permitted by UML.
-    \\
-      
-    \midrule
-    \multicolumn{4}{l}{\tsubhead{Messages~(\ref{sec:metamodel-messages})}}
-    \\
-
-    \mmessageset
-    & n/a
-    & \insp{constraint set}
-    & \mrefmessageset s are directly inspired by the PSC approach to referencing constraint sets.
-    \\
-
-    \marrowmessagespec
-    & ??
-    & arrowMSG
-    & We do not cover PSC required or fail messages.
-    \\
-
-    \mgapmessagespec
-    & ??
-    & \insp{intraMSG}
-    & Notion of direction (inbound/outbound) rather than sender/receiver labels.
-    \\
-
-    \midrule
-    \multicolumn{4}{l}{\tsubhead{Actors~(\ref{sec:metamodel-actors})}}
-    \\
-
-    \mactor
-    & lifeline
-    & \insp{component instance}
-    &
-      Always fixed at two in \langname: a \mtarget{} and a \mworld{}.
-      Neither are named, though the \mtarget{} will refer to a
-      named component such as a \mrcmodule.
-
-      Like PSC, but unlike UML, there are no executions.
-    \\
-
-    \midrule
-    \multicolumn{4}{l}{\tsubhead{Assertions~(\ref{sec:metamodel-assertions})}}
-    \\
-
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\Cref{tab:metamodel-comparison} compares \langname{} concepts to the
+This section compares \langname{} concepts to the
 corresponding features, if any, in:
 
 \begin{itemize}
@@ -119,6 +16,93 @@ corresponding features, if any, in:
 
 For each concept, we highlight the main source of inspiration (if any)
 using \insp{this formatting}.
+
+\subsection{Top~(\ref{sec:metamodel-top})}
+
+\subsection{Sequences~(\ref{sec:metamodel-sequences})}
+
+\paragraph{\msequencegap}
+\begin{description}
+\item[UML] n/a
+\item[PSC] strict operator, \insp{constraints}
+\item[Comments]
+  Gaps resemble past-unwanted-message constraints, but
+  allow restricting the set of \emph{allowed} messages;
+  this subsumes the strict operator.  Graphical syntax is a slight
+  modification of PSC syntax.  We do not cover
+  future-unwanted-message or chain constraints.  Currently, all
+  ordering is assumed strict unless modified by a gap; this
+  deviates from PSC \emph{and} some readings of UML.
+\end{description}
+    
+\subsection{Actions~(\ref{sec:metamodel-actions})}
+
+\paragraph{\marrowaction}
+\begin{description}
+\item[UML] \insp{message occurrence specification}
+\item[PSC] regular message
+\item[Comments]
+  Arrows are named for the PSC \emph{arrowMSG} concept but are closer
+  to UML.
+\end{description}
+
+\paragraph{\mdeadlinestep}
+\begin{description}
+\item[UML] \insp{MARTE time annotations}
+\item[PSC] n/a
+\item[Comments]
+  Syntax currently has an explicitly named initial time point, but UML2
+  seems to have a similar syntax that does not.  \todo{write this}
+\end{description}
+      
+\paragraph{\mloopstep}
+\begin{description}
+\item[UML] \insp{loop combined fragment}
+\item[PSC] loop operator
+    \mloopbound s inspired by those permitted by UML.
+\end{description}
+      
+\subsection{Messages~(\ref{sec:metamodel-messages})}
+
+\paragraph{\mmessageset}
+\begin{description}
+\item[UML] n/a
+\item[PSC] \insp{constraint set}
+\item[Comments]
+  \mrefmessageset s are directly inspired by the PSC approach to referencing constraint sets.
+\end{description}
+
+\paragraph{\marrowmessagespec}
+\begin{description}
+\item[UML] ??
+\item[PSC] arrowMSG
+\item[Comments]
+  We do not cover PSC required or fail messages.
+\end{description}
+
+\paragraph{\mgapmessagespec}
+\begin{description}
+\item[UML] ??
+\item[PSC] \insp{intraMSG}
+\item[Comments]
+  Notion of direction (inbound/outbound) rather than sender/receiver labels.
+\end{description}
+
+\subsection{Actors~(\ref{sec:metamodel-actors})}
+
+\paragraph{\mactor}
+\begin{description}
+\item[UML] lifeline
+\item[PSC] \insp{component instance}
+\item[Comments]
+  Always fixed at two in \langname: a \mtarget{} and a \mworld{}.
+  Neither are named, though the \mtarget{} will refer to a
+  named component such as a \mrcmodule.
+
+  Like PSC, but unlike UML, there are no executions.
+\end{description}
+
+\subsection{Assertions~(\ref{sec:metamodel-assertions})}
 
 %%% Local Variables:
 %%% mode: latex
