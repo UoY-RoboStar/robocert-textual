@@ -1,9 +1,43 @@
 %!TEX root=./robocert.tex
 \input{metamodel/defs}
 
-This section introduces the abstract syntax (metamodel) of \langname.
-It is structured in a top-down manner, with each section introducing a group of
-related \langname{} functionality.  Each section contains:
+We define \langname{} in the form of a formal abstract syntax (or
+metamodel) which is representable in multiple concrete notations ---
+the \emph{textual} (\cref{cha:textual}) and \emph{graphical}
+syntax (\cref{cha:graphical}) --- and which has a semantics in terms
+of process algebras and other formalisms (\cref{cha:semantics}).  This
+chapter discusses the abstract syntax and, in turn, the key concepts
+of \langname.
+
+\section{Introduction}\label{sec:metamodel-intro}
+
+\subsection{A note on ordering and timing}\label{sec:metamodel-intro-ordering}
+
+Actions on \langname{} sequence diagrams are, by default, strictly
+ordered with respect to each other and permit no intervening
+communications.  This reflects the view of sequence diagrams as
+representations of traces of the system under test, and appears
+consistent with some semantic treatments of UML~\cite{lima-semantics}.
+\todo{needs more justification?  is the point about Lima's semantics
+  correct?}
+
+\langname{} has native support for the \robochart{} timing model.
+This model assumes a discrete notion of time measured in \emph{time
+  units} such that, while actions such as events and operations are
+instantaneous, time is allowed to pass in between them.  Many
+\robochart{} timing primitives have counterparts in \langname.
+
+To summarise, \langname{} sequences default to being \emph{explicit}
+as to \emph{which} communications occur, but \emph{implicit} as to
+\emph{when} they occur.
+
+\subsection{Feature comparison}\label{ssec:metamodel-intro-features}
+\input{metamodel/features}
+
+\subsection{How to read the rest of this chapter}\label{ssec:metamodel-intro-readme}
+
+Each section after this one introduces a group of related \langname{}
+functionality in a top-down manner.  These sections contain:
 
 \begin{itemize}
 \item
@@ -15,9 +49,6 @@ related \langname{} functionality.  Each section contains:
 	where relevant, examples of the components in terms of the concrete
 	syntaxes of \langname.
 \end{itemize}
-
-\todo{Diagram fonts should be aligned to agree with those in this
-  report.}
 
 \section{Top}\label{sec:metamodel-top}
 \input{metamodel/top}
@@ -40,8 +71,6 @@ related \langname{} functionality.  Each section contains:
 \section{Assertions}\label{sec:metamodel-assertions}
 \input{metamodel/assertions}
 
-\section{Feature comparison}\label{sec:metamodel-features}
-\input{metamodel/features}
 
 %%% Local Variables:
 %%% mode: latex
