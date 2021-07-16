@@ -82,6 +82,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="MessageSet" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         changeable="false" volatile="true" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="universal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RefMessageSet" eSuperTypes="#//MessageSet">
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//NamedMessageSet"/>
@@ -91,6 +93,19 @@
         upperBound="-1" eType="#//GapMessageSpec" containment="true" eOpposite="#//GapMessageSpec/parent"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UniverseMessageSet" eSuperTypes="#//MessageSet"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BinaryMessageSet" eSuperTypes="#//MessageSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" lowerBound="1" eType="#//MessageSet"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" lowerBound="1"
+        eType="#//BinarySetOperator"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" eType="#//MessageSet"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="BinarySetOperator">
+    <eLiterals name="UNION"/>
+    <eLiterals name="INTERSECTION" value="1"/>
+    <eLiterals name="DIFFERENCE" value="2"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="anyGroup" eType="#//SequenceGroup"
         changeable="false" volatile="true" transient="true" derived="true"/>

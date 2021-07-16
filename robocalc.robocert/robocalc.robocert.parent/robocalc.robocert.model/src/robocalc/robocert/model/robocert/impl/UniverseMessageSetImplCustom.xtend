@@ -12,4 +12,13 @@ class UniverseMessageSetImplCustom extends UniverseMessageSetImpl {
 	override isActive() {
 		true
 	}
+	
+	/**
+	 * Universe gap messages sets are always universal.
+	 * 
+	 * @return true.
+	 */
+	override isUniversal() {
+		true
+	}
 }

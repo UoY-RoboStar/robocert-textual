@@ -41,6 +41,13 @@ class RobocertFactoryImplCustom extends RobocertFactoryImpl {
 	override createSubsequence() {
 		new SubsequenceImplCustom
 	}
+		
+	/**
+	 * @return a custom form of BinaryMessageSetImpl.
+	 */
+	override createBinaryMessageSet() {
+		new BinaryMessageSetImplCustom
+	}
 	
 	/**
 	 * @return a custom form of ExtensionalMessageSetImpl.

@@ -26,4 +26,13 @@ class UniverseMessageSetImplCustomTest {
 	def testIsActive() {
 		rf.createUniverseMessageSet.active.assertTrue
 	}
+	
+	/**
+	 * Tests to make sure 'active' is always true on universe gap message
+	 * sets.
+	 */
+	@Test
+	def testIsUniversal() {
+		rf.createUniverseMessageSet.universal.assertTrue
+	}	
 }

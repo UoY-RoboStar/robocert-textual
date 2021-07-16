@@ -29,7 +29,7 @@ class ExtensionalMessageSetImplCustomTest {
 	}
 	
 	/**
-	 * Tests to make sure hasMessages is true on nonempty extensional gap message
+	 * Tests to make sure isActive is true on nonempty extensional gap message
 	 * sets.
 	 */
 	@Test
@@ -38,5 +38,26 @@ class ExtensionalMessageSetImplCustomTest {
 			messages.add(rf.createGapMessageSpec)
 		]
 		mset.active.assertTrue
+	}
+
+	/**
+	 * Tests to make sure isUniversal is false on empty extensional gap message
+	 * sets.
+	 */
+	@Test
+	def testIsUniversal_Empty() {
+		rf.createExtensionalMessageSet.universal.assertFalse
+	}
+	
+	/**
+	 * Tests to make sure isUniversal is false even on nonempty extensional gap message
+	 * sets.
+	 */
+	@Test
+	def testIsUniversal_NonEmpty() {
+		val mset = rf.createExtensionalMessageSet=>[
+			messages.add(rf.createGapMessageSpec)
+		]
+		mset.universal.assertFalse
 	}	
 }

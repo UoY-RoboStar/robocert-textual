@@ -205,10 +205,26 @@ abstract class MessageSet {
 	 * Whether this message set has messages.
 	 *
 	 * For instance, universal message sets are always active, but
-	 * extensional ones may be if no messages are held, and
-	 * reference sets are active iff their referred-to sets are.
+	 * extensional ones may be if no messages are held,
+	 * reference sets are active iff their referred-to sets are,
+	 * and binary message sets depend on the operator and operands.
+	 *
+	 * This is an optimistic estimate, and may falsely report activity
+	 * when there isn't any.
 	 */
 	derived volatile readonly transient attr boolean active;
+	
+	/**
+	 * Whether this message set contains every message.
+	 *
+	 * Universal message sets are always universal,
+	 * reference sets are active iff their referred-to sets are,
+	 * and binary message sets depend on the operator and operands.
+	 *
+	 * This is a pessimistic estimate, and may falsely deny universality
+	 * when there is some.
+	 */
+	derived volatile readonly transient attr boolean universal;	
 }
 
 /**
@@ -236,6 +252,43 @@ class ExtensionalMessageSet extends MessageSet {
  * A message set that includes all messages.
  */
 class UniverseMessageSet extends MessageSet {
+}
+
+/**
+ * A message set that is the result of applying a binary operator to two other
+ * message sets.
+ */
+class BinaryMessageSet extends MessageSet {
+	/**
+	 * The left-hand side.
+	 */
+	val MessageSet[1] lhs;
+	/**
+	 * The set operator.
+	 */
+	attr BinarySetOperator[1] operator;
+	/**
+	 * The right-hand side.
+	 */
+	val MessageSet[1] rhs;
+}
+
+/**
+ * A binary set operator.
+ */
+enum BinarySetOperator {
+	/**
+	 * Set union ('or').
+	 */
+	UNION;
+	/**
+	 * Set intersection ('and').
+	 */
+	INTERSECTION;
+	/**
+	 * Set difference ('except').
+	 */
+	DIFFERENCE;
 }
 
 //

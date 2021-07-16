@@ -11,11 +11,11 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import robocalc.robocert.tests.util.MessageSpecFactory
 
 /**
- * Tests any custom functionality on GapMessageSets.
+ * Tests any custom functionality on GapMessageSpecs.
  */
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertCustomInjectorProvider) 
-class GapMessageSetImplCustomTest {
+class GapMessageSpecImplCustomTest {
 	@Inject extension MessageSpecFactory
 	
 	@Test def void testTarget() {
