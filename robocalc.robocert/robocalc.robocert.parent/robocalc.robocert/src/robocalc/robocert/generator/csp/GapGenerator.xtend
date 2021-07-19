@@ -6,14 +6,17 @@ import robocalc.robocert.model.robocert.SequenceAction
 import com.google.common.collect.Iterators
 import java.util.Iterator
 import java.util.Collections
-import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.ArrowAction
+import robocalc.robocert.model.robocert.ArrowMessageSpec
+import robocalc.robocert.generator.utils.MessageSetOptimiser
 
 /**
  * Generates CSP for the gaps between actions.
  */
 class GapGenerator {
+	@Inject extension MessageSetOptimiser
 	@Inject extension MessageSetGenerator
+	@Inject extension MessageSpecGenerator
 
 	/**
 	 * Generates CSP for a gap.
@@ -23,41 +26,36 @@ class GapGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generate(SequenceGap it, SequenceAction action) '''«IF isActive»gap(«generateAllowSet», «generateForbidSet(action)») /\ «ENDIF»'''
+	def generate(SequenceGap it, SequenceAction action) '''«IF isActive»gap(«generateAllowSet», «action.generateActionSet») /\ «ENDIF»'''
 
-	/**
-	 * Generates a CSP event set for a gap's allow set.
-	 * 
-	 * @param it  the gap for which we are generating CSP.
-	 * 
-	 * @return the generated CSP sequence.
-	 */
 	private def generateAllowSet(SequenceGap it) {
-		allowed.generate(Collections.emptyList)
+		it.allowed = it.allowed.optimise
+		it.allowed.generate
 	}
 
 	/**
-	 * Generates a CSP event set for a gap's forbid set.
+	 * Generates a CSP event set for an action.
 	 * 
-	 * Forbid sets also include any CSP events that the adjacent action can
-	 * accept.  This is to avoid the possibility of both the gap and the action
+	 * This is to avoid the possibility of both the gap and the action
 	 * accepting the same events.
+	 * 
+	 * Eventually we'd like to roll this into the main allow set generation,
+	 * but some issues with making sure the resulting set 
 	 * 
 	 * @param it  the gap for which we are generating CSP.
 	 * @param action  the action after the gap.
 	 * 
 	 * @return the generated CSP sequence.
 	 */
-	private def generateForbidSet(SequenceGap it, SequenceAction action) {
-		forbidden.generate(action.messageSpecs.toList)
-	}
+	private def generateActionSet(SequenceAction action)
+	'''{|«FOR i : action.messageSpecs.toIterable SEPARATOR ','»«i.generateCSPEventSet»«ENDFOR»|}'''
+
 	
-	private def dispatch Iterator<MessageSpec> messageSpecs(ArrowAction it) {
+	private def dispatch Iterator<ArrowMessageSpec> messageSpecs(ArrowAction it) {
 		Iterators.singletonIterator(body)
 	}
 
-	private def dispatch Iterator<MessageSpec> messageSpecs(SequenceAction it) {
+	private def dispatch Iterator<ArrowMessageSpec> messageSpecs(SequenceAction it) {
 		Collections.emptyIterator
 	}
-
 }

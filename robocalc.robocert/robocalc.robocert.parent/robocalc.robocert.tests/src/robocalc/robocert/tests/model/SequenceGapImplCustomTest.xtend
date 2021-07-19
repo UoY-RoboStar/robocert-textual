@@ -27,7 +27,6 @@ class SequenceGapImplCustomTest {
 	def testIsActive_UniversalAllow() {
 		val gap = rf.createSequenceGap => [
 			allowed = rf.createUniverseMessageSet
-			forbidden = rf.createExtensionalMessageSet
 		]
 		
 		gap.active.assertTrue
@@ -43,7 +42,6 @@ class SequenceGapImplCustomTest {
 			allowed = rf.createExtensionalMessageSet => [
 				messages.add(rf.createGapMessageSpec)
 			]
-			forbidden = rf.createExtensionalMessageSet
 		]
 		
 		gap.active.assertTrue
@@ -58,7 +56,6 @@ class SequenceGapImplCustomTest {
 	def testIsActive_EmptyExtensionalAllow() {
 		val gap = rf.createSequenceGap => [
 			allowed = rf.createExtensionalMessageSet
-			forbidden = rf.createExtensionalMessageSet
 		]
 		
 		gap.active.assertFalse

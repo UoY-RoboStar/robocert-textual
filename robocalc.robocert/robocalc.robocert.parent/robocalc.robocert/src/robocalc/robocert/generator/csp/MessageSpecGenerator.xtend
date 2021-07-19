@@ -44,8 +44,22 @@ class MessageSpecGenerator {
 		'''«generateHeader»«arguments.generateArguments»«generateFiller»'''
 	
 	private def generateHeader(MessageSpec it)
-		'''«target.namespace»::«topic.generate»«IF topic.hasDirection».«direction.cspDir»«ENDIF»'''
-
+		'''«namespace»::«topic.generate»«IF topic.hasDirection».«direction.cspDir»«ENDIF»'''
+	
+	private def getNamespace(MessageSpec it) {
+		target?.namespace ?: missingNamespace
+	}
+	
+	/**
+	 * Expands to a placeholder for a missing namespace.
+	 * 
+	 * This predominantly exists for debugging purposes.
+	 * 
+	 * @param it  the message spec whose namespace is missing.
+	 * 
+	 * @return a placeholder character sequence.
+	 */
+	private def missingNamespace(MessageSpec it) '''{- missing namespace: «it» -} MISSING'''
 	
 	private def<T extends Argument> generateArguments(Iterable<T> it)
 		'''«FOR x: it»«x.generateArgument»«ENDFOR»'''

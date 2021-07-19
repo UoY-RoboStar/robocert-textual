@@ -11,7 +11,6 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import static extension org.junit.Assert.assertEquals
 import robocalc.robocert.model.robocert.RobocertFactory
 import robocalc.robocert.tests.util.CspNormaliser
-import java.util.Collections
 
 /**
  * Tests the message set CSP generator.
@@ -28,6 +27,6 @@ class MessageSetGeneratorTest {
 	 */
 	@Test
 	def void generateEmptyExtensional() {
-		"{||}".assertEquals(rf.createExtensionalMessageSet.generate(Collections.EMPTY_LIST).tidy)
+		"{||}".assertEquals(rf.createExtensionalMessageSet.generate.tidy)
 	}
 }

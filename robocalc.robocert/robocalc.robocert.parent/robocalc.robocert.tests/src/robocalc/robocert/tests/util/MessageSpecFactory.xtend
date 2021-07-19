@@ -70,7 +70,7 @@ class MessageSpecFactory {
 			allowed = rcert.createUniverseMessageSet
 		]
 		rcert.createExtensionalMessageSet => [
-			gap.forbidden = it
+			gap.allowed = it
 		]
 	}
 	

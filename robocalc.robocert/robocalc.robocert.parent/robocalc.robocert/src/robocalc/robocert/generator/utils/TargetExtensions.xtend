@@ -44,7 +44,7 @@ class TargetExtensions {
 	 * @return the module name (as the namespace of any communications over the module).
 	 */
 	def dispatch String getNamespace(RCModuleTarget it) {
-		module.name
+		module?.name
 	}
 
 	/**

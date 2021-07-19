@@ -7,7 +7,7 @@
     <semanticResources>RoboCert.ecore</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_bcnGkNsNEeuTO4js3GS2GQ">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
-      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_eGO0MNsNEeuTO4js3GS2GQ" name="Messages" repPath="#_eGCm8NsNEeuTO4js3GS2GQ" changeId="8c627b6c-32b5-4fe8-9ad8-edb0eda736d0">
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_eGO0MNsNEeuTO4js3GS2GQ" name="Messages" repPath="#_eGCm8NsNEeuTO4js3GS2GQ" changeId="2f3b23e5-c1e1-4b8f-aced-ac30df93a0bb">
         <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']"/>
         <target xmi:type="ecore:EPackage" href="RoboCert.ecore#/"/>
       </ownedRepresentationDescriptors>
@@ -90,6 +90,10 @@
             <children xmi:type="notation:Node" xmi:id="_hpk_INsNEeuTO4js3GS2GQ" type="3010" element="_hoMfENsNEeuTO4js3GS2GQ">
               <styles xmi:type="notation:FontStyle" xmi:id="_hpk_IdsNEeuTO4js3GS2GQ" fontColor="7490599" fontName="Noto Sans" fontHeight="8"/>
               <layoutConstraint xmi:type="notation:Location" xmi:id="_hpk_ItsNEeuTO4js3GS2GQ"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_HfhhAOYZEeuwtOMQBOmlXA" type="3010" element="_HfRCUeYZEeuwtOMQBOmlXA">
+              <styles xmi:type="notation:FontStyle" xmi:id="_HfhhAeYZEeuwtOMQBOmlXA" fontColor="7490599" fontName="Noto Sans" fontHeight="8"/>
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_HfhhAuYZEeuwtOMQBOmlXA"/>
             </children>
             <styles xmi:type="notation:SortingStyle" xmi:id="_hpQPAdsNEeuTO4js3GS2GQ"/>
             <styles xmi:type="notation:FilteringStyle" xmi:id="_hpQPAtsNEeuTO4js3GS2GQ"/>
@@ -846,6 +850,12 @@
         <ownedStyle xmi:type="diagram:BundledImage" uid="_hoNtMNsNEeuTO4js3GS2GQ" labelColor="39,76,114" labelAlignment="LEFT" description="_hoNGINsNEeuTO4js3GS2GQ"/>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_HfRCUeYZEeuwtOMQBOmlXA" name="/universal : EBoolean = false" tooltipText="">
+        <target xmi:type="ecore:EAttribute" href="RoboCert.ecore#//MessageSet/universal"/>
+        <semanticElements xmi:type="ecore:EAttribute" href="RoboCert.ecore#//MessageSet/universal"/>
+        <ownedStyle xmi:type="diagram:BundledImage" uid="_HfRpYOYZEeuwtOMQBOmlXA" labelColor="39,76,114" labelAlignment="LEFT" description="_hoNGINsNEeuTO4js3GS2GQ"/>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
+      </ownedElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_hn6LMNsNEeuTO4js3GS2GQ" name="MessageSpec" tooltipText="" outgoingEdges="_ho97INsNEeuTO4js3GS2GQ _oAs5QNsNEeuTO4js3GS2GQ _oAvVgNsNEeuTO4js3GS2GQ _20nZYN8GEeumheJQImZpzA" incomingEdges="_hogBENsNEeuTO4js3GS2GQ _hotccNsNEeuTO4js3GS2GQ" width="12" height="10">
       <target xmi:type="ecore:EClass" href="RoboCert.ecore#//MessageSpec"/>
@@ -1407,6 +1417,7 @@
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_rIXQcOYTEeuwtOMQBOmlXA" description="_hoYsUNsNEeuTO4js3GS2GQ" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_rIXQcuYTEeuwtOMQBOmlXA" showIcon="false">
           <customFeatures>labelSize</customFeatures>
+          <labelFormat>bold</labelFormat>
         </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="_rIXQceYTEeuwtOMQBOmlXA" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>
@@ -1420,6 +1431,7 @@
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_rIZFoOYTEeuwtOMQBOmlXA" description="_hoYsUNsNEeuTO4js3GS2GQ" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_rIZFouYTEeuwtOMQBOmlXA" showIcon="false">
           <customFeatures>labelSize</customFeatures>
+          <labelFormat>bold</labelFormat>
         </centerLabelStyle>
         <endLabelStyle xmi:type="diagram:EndLabelStyle" uid="_rIZFoeYTEeuwtOMQBOmlXA" showIcon="false" labelColor="39,76,114">
           <customFeatures>labelSize</customFeatures>

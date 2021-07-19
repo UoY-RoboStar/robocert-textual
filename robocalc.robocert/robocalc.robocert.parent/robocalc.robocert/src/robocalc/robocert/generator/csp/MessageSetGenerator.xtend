@@ -4,101 +4,99 @@ import robocalc.robocert.model.robocert.ExtensionalMessageSet
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.UniverseMessageSet
 import robocalc.robocert.model.robocert.MessageSet
-import com.google.common.collect.Iterables
 import robocalc.robocert.model.robocert.RefMessageSet
-import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.NamedMessageSet
-import java.util.Collections
+import robocalc.robocert.model.robocert.BinaryMessageSet
+import robocalc.robocert.model.robocert.BinarySetOperator
+import robocalc.robocert.generator.utils.MessageSetOptimiser
 
 /**
  * CSP generator for message sets.
+ * 
+ * This generator doesn't optimise, because optimisation throws away
+ * containment information.  Optimise the sets in-place before
+ * generation.
  */
 class MessageSetGenerator {
+	@Inject extension MessageSetOptimiser
 	@Inject extension MessageSpecGenerator
-	
+
 	/**
 	 * Generates a CSP event set for an extensional gap message set.
 	 * 
-	 * @param it     the sequence gap in question.
-	 * @param extra  any additional messages to add into the set.
+	 * @param it  the sequence gap in question.
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(ExtensionalMessageSet it, Iterable<MessageSpec> extra) {
-		constructSet(Iterables.concat(messages, extra))
-	}
+	def dispatch generate(
+		ExtensionalMessageSet it) '''{|«FOR g : messages SEPARATOR ', '»«g.generateCSPEventSet»«ENDFOR»|}'''
 
 	/**
 	 * Generates a CSP event set for a universe gap message set.
 	 * 
-	 * @param it     the message set for which we are generating CSP.
-	 * @param extra  any extra events to add to the set (ignored here).
+	 * @param it  the message set for which we are generating CSP.
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(UniverseMessageSet it, Iterable<MessageSpec> extra) '''Events'''
+	def dispatch generate(UniverseMessageSet it) '''Events'''
 
 	/**
 	 * Generates a CSP event set for a reference gap message set.
 	 * 
-	 * @param it     the message set for which we are generating CSP.
-	 * @param extra  any extra events to add to the set.
+	 * @param it  the message set for which we are generating CSP.
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(RefMessageSet it, Iterable<MessageSpec> extra)
-	'''«IF extra.empty»
-		«set.generateName»
-	«ELSE»
-		union(«set.generateName», «constructSet(extra)»)
-	«ENDIF»'''
+	def dispatch generate(RefMessageSet it) '''MsgSets::«set.name»'''
+
+	/**
+	 * Generates a CSP event set for a binary gap message set.
+	 * 
+	 * @param it  the message set.
+	 * 
+	 * @return generated CSP for the gap message set.
+	 */
+	def dispatch CharSequence generate(
+		BinaryMessageSet it) '''«operator.generateOp»(«lhs.generate», «rhs.generate»)'''
 
 	/**
 	 * Fallback for generating an event set for an unknown gap message set.
 	 * 
 	 * @param it  the message set.
 	 * 
-	 * @return generated CSP for the gap message set (less the set delimiters).
+	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(MessageSet it, Iterable<MessageSpec> extra) '''{- UNKNOWN MESSAGE SET: «it» -}'''
+	def dispatch generate(MessageSet it) '''{- UNKNOWN MESSAGE SET: «it» -} Events'''
 
-	/**
-	 * Generates a reference to a named message set.
-	 * 
-	 * We emit references rather than textual inclusion to make the
-	 * generated CSP cleaner and more debuggable.
-	 * 
-	 * This name will agree with that given in generateNamedSets.
-	 * 
-	 * @param it  the set to reference.
-	 * 
-	 */
-	def generateName(NamedMessageSet it) '''MsgSets::«name»'''
+	def private generateOp(BinarySetOperator it) {
+		switch it {
+			case UNION:
+				"union"
+			case INTERSECTION:
+				"inter"
+			case DIFFERENCE:
+				"diff"
+		}
+	}
 
-		
 	def generateNamedSets(Iterable<NamedMessageSet> sets) '''
-	«IF sets.isNullOrEmpty»
-		-- No named message sets
-	«ELSE»
-		-- Named message sets
-		module MsgSets
-		exports
-			«FOR set: sets»
-				«IF set.set !== null»
-					«set.name» = «set.set.generate(Collections.emptyList)»
-				«ENDIF»
-			«ENDFOR»
-		endmodule
-	«ENDIF»
+		«IF sets.isNullOrEmpty»
+			-- No named message sets
+		«ELSE»
+			-- Named message sets
+			module MsgSets
+			exports
+				«FOR set: sets»
+					«IF set.set !== null»
+						«set.name» = «set.generateNamedSet»
+					«ENDIF»
+				«ENDFOR»
+			endmodule
+		«ENDIF»
 	'''
-
-	/**
-	 * Constructs a CSP enumerated set from an iterable of message specs.
-	 * 
-	 * @param it  the iterable yielding the set for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the set.
-	 */
-	private def constructSet(
-		Iterable<MessageSpec> it) '''{|«FOR g : it SEPARATOR ', '»«g.generateCSPEventSet»«ENDFOR»|}'''
+	
+	def generateNamedSet(NamedMessageSet it) {
+		set = set.optimise
+		set.generate
+	}
 }

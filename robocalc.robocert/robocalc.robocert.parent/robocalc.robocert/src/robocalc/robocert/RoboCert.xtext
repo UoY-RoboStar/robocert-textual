@@ -187,25 +187,54 @@ SilentInfiniteLoopBound returns LoopBound:
  * A gap specification.
  */
 SequenceGap:
-	{SequenceGap} ('anything' allowed=AllowSet forbidden=ForbidSet 'until' | allowed=EmptySet forbidden=EmptySet)
+	{SequenceGap} ('anything' allowed=AllowSet 'until' | allowed=EmptySet)
 ;
 
 /**
- * A gap message set that defaults to being universal, but may be filtered with 'in {...}'.
+ * The topmost level of a gap set specification, one of:
+ * 
+ * - 'in X';
+ * - 'in X except Y';
+ * - 'except Y';
+ * - '' (universe implied).
  */
 AllowSet returns MessageSet:
-	'in' MessageSet | {UniverseMessageSet}
+	'in' MessageSet |
+	{UniverseMessageSet} ({BinaryMessageSet.lhs=current} operator=DiffOperator rhs=UnionOrInterSet)?
 ;
 
 /**
- * A gap message set that defaults to being empty, but may be extended with 'except {...}'.
+ * The main top-level rule for message sets, after accounting for the
+ * possible omission of 'in X' in an 'anything except Y' stanza.
  */
-ForbidSet returns MessageSet:
-	'except' MessageSet | EmptySet
+MessageSet:
+	UnionOrInterSet ({BinaryMessageSet.lhs = current} (operator=DiffOperator) rhs=UnionOrInterSet)*
 ;
 
 /**
- * Pseudo-rule that pulls both gap message sets to empty if we don't see an
+ * Factored-out level for union or intersection sets.
+ */
+UnionOrInterSet returns MessageSet:
+	PrimitiveSet ({BinaryMessageSet.lhs = current} (operator=UnionOrInterOperator) rhs=PrimitiveSet)*
+;
+
+/**
+ * Union or intersection operator literals.
+ */
+enum UnionOrInterOperator returns BinarySetOperator:
+	UNION='or' |
+	INTERSECTION='and'
+;
+
+/**
+ * Difference operator literal.
+ */
+enum DiffOperator returns BinarySetOperator:
+	DIFFERENCE='except'
+;
+
+/**
+ * Pseudo-rule that pulls a gap message set to empty if we don't see an
  * explicit rule.
  */
 EmptySet returns ExtensionalMessageSet:
@@ -213,9 +242,10 @@ EmptySet returns ExtensionalMessageSet:
 ;
 
 /**
- * The common part of a gap message set.
+ * A primitive message set.
  */
-MessageSet:
+PrimitiveSet returns MessageSet:
+	'(' MessageSet ')' |
 	'universe' {UniverseMessageSet} |
 	ExtensionalMessageSet |
 	'message'? 'set' {RefMessageSet} set=[NamedMessageSet]

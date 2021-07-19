@@ -154,8 +154,7 @@ class ActionStep extends SequenceStep {
  * sequence action.
  *
  * Gaps may permit implicit communications between actions, according to the
- * allowed and forbidden message sets.  An empty allow set, for instance,
- * permits no communications. 
+ * message set.  An empty set, for instance, permits no communications. 
  */
 class SequenceGap {
 	/**
@@ -167,11 +166,6 @@ class SequenceGap {
 	 * The messages allowed by this gap.
 	 */
 	val MessageSet[1] allowed;
-
-	/**
-	 * The messages forbidden by this gap.
-	 */
-	val MessageSet[1] forbidden;
 
 	/**
 	 * Does this sequence gap allow messages to occur?

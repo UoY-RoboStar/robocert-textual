@@ -68,8 +68,6 @@
         eOpposite="#//ActionStep/gap"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="allowed" lowerBound="1"
         eType="#//MessageSet" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="forbidden" lowerBound="1"
-        eType="#//MessageSet" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
