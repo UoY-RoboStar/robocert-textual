@@ -60,6 +60,17 @@
     \\
     \(\anexpr\) & \mexpression
     \\
+    \midrule
+    \multicolumn{2}{l}{\tsubhead{Loop bounds}}
+    \\
+    \((\infty\) & \minfiniteloopbound
+    \\
+    \(n\) & \mdefiniteloopbound{} (\(n\) units)
+    \\
+    \((n, \ast)\) & \mlowerloopbound{} (\(n\)+ units)
+    \\
+    \((n, k)\) & \mrangeloopbound{} (\(n\)--\(k\) units)
+    \\
     \bottomrule
   \end{tabular}
   \begin{tabular}{p{1.3em}p{9em}}
@@ -124,7 +135,7 @@
     \\
     \(\armsgset\) & \mrefmessageset
     \\
-    \(-\abop-\) & \mbinarymessageset
+    \(\abop\) & \mbinarysetoperator
     \\
     \midrule
     \multicolumn{2}{l}{\tsubhead{Arguments}}

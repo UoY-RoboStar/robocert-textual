@@ -1,9 +1,8 @@
 %!TEX root=../robocert.tex
 
 This section introduces a \tockcsp{} semantics for \langname.
-\todo{Need to make sure it's actually \tockcsp, not CSP.}
 This semantics is inspired by that of Lima et al. on the CML semantics of
-UML sequence diagrams.
+UML sequence diagrams~\cite{lima-semantics}.
 
 The behaviour of the \langname{} generator is expected to conform to
 this semantics, except that:
@@ -14,7 +13,7 @@ this semantics, except that:
   use semantically equivalent \cspm{} constructs where the CSP equivalents
   are missing or not idiomatic;
 \item
-  The generator \emph{must} \todo{not yet but eventually} wrap processes in
+  The generator \emph{must} wrap processes in
   timed sections and prioritisations to achieve the appropriate \tockcsp{} behaviours of
   CSP operators;
 \item
@@ -34,7 +33,7 @@ The definitions here correspond to \cref{sec:metamodel-assertions}.
 
 \newcommand{\refop}[3]{\arefop_{#1}^{(#2, #3)}}
 
-The only type of assertion so far is \msequenceassertion.  The semantics of a
+The semantics of a
 \msequenceassertion{} relates the \msequence{} of the assertion to the
 \mtarget{} of the assertion.
 %
@@ -117,6 +116,7 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
 \newcommand{\deadline}{\mathbin{\scriptstyle\blacktriangleright}}
 
 \begin{definition}[\msequencestep]
+  Case analysis.
   The semantics of a \mactionstep{} consists of an unbounded
   loop over any events allowed by its gap but not by its \msequenceaction,
   interrupted by the action itself.  The exclusion of the events
@@ -131,7 +131,7 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
     \runproc{
     \olang{\msgsetsema{\field{\anastep}{gap}}}
     \setminus
-    \olang{\eventsOf{\anaction}}
+    \olang{\eventsOf{\field{\anastep}{action}}}
     }
     \interrupt
     \olang{\actsema{\field{\anastep}{action}}}
@@ -159,9 +159,9 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
     x \interrupt \funcname{Wait}(d) \circseq \Stop_u
   \\
   \intertext{
-  For now, the semantics of a loop is that of the loop
+  The semantics of a loop is that of the loop
   subsequence hoisted into an auxiliary loop-running process (defined
-  below).
+  below).  \todo{need to add breaking}
   }
   \stepsema{\aloop}
   \quad\defeq\quad
@@ -205,12 +205,8 @@ We define the loop-running process as follows:
     \tag{range-bound loops}
   \\  
 \end{align*}
-
-\end{definition}
-
-\begin{definition}[Auxiliary loop processes]
-
-We can define the loop processes used above in CSP as follows:
+%
+We can define the processes referenced above directly in CSP, as follows:
 %
 \begin{align*}
   \iloop{P}
@@ -246,22 +242,21 @@ We can define the loop processes used above in CSP as follows:
 \end{align*}
 \end{definition}
 
-\begin{definition}[CSP event sets]
-For now, the event set of an action is the prefix of an arrow action, or
-the empty set for any other actions.  This will change when the prefix becomes
-inexpressible as an event set.
+\begin{definition}[Action event sets]
+  The event set of an arrow action is the event set of its message spec; for
+  other actions, the event set is empty.
 %
-\begin{align*}
-  \eventsOf{\anarrow}
-  \quad\defeq\quad
-  &
-  \emspecsema{\field{\anarrow}{body}}
-\\
-	\eventsOf{\anaction}
-\quad\defeq\quad&
-	\tlang{\emptyset}
-	\tag{anything else}
-\end{align*}
+  \begin{align*}
+    \eventsOf{\anarrow}
+    \quad\defeq\quad
+    &
+      \emspecsema{\field{\anarrow}{body}}
+    &
+      \eventsOf{\anaction}
+      \quad\defeq\quad
+    &
+      \tlang{\emptyset}
+  \end{align*}
 \end{definition}
 
 \subsection{Actions}\label{ssec:semantics-tockcsp-actions}
@@ -365,7 +360,7 @@ The definitions here correspond to \cref{sec:metamodel-messages}.
 \end{align*}
 \end{definition}
 
-There are two distinct semantic rules for \mmessagespec s.  One is used whenever
+There are two semantic rules for \mmessagespec s.  One is used whenever
 we expand the \mmessagespec{} into an event set, and handles `rest' arguments
 by implicitly quantifying over the missing parameters.  The other is used when
 expanding to a prefix, and introduces explicit discards for the missing
