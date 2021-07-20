@@ -199,17 +199,16 @@ anything until ->op O()
 A \msequencegap{} represents a condition on any
 communication\footnote{In PSCs, this would correspond to
   \emph{intraMSG}s.} that can happen \emph{before} a \msequenceaction.
-It contains two \mmessageset s (\cref{ssec:metamodel-messages-sets}):
-one specifying the messages \emph{allowed} to pass inside the gap, and
-another specifying the messages \emph{forbidden} to pass.
+It contains a \mmessageset (\cref{ssec:metamodel-messages-sets}):
+specifying the messages \emph{allowed} to pass inside the gap.
 
 \begin{figure}[H]
   \begin{subfigure}[c]{\egtextwidth}
     \begin{lstlisting}[style=Example]
 anything in set MS except ->op O2() until
 
-anything in set MS until
-// implicit 'except {||}'
+anything except -> op O2() until
+// implicit 'in universe'
 
 anything until
 // implicit 'in universe'

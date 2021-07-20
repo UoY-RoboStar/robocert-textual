@@ -133,8 +133,7 @@ expected semantics.}
 
 \begin{definition}[\msequencegap]
 	The semantics of a \msequencegap{} is the CSP event set corresponding to
-	the difference between the \emph{allowed} set,
-	and the result of extending the \emph{forbidden} set with any events
+	the difference between the \emph{allowed} set and any events
 	the action following the gap can initially communicate.
 %
 \begin{align*}
@@ -145,11 +144,7 @@ expected semantics.}
 \tlang{
 	\olang{\msgsetsema{\field{\agap}{allowed}}}
 	\setminus
-	\left(
-		\olang{\msgsetsema{\field{\agap}{forbidden}}}
-		\cup
-		\olang{\eventsOf{\anaction}}
-	\right)
+	\olang{\eventsOf{\anaction}}
 }
 \end{align*}
 \end{definition}
@@ -296,7 +291,8 @@ The definitions here correspond to \cref{sec:metamodel-messages}.
 
   The semantics of a message set is the universal event set for \muniversemessageset s;
   the expansion of the given \mgapmessagespec s for \mextensionalmessageset s;
-  and the semantics of the referred-to set for \mrefmessageset s.
+  the semantics of the referred-to set for \mrefmessageset s;
+  and the semantics of the referred-to set operator for \mbinarymessageset s.
 %
 \begin{align*}
   \msgsetsema{\aumsgset}
@@ -325,6 +321,16 @@ The definitions here correspond to \cref{sec:metamodel-messages}.
   &
     \msgsetsema{\field{\field{\armsgset}{set}}{set}}
     \tag{reference}
+  \\
+  \msgsetsema{\amsgset_l \odot \amsgset_r}
+  \quad\defeq\quad
+  &
+  \tlang{
+    \olang{\msgsetsema{\amsgset_l}}
+    \odot
+    \olang{\msgsetsema{\amsgset_r}}
+    \tag{binary-operator}
+  }
 \end{align*}
 \end{definition}
 
