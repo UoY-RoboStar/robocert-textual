@@ -18,7 +18,7 @@ messages between actors.
 \subsection{\mmessageset}\label{ssec:metamodel-messages-sets}
 
 A \mmessageset{} expresses a set of messages allowed 
-inside a \msequencegap.  There are four types of \mmessageset:
+before a \msequenceaction.  There are four types of \mmessageset:
 
 \begin{itemize}
 \item
@@ -26,8 +26,7 @@ inside a \msequencegap.  There are four types of \mmessageset:
   all possible messages;
 \item	
   an \mextensionalmessageset{} is a set (expressed as an unordered list) of
-  zero or more \mgapmessagespec s, themselves
-  a type of \mmessagespec{} (\cref{sec:metamodel-messages});
+  zero or more \mmessagespec s (\cref{sec:metamodel-messages});
 \item
   a \mrefmessageset{} refers to a \mnamedmessageset{} attached to the
   sequence group;
@@ -35,10 +34,6 @@ inside a \msequencegap.  There are four types of \mmessageset:
   a \mbinarymessageset{} is a binary operator over two other \mmessageset s
   (operators are union, intersection, and difference).
 \end{itemize}
-
-There is not yet any meaningful extra data stored in
-\mgapmessagespec s that is not present in \mmessagespec s, but this is subject
-to change.
 
 \begin{lstlisting}[style=Example]
 universe                  // UniverseMessageSet
