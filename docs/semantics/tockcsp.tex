@@ -110,97 +110,65 @@ The semantics of a \msubsequence{} is a sequential composition of that of its st
 
 \end{definition}
 
-\todo{\msequencestep}
+\subsection{Steps}\label{ssec:semantics-tockcsp-steps}
 
-\begin{definition}[\mactionstep]
+The definitions here correspond to \cref{sec:metamodel-steps}.
 
-The semantics of a \mactionstep{} is an unbounded loop over the events of its
-\msequencegap, interrupted by the \msequenceaction.\footnote{Note that the semantics of the gap depends
-on the action.  This is because, as seen in \(\gapsema{\agap}{\anaction}\),
-the events on which the action can interrupt the
-gap must be removed from the events of the gap to ensure the interrupt has the
-expected semantics.}
+\newcommand{\deadline}{\mathbin{\scriptstyle\blacktriangleright}}
+
+\begin{definition}[\msequencestep]
+  The semantics of a \mactionstep{} consists of an unbounded
+  loop over any events allowed by its gap but not by its \msequenceaction,
+  interrupted by the action itself.  The exclusion of the events
+  offered by the action ensures that the gap cannot nondeterministically
+  choose to ignore the action and keep running.
+
 %
 \begin{align*}
-	\stepsema{\astep}
-\quad\defeq\quad&	
-	\tlang{
-		\runproc{\olang{\gapsema{\field{\astep}{gap}}{\field{\astep}{action}}}}
-		\interrupt \olang{\actsema{\field{\astep}{action}}}
-	}
+  \stepsema{\anastep}
+  \quad\defeq\quad
+  &
+    \tlang{
+    \runproc{
+    \olang{\msgsetsema{\field{\agap}{allowed}}}
+    \setminus
+    \olang{\eventsOf{\anaction}}
+    }
+    \interrupt
+    \olang{\actsema{\field{\astep}{action}}}
+    }
+    \tag{action step}
+  \\
+  \intertext{The semantics of a \mdeadlinestep{} is the \emph{deadline} operator
+  \(\deadline\) sometimes found in \tockcsp{} literature: the action is
+  interrupted after its deadline has expired by a process that prevents any
+  further time from passing.
+  }
+  \stepsema{\adeadline}
+  \quad\defeq\quad
+  &
+    \tlang{
+    \sseqsema{\field{\adeadline}{body}}
+    \deadline
+    \olang{\exprsema{\field{\adeadline}{units}}{\adeadline}}
+    }
+    \tag{deadline step}
+  \\
+  x \deadline d
+  \quad\defeq\quad
+  &
+    x \interrupt \funcname{Wait}(d) \circseq \Stop_u
+  \\
+  \intertext{We give the semantics of \mloopstep s separately.}
+  \stepsema{\aloop}
+  \quad\defeq\quad
+  &
+    \loopsema{\aloop}
+    \tag{loop step}
+  \\
 \end{align*}
 \end{definition}
 
-\begin{definition}[\msequencegap]
-	The semantics of a \msequencegap{} is the CSP event set corresponding to
-	the difference between the \emph{allowed} set and any events
-	the action following the gap can initially communicate.
-%
-\begin{align*}
-	\gapsema{
-		\agap
-	}{\anaction}
-\quad\defeq\quad&
-\tlang{
-	\olang{\msgsetsema{\field{\agap}{allowed}}}
-	\setminus
-	\olang{\eventsOf{\anaction}}
-}
-\end{align*}
-\end{definition}
-
-\begin{definition}[CSP event sets]
-For now, the event set of an action is the prefix of an arrow action, or
-the empty set for any other actions.  This will change when the prefix becomes
-inexpressible as an event set.
-%
-\begin{align*}
-	\eventsOf{\anarrow}
-\quad\defeq\quad&
-	\tlang{\Set{\olang{\emspecsema{\anarrow}}}}
-	\tag{arrow}
-\\
-	\eventsOf{\anaction}
-\quad\defeq\quad&
-	\tlang{\emptyset}
-	\tag{anything else}
-\end{align*}
-\end{definition}
-
-\subsection{Actions}\label{ssec:semantics-tockcsp-actions}
-
-The definitions here correspond to \cref{sec:metamodel-actions}.
-
-\begin{definition}[\msequenceaction]
-
-The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
-prefixing termination.  The semantics of a loop delegates to a separate rule
-over its label and subsequence.
-%
-\begin{align*}
-	\actsema{\anarrow}
-\quad\defeq\quad&
-	\tlang{
-	\left(
-	\olang{\pmspecsema{\anarrow}}
-	\then
-	\Skip
-	\right)
-	}
-	\tag{arrow action}
-\\
-	\actsema{\aloop}
-\quad\defeq\quad&
-	\loopsema{\aloop}
-\tag{loop action}
-\\
-	\actsema{\bot}
-\quad\defeq\quad&
-	\tlang{\Skip}
-\tag{final action}
-\end{align*}
-
-\end{definition}
 
 \newcommand{\iloop}[1]{\text{Loop}(#1)}
 \newcommand{\nloop}[1]{\text{Loop}_\sqcap(#1)}
@@ -282,6 +250,56 @@ We can define the loop processes used above in CSP as follows:
   \\
 \end{align*}
 \end{definition}
+
+\begin{definition}[CSP event sets]
+For now, the event set of an action is the prefix of an arrow action, or
+the empty set for any other actions.  This will change when the prefix becomes
+inexpressible as an event set.
+%
+\begin{align*}
+	\eventsOf{\anarrow}
+\quad\defeq\quad&
+	\tlang{\Set{\olang{\emspecsema{\anarrow}}}}
+	\tag{arrow}
+\\
+	\eventsOf{\anaction}
+\quad\defeq\quad&
+	\tlang{\emptyset}
+	\tag{anything else}
+\end{align*}
+\end{definition}
+
+\subsection{Actions}\label{ssec:semantics-tockcsp-actions}
+
+The definitions here correspond to \cref{sec:metamodel-actions}.
+
+\begin{definition}[\msequenceaction]
+
+The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
+prefixing termination.  The semantics of a loop delegates to a separate rule
+over its label and subsequence.
+%
+\begin{align*}
+	\actsema{\anarrow}
+\quad\defeq\quad&
+	\tlang{
+	\left(
+	\olang{\pmspecsema{\anarrow}}
+	\then
+	\Skip
+	\right)
+	}
+	\tag{arrow action}
+\\
+	\actsema{\bot}
+\quad\defeq\quad&
+	\tlang{\Skip}
+\tag{final action}
+\end{align*}
+
+\end{definition}
+
+\todo{wait action}
 
 \subsection{Messages}\label{ssec:semantics-tockcsp-messages}
 

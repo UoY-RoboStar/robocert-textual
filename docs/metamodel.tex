@@ -1,7 +1,7 @@
 %!TEX root=./robocert.tex
 \input{metamodel/defs}
 
-We define \langname{} in the form of a formal abstract syntax (or
+We define \langname{} as a formal abstract syntax (or
 metamodel) which is representable in multiple concrete notations ---
 the \emph{textual} (\cref{cha:textual}) and \emph{graphical}
 syntax (\cref{cha:graphical}) --- and which has a semantics in terms
@@ -11,25 +11,29 @@ of \langname.
 
 \section{Introduction}\label{sec:metamodel-intro}
 
-\subsection{A note on ordering and timing}\label{sec:metamodel-intro-ordering}
+\subsection{A note on ordering and timing}\label{ssec:metamodel-intro-ordering}
 
-Actions on \langname{} sequence diagrams are, by default, strictly
-ordered with respect to each other and permit no intervening
-communications.  This reflects the view of sequence diagrams as
-representations of traces of the system under test, and appears
-consistent with some semantic treatments of UML~\cite{lima-semantics}.
-\todo{needs more justification?  is the point about Lima's semantics
-  correct?}
+By default, \langname{} sequences are \emph{explicit}
+as to \emph{which} actions occur, but \emph{implicit} as to
+\emph{when}.
 
-\langname{} has native support for the \robochart{} timing model.
-This model assumes a discrete notion of time measured in \emph{time
-  units} such that, while actions such as events and operations are
-instantaneous, time is allowed to pass in between them.  Many
-\robochart{} timing primitives have counterparts in \langname.
+Unless modified by gaps (\cref{ssec:metamodel-steps-gaps}),
+communications on \langname{} sequences are strictly ordered with
+respect to each other and permit no intervening communications.  This
+reflects the view of sequence diagrams as representations of traces of
+the system under test, and appears consistent with some semantic
+treatments of UML~\cite{lima-semantics}.  \todo{needs more
+  justification?  is the point about Lima's semantics correct?}
 
-To summarise, \langname{} sequences default to being \emph{explicit}
-as to \emph{which} communications occur, but \emph{implicit} as to
-\emph{when} they occur.
+\langname{} uses the \robochart{} timing model, and some \robochart{}
+timing primitives have direct counterparts in \langname.  This model
+assumes a discrete notion of time measured in \emph{time units} such
+that, while actions such as events and operations are instantaneous,
+time is allowed to pass in between them.  We take the approach of
+assuming that where time can pass in the \robochart{} model,
+\emph{any} amount of time may pass in the sequence, unless
+constrained by deadlines (\cref{ssec:metamodel-steps-deadlines}).
+
 
 \subsection{How to read the rest of this chapter}\label{ssec:metamodel-intro-readme}
 
@@ -69,7 +73,7 @@ functionality in a top-down manner.  These sections contain:
 \section{Assertions}\label{sec:metamodel-assertions}
 \input{metamodel/assertions}
 
-\section{Feature comparison}\label{ssec:metamodel-features}
+\section{Feature comparison}\label{sec:metamodel-features}
 \input{metamodel/features}
 
 %%% Local Variables:

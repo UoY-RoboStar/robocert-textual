@@ -1,13 +1,18 @@
 %!TEX root=../robocert.tex
-\begin{figure}
+\begin{figure}[htb]
 	\centering
 	\includegraphics[width=\textwidth]{diagrams/Sequences}
 	\caption{Class diagram for the part of the \langname{} metamodel dealing with sequences.}
 	\label{fig:metamodel-sequences}
 \end{figure}
 
+The main tool for specifying properties of \robochart{} models in
+\langname{} is \emph{sequences}.  These are diagrams, similar to UML2
+sequence diagrams~\cite{lima-semantics} and Property Sequence Charts~\cite{psc},
+that capture one or more valid traces of a robotic system.
+
 \Cref{fig:metamodel-sequences} depicts the part of the metamodel concerning
-the top-level structure of sequence diagrams.
+sequence groups and sequences.
 
 \subsection{\msequencegroup}
 

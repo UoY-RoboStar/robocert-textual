@@ -23,9 +23,7 @@ inside a \msequencegap.  There are four types of \mmessageset:
 \begin{itemize}
 \item
   a \muniversemessageset{} represents the universal set containing 
-  all possible messages, and
-  captures a lack of specific restriction on
-  the \emph{allowed} set of a \msequencegap;
+  all possible messages;
 \item	
   an \mextensionalmessageset{} is a set (expressed as an unordered list) of
   zero or more \mgapmessagespec s, themselves
@@ -64,9 +62,7 @@ message set S: {| ->op O1(), ->op O2 |}
 \subsection{\mmessagespec}
 
 A \mmessagespec{} is a specification on the types of communication that can
-happen during a gap (a \mgapmessagespec) or arrow (an \marrowmessagespec).\footnote{
-This class distinction resembles that in PSCs betweeen intraMSGs and arrowMSGs,
-respectively.}  Each \mmessagespec{} contains:
+happen before or during an action.  Each \mmessagespec{} contains:
 
 \begin{itemize}
 \item
@@ -146,18 +142,6 @@ a message.  There are two types of argument:
     we'll have something that allows wildcards on arbitrary parameters, in
     which case this might be confusing to have also.}
 \end{itemize}
-
-\margument s that introduce bindings \todo{which do not exist
-  yet \todo{\ghissue{12}}} may only appear in \marrowmessagespec s.
-This is because bindings are only visible during the main body of a
-sequence.
-Consequently, any arguments that appear in
-\mgapmessagespec s must be subclasses of \mnonbindingargument.
-
-All \margument s, at time of writing, are forms of \mnonbindingargument{} and
-can therefore appear in \mgapmessagespec s.  This will change when binding
-arguments are introduced
-\todo{\ghissue{12}}.
 
 \begin{lstlisting}[style=Example]
 42  // ExpressionArgument containing integer literal

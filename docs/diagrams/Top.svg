@@ -228,7 +228,7 @@
                 <path d="M241 125 L250 125 L250 135 L241 135 L241 125 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath53">
-                <path d="M324 92 L408 92 L408 109 L324 109 L324 92 Z"/>
+                <path d="M324 57 L408 57 L408 74 L324 74 L324 57 Z"/>
             </clipPath>
             <clipPath clipPathUnits="userSpaceOnUse" id="clipPath54">
                 <path d="M268 47 L283 47 L283 56 L268 56 L268 47 Z"/>
@@ -542,7 +542,7 @@ dBuRDUBmIwMmSr0w8AZQDABsuTzq1jWRSAAAAABJRU5ErkJggg==" xlink:type="simple"
                   y1="51" y2="51"/>
             <line clip-path="url(#clipPath49)" fill="none" x1="320" x2="320"
                   y1="51" y2="133"/>
-            <text x="325" y="104" clip-path="url(#clipPath53)" stroke="none"
+            <text x="325" y="69" clip-path="url(#clipPath53)" stroke="none"
                   font-weight="normal" xml:space="preserve">[0..*] assertions</text>
             <polygon clip-path="url(#clipPath54)"
                      points=" 269 51 275 48 281 51 275 54" stroke="none"/>

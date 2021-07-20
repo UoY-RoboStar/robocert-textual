@@ -1,34 +1,37 @@
 %!TEX root=../robocert.tex
-\begin{figure}
+\begin{figure}[htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{diagrams/Actions}
 	\caption{Class diagram for the part of the \langname{} metamodel dealing with actions.}
 	\label{fig:metamodel-actions}
 \end{figure}
 
+An action (\msequenceaction{}) represents a point in time on a
+sequence when something is expected to occur.  Unless constrained by
+\mdeadlinestep s, any amount of time (including no time at all) may
+pass between two \msequenceaction s, or between the start of the
+sequence and the first \msequenceaction.  There are three types of
+action:
+\begin{itemize}
+\item \marrowaction{} (\cref{ssec:metamodel-actions-arrows}):
+  a communication is expected to occur;
+\item \mwaitaction{} (\cref{ssec:metamodel-actions-waits}):
+  a delay is expected to occur;
+\item \mfinalaction{} (\cref{ssec:metamodel-actions-final}):
+  termination is expected to occur.
+\end{itemize}
+
 \Cref{fig:metamodel-actions} depicts the part of the metamodel concerning
 sequence actions.
-
-A \msequenceaction{} is a construct in a \msubsequence{} that, informally,
-represents an activity on the sequence diagram that takes time to perform.
-(Formally speaking, most \msequenceaction s are instantaneous but
-allow time to pass immediately beforehand.)
-There are three types of action:
-\begin{itemize}
-\item \marrowaction{} (\cref{ssec:metamodel-actions-arrows});
-\item \mwaitaction{} (\cref{ssec:metamodel-actions-waits});
-\item \mfinalaction{} (\cref{ssec:metamodel-actions-final});
-\end{itemize}
 
 \subsection{\marrowaction}\label{ssec:metamodel-actions-arrows}
 
 An \marrowaction\footnote{The name signifies both that the actions resemble
 PSC \emph{arrowMSG} specifications, and also that they correspond to arrows in
-the graphical syntax.} explicitly specifies a communication between \mactor s.
+the graphical syntax.} specifies an expected communication between \mactor s.
 Each \marrowaction{} wraps one
-\marrowmessagespec{} (\cref{sec:metamodel-messages})
+\mmessagespec{} (\cref{sec:metamodel-messages})
 containing the specification proper.
-\todo{Eventually these will bind arguments.}
 
 \begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
@@ -61,10 +64,10 @@ units.
 \todo{nondeterministic wait}
 
 \begin{remark}
-The effect of a \msequencegap{} on a \mwaitaction{} is perhaps subtle:
-the gap remains active until the wait has concluded.  For instance,
-a wait for \(3\) time units allows any communication on the gap to
-occur for \(3\) time units.
+  The effect of a gap specification on a \mwaitaction{} is perhaps
+  subtle: the gap remains active until the wait has concluded.  For
+  instance, a wait for \(3\) time units allows any communication
+  allowed by the gap to occur for \(3\) time units.
 \end{remark} 
 
 \begin{figure}[H]
@@ -101,7 +104,7 @@ complete sequence of behaviour from the \mtarget{} initialising to the
 behaviour of \mtarget s that do not terminate.
 
 \begin{remark}
-The final \msequencegap{} before a \mfinalaction{} captures
+The gap of a \mfinalaction-carrying \mactionstep{} captures
 any permitted communications after the behaviour explicitly specified by the
 diagram has occurred.
 \end{remark}
