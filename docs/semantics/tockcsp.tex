@@ -270,31 +270,49 @@ The definitions here correspond to \cref{sec:metamodel-actions}.
 
 \begin{definition}[\msequenceaction]
 
+\newcommand{\wait}[1]{\text{Wait}(#1)}
+  
 The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
-prefixing termination.  The semantics of a loop delegates to a separate rule
-over its label and subsequence.
+prefixing termination.
 %
 \begin{align*}
-	\actsema{\anarrow}
-\quad\defeq\quad&
-	\tlang{
-	\left(
-	\olang{\pmspecsema{\anarrow}}
-	\then
-	\Skip
-	\right)
-	}
-	\tag{arrow action}
-\\
-	\actsema{\bot}
-\quad\defeq\quad&
-	\tlang{\Skip}
-\tag{final action}
+  \actsema{\anarrow}
+  \quad\defeq\quad
+  &
+    \tlang{
+    \left(
+    \olang{\pmspecsema{\anarrow}}
+    \then
+    \Skip
+    \right)
+    }
+    \tag{arrow action}
+  \\
+  \intertext{
+  The semantics of a wait action is to wait for the amount of time specified by the expression.}
+  \actsema{\await}
+  \quad\defeq\quad
+  &
+    \tlang{
+    \wait{\olang{\exprsema{\field{\await}{units}}{\await}}}
+    }
+    \tag{wait action}
+  \\
+  \intertext{
+  The semantics of a final action is to terminate, potentially after an arbitrary amount of time.}
+  \actsema{\bot}
+  \quad\defeq\quad
+  &
+    \tlang{
+    \mu x \ldotp
+    \Skip
+    \sqcap
+    \wait{1} \circseq \Skip
+    }
+    \tag{final action}
 \end{align*}
 
 \end{definition}
-
-\todo{wait action}
 
 \subsection{Messages}\label{ssec:semantics-tockcsp-messages}
 
