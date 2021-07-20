@@ -212,7 +212,7 @@ class ExtensionalMessageSet extends MessageSet {
 	/**
 	 * The message specifications held by this message set.
 	 */
-	!ordered val GapMessageSpec[*]#parent messages;
+	!ordered val MessageSpec[*]#parent messages;
 }
 
 /**
@@ -466,7 +466,7 @@ class ArrowAction extends SequenceAction {
 	/**
 	 * The body of the arrow.
 	 */
-	val ArrowMessageSpec[1]#parent body;
+	val MessageSpec[1] body;
 }
 
 /**
@@ -496,7 +496,7 @@ class WaitAction extends SequenceAction {
 /**
  * A specification of a message.
  */
-abstract class MessageSpec {
+class MessageSpec {
 	/**
 	 * The topic of the message.
 	 */
@@ -507,9 +507,17 @@ abstract class MessageSpec {
 	 */
 	attr MessageDirection[1] direction = "OUTBOUND";
 	
+	/**
+	 * The argument list for the message.
+	 */
+	val Argument[*] arguments;
+	
 	//
 	// Derived references
 	//
+	// Most of these come from walking backwards up a MessageSpec to its
+	// enclosing SequenceGroup, and won't work if a MessageSpec isn't
+	// contained in one.
 	//
 	
 	/**
@@ -528,36 +536,6 @@ abstract class MessageSpec {
 	 * The destination of the message.
 	 */
 	derived transient readonly volatile ref Actor[1] to;
-}
-
-/**
- * A message specification corresponding to an arrow on a sequence diagram.
- */
-class ArrowMessageSpec extends MessageSpec {
-	/**
-	 * The parent of the arrow.
-	 */
-	ref ArrowAction[1]#body parent;
-	
-	/**
-	 * The argument list for the message.
-	 */
-	val Argument[*] arguments;
-}
-
-/**
- * A message specification corresponding to an entry in a gap list.
- */
-class GapMessageSpec extends MessageSpec {
-	/**
-	 * The parent message set.
-	 */
-	ref ExtensionalMessageSet[1]#messages parent;
-	
-	/**
-	 * The argument list for the message.  Cannot bind.
-	 */
-	val NonBindingArgument[*] arguments;
 }
 
 /**
@@ -613,17 +591,9 @@ abstract class Argument {
 }
 
 /**
- * An argument pattern that doesn't make any bindings.
- *
- * Only non-binding arguments can appear in gaps.
- */
-abstract class NonBindingArgument extends Argument {
-}
-
-/**
  * An argument pattern specifying an expression.
  */
-class ExpressionArgument extends NonBindingArgument {
+class ExpressionArgument extends Argument {
 	/**
 	 * The expression in question.
 	 */
@@ -633,7 +603,7 @@ class ExpressionArgument extends NonBindingArgument {
 /**
  * An argument pattern specifying that all following arguments are unbound.
  */ 
-class RestArgument extends NonBindingArgument {
+class RestArgument extends Argument {
 }
 
 //

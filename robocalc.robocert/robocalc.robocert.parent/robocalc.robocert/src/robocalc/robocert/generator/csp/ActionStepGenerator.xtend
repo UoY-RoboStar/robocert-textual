@@ -1,14 +1,15 @@
 package robocalc.robocert.generator.csp
 
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.SequenceAction
 import com.google.common.collect.Iterators
 import java.util.Iterator
 import java.util.Collections
-import robocalc.robocert.model.robocert.ArrowAction
-import robocalc.robocert.model.robocert.ArrowMessageSpec
-import robocalc.robocert.generator.utils.MessageSetOptimiser
 import robocalc.robocert.model.robocert.ActionStep
+import robocalc.robocert.model.robocert.ArrowAction
+import robocalc.robocert.model.robocert.MessageSpec
+import robocalc.robocert.model.robocert.SequenceAction
+import robocalc.robocert.generator.utils.MessageSetOptimiser
+
 
 /**
  * Generates CSP for action steps.
@@ -26,7 +27,7 @@ class ActionStepGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generateActionStep(ActionStep it) '''«IF gap.isActive»gap(«generateGap», «action.generateActionSet») /\ «ENDIF»«action.generate»'''
+	def generateActionStep(ActionStep it) '''(«IF gap.isActive»gap(«generateGap», «action.generateActionSet») /\ «ENDIF»«action.generate»)'''
 
 	/**
 	 * Optimises the action gap in place, then generates it.
@@ -61,11 +62,11 @@ class ActionStepGenerator {
 	'''{|«FOR i : action.messageSpecs.toIterable SEPARATOR ','»«i.generateCSPEventSet»«ENDFOR»|}'''
 
 	
-	private def dispatch Iterator<ArrowMessageSpec> messageSpecs(ArrowAction it) {
+	private def dispatch Iterator<MessageSpec> messageSpecs(ArrowAction it) {
 		Iterators.singletonIterator(body)
 	}
 
-	private def dispatch Iterator<ArrowMessageSpec> messageSpecs(SequenceAction it) {
+	private def dispatch Iterator<MessageSpec> messageSpecs(SequenceAction it) {
 		Collections.emptyIterator
 	}
 }

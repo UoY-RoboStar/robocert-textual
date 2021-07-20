@@ -80,7 +80,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExtensionalMessageSet" eSuperTypes="#//MessageSet">
     <eStructuralFeatures xsi:type="ecore:EReference" name="messages" ordered="false"
-        upperBound="-1" eType="#//GapMessageSpec" containment="true" eOpposite="#//GapMessageSpec/parent"/>
+        upperBound="-1" eType="#//MessageSpec" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UniverseMessageSet" eSuperTypes="#//MessageSet"/>
   <eClassifiers xsi:type="ecore:EClass" name="BinaryMessageSet" eSuperTypes="#//MessageSet">
@@ -159,37 +159,27 @@
         eOpposite="#//ActionStep/action"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArrowAction" eSuperTypes="#//SequenceAction">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//ArrowMessageSpec"
-        containment="true" eOpposite="#//ArrowMessageSpec/parent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//MessageSpec"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction"/>
   <eClassifiers xsi:type="ecore:EClass" name="WaitAction" eSuperTypes="#//SequenceAction">
     <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MessageSpec" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="MessageSpec">
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" lowerBound="1" eType="#//MessageTopic"
         containment="true" eOpposite="#//MessageTopic/spec"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="direction" lowerBound="1"
         eType="#//MessageDirection" defaultValueLiteral="OUTBOUND"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
+        eType="#//Argument" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target" changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" lowerBound="1" eType="#//Actor"
         changeable="false" volatile="true" transient="true" derived="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="to" lowerBound="1" eType="#//Actor"
         changeable="false" volatile="true" transient="true" derived="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ArrowMessageSpec" eSuperTypes="#//MessageSpec">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//ArrowAction" eOpposite="#//ArrowAction/body"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
-        eType="#//Argument" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GapMessageSpec" eSuperTypes="#//MessageSpec">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//ExtensionalMessageSet" eOpposite="#//ExtensionalMessageSet/messages"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
-        eType="#//NonBindingArgument" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageTopic" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="spec" lowerBound="1" eType="#//MessageSpec"
@@ -207,13 +197,11 @@
     <eLiterals name="OUTBOUND" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Argument" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NonBindingArgument" abstract="true"
-      eSuperTypes="#//Argument"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ExpressionArgument" eSuperTypes="#//NonBindingArgument">
+  <eClassifiers xsi:type="ecore:EClass" name="ExpressionArgument" eSuperTypes="#//Argument">
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RestArgument" eSuperTypes="#//NonBindingArgument"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RestArgument" eSuperTypes="#//Argument"/>
   <eClassifiers xsi:type="ecore:EClass" name="Assertion" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAssertion" eSuperTypes="#//Assertion">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"

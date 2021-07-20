@@ -84,11 +84,7 @@ class BinaryMessageSetImplCustomTest {
 	
 	def private single() {
 		rf.createExtensionalMessageSet=>[
-			messages.add(rf.createGapMessageSpec)
+			messages.add(rf.createMessageSpec)
 		]
 	}
-	
-	// TODO(@MattWindsor91): make these part of a factory somewhere
-	
-
 }

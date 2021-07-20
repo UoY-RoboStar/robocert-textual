@@ -1,18 +1,14 @@
 package robocalc.robocert.generator.csp
 
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.MessageSpec
-import robocalc.robocert.model.robocert.GapMessageSpec
 import robocalc.robocert.model.robocert.Argument
-import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.ExpressionArgument
-import robocalc.robocert.model.robocert.ArrowMessageSpec
-import java.util.Collections
-import java.util.List
+import robocalc.robocert.model.robocert.MessageDirection
+import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.RestArgument
 import robocalc.robocert.generator.utils.TopicExtensions
 import robocalc.robocert.generator.utils.TargetExtensions
-import robocalc.robocert.model.robocert.MessageDirection
+import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -31,7 +27,7 @@ class MessageSpecGenerator {
 	 * @return generated CSP for the event set of one message spec.
 	 */
 	def generateCSPEventSet(MessageSpec it)
-		'''«generateHeader»«argumentsIfAny.generateArguments»'''
+		'''«generateHeader»«arguments.generateArguments»'''
 
 	/**
 	 * Generates a CSP prefix for one sequence arrow action.
@@ -40,7 +36,7 @@ class MessageSpecGenerator {
 	 * 
 	 * @return generated CSP for the message spec.
 	 */
-	def generatePrefix(ArrowMessageSpec it)
+	def generatePrefix(MessageSpec it)
 		'''«generateHeader»«arguments.generateArguments»«generateFiller»'''
 	
 	private def generateHeader(MessageSpec it)
@@ -67,10 +63,10 @@ class MessageSpecGenerator {
 	/**
 	 * Generates any prefix '?_' padding induced by a rest argument.
 	 */	
-	private def generateFiller(ArrowMessageSpec it)
+	private def generateFiller(MessageSpec it)
 		'''«FOR x: parametersToFill.toIterable»?_«ENDFOR»'''
 	
-	private def parametersToFill(ArrowMessageSpec it) {
+	private def parametersToFill(MessageSpec it) {
 		val amount = arguments.takeWhile[!(it instanceof RestArgument)].length
 		topic.params.drop(amount)
 	}
@@ -95,44 +91,6 @@ class MessageSpecGenerator {
 	
 	private def dispatch generateArgument(Argument it)
 		'''{- UNKNOWN ARGUMENT: «it» -}'''
-		
-	/**
-	 * Gets the arguments of this gap message spec in a way that erases
-	 * any gap-specific typing information.
-	 * 
-	 * @param it  the message spec.
-	 * 
-	 * @return a list of arguments.
-	 */
-	private def dispatch List<Argument> getArgumentsIfAny(GapMessageSpec it) {
-		// TODO(@MattWindsor91): move to metamodel
-		arguments.map[it]
-	}
-
-	/**
-	 * Gets the arguments of this arrow message spec in a way that erases
-	 * any arrow-specific typing information.
-	 * 
-	 * @param it  the message spec.
-	 * 
-	 * @return a list of arguments.
-	 */	
-	private def dispatch getArgumentsIfAny(ArrowMessageSpec it) {
-		// TODO(@MattWindsor91): move to metamodel
-		arguments.map[it]
-	}
-	
-	/**
-	 * Gets the arguments of this message spec in a way that erases
-	 * any gap-specific typing information.
-	 * 
-	 * @param it  the message spec.
-	 * 
-	 * @return an empty list of arguments.
-	 */	
-	private def dispatch getArgumentsIfAny(MessageSpec it) {
-		Collections.emptyList
-	}
 		
 	def private cspDir(MessageDirection it) {
 		switch(it) {

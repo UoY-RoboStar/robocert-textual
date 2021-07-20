@@ -124,7 +124,7 @@ SequenceStep:
  * An action in a sequence diagram.
  */
 SequenceAction:
-	{ArrowAction} body=ArrowMessageSpec |
+	{ArrowAction} body=MessageSpec |
 	'after' {WaitAction} units=TimeUnits |
 	'end' {FinalAction}
 ;
@@ -241,8 +241,8 @@ PrimitiveSet returns MessageSet:
  * An extensional message set (including singleton message sets).
  */
 ExtensionalMessageSet:
-	'{|' {ExtensionalMessageSet} messages+=GapMessageSpec (',' messages+=GapMessageSpec)* '|}' |
-	messages+=GapMessageSpec
+	'{|' {ExtensionalMessageSet} messages+=MessageSpec (',' messages+=MessageSpec)* '|}' |
+	messages+=MessageSpec
 ;
 
 /**
@@ -253,17 +253,10 @@ NamedMessageSet:
 ;
 
 /**
- * An arrow message specification.
+ * A message specification.
  */
-ArrowMessageSpec:
+MessageSpec:
 	 direction=MessageDirection topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')?
-;
-
-/**
- * A gap message specification.
- */
-GapMessageSpec:
-	 direction=MessageDirection topic=MessageTopic ('(' (arguments+=NonBindingArgument (',' arguments+=NonBindingArgument)*)? ')')?
 ;
 
 /**
@@ -278,13 +271,6 @@ enum MessageDirection:
  * An argument pattern.
  */
 Argument:
-	NonBindingArgument
-;
-
-/**
- * An argument that doesn't introduce a binding.
- */
-NonBindingArgument:
 	ExpressionArgument |
 	{RestArgument} '...'
 ;

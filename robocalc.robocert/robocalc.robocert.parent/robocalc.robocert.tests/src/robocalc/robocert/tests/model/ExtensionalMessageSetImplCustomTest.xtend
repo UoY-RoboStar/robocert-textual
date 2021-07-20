@@ -35,7 +35,7 @@ class ExtensionalMessageSetImplCustomTest {
 	@Test
 	def testIsActive_NonEmpty() {
 		val mset = rf.createExtensionalMessageSet=>[
-			messages.add(rf.createGapMessageSpec)
+			messages.add(rf.createMessageSpec)
 		]
 		mset.active.assertTrue
 	}
@@ -56,7 +56,7 @@ class ExtensionalMessageSetImplCustomTest {
 	@Test
 	def testIsUniversal_NonEmpty() {
 		val mset = rf.createExtensionalMessageSet=>[
-			messages.add(rf.createGapMessageSpec)
+			messages.add(rf.createMessageSpec)
 		]
 		mset.universal.assertFalse
 	}	

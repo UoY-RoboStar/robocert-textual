@@ -1,19 +1,17 @@
 package robocalc.robocert.tests.util
 
-import robocalc.robocert.model.robocert.ArrowMessageSpec
-import robocalc.robocert.model.robocert.MessageTopic
+import robocalc.robocert.model.robocert.Actor
 import robocalc.robocert.model.robocert.Argument
 import robocalc.robocert.model.robocert.MessageDirection
+import robocalc.robocert.model.robocert.MessageSpec
+import robocalc.robocert.model.robocert.MessageTopic
+import robocalc.robocert.model.robocert.RCModuleTarget
 import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.World
 import circus.robocalc.robochart.RoboChartFactory
 import circus.robocalc.robochart.Event
-import robocalc.robocert.model.robocert.GapMessageSpec
-import robocalc.robocert.model.robocert.NonBindingArgument
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.Actor
-import robocalc.robocert.model.robocert.RCModuleTarget
 import static extension org.junit.jupiter.api.Assertions.*
-import robocalc.robocert.model.robocert.World
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -32,12 +30,24 @@ class MessageSpecFactory {
 	 * 
 	 * @return a constructed arrow message spec.
 	 */
-	def ArrowMessageSpec arrowSpec(MessageTopic t, MessageDirection dir, Argument... args) {
-		rcert.createArrowMessageSpec => [
+	def MessageSpec arrowSpec(MessageTopic t, MessageDirection dir, Argument... args) {
+		spec(t, dir, args) => [s|arrowParent.body = s]
+	}
+
+	def private spec(MessageTopic t, MessageDirection dir, Argument... args) {
+		rcert.createMessageSpec => [
 			topic = t
-			parent = arrowParent
 			direction = dir
 			arguments.addAll(args)
+		]
+	}
+
+	def private arrowParent() {
+		rcert.createArrowAction => [
+			step = rcert.createActionStep => [
+				gap = rcert.createExtensionalMessageSet
+				parent = sseq
+			]
 		]
 	}
 
@@ -51,13 +61,8 @@ class MessageSpecFactory {
 	 * 
 	 * @return a constructed gap message spec.
 	 */
-	def GapMessageSpec gapSpec(MessageTopic t, MessageDirection dir, NonBindingArgument... args) {
-		rcert.createGapMessageSpec => [
-			topic = t
-			parent = gapParent
-			direction = dir
-			arguments.addAll(args)
-		]
+	def MessageSpec gapSpec(MessageTopic t, MessageDirection dir, Argument... args) {
+		spec(t, dir, args) => [s|gapParent.messages.add(s)]
 	}
 
 	/**
@@ -68,15 +73,6 @@ class MessageSpecFactory {
 		rcert.createExtensionalMessageSet => [ g |
 			rcert.createActionStep => [
 				gap = g
-				parent = sseq
-			]
-		]
-	}
-
-	def private arrowParent() {
-		rcert.createArrowAction => [
-			step = rcert.createActionStep => [
-				gap = rcert.createExtensionalMessageSet
 				parent = sseq
 			]
 		]
