@@ -141,39 +141,12 @@ class ActionStep extends SequenceStep {
 	/**
 	 * The specification of what can happen in the 'gap' before the action.
 	 */
-	val SequenceGap[1]#step gap;
+	val MessageSet[1] gap;
 
 	/**
 	 * The action proper.
 	 */
 	val SequenceAction[1]#step action;
-}
-
-/**
- * A specification of which internal communications can happen before a
- * sequence action.
- *
- * Gaps may permit implicit communications between actions, according to the
- * message set.  An empty set, for instance, permits no communications. 
- */
-class SequenceGap {
-	/**
-	 * The step containing this gap.
-	 */
-	ref ActionStep[1]#gap step;
-
-	/**
-	 * The messages allowed by this gap.
-	 */
-	val MessageSet[1] allowed;
-
-	/**
-	 * Does this sequence gap allow messages to occur?
-	 * 
-	 * At time of writing, this means that is there at least one message in the
-	 * allows set.
-	 */
-	derived volatile readonly transient attr boolean active;
 }
 
 /**

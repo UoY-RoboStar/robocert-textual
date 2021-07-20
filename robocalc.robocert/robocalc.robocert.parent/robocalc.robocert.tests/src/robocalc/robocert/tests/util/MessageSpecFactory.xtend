@@ -40,7 +40,7 @@ class MessageSpecFactory {
 			arguments.addAll(args)
 		]
 	}
-	
+
 	/**
 	 * Creates a gap message spec with the given topic, direction, and
 	 * arguments, with a fake sequence-group context.
@@ -59,26 +59,24 @@ class MessageSpecFactory {
 			arguments.addAll(args)
 		]
 	}
-	
+
 	/**
-	 * Creates an extensional message set contained within a sequence,
-	 * so as to be suitable as a parent for a gap message spec.
+	 * Sets up a gap message spec parent that has enough context for a
+	 * sequence group to be located.
 	 */
 	def private gapParent() {
-		val gap = rcert.createSequenceGap => [
-			step = rcert.createActionStep => [ parent = sseq ]
-			allowed = rcert.createUniverseMessageSet
-		]
-		rcert.createExtensionalMessageSet => [
-			gap.allowed = it
+		rcert.createExtensionalMessageSet => [ g |
+			rcert.createActionStep => [
+				gap = g
+				parent = sseq
+			]
 		]
 	}
-	
-		
+
 	def private arrowParent() {
 		rcert.createArrowAction => [
 			step = rcert.createActionStep => [
-				gap = rcert.createSequenceGap
+				gap = rcert.createExtensionalMessageSet
 				parent = sseq
 			]
 		]
@@ -91,65 +89,64 @@ class MessageSpecFactory {
 			]
 		]
 	}
-	
+
 	def Argument restArg() {
 		rcert.createRestArgument
 	}
-	
+
 	def MessageTopic topic(Event e) {
-		rcert.createEventTopic => [ event = e ]
+		rcert.createEventTopic => [event = e]
 	}
-	
+
 	def Event intEvent() {
 		rc.createEvent => [
 			name = "event"
 			type = intTypeRef
 		]
 	}
-	
+
 	private def intTypeRef() {
-		rc.createTypeRef => [ ref = intType ]
+		rc.createTypeRef => [ref = intType]
 	}
-	
+
 	private def intType() {
-		rc.createPrimitiveType => [ name = "int" ]
+		rc.createPrimitiveType => [name = "int"]
 	}
-	
+
 	private def sseq() {
 		val s = seq
 		rcert.createSubsequence => [
-			s.body = it	
+			s.body = it
 		]
 	}
-	
+
 	private def seq() {
-		rcert.createSequence => [x|
+		rcert.createSequence => [ x |
 			x.group = group
 		]
 	}
-	
+
 	private def group() {
-		rcert.createSequenceGroup => [x|
+		rcert.createSequenceGroup => [ x |
 			x.target = target
 			x.world = world
 		]
 	}
-	
+
 	private def target() {
 		rcert.createRCModuleTarget => [
 			module = rcModule
 		]
 	}
-	
+
 	private def world() {
 		rcert.createWorld
 	}
-	
+
 	private def rcModule() {
-		rc.createRCModule => [ name = "test" ]
+		rc.createRCModule => [name = "test"]
 	}
-	
-		
+
 	/**
 	 * Checks that it appears to be the arrow factory's mock world.
 	 * 
@@ -159,7 +156,7 @@ class MessageSpecFactory {
 		assertNotNull
 		assertTrue(it instanceof World)
 	}
-	
+
 	/**
 	 * Checks that it appears to be the arrow factory's mock target.
 	 * 
@@ -168,10 +165,10 @@ class MessageSpecFactory {
 	def expectTarget(Actor it) {
 		assertNotNull
 		switch it {
-		RCModuleTarget:
-			"test".assertEquals(module.name)
-		default:
-			fail("not a target")
+			RCModuleTarget:
+				"test".assertEquals(module.name)
+			default:
+				fail("not a target")
 		}
-	}	
+	}
 }

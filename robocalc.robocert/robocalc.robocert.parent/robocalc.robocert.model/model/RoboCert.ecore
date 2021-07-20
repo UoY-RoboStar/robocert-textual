@@ -58,18 +58,10 @@
         eType="#//Subsequence" eOpposite="#//Subsequence/steps"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ActionStep" eSuperTypes="#//SequenceStep">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="gap" lowerBound="1" eType="#//SequenceGap"
-        containment="true" eOpposite="#//SequenceGap/step"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gap" lowerBound="1" eType="#//MessageSet"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="1"
         eType="#//SequenceAction" containment="true" eOpposite="#//SequenceAction/step"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceGap">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//ActionStep"
-        eOpposite="#//ActionStep/gap"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="allowed" lowerBound="1"
-        eType="#//MessageSet" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedMessageSet" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//SequenceGroup"

@@ -1,7 +1,6 @@
 package robocalc.robocert.generator.csp
 
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.SequenceGap
 import robocalc.robocert.model.robocert.SequenceAction
 import com.google.common.collect.Iterators
 import java.util.Iterator
@@ -9,28 +8,39 @@ import java.util.Collections
 import robocalc.robocert.model.robocert.ArrowAction
 import robocalc.robocert.model.robocert.ArrowMessageSpec
 import robocalc.robocert.generator.utils.MessageSetOptimiser
+import robocalc.robocert.model.robocert.ActionStep
 
 /**
- * Generates CSP for the gaps between actions.
+ * Generates CSP for action steps.
  */
-class GapGenerator {
+class ActionStepGenerator {
+	@Inject extension ActionGenerator
 	@Inject extension MessageSetOptimiser
 	@Inject extension MessageSetGenerator
 	@Inject extension MessageSpecGenerator
 
 	/**
-	 * Generates CSP for a gap.
+	 * Generates CSP for an action step.
 	 * 
-	 * @param it      the gap.
-	 * @param action  the action adjacent to the gap.
+	 * @param it  the action step.
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generate(SequenceGap it, SequenceAction action) '''«IF isActive»gap(«generateAllowSet», «action.generateActionSet») /\ «ENDIF»'''
+	def generateActionStep(ActionStep it) '''«IF gap.isActive»gap(«generateGap», «action.generateActionSet») /\ «ENDIF»«action.generate»'''
 
-	private def generateAllowSet(SequenceGap it) {
-		it.allowed = it.allowed.optimise
-		it.allowed.generate
+	/**
+	 * Optimises the action gap in place, then generates it.
+	 * 
+	 * We do the optimisation like this to preserve containment information,
+	 * so sequence group lookup works.
+	 * 
+	 * @param it  the gap.
+	 * 
+	 * @return the generated CSP.
+	 */
+	private def generateGap(ActionStep it) {
+		gap = gap.optimise
+		gap.generate
 	}
 
 	/**

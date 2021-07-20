@@ -10,8 +10,7 @@ import robocalc.robocert.model.robocert.DeadlineStep
  * Generator for sequence steps.
  */
 class StepGeneratorImpl implements StepGenerator {
-	@Inject extension ActionGenerator
-	@Inject extension GapGenerator	
+	@Inject extension ActionStepGenerator	
 	@Inject extension DeadlineGenerator
 	@Inject extension LoopGenerator
 	
@@ -24,7 +23,7 @@ class StepGeneratorImpl implements StepGenerator {
 	 * 
 	 * @return generated CSP for one sequence step.
 	 */
-	private def dispatch generateStep(ActionStep it) '''(«gap.generate(action)»«action.generate»)'''
+	private def dispatch generateStep(ActionStep it) { generateActionStep }
 	
 
 	/**
