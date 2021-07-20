@@ -265,7 +265,7 @@ The definitions here correspond to \cref{sec:metamodel-actions}.
 
 \begin{definition}[\msequenceaction]
 
-\newcommand{\wait}[1]{\text{Wait}(#1)}
+\newcommand{\wait}[1]{\text{Wait}\left(#1\right)}
   
 The semantics of an arrow action is the semantics of its arrow as a CSP prefix,
 prefixing termination.
@@ -302,7 +302,7 @@ prefixing termination.
     \mu x \ldotp
     \Skip
     \sqcap
-    \wait{1} \circseq \Skip
+    \left(\text{tock} \circthen \Skip\right)
     }
     \tag{final action}
 \end{align*}
@@ -401,37 +401,30 @@ depends on the message topic
 and, for certain topics, the direction (inbound from world to target, or
 outbound from target to world).
 \newcommand{\nsOf}[1]{\mathsf{ns}(#1)}
-\newcommand{\targetOf}[2]{\mathsf{target}(#1,#2)}
-\newcommand{\topicOf}[3]{\mathsf{topic}(#1,#2,#3)}
+\newcommand{\topicOf}[2]{\mathsf{topic}(#1,#2)}
 %
 \begin{align*}
 	\funcname{msgChan}(\amspec)
 \quad\defeq\quad&
 \tlang{
-	\olang{\nsOf{\targetOf{\field{\amspec}{from}}{\field{\amspec}{to}}}}
+	\olang{\nsOf{\field{\amspec}{target}}}
 	{}\cspnsop{}
-	\olang{\topicOf{\field{\amspec}{topic}}{\field{\amspec}{from}}{\field{\amspec}{to}}}
+	\olang{\topicOf{\field{\amspec}{topic}}{\field{\amspec}{direction}}}
 }
 \\
-	\targetOf{\aworld}{\atarget}
-\quad\defeq\quad&
-	\targetOf{\atarget}{\aworld}
-	\quad\defeq\quad
-	\atarget
-\\
-	\topicOf{\anop}{\atarget}{\aworld}
+	\topicOf{\anop}{\texttt{OUTBOUND}}
 \quad\defeq\quad&
 \tlang{
 	\olang{\field{\anop}{name}}\text{Call}
 }
 \tag{operation; always outbound}
 \\
-	\topicOf{\anevent}{\aworld}{\atarget}
+	\topicOf{\anevent}{\texttt{INBOUND}}
 \quad\defeq\quad&
 	\tlang{\olang{\field{\anevent}{name}}\text{.in}}
 \tag{inbound event}
 \\
-	\topicOf{\anevent}{\atarget}{\aworld}
+	\topicOf{\anevent}{\texttt{OUTBOUND}}
 \quad\defeq\quad&
 	\tlang{\olang{\field{\anevent}{name}}\text{.out}}
 \tag{outbound event}
