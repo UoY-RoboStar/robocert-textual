@@ -25,8 +25,7 @@ sequence steps.
 
 A \mdeadlinestep{} asserts that a \msubsequence{} takes at most
 a given number of time units to complete.
-It takes a name (currently only
-used in the graphical notation), and an expression that must
+It takes an expression that must
 evaluate to a natural number of time units.
 
 \begin{remark}
@@ -37,7 +36,7 @@ immediately, use a deadline of \(0\).
 \begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
-deadline T : within 3 units {
+within 3 units {
     ->op O1()
 }
 \end{lstlisting}
@@ -55,16 +54,11 @@ deadline T : within 3 units {
 };
 \draw[lifeline] (mstart) -- (mo) -- (mde);
 \draw[lifeline] (wstart) -- (wds) -- (wo) -- (wde);
-\gdeadline{wds}{wde}{T}{3}
+\gdeadline{wds}{wde}{3}
 \draw (mo) edge[oarrow, "O1()"] (wo);
   \end{tikzpicture}
 \end{subfigure}
 \end{figure}
-
-\todo{Considering removing `deadline T :` and changing the graphical
-  syntax to just contain the number of units next to the arrow, which
-  I've seen rarely in some UML2 tutorials but I'm not sure if it's
-  allowed in MARTE.}
 
 \subsection{\mloopstep}\label{ssec:metamodel-steps-loops}
 

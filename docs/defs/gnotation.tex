@@ -103,15 +103,14 @@
 % #3: units expression
 \newcommand{\gwait}[3]{\draw (#1) edge[wait,"\gkeyword{wait}(#3)"] (#2);}
 
-\newcommand{\gdeadlineoffset}{4em}
+\newcommand{\gdeadlineoffset}{2em}
 % #1: World top
 % #2: World bottom
-% #3: Deadline name
-% #4: Deadline amount
-\newcommand{\gdeadline}[4]{
-  \draw (#1) edge[deadline,"@#3"] ($(#1) + (\gdeadlineoffset, 0)$);
-  \draw ($(#1) + (\gdeadlineoffset, 0)$) edge[deadlinespan] ($(#2) + (\gdeadlineoffset, 0)$);
-  \draw ($(#2) + (\gdeadlineoffset, 0)$) edge[deadline,"{#3..#3+#4}"] (#2);
+% #3: Time units
+\newcommand{\gdeadline}[3]{
+  \draw (#1) edge[deadline] ($(#1) + (\gdeadlineoffset, 0)$);
+  \draw ($(#1) + (\gdeadlineoffset, 0)$) edge[deadlinespan,"#3"] ($(#2) + (\gdeadlineoffset, 0)$);
+  \draw ($(#2) + (\gdeadlineoffset, 0)$) edge[deadline] (#2);
 }
 
 %%% Local Variables:
