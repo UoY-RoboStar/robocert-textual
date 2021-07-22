@@ -1,12 +1,12 @@
 %!TEX root=./robocert.tex
 \input{metamodel/defs}
 
-We define \langname{} as a formal abstract syntax (or
-metamodel) which is representable in multiple concrete notations ---
+We define \langname{} by defining its
+metamodel, which is representable in multiple concrete notations ---
 the \emph{textual} (\cref{cha:textual}) and \emph{graphical}
 syntax (\cref{cha:graphical}) --- and which has a semantics in terms
 of process algebras and other formalisms (\cref{cha:semantics}).  This
-chapter discusses the abstract syntax and, in turn, the key concepts
+chapter discusses the metamodel and, in turn, the key concepts
 of \langname.
 
 \section{Introduction}\label{sec:metamodel-intro}
@@ -17,7 +17,7 @@ By default, \langname{} sequences are \emph{explicit}
 as to \emph{which} actions occur, but \emph{implicit} as to
 \emph{when}.
 
-Unless modified by gaps (\cref{ssec:metamodel-steps-gaps}),
+Unless modified by gaps,
 communications on \langname{} sequences are strictly ordered with
 respect to each other and permit no intervening communications.  This
 reflects the view of sequence diagrams as representations of traces of
@@ -25,15 +25,13 @@ the system under test, and appears consistent with some semantic
 treatments of UML~\cite{lima-semantics}.  \todo{needs more
   justification?  is the point about Lima's semantics correct?}
 
-\langname{} uses the \robochart{} timing model, and some \robochart{}
-timing primitives have direct counterparts in \langname.  This model
-assumes a discrete notion of time measured in \emph{time units} such
-that, while actions such as events and operations are instantaneous,
-time is allowed to pass in between them.  We take the approach of
-assuming that where time can pass in the \robochart{} model,
-\emph{any} amount of time may pass in the sequence, unless
-constrained by deadlines (\cref{ssec:metamodel-steps-deadlines}).
-
+Like \robochart, \langname{} has a discrete-time model, where time is
+measured in \emph{time units} and events, operation calls, and
+primitive data operations (assignments, communication, and so on) are
+instantaneous.  Time cn pass when the software is waiting for an
+interaction with the platform.  Accordingly, any amount of time may
+pass in a sequence, unless constrained by \mdeadlinestep s
+(\cref{ssec:metamodel-steps-deadlines}).
 
 \subsection{How to read the rest of this chapter}\label{ssec:metamodel-intro-readme}
 

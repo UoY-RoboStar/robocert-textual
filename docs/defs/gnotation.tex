@@ -13,21 +13,21 @@
 \colorlet{gshading}{ocre!20}
 
 \tikzset{
-  actor/.style={draw, rectangle, minimum width=7em, align=center, minimum height=1.8em, fill={gshading}},
+  actor/.style={draw, rectangle, minimum width=6em, align=center, minimum height=1.7em, fill={gshading}},
   world/.style={actor, font={\small\gkeyword{world}}},
   target/.style={actor},
   rcmodule/.style={target, font={\small\gkeyword{module}\;}},
   lifeline/.style={dashed, thick},
   deadline/.style={solid, font={\footnotesize}},
   deadlinespan/.style={latex-latex},
-  diagram/.style={row sep=1.7em, column sep=3em},
+  diagram/.style={row sep=2em, column sep=5em},
   arrow/.style={->, thick},
   oarrow/.style={arrow, font={\scriptsize\osigil\;}},
   earrow/.style={arrow, font={\scriptsize\esigil\;}},
   final/.style={dotted, thick, font={\scriptsize\gkeywordfont}, "end"},
   wait/.style={dotted, thick, font={\scriptsize}},
   cfbox/.style={draw},
-  cfheader/.style={trapezium, draw, font={\small}, fill={gshading}, trapezium left angle=90, trapezium right angle=300},
+  cfheader/.style={chamfered rectangle, draw, font={\small}, fill={gshading}, chamfered rectangle corners=south east, inner sep=0.2em},
   gap/.style={circle, inner sep=0, minimum size=6pt, fill=black}
 }
 \newcommand{\gsecaption}{
@@ -36,9 +36,6 @@
     font={small,sf}
   }
   \caption{Graphical syntax example \todo{draft}}}
-
-\newcommand{\gchpad}{1.5em}
-\newcommand{\gcvpad}{0.5em}
 
 % Gap notation
 % #1: location node
@@ -51,7 +48,7 @@
 }
 \newcommand{\gdiff}[2]{#1\setminus#2}
 \newcommand{\guniverse}{\ast}
-\newcommand{\gextset}[1]{\{\!\mid#1\mid\!\}}
+\newcommand{\gextset}[1]{\{#1\}}
 \newcommand{\gemptyset}{\gextset{}}
 \newcommand{\grefset}[1]{\text{#1}}
 
@@ -65,7 +62,7 @@
 % #7: node name
 \newcommand{\gcfrag}[7]{
   \node[cfbox, fit=(#1) (#2) (#3) (#4), inner sep=#5] (#7) {};
-  \node[cfheader,anchor=top left corner] at (#7.north west) {#6};
+  \node[cfheader,anchor=north west] at (#7.north west) {#6};
 }
 
 % Sequence diagram
