@@ -1,8 +1,19 @@
 %!TEX root=../robocert.tex
 
 This section introduces a \tockcsp{} semantics for \langname.
-This semantics is inspired by that of Lima et al. on the CML semantics of
-UML sequence diagrams~\cite{lima-semantics}.
+This semantics is inspired by the work of Lima et al. on the CML semantics of
+UML sequence diagrams~\cite{lima-semantics}.  Differences include:
+
+\begin{itemize}
+\item a focus on \tockcsp{} rather than CML, and consequently the
+  treatment of timing properties;
+\item
+  the treatment of other concepts in \langname{} but not UML sequence
+  diagrams, for instance gaps;
+\item simplifications arising from the assumption that all sequences
+  are between two actors whose actions are always either communications with
+  each other or shared control-flow decisions.
+\end{itemize}
 
 The behaviour of the \langname{} generator is expected to conform to
 this semantics, except that:
@@ -117,7 +128,7 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
 
 \begin{definition}[\msequencestep]
   Case analysis.
-  The semantics of a \mactionstep{} consists of an unbounded
+  The semantics of an \mactionstep{} consists of an unbounded
   loop over any events allowed by its gap but not by its \msequenceaction,
   interrupted by the action itself.  The exclusion of the events
   offered by the action ensures that the gap cannot nondeterministically
@@ -138,10 +149,9 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
     }
     \tag{action step}
   \\
-  \intertext{The semantics of a \mdeadlinestep{} is the \emph{deadline} operator
-  \(\deadline\) sometimes found in \tockcsp{} literature: the action is
-  interrupted after its deadline has expired by a process that prevents any
-  further time from passing.
+  \intertext{We capture the semantics of a \mdeadlinestep{} using
+  the \tockcsp{} \emph{deadline} operator, whose definition \todo{cite BRC21}
+  we reproduce below.
   }
   \stepsema{\adeadline}
   \quad\defeq\quad
@@ -153,6 +163,13 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
     }
     \tag{deadline step}
   \\
+  \intertext{In the deadline operator,
+  the process \(x\) is
+  interrupted after its deadline \(d\) has expired by a process that prevents any
+  further time from passing.  Note that this is distinct from the notion of a
+  time budget: this operator asserts that there is no possible environment that
+  permits \(x\) to take more than \(d\) time units.
+  }
   x \deadline d
   \quad\defeq\quad
   &
