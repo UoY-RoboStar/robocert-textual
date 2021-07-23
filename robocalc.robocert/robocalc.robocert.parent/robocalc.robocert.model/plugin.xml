@@ -16,7 +16,7 @@
    <extension
          point="org.eclipse.emf.ecore.factory_override">
       <factory
-            class="robocalc.robocert.model.RobocertFactoryImplCustom"
+            class="robocalc.robocert.model.robocert.impl.RobocertFactoryImplCustom"
             uri="http://robocert.robocalc/">
       </factory>
    </extension>
