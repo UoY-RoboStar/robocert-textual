@@ -115,7 +115,7 @@ World:
  * A step in a sequence diagram.
  */
 SequenceStep:
-	DeadlineStep |
+	'within' {DeadlineStep} units=TimeUnits body=Subsequence |
 	LoopStep |
 	{ActionStep} gap=Gap action=SequenceAction
 ;
@@ -127,13 +127,6 @@ SequenceAction:
 	{ArrowAction} body=MessageSpec |
 	'after' {WaitAction} units=TimeUnits |
 	'end' {FinalAction}
-;
-
-/**
- * A deadline block.
- */
-DeadlineStep:
-	'deadline' {DeadlineStep} name=ID ':' 'within' units=TimeUnits body=Subsequence
 ;
 
 /**

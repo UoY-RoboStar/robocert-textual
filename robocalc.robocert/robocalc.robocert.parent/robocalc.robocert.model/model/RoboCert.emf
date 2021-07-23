@@ -358,7 +358,7 @@ abstract class StepWithBody extends SequenceStep {
  * A step containing one or more sequence elements alongside a deadline
  * for all of those elements to terminate, expressed in time units.
  */
-class DeadlineStep extends robochart.NamedElement, StepWithBody {
+class DeadlineStep extends StepWithBody {
 	/**
 	 * The deadline, expressed as a number of time units after the start of the
 	 * block.
