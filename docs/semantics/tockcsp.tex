@@ -40,6 +40,8 @@ a metamodel to textual snippets of something halfway between \tockcsp{} and
 
 The definitions here correspond to \cref{sec:metamodel-assertions}.
 
+\newcommand{\tock}{\text{tock}}
+
 \begin{definition}[\massertion]
 
 \newcommand{\refop}[3]{\arefop_{#1}^{(#2, #3)}}
@@ -140,9 +142,13 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
   &
     \tlang{
     \runproc{
+    \set{\tock}
+    \cup
+    \left(
     \olang{\msgsetsema{\field{\anastep}{gap}}}
     \setminus
     \olang{\eventsOf{\field{\anastep}{action}}}
+    \right)
     }
     \interrupt
     \olang{\actsema{\field{\anastep}{action}}}
@@ -319,7 +325,7 @@ prefixing termination.
     \mu x \ldotp
     \Skip
     \sqcap
-    \left(\text{tock} \circthen \Skip\right)
+    \left(\tock \circthen \Skip\right)
     }
     \tag{final action}
 \end{align*}
