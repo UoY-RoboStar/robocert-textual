@@ -46,6 +46,7 @@
 \newcommand{\metaref}[1]{{\fontfamily{qhv}\selectfont #1}}
 \newcommand{\langname}{{\sffamily\itshape RoboCert}}
 \newcommand{\robochart}{{\sffamily\itshape RoboChart}}
+\newcommand{\robostar}{{\sffamily\itshape RoboStar}}
 
 \newcommand{\thead}[1]{\textbf{#1}}
 \newcommand{\tsubhead}[1]{\textit{#1}}
@@ -119,16 +120,11 @@ permissions and limitations under the License.\\
 
 \mainmatter
 
-\part{The \langname{} language}
+\part{Core language}
+\input{core}
 
-\chapter{Abstract syntax}\label{cha:metamodel}
-\input{metamodel}
-
-\chapter{Textual syntax}\label{cha:textual}
-\input{textual}
-
-\chapter{Graphical syntax}\label{cha:graphical}
-\input{graphical}
+\part{Sequence diagrams}
+\input{seq}
 
 \part{Well-formedness and Semantics}
 
