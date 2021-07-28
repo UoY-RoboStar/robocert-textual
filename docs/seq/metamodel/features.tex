@@ -1,102 +1,110 @@
 % !TEX root=../robocert.tex
-\newcommand{\insp}[1]{\textsl{#1}}
+\newcommand{\insp}[1]{\ul{#1}}
 
-This section compares \langname{} concepts to the
-corresponding features, if any, in:
+This section compares \langname{} sequence diagram features to any
+corresponding features in:
 
-\begin{itemize}
-\item
-  UML 2.0 sequence diagrams (including the MARTE profile for timing
-  constraints);
-\item
+\newlist{featset}{description}{1}
+\setlist[featset]{font=\sffamily,align=right,labelwidth=4em}
+
+\begin{featset}
+\item[UML]
+  UML 2.0 sequence diagrams;
+\item[MARTE]
+  the MARTE profile of UML;
+\item[PSC]
   Property Sequence Chart~\cite{psc};
+\item[TPSC]
+  Timed Property Sequence Chart~\cite{tpsc};
 \item
   \todo{more}
-\end{itemize}
+\end{featset}
 
-For each concept, we highlight the main source of inspiration (if any)
+For each feature, we highlight the main source of inspiration (if any)
 using \insp{this formatting}.
-
-\subsection{Top~(\ref{sec:metamodel-top})}
 
 \subsection{Sequences~(\ref{sec:metamodel-sequences})}
 
 \subsection{Steps~(\ref{sec:metamodel-steps})}
 
 \paragraph{\mdeadlinestep}
-\begin{description}
+\begin{featset}
 \item[UML] \insp{duration constraint}
-\item[PSC] n/a
-\item[Comments] UML2 seems to have both unnamed and named duration
+\item[MARTE] (as above)
+\item[TPSC] clock constraints
+\end{featset}
+
+UML2 seems to have both unnamed and named duration
   annotations; we take the unnamed annotations for simplicity.  MARTE
   literature points out the named annotations.  \todo{work out what is
     going on here}
-\end{description}
+
+  While \robochart{} has clocks, we do not yet expose them in
+  \langname, as we consider them to be an implementation concern.
       
 \paragraph{\mloopstep}
-\begin{description}
+\begin{featset}
 \item[UML] \insp{loop combined fragment}
 \item[PSC] loop operator
-    \mloopbound s inspired by those permitted by UML.
-\end{description}
+\end{featset}
+
+\mloopbound s are inspired by those permitted by UML.
 
 \paragraph{Gaps}
-\begin{description}
-\item[UML] n/a
+\begin{featset}
 \item[PSC] strict operator, \insp{constraints}
-\item[Comments]
-  Gaps resemble past-unwanted-message constraints, but
-  allow restricting the set of \emph{allowed} messages;
-  this subsumes the strict operator.  Graphical syntax is a slight
-  modification of PSC syntax.  We do not cover
-  future-unwanted-message or chain constraints.  Currently, all
-  ordering is assumed strict unless modified by a gap; this
-  deviates from PSC \emph{and} some readings of UML.
-\end{description}
+\end{featset}
+
+Gaps resemble past-unwanted-message constraints, but
+allow restricting the set of \emph{allowed} messages;
+this subsumes the strict operator.  Graphical syntax is a slight
+modification of PSC syntax.  We do not cover
+future-unwanted-message or chain constraints.  Currently, all
+ordering is assumed strict unless modified by a gap; this
+deviates from PSC \emph{and} some readings of UML.
     
 \subsection{Actions~(\ref{sec:metamodel-actions})}
 
 \paragraph{\marrowaction}
-\begin{description}
+\begin{featset}
 \item[UML] \insp{message occurrence specification}
 \item[PSC] regular message
-\item[Comments]
-  Arrows are named for the PSC \emph{arrowMSG} concept but are closer
-  to UML.
-\end{description}
+\end{featset}
+
+Arrows are named for the PSC \emph{arrowMSG} concept but are closer
+to UML.
       
 \subsection{Messages~(\ref{sec:metamodel-messages})}
 
 \paragraph{\mmessageset}
-\begin{description}
-\item[UML] n/a
+\begin{featset}
 \item[PSC] \insp{constraint set}
-\item[Comments]
-  \mrefmessageset s are directly inspired by the PSC approach to referencing constraint sets.
-\end{description}
+\end{featset}
+
+\mrefmessageset s are directly inspired by the PSC approach to referencing constraint sets.
 
 \paragraph{\mmessagespec}
-\begin{description}
+\begin{featset}
 \item[UML] ??
-\item[PSC] arrowMSG, intraMSG
-\item[Comments]
-  We do not cover PSC required or fail messages.
-  Notion of direction (inbound/outbound) rather than sender/receiver labels.
-\end{description}
+\item[PSC] \insp{arrowMSG, intraMSG}
+\end{featset}
+
+We do not cover PSC required or fail messages.
+Notion of direction (inbound/outbound) rather than sender/receiver labels.
 
 \subsection{Actors~(\ref{sec:metamodel-actors})}
 
 \paragraph{\mactor}
-\begin{description}
+\begin{featset}
 \item[UML] lifeline
 \item[PSC] \insp{component instance}
-\item[Comments]
-  Always fixed at two in \langname: a \mtarget{} and a \mworld{}.
-  Neither are named, though the \mtarget{} will refer to a
-  named component such as a \mrcmodule.
+\end{featset}
 
-  Like PSC, but unlike UML, there are no executions.
-\end{description}
+Always fixed at two in \langname: a \mtarget{} and a \mworld{}.
+Neither are named, though the \mtarget{} will refer to a
+named component such as a \mrcmodule.
+
+Like PSC, but unlike UML, there are no executions.
 
 \subsection{Assertions~(\ref{sec:metamodel-assertions})}
 
