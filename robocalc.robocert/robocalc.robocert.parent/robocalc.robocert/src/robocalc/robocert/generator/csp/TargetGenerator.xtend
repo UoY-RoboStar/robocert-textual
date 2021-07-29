@@ -97,7 +97,7 @@ class TargetGenerator {
 
 	private def CharSequence generateOpenTargetBody(Target it) '''
 		«namespace»::O__(
-			{- id -} 0«FOR c : constants.toIterable BEFORE ',' SEPARATOR ','»
+			{- id -} 0«FOR c : parameterisation.toIterable BEFORE ',' SEPARATOR ','»
 					«instantiation.generateConstant(c)»
 			«ENDFOR»
 		)

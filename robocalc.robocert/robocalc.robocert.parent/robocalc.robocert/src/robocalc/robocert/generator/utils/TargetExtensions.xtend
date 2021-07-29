@@ -9,6 +9,7 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.TargetInstantiation
 import circus.robocalc.robochart.Expression
 import circus.robocalc.robochart.Context
+import robocalc.robocert.model.robocert.ConstAssignment
 
 /**
  * Extension methods for dealing with targets.
@@ -19,20 +20,20 @@ class TargetExtensions {
 	@Inject extension VariableExtensions
 
 	/**
-	 * Gets the constants for a module target.
+	 * Gets the parameterisation for a module target.
 	 * @param it  the target for which we are trying to get all constants.
 	 * @return an iterator of all constants defined on this target's module.
 	 */
-	def dispatch getConstants(RCModuleTarget it) {
+	def dispatch getParameterisation(RCModuleTarget it) {
 		module?.parameterisation ?: Collections.emptyIterator
 	}
 
 	/**
-	 * Gets the constants for an otherwise-unsupported target.
+	 * Gets the parameterisation for an otherwise-unsupported target.
 	 * @param it  the target for which we are trying to get all constants.
 	 * @return nothing.
 	 */
-	def dispatch getConstants(Target it) {
+	def dispatch getParameterisation(Target it) {
 		Collections.emptyIterator
 	}
 
@@ -65,8 +66,8 @@ class TargetExtensions {
 	 * @return an iterator of uninstantiated constant names.
 	 */
 	def Iterator<Variable> uninstantiatedConstants(Target it) {
-		val instantiated = instantiation.constants.map[key.constantKey].toSet
-		constants.filter[!instantiated.contains(constantKey)]
+		val instantiated = instantiation.assignments.flatMap[constants].map[constantKey].toSet
+		parameterisation.filter[!instantiated.contains(constantKey)]
 	}
 
 	/**
@@ -79,7 +80,14 @@ class TargetExtensions {
 	 *         in this instantiation.
 	 */
 	def Expression getConstant(TargetInstantiation it, Variable const) {
-		constants.findFirst[const.constantEqual(key)]?.value
+		assignments.findFirst[hasConstant(const)]?.value
+	}
+	
+	private def hasConstant(ConstAssignment it, Variable const) {
+		// The normal RoboChart equality test compares by name, which doesn't
+		// account for the variables being defined in different contexts.
+		// So we can't use constants.contains here.
+		constants.exists[constantEqual(const)]
 	}
 	
 	/**
@@ -87,8 +95,6 @@ class TargetExtensions {
 	 * if, and only if, they are referencing the same object.
 	 */
 	private def constantEqual(Variable it, Variable other) {
-		// The normal RoboChart equality test compares by name, which doesn't
-		// account for the variables being defined in different contexts.
 		constantKey == other.constantKey
 	}
 	

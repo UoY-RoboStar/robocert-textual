@@ -315,24 +315,21 @@ class RCModuleTarget extends Target {
  */
 class TargetInstantiation {
 	/**
-	 * Any constant overrides.
+	 * Any constant assignments.
 	 */
-	val ConstAssignment[*] constants;
+	val ConstAssignment[*] assignments;
 }
 
 /**
- * A constant override.
+ * Assigns a value to one or more constants.
  */
 class ConstAssignment {
-	// NOTE: this would ideally be a Map.Entry, but I couldn't get
-	// Xtend's serializer code generator to work with EMaps. 
-
 	/**
-	 * The constant being assigned.
+	 * The constant(s), being assigned.
 	 */
-	ref robochart.Variable[1] key;
+	ref robochart.Variable[1..*] constants;
 	/**
-	 * The expression containing the new value of the constant.
+	 * The expression containing the new value of the constant(s).
 	 */
 	val robochart.Expression[1] value;
 }

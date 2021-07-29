@@ -115,11 +115,12 @@
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TargetInstantiation">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignments" upperBound="-1"
         eType="#//ConstAssignment" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConstAssignment">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="key" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="1"
+        upperBound="-1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
   </eClassifiers>

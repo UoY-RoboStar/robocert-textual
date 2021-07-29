@@ -57,7 +57,7 @@ class ConstantScopeExtensions {
 	 * @return  the target's constants as a scope.
 	 */
 	private def targetScope(Target it) {
-		scopeFor(constants)
+		scopeFor(parameterisation)
 	}
 
 	/**

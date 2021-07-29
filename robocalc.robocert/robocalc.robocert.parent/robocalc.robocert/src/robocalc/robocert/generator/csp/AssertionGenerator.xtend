@@ -100,7 +100,7 @@ class AssertionGenerator {
 	 * Checks whether this sequence assertion has instantiations.
 	 */
 	private def isInstantiated(SequenceAssertion it) {
-		!instantiation.constants.empty
+		!instantiation.assignments.empty
 	}
 
 	private def generateInstantiatedTarget(SequenceAssertion it) {

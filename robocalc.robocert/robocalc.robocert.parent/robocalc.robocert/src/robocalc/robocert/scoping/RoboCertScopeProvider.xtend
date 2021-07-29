@@ -74,7 +74,7 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	 * @return  the provided scope (can be null).
 	 */
 	private def dispatch getScopeInner(ConstAssignment context, EReference reference) {
-		if (reference == CONST_ASSIGNMENT__KEY) {
+		if (reference == CONST_ASSIGNMENT__CONSTANTS) {
 			context.constAssignmentScope
 		}
 	}

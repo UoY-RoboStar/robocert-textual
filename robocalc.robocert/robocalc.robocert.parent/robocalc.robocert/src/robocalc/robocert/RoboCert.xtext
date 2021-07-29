@@ -68,7 +68,7 @@ Target:
  * A target override in a sequence diagram.
  */
 TargetInstantiation:
-	{TargetInstantiation} ('with' '{' (constants += ConstAssignment) (',' constants += ConstAssignment)* '}')?
+	{TargetInstantiation} ('with' '{' (assignments += ConstAssignment) (',' assignments += ConstAssignment)* '}')?
 ;
 
 /**
@@ -82,7 +82,11 @@ fragment AssignWords *:
  * A constant assignment.
  */
 ConstAssignment:
-	key=[Variable|QualifiedName] AssignWords value=Expression
+	ConstName ('and' ConstName)* AssignWords value=Expression
+;
+
+fragment ConstName *:
+	constants+=[Variable|QualifiedName]
 ;
 
 /**
