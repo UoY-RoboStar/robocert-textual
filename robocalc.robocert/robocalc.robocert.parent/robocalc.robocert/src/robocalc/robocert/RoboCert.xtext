@@ -313,6 +313,7 @@ SequenceAssertion:
         | type=DoesSequenceAssertionType
         )
     instantiation=TargetInstantiation
+    InCSPModelSpec?
 ;
 
 /**
@@ -335,4 +336,22 @@ enum DoesNotSequenceAssertionType returns SequenceAssertionType:
  */
 enum DoesSequenceAssertionType returns SequenceAssertionType:
 	HOLDS='holds'
+;
+
+/**
+ * Explicitly specifying the CSP model of an assertion.
+ * 
+ * TODO(@MattWindsor91): there may need to be more abstract ways of specifying
+ * these models eventually.
+ */
+fragment InCSPModelSpec *:
+	'in' 'the' model=CSPModel 'model'
+;
+
+/**
+ * Names of CSP models.
+ */
+enum CSPModel:
+	TRACES='traces' |
+	TICK_TOCK='tick-tock'
 ;
