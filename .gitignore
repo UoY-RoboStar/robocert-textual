@@ -1,3 +1,5 @@
+.DS_Store
+
 # Compiled class file
 *.class
 
@@ -44,3 +46,6 @@ bin/
 *.toc
 # PDFs (both LaTeX outputs and Sirius diagrams)
 *.pdf
+*.fls
+*.fdb_latexmk
+*.synctex.gz
