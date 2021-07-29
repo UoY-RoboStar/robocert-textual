@@ -1,4 +1,4 @@
-%!TEX root=../robocert.tex
+%!TEX root=../../robocert.tex
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{diagrams/Actions}
@@ -104,9 +104,8 @@ complete sequence of behaviour from the \mtarget{} initialising to the
 behaviour of \mtarget s that do not terminate.
 
 \begin{remark}
-The gap of a \mfinalaction-carrying \mactionstep{} captures
-any permitted communications after the behaviour explicitly specified by the
-diagram has occurred.
+To permit some communication after the behaviour explicitly specified by the
+diagram has occurred, use the gap of a \mactionstep{} carrying a \mfinalaction.
 \end{remark}
 
 \begin{figure}[h!]
