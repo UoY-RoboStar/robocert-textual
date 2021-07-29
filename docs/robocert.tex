@@ -25,36 +25,7 @@
 \setulcolor{ocre}
 \setul{}{0.2ex}
 
-\input{defs/tnotation}
-\input{defs/gnotation}
-
-% RFC 2119 keywords
-\newcommand{\rfckw}[1]{\textbf{#1}}
-\newcommand{\rfcmust}{\rfckw{must}}
-\newcommand{\rfcmustnot}{\rfckw{must not}}
-\newcommand{\rfcrequired}{\rfckw{required}}
-\newcommand{\rfcshall}{\rfckw{shall}}
-\newcommand{\rfcshallnot}{\rfckw{shall not}}
-\newcommand{\rfcshould}{\rfckw{should}}
-\newcommand{\rfcshouldnot}{\rfckw{should not}}
-\newcommand{\rfcrecommended}{\rfckw{recommended}}
-\newcommand{\rfcnotrecommended}{\rfckw{not recommended}}
-\newcommand{\rfcmay}{\rfckw{may}}
-\newcommand{\rfcoptional}{\rfckw{optional}}
-
-% Open question.
-\newcommand{\todo}[1]{\textcolor{orange}{(#1)}}
-
-\newcommand{\ghissue}[1]{\href{https://github.com/UoY-RoboStar/robocert-sequences/#1}{\##1}}
-
-\newcommand{\metaref}[1]{{\fontfamily{qhv}\selectfont #1}}
-\newcommand{\langname}{{\sffamily\itshape RoboCert}}
-\newcommand{\robochart}{{\sffamily\itshape RoboChart}}
-\newcommand{\robostar}{{\sffamily\itshape RoboStar}}
-
-\newcommand{\thead}[1]{\textbf{#1}}
-\newcommand{\tsubhead}[1]{\textit{#1}}
-
+\input{defs}
 
 \title{\langname{} Reference Manual}
 \author{Matt Windsor}
@@ -130,13 +101,16 @@ permissions and limitations under the License.\\
 \part{Sequence diagrams}
 \input{seq}
 
-\part{Well-formedness and Semantics}
+\part{Semantics}
 
-\chapter{Well-formedness}\label{cha:wf}
-\input{wf}
+\chapter{Introduction}\label{cha:semantics-intro}
+\input{semantics/intro}
 
-\chapter{Semantics}\label{cha:semantics}
-\input{semantics}
+\chapter{Timed Semantics: \tockcsp}\label{cha:semantics-tockcsp}
+\input{semantics/tockcsp}
+
+\chapter{Probabilistic Semantics: PRISM}\label{cha:sem-prism}
+%\input{sem/prism}
 
 \appendix
 

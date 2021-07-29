@@ -1,0 +1,35 @@
+%!TEX root=../robocert.tex
+
+% Various new-command definitions used throughout the robocert manual.
+
+\input{defs/tnotation} % textual notations
+\input{defs/gnotation} % graphical notations
+\input{defs/semantics} % semantic brackets, functions, etc
+
+% RFC 2119 keywords
+\newcommand{\rfckw}[1]{\textbf{#1}}
+\newcommand{\rfcmust}{\rfckw{must}}
+\newcommand{\rfcmustnot}{\rfckw{must not}}
+\newcommand{\rfcrequired}{\rfckw{required}}
+\newcommand{\rfcshall}{\rfckw{shall}}
+\newcommand{\rfcshallnot}{\rfckw{shall not}}
+\newcommand{\rfcshould}{\rfckw{should}}
+\newcommand{\rfcshouldnot}{\rfckw{should not}}
+\newcommand{\rfcrecommended}{\rfckw{recommended}}
+\newcommand{\rfcnotrecommended}{\rfckw{not recommended}}
+\newcommand{\rfcmay}{\rfckw{may}}
+\newcommand{\rfcoptional}{\rfckw{optional}}
+
+% Open question.
+\newcommand{\todo}[1]{\textcolor{orange}{(#1)}}
+
+\newcommand{\ghissue}[1]{\href{https://github.com/UoY-RoboStar/robocert-sequences/#1}{\##1}}
+
+\newcommand{\metaref}[1]{{\fontfamily{qhv}\selectfont #1}}
+\newcommand{\langname}{{\sffamily\itshape RoboCert}}
+\newcommand{\robochart}{{\sffamily\itshape RoboChart}}
+\newcommand{\robostar}{{\sffamily\itshape RoboStar}}
+
+% table headings
+\newcommand{\thead}[1]{\textbf{#1}}
+\newcommand{\tsubhead}[1]{\textit{#1}}
