@@ -369,7 +369,12 @@ class DeadlineStep extends StepWithBody {
  * A loop action has a name; this is used both in its semantic elaboration and
  * also as a target for any break actions.
  */
-class LoopStep extends robochart.NamedElement, StepWithBody {
+class LoopStep extends StepWithBody {
+	/**
+	 * Optional name of the loop, used for breaking out of it.
+	 */
+	attr String[0..1] name;
+
 	/**
 	 * The loop bound.
 	 */

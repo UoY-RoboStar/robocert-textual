@@ -132,7 +132,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//StepWithBody">
+  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//StepWithBody">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
         containment="true"/>
   </eClassifiers>

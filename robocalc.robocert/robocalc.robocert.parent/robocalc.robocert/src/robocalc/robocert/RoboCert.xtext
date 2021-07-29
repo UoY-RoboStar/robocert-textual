@@ -146,7 +146,18 @@ TimeUnits returns Expression:
  * Without a specification, loops will iterate forever.
  */
 LoopStep:
-	'loop' {LoopStep} name=ID (':' bound=LoopBound | bound=SilentInfiniteLoopBound) body=Subsequence
+	'loop' {LoopStep} 
+	// Slightly complicated rule to ensure that, if the loop has an explicit
+	// bound, ':' is optional if there is no name, but mandatory (for
+	// disambiguation) if there is one.
+	( bound=SilentInfiniteLoopBound // loop {
+	| ':'? bound=LoopBound // loop exactly 4 times {
+	| name=ID
+		( bound=SilentInfiniteLoopBound // loop L {
+		| ':' bound=LoopBound // loop L: exactly 4 times {
+		)
+	)
+	body=Subsequence
 ;
 
 /**

@@ -78,23 +78,38 @@ within 3 units {
   \gloop{mls}{wls}{mle}{wle}{#1}{#2}
 }
 
-A \mloopstep{} is a named loop over a \msubsequence{} of steps.
-The number of times a \mloopstep{} will iterate \todo{adding breaks will
-change this}
-depends on its attached \mloopbound{}.  Each bound is in terms of
-\mexpression{}s that are evaluated \emph{only once}, before the execution
-of the loop.
+A \mloopstep{} is a loop over a \msubsequence{} of
+steps.  The number of times a \mloopstep{} will iterate \todo{adding
+  breaks will change this} depends on its attached \mloopbound{}.
+Each bound is in terms of \mexpression{}s that are evaluated
+\emph{only once}, before the execution of the loop.
+
+Loops may optionally have names, which are displayed to the side of
+the loop header in the graphical syntax.  Loop names will eventually
+be used for break expressions.
+
+\begin{remark}
+  The textual notation examples shown below also work for unnamed
+  loops, with one syntactic convenience: the \texttt{:} can be
+  omitted.
+  \begin{lstlisting}[language=RoboCert]
+    loop: forever    { ->op O1() } // valid
+    loop forever     { ->op O1() } // valid, equivalent to above
+    loop L1: forever { ->op O1() } // valid
+    loop L1 forever  { ->op O1() } // invalid
+  \end{lstlisting}
+\end{remark}
 
 \paragraph{\minfiniteloopbound}
-A \minfiniteloopbound{} states that the loop executes an infinite
+A \minfiniteloopbound{} states that the loop iterates an unbounded
 number of times.
 
 \begin{figure}[H]
 \begin{subfigure}[t]{\egtextwidth}
 \begin{lstlisting}[style=Example]
-loop L1 : forever { // or 'loop L1 {'
-    ->op O1()
-}
+// these are equivalent:
+loop L1: forever { ->op O1() }
+loop L1          { ->op O1() }
 \end{lstlisting}
 \end{subfigure}
 \hfill
@@ -108,7 +123,7 @@ loop L1 : forever { // or 'loop L1 {'
 \end{figure}
 
 \paragraph{\mdefiniteloopbound}
-A \mdefiniteloopbound{} states that the loop executes exactly the
+A \mdefiniteloopbound{} states that the loop iterates exactly the
 number of times given in the bound.
 
 \begin{figure}[H]
@@ -130,7 +145,7 @@ loop L2 : exactly 4 times {
 \end{figure}
 
 \paragraph{\mlowerloopbound}
-A \mlowerloopbound{} states that the loop executes at least the
+A \mlowerloopbound{} states that the loop iterates at least the
 number of times given in the bound, but may nondeterministically
 choose to execute any number of times in addition.
 
@@ -154,7 +169,7 @@ loop L3 : at least 5 times {
 
 \paragraph{\mrangeloopbound}
 A \mrangeloopbound{} behaves as a \mlowerloopbound, but states that
-the loop will not execute any more times than the given upper bound.
+the loop will not iterate any more times than the given upper bound.
 Note that if the bounds are the same, the semantics is equivalent
 to that of a \mdefiniteloopbound{}.
 
