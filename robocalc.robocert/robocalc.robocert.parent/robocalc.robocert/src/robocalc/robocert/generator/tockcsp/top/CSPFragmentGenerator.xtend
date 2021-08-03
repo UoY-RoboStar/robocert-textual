@@ -19,11 +19,11 @@ class CSPFragmentGenerator {
 	 * 
 	 * @return the generated CSP-M.
 	 */
-	def dispatch generate(
-		ProcessCSPFragment it
-	) '''«name» = {- begin CSP fragment -}(
-	«contents»
-){- end CSP fragment «name» -}'''
+	def dispatch generate(ProcessCSPFragment it) '''
+		«name» = {- begin CSP fragment -}(
+			«contents»
+		){- end CSP fragment «name» -}
+	'''
 
 	/**
 	 * Generates CSP-M for an inline CSP fragment.
@@ -32,11 +32,11 @@ class CSPFragmentGenerator {
 	 * 
 	 * @return the generated CSP-M.
 	 */
-	def dispatch generate(
-		InlineCSPFragment it
-	) '''{- begin CSP fragment «nameOrFallback» -}
-	«contents»
-{- end CSP fragment «nameOrFallback» -}'''
+	def dispatch generate(InlineCSPFragment it) '''
+		{- begin CSP fragment «nameOrFallback» -}
+			«contents»
+		{- end CSP fragment «nameOrFallback» -}
+	'''
 
 	/**
 	 * Generates fallback CSP-M for an unrecognised CSP fragment.

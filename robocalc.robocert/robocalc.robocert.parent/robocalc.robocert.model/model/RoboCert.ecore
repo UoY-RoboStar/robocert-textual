@@ -13,20 +13,74 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RAPackage" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//BasicPackage">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cspFragments" upperBound="-1"
-        eType="#//CSPFragment" containment="true"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A RoboCert package."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cspGroups" upperBound="-1"
+        eType="#//CSPGroup" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequenceGroups" upperBound="-1"
         eType="#//SequenceGroup" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" upperBound="-1"
         eType="#//Assertion" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPProcessSource" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPGroup">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A group of raw CSP-M declarations.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUntimed" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If true, the group should be generated outside of a timed section."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
+        eType="#//CSPFragment" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The fragments contained in this group."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//CSPFragment #//CSPProcessSource ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="InlineCSPFragment" eSuperTypes="#//CSPFragment #//OptionallyNamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPProcessSource" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Abstract class of anything that can be interpreted as a CSP process.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The raw contents of the CSP fragment."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//CSPFragment #//CSPProcessSource ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M that is bound to a process.&#xD;&#xA;&#xD;&#xA;Such fragments must be named; the name is then used to refer to the process."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineCSPFragment" eSuperTypes="#//CSPFragment #//OptionallyNamedElement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M that is not bound to anything.&#xD;&#xA;&#xD;&#xA;Such fragments can be named, but don't need to be, and nothing in the semantics&#xD;&#xA;will depend on such a name existing."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A tock-CSP refinement model."/>
+    </eAnnotations>
+    <eLiterals name="TICK_TOCK">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Tick-tock refinement model."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="TRACES" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Traces refinement model (with prioritisation)."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceGroup" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target" containment="true" eOpposite="#//Target/group"/>
@@ -224,9 +278,5 @@
   <eClassifiers xsi:type="ecore:EEnum" name="SequenceAssertionType">
     <eLiterals name="HOLDS"/>
     <eLiterals name="IS_OBSERVED" value="1"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
-    <eLiterals name="TICK_TOCK"/>
-    <eLiterals name="TRACES" value="1"/>
   </eClassifiers>
 </ecore:EPackage>

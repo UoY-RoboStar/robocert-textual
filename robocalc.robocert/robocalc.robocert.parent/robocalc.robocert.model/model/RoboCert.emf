@@ -11,9 +11,9 @@ package robocert;
 
 import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
 
-//
+///////////////////////////////////////////////////////////////////////////////
 // UTILITIES
-//
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * An element that might be named, but might not be.
@@ -29,20 +29,18 @@ abstract class OptionallyNamedElement {
 	attr String[0..1] name;
 }
 
-//
-// TOP LEVEL
-//
+///////////////////////////////////////////////////////////////////////////////
+// CORE LANGUAGE
+///////////////////////////////////////////////////////////////////////////////
 
-/**
- * A RoboCert package.
- */
+@genmodel(documentation="A RoboCert package.")
 class RAPackage extends robochart.BasicPackage {
 	/**
 	 * Any top-level CSP fragments in this package.
 	 * 
 	 * TODO: these will likely go away once we have a way of resolving files.
 	 */
-	val CSPFragment[*] cspFragments;
+	val CSPGroup[*] cspGroups;
 	/**
 	 * Any sequence groups in this package.
 	 */
@@ -53,38 +51,58 @@ class RAPackage extends robochart.BasicPackage {
 	val Assertion[*] assertions;
 }
 
-/**
- * Abstract class of anything that can be interpreted as a CSP process.
- *
- * This is predominantly a marker, and doesn't hold any state of its own.
- */
+///////////////////////////////////////////////////////////////////////////////
+// CSP
+///////////////////////////////////////////////////////////////////////////////
+
+@genmodel(documentation="A group of raw CSP-M declarations.
+
+We generally interpret CSP-M as tock-CSP and implicitly generate it into a
+timed section, but this can be overridden.")
+class CSPGroup {
+	@genmodel(documentation="If true, the group should be generated outside of a timed section.")
+	attr boolean[1] isUntimed;
+	
+	@genmodel(documentation="The fragments contained in this group.")
+	val CSPFragment[*]#group fragments;
+}
+
+@genmodel(documentation="Abstract class of anything that can be interpreted as a CSP process.
+
+This is predominantly a marker, and doesn't hold any state of its own.")
 abstract class CSPProcessSource {
 }
 
-/**
- * A fragment of CSP-M.
- */
+@genmodel(documentation="A fragment of CSP-M.
+
+We generally interpret CSP-M as tock-CSP and implicitly generate it into a
+timed section, but this can be overridden.")
 abstract class CSPFragment {
-	/**
-	 * The raw contents of the CSP fragment.
-	 */
+	@genmodel(documentation="The raw contents of the CSP fragment.")
 	attr String[1] contents;
 }
 
-/**
- * A fragment of CSP-M that is bound to a process.
- *
- * Such fragments must be named; the name is then used to refer to the process.
- */
+@genmodel(documentation="A fragment of CSP-M that is bound to a process.
+
+Such fragments must be named; the name is then used to refer to the process.")
 class ProcessCSPFragment extends CSPFragment, CSPProcessSource, robochart.NamedElement {
 }
 
-/**
- * A fragment of CSP-M that is not bound to anything.
- *
- * Such fragments can be named, but don't need to be.
- */
+@genmodel(documentation="A fragment of CSP-M that is not bound to anything.
+
+Such fragments can be named, but don't need to be, and nothing in the semantics
+will depend on such a name existing.")
 class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
+}
+
+
+@genmodel(documentation="A tock-CSP refinement model.")
+enum CSPModel {
+	@genmodel(documentation="Tick-tock refinement model.")
+	TICK_TOCK;
+	
+	@genmodel(documentation="Traces refinement model (with prioritisation).")
+	TRACES;
 }
 
 //
@@ -695,18 +713,4 @@ enum SequenceAssertionType {
 	 * (all behaviours of the sequence are observable on the target).
 	 */
 	IS_OBSERVED;
-}
-
-/**
- * A CSP refinement model.
- */
-enum CSPModel {
-	/**
-	 * The timed tick-tock CSP model.
-	 */
-	TICK_TOCK;
-	/**
-	 * Traces refinement.
-	 */
-	TRACES;
 }

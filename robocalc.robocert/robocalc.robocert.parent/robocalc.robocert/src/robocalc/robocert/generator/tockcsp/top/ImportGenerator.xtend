@@ -32,10 +32,11 @@ class ImportGenerator {
 	 * 
 	 * @return  the generated imports.
 	 */
-	def CharSequence generateImports(Resource resource)
-	'''«FOR p : resource.imports»
-		include "«p»"
-	«ENDFOR»'''
+	def CharSequence generateImports(Resource resource) '''
+		«FOR p : resource.imports»
+			include "«p»"
+		«ENDFOR»
+	'''
 
 	// Pulled out of GeneratorUtils
 	private def getImports(Resource it) {

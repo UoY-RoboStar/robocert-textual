@@ -16,7 +16,7 @@ class RoboCertFormatter extends RoboChartFormatter {
 
 	def dispatch void format(RAPackage rAPackage, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		for (cSPFragment : rAPackage.cspFragments) {
+		for (cSPFragment : rAPackage.cspGroups) {
 			cSPFragment.format
 		}
 		for (sequenceGroup : rAPackage.sequenceGroups) {
