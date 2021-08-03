@@ -1,17 +1,17 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.intf.seq
 
 import robocalc.robocert.model.robocert.SequenceAction
 
 /**
- * Interface for things that generate CSP for actions.
+ * Interface for things that generate code for actions.
  */
 interface ActionGenerator {
 	/**
-	 * Generates CSP for a action.
+	 * Generates code for a action.
 	 * 
 	 * @param it  the action.
 	 * 
-	 * @return the generated CSP.
+	 * @return the generated code.
 	 */
 	def CharSequence generate(SequenceAction it)
 }

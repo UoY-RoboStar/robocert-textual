@@ -12,6 +12,24 @@ package robocert;
 import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
 
 //
+// UTILITIES
+//
+
+/**
+ * An element that might be named, but might not be.
+ *
+ * This is usually useful for elements where the name adds some syntactic
+ * complexity but enables cross-reference, and so we want to offer a possible
+ * unnamed variant.
+ */
+abstract class OptionallyNamedElement {
+	/**
+	 * The name (can be null).
+	 */
+	attr String[0..1] name;
+}
+
+//
 // TOP LEVEL
 //
 
@@ -36,13 +54,37 @@ class RAPackage extends robochart.BasicPackage {
 }
 
 /**
+ * Abstract class of anything that can be interpreted as a CSP process.
+ *
+ * This is predominantly a marker, and doesn't hold any state of its own.
+ */
+abstract class CSPProcessSource {
+}
+
+/**
  * A fragment of CSP-M.
  */
-class CSPFragment {
+abstract class CSPFragment {
 	/**
 	 * The raw contents of the CSP fragment.
 	 */
 	attr String[1] contents;
+}
+
+/**
+ * A fragment of CSP-M that is bound to a process.
+ *
+ * Such fragments must be named; the name is then used to refer to the process.
+ */
+class ProcessCSPFragment extends CSPFragment, CSPProcessSource, robochart.NamedElement {
+}
+
+/**
+ * A fragment of CSP-M that is not bound to anything.
+ *
+ * Such fragments can be named, but don't need to be.
+ */
+class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
 }
 
 //
@@ -366,15 +408,9 @@ class DeadlineStep extends StepWithBody {
 /**
  * A step containing one or more sequence elements in loop.
  *
- * A loop action has a name; this is used both in its semantic elaboration and
- * also as a target for any break actions.
+ * A loop action may have a name, which is useful when specifying break actions.
  */
-class LoopStep extends StepWithBody {
-	/**
-	 * Optional name of the loop, used for breaking out of it.
-	 */
-	attr String[0..1] name;
-
+class LoopStep extends StepWithBody, OptionallyNamedElement {
 	/**
 	 * The loop bound.
 	 */
@@ -445,7 +481,6 @@ class RangeLoopBound extends LoopBound {
 	 */
 	val robochart.Expression[1] upperTimes;
 }
-
 
 //
 // ACTIONS

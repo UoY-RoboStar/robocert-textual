@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.top
 
 import circus.robocalc.robochart.BasicPackage
 import circus.robocalc.robochart.Import

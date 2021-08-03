@@ -5,18 +5,19 @@ package robocalc.robocert
 
 import org.eclipse.xtext.generator.IOutputConfigurationProvider
 import robocalc.robocert.generator.RoboCertOutputConfigurationProvider
-import robocalc.robocert.generator.csp.ActionGenerator
-import robocalc.robocert.generator.csp.ActionGeneratorImpl
-import robocalc.robocert.generator.csp.SubsequenceGenerator
-import robocalc.robocert.generator.csp.SequenceGenerator
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter
 import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom
 import circus.robocalc.robochart.RoboChartFactory
 import robocalc.robocert.model.robocert.RobocertFactory
 import robocalc.robocert.model.robocert.impl.RobocertFactoryImplCustom
-import robocalc.robocert.generator.csp.StepGeneratorImpl
-import robocalc.robocert.generator.csp.StepGenerator
+import robocalc.robocert.generator.intf.seq.ActionGenerator
+import robocalc.robocert.generator.tockcsp.seq.ActionGeneratorImpl
+import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
+import robocalc.robocert.generator.tockcsp.seq.SequenceGenerator
+import robocalc.robocert.generator.intf.seq.StepGenerator
+import robocalc.robocert.generator.tockcsp.seq.StepGeneratorImpl
+import org.eclipse.xtext.conversion.IValueConverterService
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -44,6 +45,10 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	 */
 	def Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
 		RoboChartQualifiedNameConverter
+	}
+	
+	override Class<? extends IValueConverterService> bindIValueConverterService() {
+		RoboCertValueConverterService
 	}
 	
 	/**

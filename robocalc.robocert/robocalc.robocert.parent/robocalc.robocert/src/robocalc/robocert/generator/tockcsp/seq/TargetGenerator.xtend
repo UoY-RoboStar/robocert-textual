@@ -1,6 +1,6 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
-import javax.inject.Inject
+import com.google.inject.Inject
 import robocalc.robocert.generator.utils.VariableExtensions
 import circus.robocalc.robochart.Variable
 import robocalc.robocert.generator.utils.TargetExtensions
@@ -92,13 +92,13 @@ class TargetGenerator {
 	 */
 	private def CharSequence generateOpenTargetSig(Target it, TargetInstantiation instantiation) '''
 	OpenTarget«FOR c : uninstantiatedConstants.toIterable BEFORE '(' SEPARATOR ',' AFTER ')'»
-		«instantiation.generateConstant(c)»
+			«instantiation.generateConstant(c)»
 	«ENDFOR»'''
 
 	private def CharSequence generateOpenTargetBody(Target it) '''
 		«namespace»::O__(
 			{- id -} 0«FOR c : parameterisation.toIterable BEFORE ',' SEPARATOR ','»
-					«instantiation.generateConstant(c)»
+						«instantiation.generateConstant(c)»
 			«ENDFOR»
 		)
 	'''

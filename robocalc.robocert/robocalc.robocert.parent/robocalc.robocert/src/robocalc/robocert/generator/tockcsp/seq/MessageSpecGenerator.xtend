@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Argument

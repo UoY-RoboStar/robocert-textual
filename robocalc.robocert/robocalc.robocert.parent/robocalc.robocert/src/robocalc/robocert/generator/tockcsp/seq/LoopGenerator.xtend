@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.InfiniteLoopBound
@@ -8,6 +8,7 @@ import robocalc.robocert.model.robocert.DefiniteLoopBound
 import robocalc.robocert.model.robocert.RangeLoopBound
 import robocalc.robocert.model.robocert.LoopStep
 import robocalc.robocert.model.robocert.LoopBound
+import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 
 /**
  * Generates CSP for loops.
@@ -17,7 +18,7 @@ import robocalc.robocert.model.robocert.LoopBound
  */
 class LoopGenerator {
 	@Inject extension ExpressionGenerator
-	@Inject extension SequenceGenerator
+	@Inject extension SubsequenceGenerator
 	
 	/**
 	 * Generates CSP for a loop action.

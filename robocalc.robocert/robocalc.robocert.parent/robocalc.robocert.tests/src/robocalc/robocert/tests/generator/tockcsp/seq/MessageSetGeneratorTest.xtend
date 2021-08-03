@@ -1,4 +1,4 @@
-package robocalc.robocert.tests.generator.csp
+package robocalc.robocert.tests.generator.tockcsp.seq
 
 
 import com.google.inject.Inject
@@ -6,7 +6,7 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
-import robocalc.robocert.generator.csp.MessageSetGenerator
+import robocalc.robocert.generator.tockcsp.seq.MessageSetGenerator
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import static extension org.junit.Assert.assertEquals
 import robocalc.robocert.model.robocert.RobocertFactory

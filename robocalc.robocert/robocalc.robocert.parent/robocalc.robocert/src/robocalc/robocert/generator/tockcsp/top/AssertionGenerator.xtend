@@ -1,8 +1,10 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.top
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.SequenceAssertion
 import robocalc.robocert.model.robocert.Assertion
+import robocalc.robocert.generator.tockcsp.seq.SequenceGenerator
+import robocalc.robocert.generator.tockcsp.seq.TargetGenerator
 
 /**
  * Generates CSP for assertions.

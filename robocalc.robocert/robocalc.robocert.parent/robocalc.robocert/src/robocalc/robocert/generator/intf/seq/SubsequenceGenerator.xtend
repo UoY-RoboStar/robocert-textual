@@ -1,20 +1,20 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.intf.seq
 
 import robocalc.robocert.model.robocert.Subsequence
 
 /**
- * Interface for things that generate CSP for subsequences.
+ * Interface for things that generate code for subsequences.
  * 
  * Subsequences induce cyclic dependencies, so the main purpose of this
  * generator is to help break up the dependency cycle.
  */
 interface SubsequenceGenerator {
 	/**
-	 * Generates CSP for a subsequence.
+	 * Generates code for a subsequence.
 	 * 
 	 * @param it  the action.
 	 * 
-	 * @return the generated CSP.
+	 * @return the generated code.
 	 */
 	def CharSequence generate(Subsequence it)
 }

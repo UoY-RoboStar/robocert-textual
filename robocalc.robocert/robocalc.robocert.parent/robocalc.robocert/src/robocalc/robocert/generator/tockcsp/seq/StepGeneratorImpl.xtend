@@ -1,13 +1,16 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.SequenceStep
 import robocalc.robocert.model.robocert.ActionStep
 import robocalc.robocert.model.robocert.LoopStep
 import robocalc.robocert.model.robocert.DeadlineStep
+import robocalc.robocert.generator.intf.seq.StepGenerator
 
 /**
  * Generator for sequence steps.
+ * 
+ * This generator mainly just delegates into lower-level generators.
  */
 class StepGeneratorImpl implements StepGenerator {
 	@Inject extension ActionStepGenerator	

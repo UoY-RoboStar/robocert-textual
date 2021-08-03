@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.ArrowAction
@@ -6,6 +6,7 @@ import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.model.robocert.FinalAction
 import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.WaitAction
+import robocalc.robocert.generator.intf.seq.ActionGenerator
 
 /**
  * Top-level CSP generator for sequence actions.

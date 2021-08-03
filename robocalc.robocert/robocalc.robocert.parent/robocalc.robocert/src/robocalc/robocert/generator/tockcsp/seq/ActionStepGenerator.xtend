@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import com.google.common.collect.Iterators
@@ -9,7 +9,7 @@ import robocalc.robocert.model.robocert.ArrowAction
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.generator.utils.MessageSetOptimiser
-
+import robocalc.robocert.generator.intf.seq.ActionGenerator
 
 /**
  * Generates CSP-M for action steps.

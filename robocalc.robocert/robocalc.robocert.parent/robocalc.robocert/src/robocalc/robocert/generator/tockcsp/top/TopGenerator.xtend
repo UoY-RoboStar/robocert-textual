@@ -1,16 +1,18 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.top
 
 import org.eclipse.emf.ecore.resource.Resource
 import robocalc.robocert.model.robocert.CSPFragment
 import robocalc.robocert.model.robocert.Assertion
 import robocalc.robocert.model.robocert.SequenceGroup
 import com.google.inject.Inject
+import robocalc.robocert.generator.tockcsp.seq.SequenceGenerator
 
 /**
  * Top-level generator for tock-CSP.
  */
 class TopGenerator {
 	@Inject extension AssertionGenerator
+	@Inject extension CSPFragmentGenerator
 	@Inject extension ImportGenerator
 	@Inject extension SequenceGenerator
 	
@@ -57,21 +59,9 @@ class TopGenerator {
 		// diagrams.  This will change later on.
 		'''
 			«FOR csp : resource.allContents.filter(CSPFragment).toIterable»
-				«csp.generateCSPFragment»
+				«csp.generate»
 			«ENDFOR»
 		'''
-	}
-
-	/**
-	 * @return included CSP for a CSP fragment.
-	 * 
-	 * @param frag  the CSP fragment.
-	 */
-	private def generateCSPFragment(CSPFragment frag) {
-		// stripping 'csp-begin' (9 chars) and 'csp-end' (7 chars).
-		// TODO: is this the right way to do this, or do we need a value
-		// converter?
-		frag.contents.substring(9, frag.contents.length - 7)
 	}
 
 	/**

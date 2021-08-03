@@ -1,8 +1,9 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.DeadlineStep
+import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 
 /**
  * Generates CSP-M for deadlines.

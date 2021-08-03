@@ -16,7 +16,7 @@ import org.eclipse.xtext.EcoreUtil2
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class RoboCertGenerator extends AbstractGenerator {
-	@Inject robocalc.robocert.generator.csp.TopGenerator csp
+	@Inject robocalc.robocert.generator.tockcsp.top.TopGenerator csp
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		// Needed to make sure that imports in any RoboChart packages

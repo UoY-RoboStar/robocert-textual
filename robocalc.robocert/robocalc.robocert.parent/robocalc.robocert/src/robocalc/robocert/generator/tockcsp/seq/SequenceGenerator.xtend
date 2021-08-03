@@ -1,9 +1,11 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
 import robocalc.robocert.model.robocert.Sequence
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Subsequence
 import robocalc.robocert.model.robocert.SequenceGroup
+import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
+import robocalc.robocert.generator.intf.seq.StepGenerator
 
 /**
  * A generator that emits CSP for sequences and subsequences.
@@ -26,7 +28,7 @@ class SequenceGenerator implements SubsequenceGenerator {
 			-- world «world»
 			
 			«messageSets.generateNamedSets(target)»
-
+		
 		exports
 			Timed(OneStep) {
 				«target.generateOpenTargetDef»

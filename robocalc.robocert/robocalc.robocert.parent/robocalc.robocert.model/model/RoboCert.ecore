@@ -9,6 +9,9 @@
     <details key="editorDirectory" value="/robocalc.robocert.model.editor/src-gen"/>
     <details key="testsDirectory" value="/robocalc.robocert.model.tests/src-gen"/>
   </eAnnotations>
+  <eClassifiers xsi:type="ecore:EClass" name="OptionallyNamedElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RAPackage" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//BasicPackage">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cspFragments" upperBound="-1"
         eType="#//CSPFragment" containment="true"/>
@@ -17,10 +20,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" upperBound="-1"
         eType="#//Assertion" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
+  <eClassifiers xsi:type="ecore:EClass" name="CSPProcessSource" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//CSPFragment #//CSPProcessSource ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineCSPFragment" eSuperTypes="#//CSPFragment #//OptionallyNamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceGroup" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target" containment="true" eOpposite="#//Target/group"/>
@@ -132,8 +138,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//StepWithBody">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//StepWithBody #//OptionallyNamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
         containment="true"/>
   </eClassifiers>

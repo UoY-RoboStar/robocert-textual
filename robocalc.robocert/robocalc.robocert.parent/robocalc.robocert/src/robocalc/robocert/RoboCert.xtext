@@ -5,6 +5,10 @@ import "http://robocert.robocalc/"
 import "http://www.robocalc.circus/RoboChart"
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
+///////////////////////////////////////////////////////////////////////////////
+// Core language
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * A top-level assertions package.
  */
@@ -15,15 +19,21 @@ RAPackage:
 	)*;
 
 /**
- * A raw CSP fragment.
+ * A CSP fragment.
  * 
- * TODO: per meta-model, these will likely go away later on, replaced with
- *       process-bound CSP fragments only.
+ * CSP fragments can be process-bound or inline.
  */
-
 CSPFragment:
-	'include' contents = CSP_CODE;
+	'csp'
+	( 'process' {ProcessCSPFragment} name=ID
+	| 'inline' {InlineCSPFragment} name=ID?
+	)
+	':' contents=CSP_CODE
+;
 
+/**
+ * The raw CSP code.
+ */
 terminal CSP_CODE: 'csp-begin' -> 'csp-end';
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.intf.seq
 
 import robocalc.robocert.model.robocert.SequenceStep
 
@@ -7,11 +7,11 @@ import robocalc.robocert.model.robocert.SequenceStep
  */
 interface StepGenerator {
 	/**
-	 * Generates CSP for a sequence step.
+	 * Generates code for a sequence step.
 	 * 
 	 * @param it  the sequence step.
 	 * 
-	 * @return a CSP character sequence.
+	 * @return a code character sequence.
 	 */
 	def CharSequence generate(SequenceStep it);	
 }

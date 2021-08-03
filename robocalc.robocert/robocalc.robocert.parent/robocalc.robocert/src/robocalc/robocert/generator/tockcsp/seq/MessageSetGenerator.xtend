@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.csp
+package robocalc.robocert.generator.tockcsp.seq
 
 import robocalc.robocert.model.robocert.ExtensionalMessageSet
 import com.google.inject.Inject
