@@ -9,6 +9,8 @@ import robocalc.robocert.model.robocert.NamedMessageSet
 import robocalc.robocert.model.robocert.BinaryMessageSet
 import robocalc.robocert.model.robocert.BinarySetOperator
 import robocalc.robocert.generator.utils.MessageSetOptimiser
+import robocalc.robocert.model.robocert.Target
+import robocalc.robocert.generator.utils.TargetExtensions
 
 /**
  * CSP generator for message sets.
@@ -18,6 +20,7 @@ import robocalc.robocert.generator.utils.MessageSetOptimiser
  * generation.
  */
 class MessageSetGenerator {
+	@Inject extension TargetExtensions
 	@Inject extension MessageSetOptimiser
 	@Inject extension MessageSpecGenerator
 
@@ -38,7 +41,7 @@ class MessageSetGenerator {
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(UniverseMessageSet it) '''Events'''
+	def dispatch generate(UniverseMessageSet it) '''«MODULE_NAME»::«UNIVERSE_NAME»'''
 
 	/**
 	 * Generates a CSP event set for a reference gap message set.
@@ -47,7 +50,7 @@ class MessageSetGenerator {
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(RefMessageSet it) '''MsgSets::«set.name»'''
+	def dispatch generate(RefMessageSet it) '''«MODULE_NAME»::«set.name»'''
 
 	/**
 	 * Generates a CSP event set for a binary gap message set.
@@ -79,24 +82,44 @@ class MessageSetGenerator {
 		}
 	}
 
-	def generateNamedSets(Iterable<NamedMessageSet> sets) '''
-		«IF sets.isNullOrEmpty»
-			-- No named message sets
-		«ELSE»
-			-- Named message sets
-			module MsgSets
-			exports
-				«FOR set: sets»
-					«IF set.set !== null»
-						«set.name» = «set.generateNamedSet»
-					«ENDIF»
-				«ENDFOR»
-			endmodule
-		«ENDIF»
-	'''
+	/**
+	 * Generates the named set module for a sequence group.
+	 * 
+	 * @param sets  the message sets to expose in the module.
+	 * @param tgt   the sequence group's target.
+	 * 
+	 * @return generated CSP for the named message set group.
+	 */
+	def generateNamedSets(Iterable<NamedMessageSet> sets, Target tgt)
+	'''module MsgSets
+exports
+	«UNIVERSE_NAME» = «tgt.namespace»::«UNIVERSE_DEF_NAME»
+	«IF sets !== null»
+		«FOR set: sets.filterNull»
+			«set.name» = «set.generateNamedSet»
+		«ENDFOR»
+	«ENDIF»
+endmodule'''
 	
-	def generateNamedSet(NamedMessageSet it) {
+	def private generateNamedSet(NamedMessageSet it) {
 		set = set.optimise
 		set.generate
 	}
+	
+	/**
+	 * The name of the message set module exposed by RoboCert.
+	 */
+	public static final String MODULE_NAME = "MsgSets"
+	
+	/**
+	 * The name of the universe set exposed by RoboCert in the message set
+	 * module.
+	 */
+	public static final String UNIVERSE_NAME = "Universe"
+	
+	/**
+	 * The name of the events set exposed by the RoboChart/RoboSim semantics
+	 * and which contains all semantically relevant events.
+	 */
+	static final String UNIVERSE_DEF_NAME = "sem__events"
 }

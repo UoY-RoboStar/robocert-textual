@@ -24,10 +24,10 @@ class SequenceGenerator implements SubsequenceGenerator {
 		module «name»
 			-- target «target»
 			-- world «world»
-		exports
-			«messageSets.generateNamedSets»
+			
+			«messageSets.generateNamedSets(target)»
 
-			-- Target definitions
+		exports
 			Timed(OneStep) {
 				«target.generateOpenTargetDef»
 				«target.generateClosedTargetDef»

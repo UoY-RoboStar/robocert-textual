@@ -12,7 +12,7 @@ import robocalc.robocert.generator.utils.MessageSetOptimiser
 
 
 /**
- * Generates CSP for action steps.
+ * Generates CSP-M for action steps.
  */
 class ActionStepGenerator {
 	@Inject extension ActionGenerator
@@ -21,16 +21,25 @@ class ActionStepGenerator {
 	@Inject extension MessageSpecGenerator
 
 	/**
-	 * Generates CSP for an action step.
+	 * Generates CSP-M for an action step.
 	 * 
 	 * @param it  the action step.
 	 * 
-	 * @return the generated CSP.
+	 * @return the generated CSP-M.
 	 */
-	def generateActionStep(ActionStep it) '''(«IF gap.isActive»gap(«generateGap», «action.generateActionSet») /\ «ENDIF»«action.generate»)'''
+	def generateActionStep(ActionStep it) '''(«IF gap.isActive»«generateGap» /\ «ENDIF»«action.generate»)'''
 
 	/**
-	 * Optimises the action gap in place, then generates it.
+	 * Generates CSP-M for an action step gap.
+	 * 
+	 * @param it  the action step.
+	 * 
+	 * @return the generated CSP-M.
+	 */
+	private def generateGap(ActionStep it) '''«GAP_PROC»(«generateGapSet», «action.generateActionSet»)'''
+
+	/**
+	 * Optimises the gap set in place, then generates it.
 	 * 
 	 * We do the optimisation like this to preserve containment information,
 	 * so sequence group lookup works.
@@ -39,7 +48,7 @@ class ActionStepGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	private def generateGap(ActionStep it) {
+	private def generateGapSet(ActionStep it) {
 		gap = gap.optimise
 		gap.generate
 	}
@@ -69,4 +78,9 @@ class ActionStepGenerator {
 	private def dispatch Iterator<MessageSpec> messageSpecs(SequenceAction it) {
 		Collections.emptyIterator
 	}
+
+	/**
+	 * Name of the process that implements gaps.
+	 */
+	static final String GAP_PROC = "gap" // in robocert_defs
 }

@@ -34,7 +34,9 @@ class RoboCertGenerator extends AbstractGenerator {
 	def importResourceStream() {
 		class.classLoader.getResourceAsStream("lib/semantics/"+ROBOCERT_DEFS_NAME)
 	}
-	
 
-	static String ROBOCERT_DEFS_NAME = "robocert_defs.csp"
+	/**
+	 * The name of the robocert-defs file.
+	 */
+	static final String ROBOCERT_DEFS_NAME = "robocert_defs.csp"
 }

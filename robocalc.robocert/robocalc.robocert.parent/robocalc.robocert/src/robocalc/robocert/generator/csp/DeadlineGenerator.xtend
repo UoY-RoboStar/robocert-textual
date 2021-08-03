@@ -5,26 +5,29 @@ import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.DeadlineStep
 
 /**
- * Generates CSP for deadlines.
- * 
- * Most of this CSP is calls into either the CSP-M or RoboCert standard
- * libraries.
+ * Generates CSP-M for deadlines.
  */
 class DeadlineGenerator {
 	@Inject extension ExpressionGenerator
 	@Inject extension SubsequenceGenerator
 
 	/**
-	 * Generates CSP for a deadline step.
+	 * Generates CSP-M for a deadline step.
+	 *
+	 * At the mathematical level, this becomes the 'deadline' tock-CSP
+	 * operator.
 	 * 
 	 * @param it  the deadline step to generate.
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generateDeadline(DeadlineStep it) '''Deadline(
-		(
-			«body.generate»
-		),
+	def generateDeadline(DeadlineStep it) '''«DEADLINE_PROC»(
+		(«body.generate»),
 		{- time units -} «units.compileExpression(it)»
 	)'''
+
+	/**
+	 * Name of the process that implements the tick-tock deadline operator.
+	 */
+	static final String DEADLINE_PROC = "EndBy" // in core_timed
 }
