@@ -22,7 +22,7 @@ RAPackage:
  * A CSP group.
  */
 CSPGroup:
-	(isUntimed?='untimed') 'csp' '{' fragments+=CSPFragment* '}'
+	{CSPGroup} (isUntimed?='untimed'? & isPreamble?='preamble'?) 'csp' '{' fragments+=CSPFragment* '}'
 ;
 
 /**

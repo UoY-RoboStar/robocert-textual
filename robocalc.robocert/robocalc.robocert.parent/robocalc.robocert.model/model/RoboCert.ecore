@@ -33,6 +33,12 @@
         <details key="documentation" value="If true, the group should be generated outside of a timed section."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPreamble" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If true, the group should be generated before any model-specific imports.&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;This is useful primarily for debugging purposes.&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;The group may be generated after RoboCert prelude imports, as these contain&#xD;&#xA;&#x9;the timing model depended upon by the tock-CSP encoding."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
         eType="#//CSPFragment" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

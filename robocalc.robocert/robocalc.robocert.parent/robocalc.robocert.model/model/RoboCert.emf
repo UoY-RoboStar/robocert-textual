@@ -63,6 +63,14 @@ class CSPGroup {
 	@genmodel(documentation="If true, the group should be generated outside of a timed section.")
 	attr boolean[1] isUntimed;
 	
+	@genmodel(documentation="If true, the group should be generated before any model-specific imports.
+	
+	This is useful primarily for debugging purposes.
+	
+	The group may be generated after RoboCert prelude imports, as these contain
+	the timing model depended upon by the tock-CSP encoding.")
+	attr boolean[1] isPreamble;
+	
 	@genmodel(documentation="The fragments contained in this group.")
 	val CSPFragment[*]#group fragments;
 }
