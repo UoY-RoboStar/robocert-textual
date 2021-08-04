@@ -8,6 +8,8 @@ import robocalc.robocert.model.robocert.CSPGroup
 import robocalc.robocert.model.robocert.SequenceGroup
 import java.util.Date
 import java.text.SimpleDateFormat
+import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
+import robocalc.robocert.model.robocert.Group
 
 /**
  * Top-level generator for tock-CSP.
@@ -16,7 +18,8 @@ class TopGenerator {
 	@Inject extension AssertionGenerator
 	@Inject extension CSPGroupGenerator
 	@Inject extension ImportGenerator
-	@Inject extension SequenceGenerator
+	@Inject extension SequenceGenerator sg
+	@Inject extension UnsupportedSubclassHandler
 	
 	/**
 	 * @return generated CSP for all elements.
@@ -31,16 +34,10 @@ class TopGenerator {
 		«resource.generateImports»
 
 		--
-		-- CSP fragments
+		-- Specifications
 		--
 		
-		«resource.generateCSPGroups»
-		
-		--
-		-- Sequences
-		--
-		
-		«resource.generateSequenceGroups»
+		«resource.generateGroups»
 		
 		--
 		-- Assertions
@@ -69,7 +66,7 @@ class TopGenerator {
 	
 
 	/**
-	 * @return included CSP for all preamble CSP fragments.
+	 * @return included CSP for all preamble CSP groups.
 	 * 
 	 * @param resource  the top-level property model.
 	 */
@@ -80,26 +77,27 @@ class TopGenerator {
 	'''
 
 	/**
-	 * @return included CSP for all raw CSP fragments.
+	 * @return included CSP for all groups.
 	 * 
 	 * @param resource  the top-level property model.
 	 */
-	private def generateCSPGroups(Resource resource) '''
-		«FOR csp : resource.allContents.filter(CSPGroup).filter[!isPreamble].toIterable»
-			«csp.generate»
+	private def generateGroups(Resource resource) '''
+		«FOR it : resource.allContents.filter(Group).toIterable»
+			«generateGroup»
 		«ENDFOR»
 	'''
-
-	/**
-	 * @return generated CSP for all sequences.
-	 * 
-	 * @param resource  the top-level property model.
-	 */
-	private def generateSequenceGroups(Resource resource ) '''
-		«FOR group : resource.allContents.filter(SequenceGroup).toIterable»
-			«group.generateGroup»
-		«ENDFOR»
+	
+	def private dispatch generateGroup(CSPGroup it) '''
+		«IF !isPreamble»«generate»«ENDIF»
 	'''
+	
+	def private dispatch generateGroup(SequenceGroup it) {
+		sg.generateGroup(it)
+	}
+	
+	def private dispatch generateGroup(Group it) {
+		unsupported("group", "")
+	}
 
 	//
 	// Assertions

@@ -35,20 +35,19 @@ abstract class OptionallyNamedElement {
 
 @genmodel(documentation="A RoboCert package.")
 class RAPackage extends robochart.BasicPackage {
-	/**
-	 * Any top-level CSP fragments in this package.
-	 * 
-	 * TODO: these will likely go away once we have a way of resolving files.
-	 */
-	val CSPGroup[*] cspGroups;
-	/**
-	 * Any sequence groups in this package.
-	 */
-	val SequenceGroup[*] sequenceGroups;
-	/**
-	 * Any assertions in this package.
-	 */
+	@genmodel(documentation="Any groups in this package.")
+	!ordered val Group[*]#parent groups;
+	
+	@genmodel(documentation="Any assertions in this package.")
 	val Assertion[*] assertions;
+}
+
+@genmodel(documentation="A group in a RoboCert package.
+
+Groups contain specifications in a particular RoboCert notation.")
+abstract class Group {
+	@genmodel(documentation="The parent package.")
+	ref RAPackage[1]#groups parent;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,7 +58,7 @@ class RAPackage extends robochart.BasicPackage {
 
 We generally interpret CSP-M as tock-CSP and implicitly generate it into a
 timed section, but this can be overridden.")
-class CSPGroup {
+class CSPGroup extends Group {
 	@genmodel(documentation="If true, the group should be generated outside of a timed section.")
 	attr boolean[1] isUntimed;
 	
@@ -120,7 +119,7 @@ enum CSPModel {
 /**
  * A collection of sequence diagrams between a given target and world.
  */
-class SequenceGroup extends robochart.NamedElement {
+class SequenceGroup extends Group, robochart.NamedElement {
 	/**
 	 * The target actor of the sequence group.
 	 */

@@ -16,14 +16,31 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A RoboCert package."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="cspGroups" upperBound="-1"
-        eType="#//CSPGroup" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequenceGroups" upperBound="-1"
-        eType="#//SequenceGroup" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" ordered="false"
+        upperBound="-1" eType="#//Group" containment="true" eOpposite="#//Group/parent">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Any groups in this package."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" upperBound="-1"
-        eType="#//Assertion" containment="true"/>
+        eType="#//Assertion" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Any assertions in this package."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPGroup">
+  <eClassifiers xsi:type="ecore:EClass" name="Group" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A group in a RoboCert package.&#xD;&#xA;&#xD;&#xA;Groups contain specifications in a particular RoboCert notation."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
+        eType="#//RAPackage" eOpposite="#//RAPackage/groups">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent package."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//Group">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group of raw CSP-M declarations.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
     </eAnnotations>
@@ -87,7 +104,7 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceGroup" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceGroup" eSuperTypes="#//Group ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target" containment="true" eOpposite="#//Target/group"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="world" lowerBound="1" eType="#//World"

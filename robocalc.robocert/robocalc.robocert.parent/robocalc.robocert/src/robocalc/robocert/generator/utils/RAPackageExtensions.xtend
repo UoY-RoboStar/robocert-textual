@@ -22,8 +22,12 @@ class RAPackageExtensions {
 	 * @returns an iterator of named elements.
 	 */
 	def Iterator<NamedElement> getReferencedElements(RAPackage it) {
-		sequenceGroups.iterator.flatMap[referencedElements]
+		getSequenceGroups.flatMap[referencedElements]
 		// TODO(@MattWindsor91): do we need anything else?
+	}
+	
+	private def Iterator<SequenceGroup> getSequenceGroups(RAPackage it) {
+		groups.iterator.filter(SequenceGroup)
 	}
 
 	private def Iterator<NamedElement> getReferencedElements(SequenceGroup it) {
