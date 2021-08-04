@@ -90,18 +90,41 @@ class TargetGenerator {
 	 * @return CSP referring to, or giving the signature of, the 'open' form of
 	 *         this target.
 	 */
-	private def CharSequence generateOpenTargetSig(Target it, TargetInstantiation instantiation) '''
+	def private CharSequence generateOpenTargetSig(Target it, TargetInstantiation instantiation) '''
 	OpenTarget«FOR c : uninstantiatedConstants.toIterable BEFORE '(' SEPARATOR ',' AFTER ')'»
 			«instantiation.generateConstant(c)»
 	«ENDFOR»'''
 
-	private def CharSequence generateOpenTargetBody(Target it) '''
-		«namespace»::O__(
-			{- id -} 0«FOR c : parameterisation.toIterable BEFORE ',' SEPARATOR ','»
-						«instantiation.generateConstant(c)»
-			«ENDFOR»
-		)
+	def private CharSequence generateOpenTargetBody(Target it) '''
+		«generateOpenTargetName»«parameterisation.toList.generateOpenTargetParams(instantiation)»
 	'''
+	
+	/*
+	 * In email with Pedro (4 Aug): the target of a refinement against
+	 * a (simple) specification should usually be unoptimised (D__); model
+	 * comparisons should usually be optimised (O__).
+	 * 
+	 * TODO(@MattWindsor91): when upstream is changed to make D__ default,
+	 * this should call into CTimedGeneratorUtils; eventually, we should be
+	 * able to select the optimisation level.
+	 */
+	 
+	def private generateOpenTargetName(Target it) '''«namespace»::D__'''
+
+	def private generateOpenTargetParams(Iterable<Variable> cs, TargetInstantiation instantiation) '''
+		«IF cs.isNullOrEmpty»
+			(«ID»)
+		«ELSE»
+			(
+				«ID»,
+				«FOR c: cs SEPARATOR ','»
+					«instantiation.generateConstant(c)»
+				«ENDFOR»
+			)
+		«ENDIF»
+	'''
+	
+	static final String ID = "{- id -} 0"
 
 	/**
 	 * Generates the value of a constant given an instantiation.
