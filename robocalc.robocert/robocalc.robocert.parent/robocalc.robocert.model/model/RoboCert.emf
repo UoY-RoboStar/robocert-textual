@@ -64,10 +64,10 @@ class CSPGroup extends Group {
 	
 	@genmodel(documentation="If true, the group should be generated before any model-specific imports.
 	
-	This is useful primarily for debugging purposes.
-	
-	The group may be generated after RoboCert prelude imports, as these contain
-	the timing model depended upon by the tock-CSP encoding.")
+This is useful primarily for debugging purposes.
+
+The group may be generated after RoboCert prelude imports, as these contain
+the timing model depended upon by the tock-CSP encoding.")
 	attr boolean[1] isPreamble;
 	
 	@genmodel(documentation="The fragments contained in this group.")
@@ -89,10 +89,25 @@ abstract class CSPFragment {
 	attr String[1] contents;
 }
 
-@genmodel(documentation="A fragment of CSP-M that is bound to a process.
+@genmodel(documentation="A fragment of CSP-M that has a name.
 
-Such fragments must be named; the name is then used to refer to the process.")
-class ProcessCSPFragment extends CSPFragment, CSPProcessSource, robochart.NamedElement {
+These are used to bind CSP-M to names that are referred-to elsewhere.")
+class NamedCSPFragment extends CSPFragment, robochart.NamedElement {
+	
+}
+
+@genmodel(documentation="A fragment of CSP-M that is bound to an event set.")
+class EventSetCSPFragment extends NamedCSPFragment {
+}
+
+@genmodel(documentation="A fragment of CSP-M that is bound to a process.")
+class ProcessCSPFragment extends NamedCSPFragment, CSPProcessSource {
+	@genmodel(documentation="The set of all events that the process can communicate.
+
+This is used for tick-tock model shifting.  We cannot, and do not,
+check to make sure that this event set is an accurate representation
+of the process's actual event universe.")
+	ref EventSetCSPFragment[0..1] events;
 }
 
 @genmodel(documentation="A fragment of CSP-M that is not bound to anything.
@@ -101,7 +116,6 @@ Such fragments can be named, but don't need to be, and nothing in the semantics
 will depend on such a name existing.")
 class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
 }
-
 
 @genmodel(documentation="A tock-CSP refinement model.")
 enum CSPModel {

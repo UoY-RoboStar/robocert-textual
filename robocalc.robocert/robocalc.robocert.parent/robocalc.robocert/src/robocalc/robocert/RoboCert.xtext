@@ -27,13 +27,13 @@ CSPGroup:
 /**
  * A CSP fragment.
  * 
- * CSP fragments can be process-bound or inline.
+ * CSP fragments can be event-set-bound, process-bound, or inline.
  */
 CSPFragment:
-	('process' {ProcessCSPFragment} name=ID
+	( 'event' 'set' {EventSetCSPFragment} name=ID
+	| 'process' {ProcessCSPFragment} name=ID (':' 'events' 'in' events=[EventSetCSPFragment|QualifiedName])?
 	| 'inline' {InlineCSPFragment} name=ID?
 	)
-	':'
 	contents=CSP_CODE
 ;
 

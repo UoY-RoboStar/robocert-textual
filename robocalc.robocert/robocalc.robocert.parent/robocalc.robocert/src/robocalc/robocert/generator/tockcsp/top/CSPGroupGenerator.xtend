@@ -24,7 +24,7 @@ class CSPGroupGenerator {
 		«IF isUntimed»
 			«generateInner»
 		«ELSE»
-			timed(OneStep) {
+			Timed(OneStep) {
 				«generateInner»
 			}
 		«ENDIF»

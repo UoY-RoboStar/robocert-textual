@@ -53,7 +53,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPreamble" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="If true, the group should be generated before any model-specific imports.&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;This is useful primarily for debugging purposes.&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;The group may be generated after RoboCert prelude imports, as these contain&#xD;&#xA;&#x9;the timing model depended upon by the tock-CSP encoding."/>
+        <details key="documentation" value="If true, the group should be generated before any model-specific imports.&#xD;&#xA;&#x9;&#xD;&#xA;This is useful primarily for debugging purposes.&#xD;&#xA;&#xD;&#xA;The group may be generated after RoboCert prelude imports, as these contain&#xD;&#xA;the timing model depended upon by the tock-CSP encoding."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
@@ -79,10 +79,25 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//CSPFragment #//CSPProcessSource ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="NamedCSPFragment" eSuperTypes="#//CSPFragment ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that is bound to a process.&#xD;&#xA;&#xD;&#xA;Such fragments must be named; the name is then used to refer to the process."/>
+      <details key="documentation" value="A fragment of CSP-M that has a name.&#xD;&#xA;&#xD;&#xA;These are used to bind CSP-M to names that are referred-to elsewhere."/>
     </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EventSetCSPFragment" eSuperTypes="#//NamedCSPFragment">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M that is bound to an event set."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//NamedCSPFragment #//CSPProcessSource">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M that is bound to a process."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="events" eType="#//EventSetCSPFragment">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The set of all events that the process can communicate.&#xD;&#xA;&#xD;&#xA;This is used for tick-tock model shifting.  We cannot, and do not,&#xD;&#xA;check to make sure that this event set is an accurate representation&#xD;&#xA;of the process's actual event universe."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InlineCSPFragment" eSuperTypes="#//CSPFragment #//OptionallyNamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

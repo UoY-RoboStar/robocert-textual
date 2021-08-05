@@ -3,7 +3,7 @@ package robocalc.robocert.generator.tockcsp.top
 import com.google.inject.Inject
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import robocalc.robocert.model.robocert.CSPFragment
-import robocalc.robocert.model.robocert.ProcessCSPFragment
+import robocalc.robocert.model.robocert.NamedCSPFragment
 import robocalc.robocert.model.robocert.InlineCSPFragment
 
 /**
@@ -13,16 +13,17 @@ class CSPFragmentGenerator {
 	@Inject extension UnsupportedSubclassHandler
 
 	/**
-	 * Generates CSP-M for a process-level CSP fragment.
+	 * Generates CSP-M for a named (event set or process) CSP fragment.
 	 * 
 	 * @param it  the fragment to generate.
 	 * 
 	 * @return the generated CSP-M.
 	 */
-	def dispatch generate(ProcessCSPFragment it) '''
-		«name» = {- begin CSP fragment -}(
+	def dispatch generate(NamedCSPFragment it) '''
+		-- begin named CSP fragment
+		«name» =
 			«contents»
-		){- end CSP fragment «name» -}
+		-- end named CSP fragment «name»
 	'''
 
 	/**
@@ -33,9 +34,9 @@ class CSPFragmentGenerator {
 	 * @return the generated CSP-M.
 	 */
 	def dispatch generate(InlineCSPFragment it) '''
-		{- begin CSP fragment «nameOrFallback» -}
+		-- begin inline CSP fragment «nameOrFallback»
 			«contents»
-		{- end CSP fragment «nameOrFallback» -}
+		-- end inline CSP fragment «nameOrFallback»
 	'''
 
 	/**
