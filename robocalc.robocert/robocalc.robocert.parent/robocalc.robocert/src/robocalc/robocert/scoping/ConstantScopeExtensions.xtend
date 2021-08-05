@@ -4,7 +4,7 @@ import robocalc.robocert.model.robocert.ConstAssignment
 import robocalc.robocert.generator.utils.TargetExtensions
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Target
-import robocalc.robocert.model.robocert.SequenceAssertion
+import robocalc.robocert.model.robocert.SequenceProperty
 import org.eclipse.xtext.scoping.Scopes
 import java.util.Iterator
 import circus.robocalc.robochart.Variable
@@ -46,7 +46,7 @@ class ConstantScopeExtensions {
 	 */
 	private def assertionConstAssignmentScope(ConstAssignment it) {
 		// TODO(@MattWindsor91): this should be part of the metamodel, somehow.
-		getContainerOfType(SequenceAssertion)?.sequence?.target?.uninstantiatedTargetScope
+		getContainerOfType(SequenceProperty)?.sequence?.target?.uninstantiatedTargetScope
 	}
 
 	/**

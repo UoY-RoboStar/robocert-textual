@@ -16,6 +16,47 @@ RAPackage:
 	( groups += (CSPGroup | SequenceGroup)
 	| assertions += Assertion
 	)*;
+
+/**
+ * A RoboCert assertion.
+ */
+Assertion:
+	'assertion' name=ID ':'
+	property=
+		( CSPRefinementProperty
+		| SequenceProperty
+		)
+;
+
+/**
+ * A RoboCert CSP refinement property.
+ */
+CSPRefinementProperty:
+	lhs=[CSPProcessSource|QualifiedName]
+	( 'does' isNegated?='not' type=DoesNotCSPRefinementOperator
+    | type=DoesCSPRefinementOperator
+    )
+	rhs=[CSPProcessSource|QualifiedName]
+    InCSPModelSpec?
+;
+
+/**
+ * Sequence property types that agree with 'does not'.
+ */
+enum DoesNotCSPRefinementOperator returns CSPRefinementOperator:
+	REFINES='refine'
+	| EQUALS='equal'
+;
+
+/**
+ * Sequence property that agree without a prefix (eg, the opposite of
+ * 'does not' sequence property types).
+ */
+enum DoesCSPRefinementOperator returns CSPRefinementOperator:
+	REFINES='refines'
+	| EQUALS='equals'
+;
+
 	
 /**
  * A CSP group.
@@ -41,6 +82,25 @@ CSPFragment:
  * The raw CSP code.
  */
 terminal CSP_CODE: 'csp-begin' -> 'csp-end';
+
+
+/**
+ * Explicitly specifying the CSP model of a property.
+ * 
+ * TODO(@MattWindsor91): there may need to be more abstract ways of specifying
+ * these models eventually.
+ */
+fragment InCSPModelSpec *:
+	'in' 'the' model=CSPModel 'model'
+;
+
+/**
+ * Names of CSP models.
+ */
+enum CSPModel:
+	TRACES='traces' |
+	TICK_TOCK='tick-tock'
+;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Sequence diagrams
@@ -311,78 +371,48 @@ MessageTopic:
 	('op'|'operation') {OperationTopic} operation=[OperationSig|QualifiedName]
 ;
 
-///////////////////////////////////////////////////////////////////////////////
-// Assertions
-///////////////////////////////////////////////////////////////////////////////
+//
+// Sequence properties
+//
 
 /**
- * A RoboCert assertion.
- */
-Assertion:
-	SequenceAssertion
-;
-
-fragment AssertionName *:
-	'assertion' name=ID ':'
-;
-
-/**
- * A sequence assertion.
+ * A sequence property.
  *
  * These are:
  *
- * - assertion ID: SEQUENCE is observed (in CSP: sequence refines target)
- * - assertion ID: SEQUENCE is not observed (in CSP: sequence does not refine target)
- * - assertion ID: SEQUENCE holds (in CSP: target refines sequence)
- * - assertion ID: SEQUENCE does not hold (in CSP: target does not refine sequence)
+ * - SEQUENCE is observed (in CSP: sequence refines target)
+ * - SEQUENCE is not observed (in CSP: sequence does not refine target)
+ * - SEQUENCE holds (in CSP: target refines sequence)
+ * - SEQUENCE does not hold (in CSP: target does not refine sequence)
  */
-SequenceAssertion:
-	AssertionName
+SequenceProperty:
 	sequence=[Sequence|QualifiedName]
-		( 'is' isNegated?='not' type=IsSequenceAssertionType
-        | 'does' isNegated?='not' type=DoesNotSequenceAssertionType
-        | type=DoesSequenceAssertionType
+		( 'is' isNegated?='not' type=IsSequencePropertyType
+        | 'does' isNegated?='not' type=DoesNotSequencePropertyType
+        | type=DoesSequencePropertyType
         )
     instantiation=TargetInstantiation
     InCSPModelSpec?
 ;
 
 /**
- * Assertion types that agree with 'is' and 'is not'.
+ * Sequence property types that agree with 'is' and 'is not'.
  */
-enum IsSequenceAssertionType returns SequenceAssertionType:
+enum IsSequencePropertyType returns SequencePropertyType:
 	IS_OBSERVED='observed'
 ;
 
 /**
- * Assertion types that agree with 'does not'.
+ * Sequence property types that agree with 'does not'.
  */
-enum DoesNotSequenceAssertionType returns SequenceAssertionType:
+enum DoesNotSequencePropertyType returns SequencePropertyType:
 	HOLDS='hold'
 ;
 
 /**
- * Assertion types that agree without a prefix (eg, the opposite of
- * 'does not' assertion types).
+ * Sequence property that agree without a prefix (eg, the opposite of
+ * 'does not' sequence property types).
  */
-enum DoesSequenceAssertionType returns SequenceAssertionType:
+enum DoesSequencePropertyType returns SequencePropertyType:
 	HOLDS='holds'
-;
-
-/**
- * Explicitly specifying the CSP model of an assertion.
- * 
- * TODO(@MattWindsor91): there may need to be more abstract ways of specifying
- * these models eventually.
- */
-fragment InCSPModelSpec *:
-	'in' 'the' model=CSPModel 'model'
-;
-
-/**
- * Names of CSP models.
- */
-enum CSPModel:
-	TRACES='traces' |
-	TICK_TOCK='tick-tock'
 ;

@@ -50,6 +50,21 @@ abstract class Group {
 	ref RAPackage[1]#groups parent;
 }
 
+@genmodel(documentation="An assertion.")
+class Assertion extends robochart.NamedElement {
+	@genmodel(documentation="The root property of the assertion.")
+	val Property[1] property;
+}
+
+@genmodel(documentation="A property in an assertion.")
+abstract class Property {
+	// TODO(@MattWindsor91): we may eventually want conjunctions/disjunctions,
+	// in which case I might need to re-evaluate whether isNegated belongs here.
+
+	@genmodel(documentation="Whether the assertion must fail to hold for the model to be validated.")
+	attr boolean[1] isNegated;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // CSP
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,6 +95,10 @@ This is predominantly a marker, and doesn't hold any state of its own.")
 abstract class CSPProcessSource {
 }
 
+//
+// CSP fragments
+//
+
 @genmodel(documentation="A fragment of CSP-M.
 
 We generally interpret CSP-M as tock-CSP and implicitly generate it into a
@@ -93,7 +112,6 @@ abstract class CSPFragment {
 
 These are used to bind CSP-M to names that are referred-to elsewhere.")
 class NamedCSPFragment extends CSPFragment, robochart.NamedElement {
-	
 }
 
 @genmodel(documentation="A fragment of CSP-M that is bound to an event set.")
@@ -115,6 +133,34 @@ of the process's actual event universe.")
 Such fragments can be named, but don't need to be, and nothing in the semantics
 will depend on such a name existing.")
 class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
+}
+
+//
+// CSP refinement
+//
+
+@genmodel(documentation="A property that requires a low-level CSP refinement relation.")
+class CSPRefinementProperty extends Property {
+	@genmodel(documentation="Left-hand side of the refinement.")
+	ref CSPProcessSource[1] lhs;
+
+	@genmodel(documentation="Left-hand side of the refinement.")
+	ref CSPProcessSource[1] rhs;
+
+	@genmodel(documentation="Type of assertion.")
+	attr CSPRefinementOperator[1] type;
+	
+	@genmodel(documentation="Model under which this assertion should be checked under CSP.")
+	attr CSPModel[1] model = "TICK_TOCK";	
+}
+
+@genmodel(documentation="A tock-CSP refinement operator.")
+enum CSPRefinementOperator {
+	@genmodel(documentation="LHS refines RHS.")
+	REFINES;
+
+	@genmodel(documentation="LHS refines RHS and RHS refines LHS.")
+	EQUALS;
 }
 
 @genmodel(documentation="A tock-CSP refinement model.")
@@ -682,56 +728,27 @@ class ExpressionArgument extends Argument {
 class RestArgument extends Argument {
 }
 
-//
-// ASSERTIONS
-//
 
-/**
- * An assertion.
- */
-abstract class Assertion extends robochart.NamedElement {
-}
-
-/**
- * A RoboCert sequence assertion body.
- */
-class SequenceAssertion extends Assertion {
-	/**
-	 * The sequence to which this assertion refers.
-	 */
+@genmodel(documentation="A property of a sequence.")
+class SequenceProperty extends Property {
+	@genmodel(documentation="Sequence to which this assertion refers.")
 	ref Sequence[1] sequence;
-	/**
-	 * Whether the assertion must fail to hold for the model to be validated.
-	 */
-	attr boolean[1] isNegated;
-	/**
-	 * The type of assertion.
-	 */
-	attr SequenceAssertionType[1] type;
-	/**
-	 * Assertion-level instantiation applied to this sequence's target.
-	 */
+
+	@genmodel(documentation="Type of assertion.")
+	attr SequencePropertyType[1] type;
+	
+	@genmodel(documentation="Assertion-level instantiation applied to this sequence's target.")
 	val TargetInstantiation[1] instantiation;
-	/**
-	 * The model under which this assertion should be checked under CSP.
-	 * 
-	 * TODO(@MattWindsor91): timed models, work out what to do with this actually.
-	 */
+	
+	@genmodel(documentation="Model under which this assertion should be checked under CSP.")
 	attr CSPModel[1] model = "TICK_TOCK";	
 }
 
-/**
- * Types of sequence assertion.
- */
-enum SequenceAssertionType {
-	/**
-	 * The sequence holds over the target
-	 * (all behaviours of the target are included in the sequence).
-	 */
+@genmodel(documentation="Type of sequence assertion.")
+enum SequencePropertyType {
+	@genmodel(documentation="All behaviours of the target are included in the sequence.")
 	HOLDS;
-	/**
-	 * The sequence is observed on the target
-	 * (all behaviours of the sequence are observable on the target).
-	 */
+
+	@genmodel(documentation="All behaviours of the sequence are observable on the target.")
 	IS_OBSERVED;
 }
