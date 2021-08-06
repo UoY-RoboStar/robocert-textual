@@ -1,26 +1,13 @@
-%!TEX root=../robocert.tex
+%!TEX root=../../robocert.tex
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{diagrams/Assertions}
-	\caption{Class diagram for the part of the \langname{} metamodel dealing with assertions.}
-	\label{fig:metamodel-assertions}
+	\caption{Class diagram for the part of the \langname{} metamodel dealing with sequence assertions.}
+	\label{fig:seq-metamodel-assertions}
 \end{figure}
 
-Assertions (\massertion) are named properties to be checked.  There is
-only one type of assertion \todo{This will change
-  when merging with the existing language, if not sooner.}:
-
-\begin{itemize}
-\item \msequenceassertion{} (\cref{ssec:metamodel-assertions-sequence}).
-\end{itemize}
-
-
-\Cref{fig:metamodel-assertions} depicts the part of the metamodel concerning
-assertions.
-
-
-
-\subsection{\msequenceassertion}\label{ssec:metamodel-assertions-sequence}
+\Cref{fig:seq-metamodel-assertions} depicts the part of the metamodel concerning
+sequence assertions.
 
 A \msequenceassertion{} is an assertion about a particular \msequence{} with
 respect to its \mtarget.  The \mtarget{} is modified by applying an

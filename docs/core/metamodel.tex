@@ -1,5 +1,13 @@
 \input{core/metamodel/defs}
 
+We define \langname{} by defining its
+metamodel.  Parts of the metamodel map to various concrete notations (for
+instance, sequences map to UML-style sequence diagrams), and have a semantics
+in terms of process algebras and other formalisms (\cref{cha:semantics-intro}).
+
+This chapter discusses the top-level metamodel and, in turn, the key concepts
+of \langname.
+
 \section{Introduction}\label{ssec:core-metamodel-intro}
 \subsection{How to read the rest of this chapter}\label{ssec:core-metamodel-intro-readme}
 
@@ -18,8 +26,11 @@ functionality in a top-down manner.  These sections contain:
 	syntaxes of \langname.
 \end{itemize}
 
-\section{Top-level}\label{ssec:core-metamodel-top}
+\section{Top-level}\label{sec:core-metamodel-top}
 \input{core/metamodel/top}
+
+\section{Assertions}\label{sec:core-metamodel-assertions}
+\input{core/metamodel/assertions}
 
 %%% Local Variables:
 %%% mode: latex
