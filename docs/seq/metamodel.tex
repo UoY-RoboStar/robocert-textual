@@ -8,6 +8,9 @@ syntax (\cref{cha:seq-graphical}) --- and a semantics (\cref{cha:semantics-intro
 
 \section{Introduction}\label{sec:metamodel-intro}
 
+For information on how to read the rest of this chapter, see the notes on
+the top-level metamodel (\cref{ssec:core-metamodel-intro-readme}).
+
 \subsection{A note on ordering and timing}\label{ssec:metamodel-intro-ordering}
 
 By default, \langname{} sequences are \emph{explicit}
@@ -30,23 +33,6 @@ interaction with the platform.  Accordingly, any amount of time may
 pass in a sequence, unless constrained by \mdeadlinestep s
 (\cref{ssec:metamodel-steps-deadlines}).
 
-\subsection{How to read the rest of this chapter}\label{ssec:metamodel-intro-readme}
-
-Each section, except this one and \cref{sec:metamodel-features},
-introduces a group of related \langname{}
-functionality in a top-down manner.  These sections contain:
-
-\begin{itemize}
-\item
-	a class diagram representing the Ecore classes, enumerations, and other
-	components that make up the group being discussed;
-\item
-	descriptions of the components being shown in the class diagram;
-\item
-	where relevant, examples of the components in terms of the concrete
-	syntaxes of \langname.
-\end{itemize}
-
 \section{Sequences}\label{sec:metamodel-sequences}
 \input{seq/metamodel/sequences}
 
@@ -64,9 +50,6 @@ functionality in a top-down manner.  These sections contain:
 
 \section{Assertions}\label{sec:seq-metamodel-assertions}
 \input{seq/metamodel/assertions}
-
-\section{Feature comparison}\label{sec:metamodel-features}
-\input{seq/metamodel/features}
 
 %%% Local Variables:
 %%% mode: latex

@@ -1,0 +1,29 @@
+%!TEX root=../robocert.tex
+
+This chapter compares the \langname{} sequence notation to other similar
+notations.  The notations we cover here are:
+
+\newlist{featset}{description}{1}
+\setlist[featset]{font=\sffamily,align=right,labelwidth=4em}
+
+\begin{featset}
+\item[MARTE] the MARTE profile of UML;
+\item[PSC] Property Sequence Chart~\cite{psc};
+\item[PSP] Property Specification Patterns~\cite{psp,pspsite}\footnote{This is
+not a sequence notation, but is useful as a benchmark for checking the
+expressivity of such notations.};
+\item[TPSC] Timed Property Sequence Chart~\cite{tpsc};
+\item[UML] UML 2.0 sequence diagrams;
+\item \todo{more}
+\end{featset}
+
+\section{Notation review}\label{sec:seq-comparison-review}
+\input{seq/comparison/review}
+
+\section{Feature comparison}\label{sec:seq-comparison-features}
+\input{seq/comparison/features}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../robocert"
+%%% End:

@@ -1,0 +1,63 @@
+% !TEX root=../../robocert.tex
+
+This section reviews each of the above notations in turn, comparing
+\langname{} sequences to each.
+
+\subsection{UML 2.0}
+
+\paragraph{Timing features}
+UML sequence diagrams have support for \emph{time constraints} (applied to one
+moment on the lifeline) and \emph{duration constraints} (applied across part
+of a lifeline). \todo{visual-paradigm tutorials; need a proper citation.}
+These can specify concepts such as `noting that a message arrives at time
+\(t_1\) and its reply arrives at time \(t_2\), the duration \(t_2 - t_1 < 1\) seconds'.
+We take the basic duration constraint from UML as the graphical
+notation for our notion of \mdeadlinestep s.
+
+\paragraph{Semantics}
+Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
+that of Lima et al.~\cite{lima-semantics}, with minor differences to account
+for the fact that we target \tockcsp{} and not Compass CML.  In the case of
+two-\mactor{} sequences \todo{all of them at the moment}, we can (and do)
+simplify the semantics significantly.
+The main novelty of our work here is that, by targeting \tockcsp, we can capture
+timing properties.
+
+\subsection{MARTE}
+
+\paragraph{Timing features}
+MARTE supports a range of timing models, including discrete-time (clocked) and
+continuous-time (real-time) approaches; our work only covers discrete-time
+situations.\todo{cite this, I can't remember where I saw it}
+
+MARTE has rich support, using its \emph{Value Specification Language}, for
+constraining the durations of message-passing as well as parts of lifelines,
+allowing constraints at both local
+and global scope\todo{Getting this from Ebeid et al, but I'm not sure that's the
+right citation}.  We do not yet support this level of richness.
+
+\paragraph{Semantics}
+We are not aware of a particular formal semantics for the MARTE profile.
+\todo{Check}
+There is work to generate HDL from MARTE sequence diagrams~\todo{cite}
+
+\subsection{Property Sequence Chart}
+
+\paragraph{Semantics}
+The PSC semantics is in terms of B\"uchi automata, and automated as a
+\textsc{Charmy} plugin.
+
+\subsection{Timed Property Sequence Chart}
+This notation extends property sequence charts to add 
+
+\paragraph{Timing features}
+
+\paragraph{Semantics}
+The TPSC semantics is in terms of timed B\"uchi automata.
+
+\subsection{Property Specification Patterns}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../robocert"
+%%% End:
