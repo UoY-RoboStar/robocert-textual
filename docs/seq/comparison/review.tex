@@ -24,6 +24,9 @@ form of intervals between minimum and maximum permitted duration.
 At the moment, our \mdeadlinestep{} construct resembles a UML duration
 constraint with minimum duration \(0\).  We do not support observations.
 
+\paragraph{Probabilistic features}
+None.  \todo{check}
+
 \paragraph{Semantics}
 Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
 that of Lima et al.~\cite{lima-semantics}, with minor differences to account
@@ -38,9 +41,10 @@ timing properties.
 MARTE is a UML profile for real-time systems.
 
 \paragraph{Timing features}
-MARTE supports a range of timing models, including discrete-time (clocked) and
-continuous-time (real-time) approaches; our work only covers discrete-time
-situations.\todo{cite this, I can't remember where I saw it}
+MARTE 1.2 dedicates section 9 to three classes of time abstraction:
+casual, synchronous (discrete, clocked), and physical (real-time).  Our work
+only covers discrete-time
+situations.
 
 MARTE has rich support, using its \emph{Value Specification Language}, for
 constraining the durations of message-passing as well as parts of lifelines,
@@ -48,13 +52,28 @@ allowing constraints at both local
 and global scope\todo{Getting this from Ebeid et al, but I'm not sure that's the
 right citation}.  We do not yet support this level of richness.
 
+\paragraph{Probabilistic features}
+None.  \todo{check}
+
 \paragraph{Semantics}
 We are not aware of a particular formal semantics for the MARTE profile.
 \todo{Check}
 There is work to generate HDL from MARTE sequence diagrams~\todo{cite}
 
-\subsection{Property Sequence Chart}
+\subsection{Property Sequence Chart (PSC)}
 
+This notation extends a subset of UML2 sequence diagrams (with inspiration from
+Message Sequence Charts) to provide a
+user-friendly layer atop linear temporal logic.  This is
+similar to the general concept of \langname{} sequences with respect to \tockcsp{}
+etc., though without the
+specific focus on describing properties of \robochart{} models.
+
+A key difference between PSC and our work is that we are
+targeting \todo{for now} properties easily expressed as refinement questions
+(and so as artefacts such as CSP processes), whereas PSC targets properties
+expressible as linear temporal logic.  While there exist ways of encoding LTL
+in CSP~\cite{fdrspin}, we do not \todo{yet} use them here.
 
 \paragraph{Timing features}
 None.
@@ -64,12 +83,15 @@ None.
 
 \paragraph{Semantics}
 The PSC semantics is in terms of B\"uchi automata, and automated as a
-\textsc{Charmy} plugin.
+\textsc{Charmy} plugin; there also exists a denotational semantics in terms of
+invalid traces.
 
-\subsection{Timed Property Sequence Chart}
-This notation extends property sequence charts to add 
+\subsection{Timed Property Sequence Chart (TPSC)}
+This notation extends property sequence charts to add clock constraints.  Many
+of the observations for PSC above apply here, also.
 
 \paragraph{Timing features}
+\todo{TODO}
 
 \paragraph{Probabilistic features}
 None.
@@ -77,16 +99,29 @@ None.
 \paragraph{Semantics}
 The TPSC semantics is in terms of timed B\"uchi automata.
 
-\subsection{Probabilistic Timed Property Sequence Chart}
+\subsection{Probabilistic Timed Property Sequence Chart (PTPSC)}
 This notation extends timed property sequence charts to add probabilistic
-sections.
+sections.  Such sections resemble UML combined fragments with inequalities over
+the probability of entering the section.
 
 \paragraph{Timing features}
 As above.
 
-\subsection{Property Specification Patterns}
+\paragraph{Probabilistic features}
+\todo{TODO}
 
-\subsection{Autili, Grunske, Lumpe, Pelliccione, and Tang}
+\paragraph{Semantics}
+The PTPSC semantics also appears to be in terms of timed B\"uchi automata,
+augmented with monitoring processes.  \todo{I don't quite understand this yet.}
+
+\subsection{Property Specification Patterns (PSP)}
+
+This long-running work by Dwyer et al. forms a repository of
+`Gang of Four'-style patterns for structuring the specification of temporal
+properties for concurrent and reactive systems.  These patterns have names,
+known modes of composition, and example mappings into temporal logics.
+
+\subsection{Autili, Grunske, Lumpe, Pelliccione, and Tang (AGLPT)}
 
 This work proposes a structured English grammar covering many of the Property
 Specification Patterns.  The grammar provides for timing and probabilistic

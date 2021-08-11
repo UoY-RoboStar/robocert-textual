@@ -6,7 +6,7 @@ corresponding features in the other notations.
 For each feature, we highlight the main source of inspiration (if any)
 using \insp{underlines}.
 
-\subsection{Sequences~(\ref{sec:metamodel-sequences})}
+%\subsection{Sequences~(\ref{sec:metamodel-sequences})}
 
 \subsection{Steps~(\ref{sec:metamodel-steps})}
 
@@ -15,6 +15,7 @@ using \insp{underlines}.
 \item[UML] \insp{duration constraint}, time observations and constraints
 \item[TPSC] clock constraint
 \item[AGLPT] upper time bounds
+\item[CSP] \insp{deadline operator}
 \end{featset}
 
 UML2 allows time and duration constraints to relate to named observations taken
@@ -29,13 +30,16 @@ While \robochart{} has clocks, we do not yet expose them in
 \begin{featset}
 \item[UML] \insp{loop combined fragment}
 \item[PSC] loop operator
+\item[CSP] recursive processes
 \end{featset}
 
 \mloopbound s are inspired by those permitted by UML.
 
 \paragraph{Gaps}
 \begin{featset}
-\item[PSC] strict operator, \insp{constraints}
+\item[PSC] \insp{constraints}, strict operator
+\item[AGLPT] until
+\item[CSP] \insp{interrupt operator}, throw operator
 \end{featset}
 
 Gaps resemble past-unwanted-message constraints, but
@@ -52,6 +56,7 @@ deviates from PSC \emph{and} some readings of UML.
 \begin{featset}
 \item[UML] \insp{message occurrence specification}
 \item[PSC] regular message
+\item[CSP] prefix
 \end{featset}
 
 Arrows are named for the PSC \emph{arrowMSG} concept but are closer
@@ -83,7 +88,7 @@ Notion of direction (inbound/outbound) rather than sender/receiver labels.
 \item[PSC] \insp{component instance}
 \end{featset}
 
-Always fixed at two \todo{for now} in \langname: a \mtarget{} and a \mworld{}.
+Always fixed at two \ghtodo{32}{for now} in \langname: a \mtarget{} and a \mworld{}.
 Neither are named, though the \mtarget{} will refer to a
 named component such as a \mrcmodule.
 
