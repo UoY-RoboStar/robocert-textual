@@ -22,8 +22,12 @@
 
 % Open question.
 \newcommand{\todo}[1]{\textcolor{orange}{(#1)}}
-
+% GitHub issue.
 \newcommand{\ghissue}[1]{\href{https://github.com/UoY-RoboStar/robocert-sequences/#1}{\##1}}
+% Combination of the two above
+% 1: the issue number
+% 2: description of the issue
+\newcommand{\ghtodo}[2]{\todo{\ghissue{#1}: #2}}
 
 \newcommand{\metaref}[1]{{\fontfamily{qhv}\selectfont #1}}
 \newcommand{\langname}{{\sffamily\itshape RoboCert}}
