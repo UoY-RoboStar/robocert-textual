@@ -1,21 +1,34 @@
 %!TEX root=../robocert.tex
 
-This chapter compares the \langname{} sequence notation to other similar
-notations.  The notations we cover here are:
+This chapter compares \langname{} sequences to the following graphical
+and textual notations:
 
 \newlist{featset}{description}{1}
 \setlist[featset]{font=\sffamily,align=right,labelwidth=4em}
 
+\paragraph{Graphical (UML based)}
+
 \begin{featset}
+\item[UML] UML 2.5.1 sequence diagrams~\cite{uml251};
 \item[MARTE] the MARTE profile of UML;
 \item[PSC] Property Sequence Chart~\cite{psc};
-\item[PSP] Property Specification Patterns~\cite{psp,pspsite}\footnote{This is
-not a sequence notation, but is useful as a benchmark for checking the
-expressivity of such notations.};
 \item[TPSC] Timed Property Sequence Chart~\cite{tpsc};
-\item[UML] UML 2.0 sequence diagrams;
-\item \todo{more}
+\item[PTPSC] Probabilistic Timed Property Sequence Chart~\cite{ptpsc}.
 \end{featset}
+
+\paragraph{Textual (Property Specification Patterns based)}
+
+\begin{featset}
+\item[PSP] Property Specification Patterns~\cite{psp,pspsite};
+\item[AGLPT] Grammar given in Autili, Grunske, Lumpe, Pelliccione, and Tang~\cite{aglpt}.
+\end{featset}
+
+\paragraph{Low-level languages}
+We also loosely compare \langname{} sequences to the languages targeted by their
+semantics (eg, CSP).
+This demonstrates the ability of our notations to
+capture patterns and operators that would otherwise require using
+those notations directly.
 
 \section{Notation review}\label{sec:seq-comparison-review}
 \input{seq/comparison/review}

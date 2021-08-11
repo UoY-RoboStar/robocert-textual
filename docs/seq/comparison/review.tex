@@ -3,16 +3,26 @@
 This section reviews each of the above notations in turn, comparing
 \langname{} sequences to each.
 
-\subsection{UML 2.0}
+\subsection{UML 2.5.1 sequence diagrams}
+
+UML sequence diagrams are a well-understood, standardised notation for
+specifying properties over sequences of multi-actor interactions.  As such, they
+are an obvious first point of inspiration and comparison.  We track the most
+recent standard at time of writing (2.5.1) here.
 
 \paragraph{Timing features}
-UML sequence diagrams have support for \emph{time constraints} (applied to one
-moment on the lifeline) and \emph{duration constraints} (applied across part
-of a lifeline). \todo{visual-paradigm tutorials; need a proper citation.}
-These can specify concepts such as `noting that a message arrives at time
-\(t_1\) and its reply arrives at time \(t_2\), the duration \(t_2 - t_1 < 1\) seconds'.
-We take the basic duration constraint from UML as the graphical
-notation for our notion of \mdeadlinestep s.
+UML 2.5.1 dedicates section 8.4 to basic notions of time.  This
+support comes in \emph{time} and \emph{duration} (difference between two points
+in time) primitives, further divided into \emph{observations} (inspecting the
+moment in time when, or duration since, some event occurred) as well as
+\emph{constraints} (specifying the time or duration of one or more events).
+Constraints can to refer to observations, allowing complex situations such as
+`this set of events should happen in at most three times the duration that
+this other set of events happened in'.  Duration constraints come in the
+form of intervals between minimum and maximum permitted duration.
+
+At the moment, our \mdeadlinestep{} construct resembles a UML duration
+constraint with minimum duration \(0\).  We do not support observations.
 
 \paragraph{Semantics}
 Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
@@ -24,6 +34,8 @@ The main novelty of our work here is that, by targeting \tockcsp, we can capture
 timing properties.
 
 \subsection{MARTE}
+
+MARTE is a UML profile for real-time systems.
 
 \paragraph{Timing features}
 MARTE supports a range of timing models, including discrete-time (clocked) and
@@ -43,6 +55,13 @@ There is work to generate HDL from MARTE sequence diagrams~\todo{cite}
 
 \subsection{Property Sequence Chart}
 
+
+\paragraph{Timing features}
+None.
+
+\paragraph{Probabilistic features}
+None.
+
 \paragraph{Semantics}
 The PSC semantics is in terms of B\"uchi automata, and automated as a
 \textsc{Charmy} plugin.
@@ -52,10 +71,26 @@ This notation extends property sequence charts to add
 
 \paragraph{Timing features}
 
+\paragraph{Probabilistic features}
+None.
+
 \paragraph{Semantics}
 The TPSC semantics is in terms of timed B\"uchi automata.
 
+\subsection{Probabilistic Timed Property Sequence Chart}
+This notation extends timed property sequence charts to add probabilistic
+sections.
+
+\paragraph{Timing features}
+As above.
+
 \subsection{Property Specification Patterns}
+
+\subsection{Autili, Grunske, Lumpe, Pelliccione, and Tang}
+
+This work proposes a structured English grammar covering many of the Property
+Specification Patterns.  The grammar provides for timing and probabilistic
+features.
 
 %%% Local Variables:
 %%% mode: latex

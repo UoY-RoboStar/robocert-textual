@@ -1,10 +1,10 @@
-% !TEX root=../robocert.tex
+% !TEX root=../../robocert.tex
 \newcommand{\insp}[1]{\ul{#1}}
 
-This section directly compares \langname{} sequence diagram features to any
+This section compares \langname{} sequence features to any
 corresponding features in the other notations.
 For each feature, we highlight the main source of inspiration (if any)
-using \insp{this formatting}.
+using \insp{underlines}.
 
 \subsection{Sequences~(\ref{sec:metamodel-sequences})}
 
@@ -12,18 +12,18 @@ using \insp{this formatting}.
 
 \paragraph{\mdeadlinestep}
 \begin{featset}
-\item[UML] \insp{duration constraint}
-\item[MARTE] (as above)
-\item[TPSC] clock constraints
+\item[UML] \insp{duration constraint}, time observations and constraints
+\item[TPSC] clock constraint
+\item[AGLPT] upper time bounds
 \end{featset}
 
-UML2 seems to have both unnamed and named duration
-  annotations; we take the unnamed annotations for simplicity.  MARTE
-  literature points out the named annotations.  \todo{work out what is
-    going on here}
+UML2 allows time and duration constraints to relate to named observations taken
+previously in the sequence.  By combining a time observation at one end of a
+subsequence with a time constraint at the other, we can capture a form of clock
+constraint.  We do not yet capture observations.
 
-  While \robochart{} has clocks, we do not yet expose them in
-  \langname, as we consider them to be an implementation concern.
+While \robochart{} has clocks, we do not yet expose them in
+\langname, as we consider them to be an implementation concern.
       
 \paragraph{\mloopstep}
 \begin{featset}
@@ -83,7 +83,7 @@ Notion of direction (inbound/outbound) rather than sender/receiver labels.
 \item[PSC] \insp{component instance}
 \end{featset}
 
-Always fixed at two in \langname: a \mtarget{} and a \mworld{}.
+Always fixed at two \todo{for now} in \langname: a \mtarget{} and a \mworld{}.
 Neither are named, though the \mtarget{} will refer to a
 named component such as a \mrcmodule.
 
