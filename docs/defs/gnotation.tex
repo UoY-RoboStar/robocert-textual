@@ -109,7 +109,7 @@
 % #3: Time units
 \newcommand{\gdeadline}[3]{
   \draw (#1) edge[deadline] ($(#1) + (\gdeadlineoffset, 0)$);
-  \draw ($(#1) + (\gdeadlineoffset, 0)$) edge[deadlinespan,"#3"] ($(#2) + (\gdeadlineoffset, 0)$);
+  \draw ($(#1) + (\gdeadlineoffset, 0)$) edge[deadlinespan,"\{0..#3\}"] ($(#2) + (\gdeadlineoffset, 0)$);
   \draw ($(#2) + (\gdeadlineoffset, 0)$) edge[deadline] (#2);
 }
 
