@@ -6,6 +6,13 @@ corresponding features in the other notations.
 For each feature, we highlight the main source of inspiration (if any)
 using \insp{underlines}.
 
+As well as the notations reviewed previously, we also
+informally note where \langname{} sequence features align to those of
+languages targeted by the \langname{} semantics.  These languages are:
+
+\begin{featset}
+\item[CSP] \tockcsp~(\autoref{cha:semantics-tockcsp}).
+\end{featset}
 %\subsection{Sequences~(\ref{sec:metamodel-sequences})}
 
 \subsection{Steps~(\ref{sec:metamodel-steps})}
@@ -93,6 +100,70 @@ Neither are named, though the \mtarget{} will refer to a
 named component such as a \mrcmodule.
 
 Like PSC, but unlike UML, there are no executions.
+
+\subsection{Matrix}
+
+\newcommand\rot{\rotatebox{90}}
+\newcommand\OK{\checkmark}
+\newcommand\ISH{(\OK)}
+\newcommand\NO{\(\bullet\)}
+\newcommand\SOON{\(\circ\)}
+
+\begin{table}[htb!]
+  \label{tab:seq-comparison-features}
+  \centering
+
+  \begin{tabular}{rl|ccccc|cc|ccc}
+  \toprule
+
+  & \rot{\thead{\langname}}
+  & \rot{\thead{UML}}
+  & \rot{\thead{MARTE}}
+  & \rot{\thead{PSC}}
+  & \rot{\thead{TPSC}}
+  & \rot{\thead{PTPSC}}
+  & \rot{\thead{PSP}}
+  & \rot{\thead{AGLPT}}
+  & \rot{\thead{CSP}}
+  & \rot{\thead{PRISM}}
+  & \rot{\thead{IUTP}}
+  \\
+  \midrule
+  \tsubhead{Regular messages} & \OK & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ?
+  \\
+  \tsubhead{Expected messages} & \NO & \NO & \NO & \OK & \OK & \OK & ? & ? & ? & ? & ?
+  \\
+  \tsubhead{Fail messages} & \NO & \NO & \NO & \OK & \OK & \OK & ? & ? & ? & ? & ?
+  \\
+  \midrule
+  \tsubhead{Waits (\mwaitaction)} & \OK & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ? & \OK & ? & ?
+  \\
+  \tsubhead{Nondeterministic waits} & \SOON & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ? & \OK & ? & ?
+  \\
+  \midrule
+  \tsubhead{Gaps/inter-msg constraints} & \OK & \NO & \NO & \OK & \OK & \OK & ? & \ISH? & \ISH & ? & ?
+  \\
+  \tsubhead{Deadlines (\mdeadlinestep)} & \OK & \OK & \OK & \NO & \OK & \OK & ? & ? & \OK & ? & ?
+
+  \\
+  \tsubhead{Loops (\mloopstep)} & \OK & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ?
+  \\
+  \tsubhead{Breaks} & \SOON & \OK & \OK & \OK & \OK & \OK & ? & ? & \ISH & ? & ?
+  \\
+  \tsubhead{Optional blocks} & \SOON? & \OK & \OK & \ISH & \ISH & \ISH & ? & ? & \OK & ? & ?
+  \\
+  \tsubhead{Probabilistic optional blocks} & \SOON & \NO & \NO & \NO & \NO & \OK & ? & ? & \NO & ? & ?
+  \\
+  \bottomrule
+  \end{tabular}
+  \caption{Matrix of features available in \langname{} sequences compared to
+  other notations.  (Key: \OK{}={}supported; \ISH{}={}indirectly encodable; \SOON{}={}planned; \NO{}={}unsupported)}
+\end{table}
+
+\Cref{tab:seq-comparison-features} summarises both the features listed earlier
+(which \langname{} has, and may correspond to similar features in other
+notations) and features in other notations for which \langname{} does not,
+or not yet, have a counterpart.
 
 %%% Local Variables:
 %%% mode: latex

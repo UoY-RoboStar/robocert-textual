@@ -5,6 +5,7 @@ and textual notations:
 
 \newlist{featset}{description}{1}
 \setlist[featset]{font=\sffamily,align=right,labelwidth=4em}
+\newcommand{\featname}[1]{\textsf{#1}}
 
 \paragraph{Graphical (UML based)}
 
@@ -21,17 +22,6 @@ and textual notations:
 \begin{featset}
 \item[PSP] Property Specification Patterns~\cite{psp,pspsite};
 \item[AGLPT] Grammar given in Autili, Grunske, Lumpe, Pelliccione, and Tang~\cite{aglpt}.
-\end{featset}
-
-\paragraph{Low-level languages}
-We also loosely compare \langname{} sequences to the languages targeted by their
-semantics.
-This demonstrates the ability of our notations to
-capture patterns and operators that would otherwise require using
-those notations directly:
-
-\begin{featset}
-\item[CSP] \tockcsp.
 \end{featset}
 
 \section{Notation review}\label{sec:seq-comparison-review}
