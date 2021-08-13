@@ -6,6 +6,8 @@ corresponding features in the other notations.
 For each feature, we highlight the main source of inspiration (if any)
 using \insp{underlines}.
 
+\paragraph{Additional points of comparison}
+
 As well as the notations reviewed previously, we also
 informally note where \langname{} sequence features align to those of
 languages targeted by the \langname{} semantics.  These languages are:
@@ -15,6 +17,13 @@ languages targeted by the \langname{} semantics.  These languages are:
 \end{featset}
 %\subsection{Sequences~(\ref{sec:metamodel-sequences})}
 
+We also note where features in \langname{} correspond directly to concepts
+in \robochart{} \todo{and other languages}:
+
+\begin{featset}
+\item[RC] \robochart.
+\end{featset}
+
 \subsection{Steps~(\ref{sec:metamodel-steps})}
 
 \paragraph{\mdeadlinestep}
@@ -23,6 +32,7 @@ languages targeted by the \langname{} semantics.  These languages are:
 \item[TPSC] clock constraint
 \item[AGLPT] upper time bounds
 \item[CSP] \insp{deadline operator}
+\item[RC] \insp{deadlines}
 \end{featset}
 
 UML2 allows time and duration constraints to relate to named observations taken
@@ -69,6 +79,18 @@ deviates from PSC \emph{and} some readings of UML.
 Arrows are named for the PSC \emph{arrowMSG} concept but are closer
 to UML.
       
+\paragraph{\mwaitaction}
+\begin{featset}
+\item[UML] combination of time observations and constraints(?)
+\item[TPSC] clock constraints(?)
+\item[CSP] \insp{wait}
+\item[RC] \insp{wait}
+\end{featset}
+
+Because the use of a wait action in \langname{} is to assert that one
+action occurs at least some time units after another, we assume that it is
+possible to encode the same pattern using clock-style constraints.
+
 \subsection{Messages~(\ref{sec:metamodel-messages})}
 
 \paragraph{\mmessageset}
@@ -93,6 +115,7 @@ Notion of direction (inbound/outbound) rather than sender/receiver labels.
 \begin{featset}
 \item[UML] lifeline
 \item[PSC] \insp{component instance}
+\item[RC] \insp{module}
 \end{featset}
 
 Always fixed at two \ghtodo{32}{for now} in \langname: a \mtarget{} and a \mworld{}.
@@ -104,55 +127,73 @@ Like PSC, but unlike UML, there are no executions.
 \subsection{Matrix}
 
 \newcommand\rot{\rotatebox{90}}
-\newcommand\OK{\checkmark}
-\newcommand\ISH{(\OK)}
-\newcommand\NO{\(\bullet\)}
-\newcommand\SOON{\(\circ\)}
+\newcommand\matding[1]{{\small#1}}
+\newcommand\OK{\matding{\checkmark}}
+\newcommand\ISH{\matding{(\OK)}}
+\newcommand\NO{\matding{\(\bullet\)}}
+\newcommand\SOON{\matding{\(\circ\)}}
+\newcommand\NA{\matding{n/a}}
 
 \begin{table}[htb!]
   \label{tab:seq-comparison-features}
   \centering
 
-  \begin{tabular}{rl|ccccc|cc|ccc}
+  \begin{tabular}{rl|ccccc|cc|ccc|c}
   \toprule
 
   & \rot{\thead{\langname}}
-  & \rot{\thead{UML}}
-  & \rot{\thead{MARTE}}
-  & \rot{\thead{PSC}}
-  & \rot{\thead{TPSC}}
-  & \rot{\thead{PTPSC}}
-  & \rot{\thead{PSP}}
-  & \rot{\thead{AGLPT}}
-  & \rot{\thead{CSP}}
-  & \rot{\thead{PRISM}}
-  & \rot{\thead{IUTP}}
+  & \rot{\thead{\featname{UML}}}
+  & \rot{\thead{\featname{MARTE}}}
+  & \rot{\thead{\featname{PSC}}}
+  & \rot{\thead{\featname{TPSC}}}
+  & \rot{\thead{\featname{PTPSC}}}
+  & \rot{\thead{\featname{PSP}}}
+  & \rot{\thead{\featname{AGLPT}}}
+  & \rot{\thead{\featname{CSP}}}
+  & \rot{\thead{\featname{PRISM}}}
+  & \rot{\thead{\featname{IUTP}}}
+  & \rot{\thead{\featname{RC}}}
   \\
   \midrule
-  \tsubhead{Regular messages} & \OK & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ?
+  \multicolumn{12}{l}{\tsubhead{Messages}}
   \\
-  \tsubhead{Expected messages} & \NO & \NO & \NO & \OK & \OK & \OK & ? & ? & ? & ? & ?
+  Regular & \OK & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ? & \OK
   \\
-  \tsubhead{Fail messages} & \NO & \NO & \NO & \OK & \OK & \OK & ? & ? & ? & ? & ?
+  Expected & \NO & \NO & \NO & \OK & \OK & \OK & ? & ? & ? & ? & ? & \NA
   \\
-  \midrule
-  \tsubhead{Waits (\mwaitaction)} & \OK & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ? & \OK & ? & ?
-  \\
-  \tsubhead{Nondeterministic waits} & \SOON & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ? & \OK & ? & ?
+  Fail & \NO & \NO & \NO & \OK & \OK & \OK & ? & ? & ? & ? & ? & \NA
   \\
   \midrule
-  \tsubhead{Gaps/inter-msg constraints} & \OK & \NO & \NO & \OK & \OK & \OK & ? & \ISH? & \ISH & ? & ?
+  \multicolumn{12}{l}{\tsubhead{Waits}}
   \\
-  \tsubhead{Deadlines (\mdeadlinestep)} & \OK & \OK & \OK & \NO & \OK & \OK & ? & ? & \OK & ? & ?
-
+  Explicit (\mwaitaction) & \OK & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ? & \OK & ? & ? & \OK
   \\
-  \tsubhead{Loops (\mloopstep)} & \OK & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ?
+  Ranged & \SOON & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ? & \OK & ? & ? & \OK
   \\
-  \tsubhead{Breaks} & \SOON & \OK & \OK & \OK & \OK & \OK & ? & ? & \ISH & ? & ?
+  \midrule
+  \multicolumn{12}{l}{\tsubhead{Duration constraints}}
   \\
-  \tsubhead{Optional blocks} & \SOON? & \OK & \OK & \ISH & \ISH & \ISH & ? & ? & \OK & ? & ?
+  Lower-bound & \SOON? & \OK & \OK & \NO & \OK? & \OK? & ? & ? & \ISH & ? & ? & ?
   \\
-  \tsubhead{Probabilistic optional blocks} & \SOON & \NO & \NO & \NO & \NO & \OK & ? & ? & \NO & ? & ?
+  Upper-bound/deadline & \OK & \OK & \OK & \NO & \OK & \OK & ? & ? & \OK & ? & ? & \OK
+  \\
+  \midrule
+  \multicolumn{12}{l}{\tsubhead{Conditionally executed blocks}}
+  \\
+  Optional & \SOON? & \OK & \OK & \ISH & \ISH & \ISH & ? & ? & \OK & ? & ? & ?
+  \\
+  Probabilistic optional & \SOON & \NO & \NO & \NO & \NO & \OK & ? & ? & \NO & ? & ? & ?
+  \\
+  Alternative (if) & \SOON? & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ? & \OK
+  \\
+  \midrule
+  \multicolumn{12}{l}{\tsubhead{Other}}
+  \\
+  Gaps (or similar) & \OK & \NO & \NO & \OK & \OK & \OK & ? & \ISH? & \ISH & ? & ? & \NA
+  \\
+  Loops (\mloopstep) & \OK & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ? & \NO
+  \\
+  Breaks & \SOON & \OK & \OK & \OK & \OK & \OK & ? & ? & \ISH & ? & ? & \NA
   \\
   \bottomrule
   \end{tabular}
