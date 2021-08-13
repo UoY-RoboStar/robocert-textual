@@ -6,23 +6,7 @@ corresponding features in the other notations.
 For each feature, we highlight the main source of inspiration (if any)
 using \insp{underlines}.
 
-\paragraph{Additional points of comparison}
-
-As well as the notations reviewed previously, we also
-informally note where \langname{} sequence features align to those of
-languages targeted by the \langname{} semantics.  These languages are:
-
-\begin{featset}
-\item[CSP] \tockcsp~(\autoref{cha:semantics-tockcsp}).
-\end{featset}
 %\subsection{Sequences~(\ref{sec:metamodel-sequences})}
-
-We also note where features in \langname{} correspond directly to concepts
-in \robochart{} \todo{and other languages}:
-
-\begin{featset}
-\item[RC] \robochart.
-\end{featset}
 
 \subsection{Steps~(\ref{sec:metamodel-steps})}
 
@@ -31,8 +15,6 @@ in \robochart{} \todo{and other languages}:
 \item[UML] \insp{duration constraint}, time observations and constraints
 \item[TPSC] clock constraint
 \item[AGLPT] upper time bounds
-\item[CSP] \insp{deadline operator}
-\item[RC] \insp{deadlines}
 \end{featset}
 
 UML2 allows time and duration constraints to relate to named observations taken
@@ -47,7 +29,6 @@ While \robochart{} has clocks, we do not yet expose them in
 \begin{featset}
 \item[UML] \insp{loop combined fragment}
 \item[PSC] loop operator
-\item[CSP] recursive processes
 \end{featset}
 
 \mloopbound s are inspired by those permitted by UML.
@@ -56,7 +37,6 @@ While \robochart{} has clocks, we do not yet expose them in
 \begin{featset}
 \item[PSC] \insp{constraints}, strict operator
 \item[AGLPT] until
-\item[CSP] \insp{interrupt operator}, throw operator
 \end{featset}
 
 Gaps resemble past-unwanted-message constraints, but
@@ -73,7 +53,6 @@ deviates from PSC \emph{and} some readings of UML.
 \begin{featset}
 \item[UML] \insp{message occurrence specification}
 \item[PSC] regular message
-\item[CSP] prefix
 \end{featset}
 
 Arrows are named for the PSC \emph{arrowMSG} concept but are closer
@@ -83,9 +62,10 @@ to UML.
 \begin{featset}
 \item[UML] combination of time observations and constraints(?)
 \item[TPSC] clock constraints(?)
-\item[CSP] \insp{wait}
-\item[RC] \insp{wait}
 \end{featset}
+
+The exact syntax of this operator comes mostly from \robochart{} and, to
+a lesser extent, \tockcsp.
 
 Because the use of a wait action in \langname{} is to assert that one
 action occurs at least some time units after another, we assume that it is
@@ -138,7 +118,7 @@ Like PSC, but unlike UML, there are no executions.
   \label{tab:seq-comparison-features}
   \centering
 
-  \begin{tabular}{rl|ccccc|cc|ccc|c}
+  \begin{tabular}{rl|ccccc|cc}
   \toprule
 
   & \rot{\thead{\langname}}
@@ -149,56 +129,53 @@ Like PSC, but unlike UML, there are no executions.
   & \rot{\thead{\featname{PTPSC}}}
   & \rot{\thead{\featname{PSP}}}
   & \rot{\thead{\featname{AGLPT}}}
-  & \rot{\thead{\featname{CSP}}}
-  & \rot{\thead{\featname{PRISM}}}
-  & \rot{\thead{\featname{IUTP}}}
-  & \rot{\thead{\featname{RC}}}
   \\
   \midrule
-  \multicolumn{12}{l}{\tsubhead{Messages}}
+  \multicolumn{8}{l}{\tsubhead{Messages}}
   \\
-  Regular & \OK & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ? & \OK
+  Regular & \OK & \OK & \OK & \OK & \OK & \OK & ? & ?
   \\
-  Expected & \NO & \NO & \NO & \OK & \OK & \OK & ? & ? & ? & ? & ? & \NA
+  Expected & \NO & \NO & \NO & \OK & \OK & \OK & ? & ?
   \\
-  Fail & \NO & \NO & \NO & \OK & \OK & \OK & ? & ? & ? & ? & ? & \NA
-  \\
-  \midrule
-  \multicolumn{12}{l}{\tsubhead{Waits}}
-  \\
-  Explicit (\mwaitaction) & \OK & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ? & \OK & ? & ? & \OK
-  \\
-  Ranged & \SOON & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ? & \OK & ? & ? & \OK
+  Fail & \NO & \NO & \NO & \OK & \OK & \OK & ? & ?
   \\
   \midrule
-  \multicolumn{12}{l}{\tsubhead{Duration constraints}}
+  \multicolumn{8}{l}{\tsubhead{Waits}}
   \\
-  Lower-bound & \SOON? & \OK & \OK & \NO & \OK? & \OK? & ? & ? & \ISH & ? & ? & ?
+  Explicit (\mwaitaction) & \OK & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ?
   \\
-  Upper-bound/deadline & \OK & \OK & \OK & \NO & \OK & \OK & ? & ? & \OK & ? & ? & \OK
-  \\
-  \midrule
-  \multicolumn{12}{l}{\tsubhead{Conditionally executed blocks}}
-  \\
-  Optional & \SOON? & \OK & \OK & \ISH & \ISH & \ISH & ? & ? & \OK & ? & ? & ?
-  \\
-  Probabilistic optional & \SOON & \NO & \NO & \NO & \NO & \OK & ? & ? & \NO & ? & ? & ?
-  \\
-  Alternative (if) & \SOON? & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ? & \OK
+  Ranged & \SOON & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ?
   \\
   \midrule
-  \multicolumn{12}{l}{\tsubhead{Other}}
+  \multicolumn{8}{l}{\tsubhead{Duration constraints}}
   \\
-  Gaps (or similar) & \OK & \NO & \NO & \OK & \OK & \OK & ? & \ISH? & \ISH & ? & ? & \NA
+  Lower-bound & \SOON? & \OK & \OK & \NO & \OK? & \OK? & ? & ?
   \\
-  Loops (\mloopstep) & \OK & \OK & \OK & \OK & \OK & \OK & ? & ? & \OK & ? & ? & \NO
+  Upper-bound/deadline & \OK & \OK & \OK & \NO & \OK & \OK & ? & ?
   \\
-  Breaks & \SOON & \OK & \OK & \OK & \OK & \OK & ? & ? & \ISH & ? & ? & \NA
+  \midrule
+  \multicolumn{8}{l}{\tsubhead{Conditionally executed blocks}}
+  \\
+  Optional & \SOON? & \OK & \OK & \ISH & \ISH & \ISH & ? & ?
+  \\
+  Probabilistic optional & \SOON & \NO & \NO & \NO & \NO & \OK & ? & ?
+  \\
+  Alternative (if) & \SOON? & \OK & \OK & \OK & \OK & \OK & ? & ?
+  \\
+  \midrule
+  \multicolumn{8}{l}{\tsubhead{Other}}
+  \\
+  Gaps (or similar) & \OK & \NO & \NO & \OK & \OK & \OK & ? & \ISH?
+  \\
+  Loops (\mloopstep) & \OK & \OK & \OK & \OK & \OK & \OK & ? & ?
+  \\
+  Breaks & \SOON & \OK & \OK & \OK & \OK & \OK & ? & ?
   \\
   \bottomrule
   \end{tabular}
   \caption{Matrix of features available in \langname{} sequences compared to
-  other notations.  (Key: \OK{}={}supported; \ISH{}={}indirectly encodable; \SOON{}={}planned; \NO{}={}unsupported)}
+  other notations.\\
+  \small{(Key: \OK{}={}supported; \ISH{}={}indirectly encodable; \SOON{}={}planned; \NO{}={}unsupported)}}
 \end{table}
 
 \Cref{tab:seq-comparison-features} summarises both the features listed earlier
