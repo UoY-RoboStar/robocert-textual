@@ -1,0 +1,34 @@
+%!TEX root=../robocert.tex
+
+This chapter compares our work on the \emph{semantics} of \langname{}
+previous semantic treatments of similar notations.
+
+\section{Sequences}\label{sec:semantics-review-seq}
+
+\subsection{UML2 and derived profiles}
+
+\paragraph{CML semantics of SysML}
+
+Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
+that of Lima et al.~\cite{lima-semantics} on the SysML profile of UML, with
+some differences to account for a retargeting from CML to \tockcsp.  For
+two-\mactor{} sequences \todo{all of them at the moment}, we can (and do)
+simplify the semantics significantly.
+The main novelty of our work here is that, by targeting \tockcsp, we can capture
+timing properties and refinement relations.
+
+\paragraph{MARTE}
+
+We are not aware of a particular formal semantics for the MARTE profile.
+\todo{Check}
+There is work to generate HDL from MARTE sequence diagrams~\todo{cite}
+
+\subsection{PSC, TPSC, and PTPSC}
+
+Property Sequence Chart (and its derivatives) is a layer atop
+linear temporal logic, which means that its operational semantics is
+in the form of B\"uchi automata (for TPSC, timed B\"uchi
+automata; it is unclear what needs to be added to these automata for PTPSC \todo{?}).
+
+For PSC, a \textsc{Charmy} plugin automates the operational semantics.  A denotational semantics in terms of
+invalid traces also exists.

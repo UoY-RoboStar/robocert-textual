@@ -27,15 +27,6 @@ constraint with minimum duration \(0\).  We do not support observations.
 \paragraph{Probabilistic features}
 None.  \todo{check}
 
-\paragraph{Semantics}
-Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
-that of Lima et al.~\cite{lima-semantics} on the SysML profile of UML, with
-some differences to account for a retargeting from CML to \tockcsp.  For
-two-\mactor{} sequences \todo{all of them at the moment}, we can (and do)
-simplify the semantics significantly.
-The main novelty of our work here is that, by targeting \tockcsp, we can capture
-timing properties and refinement relations.
-
 \subsection{MARTE}
 
 MARTE is a UML profile for real-time systems.
@@ -54,11 +45,6 @@ right citation}.  We do not yet support this level of richness.
 
 \paragraph{Probabilistic features}
 None.  \todo{check}
-
-\paragraph{Semantics}
-We are not aware of a particular formal semantics for the MARTE profile.
-\todo{Check}
-There is work to generate HDL from MARTE sequence diagrams~\todo{cite}
 
 \subsection{Property Sequence Chart (PSC)}
 
@@ -81,11 +67,6 @@ None.
 \paragraph{Probabilistic features}
 None.
 
-\paragraph{Semantics}
-The PSC semantics is in terms of B\"uchi automata, and automated as a
-\textsc{Charmy} plugin; there also exists a denotational semantics in terms of
-invalid traces.
-
 \subsection{Timed Property Sequence Chart (TPSC)}
 This notation extends property sequence charts to timing features.  Many
 of the observations for PSC above apply here, also.
@@ -99,9 +80,6 @@ a named and resettable clock.
 \paragraph{Probabilistic features}
 None.
 
-\paragraph{Semantics}
-The TPSC semantics is in terms of timed B\"uchi automata.
-
 \subsection{Probabilistic Timed Property Sequence Chart (PTPSC)}
 This notation extends timed property sequence charts to add probabilistic
 reasoning.
@@ -113,10 +91,6 @@ As above.
 PTPSC add probabilistic
 sections.  Such sections resemble UML combined fragments with inequalities over
 the probability of entering the section.
-
-\paragraph{Semantics}
-The PTPSC semantics also appears to be in terms of timed B\"uchi automata,
-augmented with monitoring processes.  \todo{I don't quite understand this yet.}
 
 \subsection{Property Specification Patterns (PSP)}
 
