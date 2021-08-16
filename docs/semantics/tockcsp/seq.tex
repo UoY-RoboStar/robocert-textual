@@ -192,7 +192,7 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
 
 
 \newcommand{\iloop}[1]{\text{Loop}(#1)}
-\newcommand{\nloop}[1]{\text{Loop}_\sqcap(#1)}
+\newcommand{\nloop}[1]{\text{Loop}_{\intchoice}(#1)}
 \newcommand{\dloop}[2]{\text{Loop}_d(#1, #2)}
 \newcommand{\lloop}[2]{\text{Loop}_l(#1, #2)}
 \newcommand{\uloop}[2]{\text{Loop}_u(#1, #2)}
@@ -234,7 +234,7 @@ We can define the processes referenced above directly in CSP, as follows:
   \\
   \nloop{P}
   \quad\defeq\quad
-  & \Skip \sqcap \left(P \circseq \nloop{P}\right)
+  & \Skip \intchoice \left(P \circseq \nloop{P}\right)
     \tag{nondeterministic}
   \\  
   \dloop{n}{P}
@@ -244,7 +244,7 @@ We can define the processes referenced above directly in CSP, as follows:
   \\
   \uloop{n}{P}
   \quad\defeq\quad
-  & \Skip \triangleleft n \leq 0 \triangleright \left(\Skip \sqcap \left(P \circseq \uloop{n-1}{P}\right)\right)
+  & \Skip \triangleleft n \leq 0 \triangleright \left(\Skip \intchoice \left(P \circseq \uloop{n-1}{P}\right)\right)
     \tag{upper-bound}
   \\
   \lloop{n}{P}
@@ -319,7 +319,7 @@ prefixing termination.
     \tlang{
     \mu x \ldotp
     \Skip
-    \sqcap
+    \intchoice
     \left(\tock \circthen \Skip\right)
     }
     \tag{final action}

@@ -1,14 +1,15 @@
 % !TEX root=../../robocert.tex
 
 This section reviews each of the above notations in turn, comparing
-\langname{} sequences to each.
+\langname{} sequences to each.  (We discuss semantics
+later on, in \cref{sec:semantics-review-seq}.)
 
 \subsection{UML 2.5.1 sequence diagrams}
 
 UML sequence diagrams are a well-understood, standardised notation for
 specifying properties over sequences of multi-actor interactions.  As such, they
 are an obvious first point of inspiration and comparison.  We track the most
-recent standard at time of writing (2.5.1) here.
+recent standard at time of writing (UML 2.5.1).
 
 \paragraph{Timing features}
 UML 2.5.1 dedicates section 8.4 to basic notions of time.  This
@@ -46,14 +47,45 @@ right citation}.  We do not yet support this level of richness.
 \paragraph{Probabilistic features}
 None.  \todo{check}
 
+\subsection{STAIRS}
+
+STAIRS is an approach for incremental, refinement-based development of
+UML sequence diagrams capturing existing systems.  We compare against it
+because it adds features that are not available in UML2, but useful when
+following such development processes:
+
+\begin{itemize}
+\item
+	a distinction between \emph{potential} behaviour (nondeterminism
+	in the specification) and \emph{mandatory} behaviour (things the
+	specification \emph{must} offer the environment)---for example,
+	an \texttt{xalt} operator that states that all of the choices
+	must be offered to the environment (unlike \texttt{alt}) which
+	is cast as an underspecification.
+	This is
+	useful from a stepwise refinement perspective, and also
+	parallels the distinction in CSP between
+	\(\intchoice\) and \(\extchoice\);
+\item
+	in the probabilistic form of STAIRS, an
+	\texttt{alt} operator where choices have associated probability
+	sets;
+\item
+	notions of \emph{supplementing}, \emph{narrowing}, and
+	\emph{detailing} sequence diagrams to achieve a more
+	comprehensive specification.
+\end{itemize}
+
 \subsection{Property Sequence Chart (PSC)}
 
-This notation extends a subset of UML2 sequence diagrams (with inspiration from
+PSC extends a subset of UML2 sequence diagrams (with inspiration from
 Message Sequence Charts) to provide a
 user-friendly layer atop linear temporal logic.  This is
 similar to the general concept of \langname{} sequences with respect to \tockcsp{}
 etc., though without the
-specific focus on describing properties of \robochart{} models.
+specific focus on properties of \robochart{} models.
+Extensions add timing (TPSC~\cite{tpsc}) and
+probabilistic (PTPSC~\cite{ptpsc}) features.
 
 A key difference between PSC and our work is that we are
 targeting \todo{for now} properties easily expressed as refinement questions
@@ -62,30 +94,10 @@ expressible as linear temporal logic.  While there exist ways of encoding LTL
 in CSP~\cite{fdrspin}, we do not \todo{yet} use them here.
 
 \paragraph{Timing features}
-None.
-
-\paragraph{Probabilistic features}
-None.
-
-\subsection{Timed Property Sequence Chart (TPSC)}
-This notation extends property sequence charts to timing features.  Many
-of the observations for PSC above apply here, also.
-
-\paragraph{Timing features}
-TPSC has clock constraints.  These complement the existing PSC constraint system
+TPSC and PTPSC have clock constraints.  These complement the existing PSC constraint system
 (which loosely corresponds to our concept of gaps), adding the ability to
 specify that the occurrence of certain messages satisfies an inequality against
 a named and resettable clock.
-
-\paragraph{Probabilistic features}
-None.
-
-\subsection{Probabilistic Timed Property Sequence Chart (PTPSC)}
-This notation extends timed property sequence charts to add probabilistic
-reasoning.
-
-\paragraph{Timing features}
-As above.
 
 \paragraph{Probabilistic features}
 PTPSC add probabilistic

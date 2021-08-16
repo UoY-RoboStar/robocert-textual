@@ -23,6 +23,18 @@ We are not aware of a particular formal semantics for the MARTE profile.
 \todo{Check}
 There is work to generate HDL from MARTE sequence diagrams~\todo{cite}
 
+\paragraph{Trace semantics of STAIRS}
+
+STAIRS~\cite{Haugen03-STAIRS} gives a trace semantics for UML2 in terms
+of pairs of positive and negative trace sets.  These traces contain
+transmission and consumption events across signals.
+
+Traces for Timed
+STAIRS~\cite{Haugen05-TimedSTAIRS} also contain separate reception
+events (capturing the distinction between the time an event reaches
+its destination and the time it is processed), and \(\mathbb R\)-valued
+timestamps capturing timing.
+
 \subsection{PSC, TPSC, and PTPSC}
 
 Property Sequence Chart (and its derivatives) is a layer atop
