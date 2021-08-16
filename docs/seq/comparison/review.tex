@@ -29,12 +29,12 @@ None.  \todo{check}
 
 \paragraph{Semantics}
 Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
-that of Lima et al.~\cite{lima-semantics}, with minor differences to account
-for the fact that we target \tockcsp{} and not Compass CML.  In the case of
+that of Lima et al.~\cite{lima-semantics} on the SysML profile of UML, with
+some differences to account for a retargeting from CML to \tockcsp.  For
 two-\mactor{} sequences \todo{all of them at the moment}, we can (and do)
 simplify the semantics significantly.
 The main novelty of our work here is that, by targeting \tockcsp, we can capture
-timing properties.
+timing properties and refinement relations.
 
 \subsection{MARTE}
 
@@ -87,11 +87,14 @@ The PSC semantics is in terms of B\"uchi automata, and automated as a
 invalid traces.
 
 \subsection{Timed Property Sequence Chart (TPSC)}
-This notation extends property sequence charts to add clock constraints.  Many
+This notation extends property sequence charts to timing features.  Many
 of the observations for PSC above apply here, also.
 
 \paragraph{Timing features}
-\todo{TODO}
+TPSC has clock constraints.  These complement the existing PSC constraint system
+(which loosely corresponds to our concept of gaps), adding the ability to
+specify that the occurrence of certain messages satisfies an inequality against
+a named and resettable clock.
 
 \paragraph{Probabilistic features}
 None.
@@ -101,14 +104,15 @@ The TPSC semantics is in terms of timed B\"uchi automata.
 
 \subsection{Probabilistic Timed Property Sequence Chart (PTPSC)}
 This notation extends timed property sequence charts to add probabilistic
-sections.  Such sections resemble UML combined fragments with inequalities over
-the probability of entering the section.
+reasoning.
 
 \paragraph{Timing features}
 As above.
 
 \paragraph{Probabilistic features}
-\todo{TODO}
+PTPSC add probabilistic
+sections.  Such sections resemble UML combined fragments with inequalities over
+the probability of entering the section.
 
 \paragraph{Semantics}
 The PTPSC semantics also appears to be in terms of timed B\"uchi automata,
@@ -117,7 +121,7 @@ augmented with monitoring processes.  \todo{I don't quite understand this yet.}
 \subsection{Property Specification Patterns (PSP)}
 
 This long-running work by Dwyer et al. forms a repository of
-`Gang of Four'-style patterns for structuring the specification of temporal
+structured patterns for structuring the specification of temporal
 properties for concurrent and reactive systems.  These patterns have names,
 known modes of composition, and example mappings into temporal logics.
 

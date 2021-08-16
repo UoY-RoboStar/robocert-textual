@@ -64,10 +64,9 @@ to UML.
 \item[TPSC] clock constraints(?)
 \end{featset}
 
-The exact syntax of this operator comes mostly from \robochart{} and, to
+The exact form of this operator comes mostly from \robochart{} and, to
 a lesser extent, \tockcsp.
-
-Because the use of a wait action in \langname{} is to assert that one
+Because wait actions in \langname{} assert that one
 action occurs at least some time units after another, we assume that it is
 possible to encode the same pattern using clock-style constraints.
 
@@ -109,73 +108,80 @@ Like PSC, but unlike UML, there are no executions.
 \newcommand\rot{\rotatebox{90}}
 \newcommand\matding[1]{{\small#1}}
 \newcommand\OK{\matding{\checkmark}}
-\newcommand\ISH{\matding{(\OK)}}
+\newcommand\ISH{\matding{E}}
 \newcommand\NO{\matding{\(\bullet\)}}
 \newcommand\SOON{\matding{\(\circ\)}}
 \newcommand\NA{\matding{n/a}}
+\newcommand\INTIMED{\matding{T}}
+\newcommand\INPROB{\matding{P}}
 
 \begin{table}[htb!]
   \label{tab:seq-comparison-features}
   \centering
 
-  \begin{tabular}{rl|ccccc|cc}
+  \begin{tabular}{rlcccccc}
   \toprule
 
   & \rot{\thead{\langname}}
   & \rot{\thead{\featname{UML}}}
   & \rot{\thead{\featname{MARTE}}}
+  & \rot{\thead{\featname{STAIRS}}}
   & \rot{\thead{\featname{PSC}}}
-  & \rot{\thead{\featname{TPSC}}}
-  & \rot{\thead{\featname{PTPSC}}}
   & \rot{\thead{\featname{PSP}}}
   & \rot{\thead{\featname{AGLPT}}}
   \\
   \midrule
-  \multicolumn{8}{l}{\tsubhead{Messages}}
+  \multicolumn{7}{l}{\tsubhead{Messages}}
   \\
-  Regular & \OK & \OK & \OK & \OK & \OK & \OK & ? & ?
+  Sync/async & \NO & \OK & \OK & \OK & ? & ? & ?
   \\
-  Expected & \NO & \NO & \NO & \OK & \OK & \OK & ? & ?
-  \\
-  Fail & \NO & \NO & \NO & \OK & \OK & \OK & ? & ?
+  Expected/fail & \NO & \NO & \NO & \NO & \OK & ? & ?
   \\
   \midrule
-  \multicolumn{8}{l}{\tsubhead{Waits}}
+  \multicolumn{7}{l}{\tsubhead{Waits}}
   \\
-  Explicit (\mwaitaction) & \OK & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ?
+  Explicit (\mwaitaction) & \OK & \ISH & \ISH & \INTIMED & \INTIMED? & ? & ?
   \\
-  Ranged & \SOON & \ISH & \ISH & \NO & \ISH? & \ISH? & ? & ?
-  \\
-  \midrule
-  \multicolumn{8}{l}{\tsubhead{Duration constraints}}
-  \\
-  Lower-bound & \SOON? & \OK & \OK & \NO & \OK? & \OK? & ? & ?
-  \\
-  Upper-bound/deadline & \OK & \OK & \OK & \NO & \OK & \OK & ? & ?
+  Ranged & \SOON & \ISH & \ISH & \INTIMED & \INTIMED? & ? & ?
   \\
   \midrule
-  \multicolumn{8}{l}{\tsubhead{Conditionally executed blocks}}
+  \multicolumn{7}{l}{\tsubhead{Duration constraints}}
   \\
-  Optional & \SOON? & \OK & \OK & \ISH & \ISH & \ISH & ? & ?
+  Lower-bound & \SOON? & \OK & \OK & \INTIMED & \INTIMED? & ? & ?
   \\
-  Probabilistic optional & \SOON & \NO & \NO & \NO & \NO & \OK & ? & ?
-  \\
-  Alternative (if) & \SOON? & \OK & \OK & \OK & \OK & \OK & ? & ?
+  Upper-bound/deadline & \OK & \OK & \OK & \INTIMED & \INTIMED & ? & ?
   \\
   \midrule
-  \multicolumn{8}{l}{\tsubhead{Other}}
+  \multicolumn{7}{l}{\tsubhead{Conditionally executed blocks}}
   \\
-  Gaps (or similar) & \OK & \NO & \NO & \OK & \OK & \OK & ? & \ISH?
+  Optional (\texttt{opt}) & \SOON? & \OK & \OK & \OK & \ISH & ? & ?
   \\
-  Loops (\mloopstep) & \OK & \OK & \OK & \OK & \OK & \OK & ? & ?
+  Probabilistic optional & \SOON & \NO & \NO & \NO & \INPROB & ? & ?
   \\
-  Breaks & \SOON & \OK & \OK & \OK & \OK & \OK & ? & ?
+  (Potential) alternative (\texttt{alt}, \(\sqcap\)) & \SOON & \OK & \OK & \OK & \OK & ? & ?
+  \\
+  Mandatory alternative (\texttt{xalt}, \(\extchoice\)) & \SOON? & \NO & \NO & \OK & \OK & ? & ?
+  \\
+  Probabilistic alternative (\texttt{palt}) & \SOON? & \NO & \NO & \INPROB & ? & ? & ?
+  \\
+  \midrule
+  \multicolumn{7}{l}{\tsubhead{Other}}
+  \\
+  Gaps (or similar) & \OK & \NO & \NO & \NO & \OK & ? & \ISH?
+  \\
+  Loops (\mloopstep) & \OK & \OK & \OK & \OK & \OK & ? & ?
+  \\
+  Breaks & \SOON & \OK & \OK & \OK & \OK & ? & ?
   \\
   \bottomrule
   \end{tabular}
   \caption{Matrix of features available in \langname{} sequences compared to
   other notations.\\
-  \small{(Key: \OK{}={}supported; \ISH{}={}indirectly encodable; \SOON{}={}planned; \NO{}={}unsupported)}}
+  \small{(Key: \OK{}={}supported;
+  \ISH{}={}indirectly encodable; 
+  \INTIMED{}={}timed variant only;
+  \INPROB{}={}probabilistic variant only;
+  \SOON{}={}planned; \NO{}={}unsupported)}}
 \end{table}
 
 \Cref{tab:seq-comparison-features} summarises both the features listed earlier
