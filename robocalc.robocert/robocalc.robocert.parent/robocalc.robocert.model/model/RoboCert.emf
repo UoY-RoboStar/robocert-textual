@@ -398,9 +398,7 @@ enum BinarySetOperator {
  * diagram itself, but the target may also name an external RoboChart entity.
  */
 abstract class Actor {
-	/**
-	 * Typically expands to the target's sequence group parameter.
-	 */
+	@genmodel(documentation="Typically expands to the target's sequence group parameter.")
 	derived volatile transient readonly ref SequenceGroup[0..1] anyGroup;
 }
 
@@ -428,6 +426,9 @@ abstract class Target extends Actor {
 	 * Assertions may apply a further instantiation.
 	 */
 	val TargetInstantiation[1] instantiation;
+	
+	@genmodel(documentation="Lowest common denominator for the targeted element.")
+	derived volatile transient readonly ref robochart.NamedElement[1] element;	
 }
 
 /**

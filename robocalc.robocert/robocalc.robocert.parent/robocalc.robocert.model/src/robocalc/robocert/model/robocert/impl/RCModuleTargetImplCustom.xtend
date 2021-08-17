@@ -13,4 +13,13 @@ class RCModuleTargetImplCustom extends RCModuleTargetImpl {
 	override basicGetAnyGroup() {
 		group
 	}
+	
+	/**
+	 * Re-points element to resolve to the target's module.
+	 * 
+	 * @return the target's module.
+	 */
+	override basicGetElement() {
+		module
+	}
 }

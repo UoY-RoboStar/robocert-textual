@@ -8,6 +8,7 @@ import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.TargetInstantiation
 import robocalc.robocert.model.robocert.Target
 import circus.robocalc.robochart.Expression
+import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 
 /**
  * Generates CSP referring to a target.
@@ -16,6 +17,7 @@ class TargetGenerator {
 	@Inject extension ExpressionGenerator
 	@Inject extension TargetExtensions
 	@Inject extension VariableExtensions
+	@Inject extension CTimedGeneratorUtils
 
 	/**
 	 * Generates an external reference for the 'closed' form of this target.
@@ -104,12 +106,12 @@ class TargetGenerator {
 	 * a (simple) specification should usually be unoptimised (D__); model
 	 * comparisons should usually be optimised (O__).
 	 * 
-	 * TODO(@MattWindsor91): when upstream is changed to make D__ default,
-	 * this should call into CTimedGeneratorUtils; eventually, we should be
-	 * able to select the optimisation level.
+	 * TODO(@MattWindsor91): eventually, we should be able to select the
+	 * optimisation level.
 	 */
-	 
-	def private generateOpenTargetName(Target it) '''«namespace»::D__'''
+	def private generateOpenTargetName(Target it) {
+		element.getFullProcessName(false)
+	}
 
 	def private generateOpenTargetParams(Iterable<Variable> cs, TargetInstantiation instantiation) '''
 		«IF cs.isNullOrEmpty»

@@ -10,6 +10,7 @@ import robocalc.robocert.model.robocert.TargetInstantiation
 import circus.robocalc.robochart.Expression
 import circus.robocalc.robochart.Context
 import robocalc.robocert.model.robocert.ConstAssignment
+import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 
 /**
  * Extension methods for dealing with targets.
@@ -18,6 +19,7 @@ class TargetExtensions {
 	// TODO(@MattWindsor91): move some of these to the metamodel?
 	@Inject extension RCModuleExtensions
 	@Inject extension VariableExtensions
+	@Inject extension CTimedGeneratorUtils
 
 	/**
 	 * Gets the parameterisation for a module target.
@@ -38,23 +40,14 @@ class TargetExtensions {
 	}
 
 	/**
-	 * Scrapes the namespace from a RoboChart module.
-	 * 
-	 * @param it  the actor for which we are getting a namespace.
-	 * 
-	 * @return the module name (as the namespace of any communications over the module).
-	 */
-	def dispatch String getNamespace(RCModuleTarget it) {
-		module?.name
-	}
-
-	/**
-	 * Fallback for targets that don't correspond to a namespace.
+	 * Gets the namespace of a target.
 	 * 
 	 * @param it  the target for which we are getting a namespace.
-	 * @return the empty string (signifying this actor has no namespace).
+	 * @return the namespace (named element's process ID) of the target.
 	 */
-	def dispatch String getNamespace(Target it) '''{- UNSUPPORTED TARGET: «it» -}'''
+	def String getNamespace(Target it) {
+		element?.processId
+	}
 
 	/**
 	 * Gets any constants in this target actor that haven't been instantiated

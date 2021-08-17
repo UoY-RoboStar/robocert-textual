@@ -259,7 +259,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="anyGroup" eType="#//SequenceGroup"
-        changeable="false" volatile="true" transient="true" derived="true"/>
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Typically expands to the target's sequence group parameter."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="World" eSuperTypes="#//Actor">
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
@@ -270,6 +274,13 @@
         eOpposite="#//SequenceGroup/target"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
         eType="#//TargetInstantiation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Lowest common denominator for the targeted element."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RCModuleTarget" eSuperTypes="#//Target">
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
