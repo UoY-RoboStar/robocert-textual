@@ -17,10 +17,20 @@ class RoboCertParsingTest {
 	@Inject
 	ParseHelper<robocalc.robocert.model.robocert.RAPackage> parseHelper
 	
+	// TODO(@MattWindsor91): find out how on earth to use the validation helper here;
+	// the problem is that it's impossible to construct a valid and meaningful
+	// RAPackage that doesn't refer to things in an existing RCPackage.
+	//
+	// maybe inject them into the model post-facto?
+	
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			Hello Xtext!
+			sequence group S : module M -> world {
+				sequence Test {
+					anything until end
+				}
+			}
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
