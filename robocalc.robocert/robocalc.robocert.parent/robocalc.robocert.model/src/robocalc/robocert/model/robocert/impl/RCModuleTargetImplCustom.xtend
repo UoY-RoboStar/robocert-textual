@@ -22,4 +22,9 @@ class RCModuleTargetImplCustom extends RCModuleTargetImpl {
 	override basicGetElement() {
 		module
 	}
+	
+	/**
+	 * @return a human-readable summary of this module.
+	 */
+	override toString() '''module «module.name»'''
 }

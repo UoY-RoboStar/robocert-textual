@@ -13,4 +13,9 @@ class WorldImplCustom extends WorldImpl {
 	override basicGetAnyGroup() {
 		group
 	}
+	
+	/**
+	 * @return a human-friendly representation of this world actor.
+	 */
+	override toString() '''world'''
 }

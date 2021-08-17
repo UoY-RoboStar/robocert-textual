@@ -9,17 +9,15 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension
 import robocalc.robocert.tests.RoboCertInjectorProvider
 import org.eclipse.xtext.testing.InjectWith
 import org.junit.jupiter.api.^extension.ExtendWith
-import circus.robocalc.robochart.RoboChartFactory
 
 /**
- * Tests any custom functionality on RCModuleTargets, and also tests that the
+ * Tests any custom functionality on Worlds, and also tests that the
  * factory resolves them correctly.
  */
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
-class RCModuleTargetImplCustomTest {
+class WorldImplCustomTest {
 	@Inject RobocertFactory rf
-	@Inject RoboChartFactory cf
 	
 	/**
 	 * Tests that anyGroup and group give the same, non-null result.
@@ -32,28 +30,15 @@ class RCModuleTargetImplCustomTest {
 	}
 	
 	/**
-	 * Tests that element and module give the same, non-null result.
-	 */
-	@Test
-	def testElement() {
-		val x = example
-		x?.element.assertNotNull
-		x.module.assertEquals(x.element)
-	}
-	
-	/**
 	 * Tests that the string representation is correct.
 	 */
 	@Test
 	def testToString() {
-		"module foo".assertEquals(example.toString)
+		"world".assertEquals(example.toString)
 	}
 	
 	private def example() {
-		rf.createRCModuleTarget=>[
-			module = cf.createRCModule=>[
-				name = "foo"
-			]
+		rf.createWorld=>[
 			group = rf.createSequenceGroup
 		]
 	}
