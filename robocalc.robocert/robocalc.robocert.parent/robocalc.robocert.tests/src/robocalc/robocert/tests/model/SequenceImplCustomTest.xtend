@@ -2,8 +2,7 @@ package robocalc.robocert.tests.model
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.RobocertFactory
-import static extension org.junit.Assert.assertArrayEquals
-import static extension org.junit.Assert.assertEquals
+import static extension org.junit.Assert.*
 import org.junit.jupiter.api.Test
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import robocalc.robocert.tests.RoboCertInjectorProvider
@@ -35,5 +34,16 @@ class SequenceImplCustomTest {
 		sgroup.target.assertEquals(seq.target)
 		sgroup.world.assertEquals(seq.world)
 		#[seq.target, seq.world].assertArrayEquals(seq.actors.toArray)
+	}
+	
+	/**
+	 * Tests that the 'actors' derived property works if the sequence has
+	 * no group.
+	 */
+	@Test
+	def testActors_NoGroup() {
+		val actors = rf.createSequence.actors
+		actors.assertNotNull
+		0.assertEquals(actors.length)
 	}
 }

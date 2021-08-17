@@ -1,14 +1,18 @@
 package robocalc.robocert.tests.model
 
 import com.google.inject.Inject
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.extensions.InjectionExtension
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.^extension.ExtendWith
+import robocalc.robocert.model.robocert.RefMessageSet
 import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.tests.RoboCertInjectorProvider
+
 import static extension org.junit.Assert.assertFalse
 import static extension org.junit.Assert.assertTrue
-import org.junit.jupiter.api.Test
-import org.eclipse.xtext.testing.extensions.InjectionExtension
-import robocalc.robocert.tests.RoboCertInjectorProvider
-import org.eclipse.xtext.testing.InjectWith
-import org.junit.jupiter.api.^extension.ExtendWith
+import robocalc.robocert.model.robocert.MessageSet
+import robocalc.robocert.model.robocert.util.SetFactory
 
 /**
  * Tests any custom functionality on RefMessageSets, and also tests
@@ -18,38 +22,53 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @InjectWith(RoboCertInjectorProvider) 
 class RefMessageSetImplCustomTest {
 	@Inject RobocertFactory rf
+	@Inject extension SetFactory
 
 	/**
-	 * Tests to make sure isActive is false on null references.
+	 * Tests isActive on various forms of reference.
 	 */
 	@Test
-	def testIsActive_NullRef() {
-		rf.createRefMessageSet.active.assertFalse
+	def testIsActive() {
+		nullRef.active.assertFalse
+		nullIndirectRef.active.assertFalse
+		refTo(empty).active.assertFalse
+		
+		refTo(single).active.assertTrue
+		refTo(universe).active.assertTrue
+	}
+
+	/**
+	 * Tests isUniversal on various forms of reference.
+	 */
+	@Test
+	def testIsUniversal() {
+		nullRef.universal.assertFalse
+		nullIndirectRef.universal.assertFalse
+		refTo(empty).universal.assertFalse
+		refTo(single).universal.assertFalse
+		
+		refTo(universe).universal.assertTrue
 	}
 	
-	/**
-	 * Tests to make sure isActive is false on references to named
-	 * sets with null contents.
-	 */
-	@Test
-	def testIsActive_NullIndirect() {
-		val mset = rf.createRefMessageSet=>[
+	private def nullRef() {
+		rf.createRefMessageSet
+	}
+	
+	private def nullIndirectRef() {
+		nullRef=>[
 			set = rf.createNamedMessageSet
 		]
-		mset.active.assertFalse
 	}
 	
-	/**
-	 * Tests to make sure isActive is true on references to named
-	 * sets with universe contents.
-	 */
-	@Test
-	def testIsActive_Universe() {
-		val mset = rf.createRefMessageSet=>[
-			set = rf.createNamedMessageSet=>[
-				set = rf.createUniverseMessageSet
-			]
+	private def RefMessageSet refTo(MessageSet ms) {
+		nullIndirectRef=>[
+			set.set = ms
 		]
-		mset.active.assertTrue
+	}
+	
+	private def single() {
+		rf.createExtensionalMessageSet=>[
+			messages.add(rf.createMessageSpec)
+		]
 	}
 }

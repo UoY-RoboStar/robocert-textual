@@ -81,8 +81,65 @@ class BinaryMessageSetImplCustomTest {
 		diff(single, universe).active.assertFalse
 		diff(universe, single).active.assertTrue	
 	}
+
+	/**
+	 * Tests to make sure isUniversal is handled correctly on unions.
+	 */
+	@Test
+	def testIsUniversal_Union() {	
+		// any union including the universe is universal
+		union(universe, empty).universal.assertTrue
+		union(empty, universe).universal.assertTrue
+		union(universe, universe).universal.assertTrue
+		union(single, universe).universal.assertTrue
+		union(universe, single).universal.assertTrue
+
+		// anything else is not
+		union(empty, empty).universal.assertFalse
+		union(single, empty).universal.assertFalse
+		union(empty, single).universal.assertFalse
+		union(single, single).universal.assertFalse
+	}
 	
-	def private single() {
+	/**
+	 * Tests to make sure isUniversal is handled correctly on intersections.
+	 */
+	@Test
+	def testIsUniversal_Intersection() {
+		// only universes intersected with universes remain universal
+		inter(universe, universe).universal.assertTrue
+			
+		// everything else does not
+		inter(empty, empty).universal.assertFalse		
+		inter(empty, single).universal.assertFalse
+		inter(empty, universe).universal.assertFalse
+		inter(single, empty).universal.assertFalse
+		inter(single, single).universal.assertFalse
+		inter(single, universe).universal.assertFalse
+		inter(universe, empty).universal.assertFalse
+		inter(universe, single).universal.assertFalse
+	}
+
+	/**
+	 * Tests to make sure isActive is handled correctly on differences.
+	 */
+	@Test
+	def testIsUniversal_Difference() {
+		// only universes with nothing removed remain universal
+		diff(universe, empty).universal.assertTrue
+		
+		// everything else does not
+		diff(empty, empty).universal.assertFalse
+		diff(empty, universe).universal.assertFalse
+		diff(empty, single).universal.assertFalse
+		diff(single, empty).universal.assertFalse
+		diff(single, universe).universal.assertFalse
+		diff(single, single).universal.assertFalse
+		diff(universe, single).universal.assertFalse
+		diff(universe, universe).universal.assertFalse
+	}
+	
+	private def single() {
 		rf.createExtensionalMessageSet=>[
 			messages.add(rf.createMessageSpec)
 		]

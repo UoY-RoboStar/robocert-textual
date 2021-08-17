@@ -7,7 +7,7 @@ import robocalc.robocert.tests.RoboCertInjectorProvider
 import robocalc.robocert.model.robocert.RobocertFactory
 import com.google.inject.Inject
 import org.junit.jupiter.api.Test
-import static extension org.junit.Assert.assertEquals
+import static extension org.junit.Assert.*
 
 /**
  * Tests any custom functionality on Subsequences, and also tests that the factory
@@ -17,6 +17,15 @@ import static extension org.junit.Assert.assertEquals
 @InjectWith(RoboCertInjectorProvider) 
 class SubsequenceImplCustomTest {
 	@Inject RobocertFactory rf
+	
+	/**
+	 * Tests that we return null if there is no parent sequence.
+	 */
+	@Test
+	def testSequence_Null() {
+		rf.createSubsequence.sequence.assertNull
+	}
+	
 	
 	/**
 	 * Tests that we can find the subsequence of a root subsequence.
