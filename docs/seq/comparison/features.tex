@@ -94,14 +94,20 @@ Notion of direction (inbound/outbound) rather than sender/receiver labels.
 \begin{featset}
 \item[UML] lifeline
 \item[PSC] \insp{component instance}
-\item[RC] \insp{module}
 \end{featset}
 
-Always fixed at two \ghtodo{32}{for now} in \langname: a \mtarget{} and a \mworld{}.
+Unlike UML and PSC, we fix the number of actors at two
+\ghtodo{32}{for now} in \langname: a \mtarget{} and a \mworld{}.
 Neither are named, though the \mtarget{} will refer to a
 named component such as a \mrcmodule.
 
 Like PSC, but unlike UML, there are no executions.
+
+\subsection{Assertions~(\ref{sec:seq-metamodel-assertions})}
+
+Being part of a language for automated property checking,
+\langname{} sequence assertions more closely resemble CSP-M/FDR refinement
+assertions than the usual ways of reasoning about UML or PSC sequence diagrams.
 
 \subsection{Matrix}
 
@@ -133,7 +139,9 @@ Like PSC, but unlike UML, there are no executions.
   \midrule
   \multicolumn{7}{l}{\tsubhead{Messages}}
   \\
-  Sync/async & \NO & \OK & \OK & \OK & ? & ? & ?
+  Asynchronous & \OK & \OK & \OK & \OK & \NO & ? & ?
+  \\
+  Synchronous & \SOON? & \OK & \OK & \OK & \OK & ? & ?
   \\
   Expected/fail & \NO & \NO & \NO & \NO & \OK & ? & ?
   \\
@@ -158,7 +166,7 @@ Like PSC, but unlike UML, there are no executions.
   \\
   Probabilistic optional & \SOON & \NO & \NO & \NO & \INPROB & ? & ?
   \\
-  (Potential) alternative (\texttt{alt}, \(\sqcap\)) & \SOON & \OK & \OK & \OK & \OK & ? & ?
+  Potential alternative (\texttt{alt}, \(\sqcap\)) & \SOON & \OK & \OK & \OK & \OK & ? & ?
   \\
   Mandatory alternative (\texttt{xalt}, \(\extchoice\)) & \SOON? & \NO & \NO & \OK & \OK & ? & ?
   \\
