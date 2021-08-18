@@ -1,39 +1,10 @@
 %!TEX root=../../robocert.tex
 
-This semantics is inspired by the work of Lima et al. on the CML semantics of
-UML sequence diagrams~\cite{lima-semantics}.  Differences include:
-
-\begin{itemize}
-\item a focus on \tockcsp{} rather than CML, and consequently the
-  treatment of timing properties;
-\item
-  the treatment of other concepts in \langname{} but not UML sequence
-  diagrams, for instance gaps;
-\item simplifications arising from the assumption that all sequences
-  are between two actors whose actions are always either communications with
-  each other or shared control-flow decisions.
-\end{itemize}
-
-The behaviour of the \langname{} generator is expected to conform to
-this semantics, except that:
-
-\begin{itemize}
-\item
-  The generator targets \cspm{} instead of CSP, and so \emph{may}
-  use semantically equivalent \cspm{} constructs where the CSP equivalents
-  are missing or not idiomatic;
-\item
-  The generator \emph{must} wrap processes in
-  timed sections and prioritisations to achieve the appropriate \tockcsp{} behaviours of
-  CSP operators;
-\item
-  The generator \emph{may} perform semantics-preserving optimisations,
-  such as substituting \(P\) for \(\tlang{\Stop \interrupt \olang{P}}\).
-\end{itemize}
-
-\todo{Some of the definitions are very loosely typed (as they are expanding from
-a metamodel to textual snippets of something halfway between \tockcsp{} and
-\cspm), and it'd be nice to fix that and/or give explicit result types.}
+This section gives the \tockcsp{} semantics of \langname{} sequences.  As
+discussed in \cref{sec:semantics-review-seq}, this
+semantics is inspired by the work of Lima et al. on the CML semantics of
+SysML sequence diagrams~\cite{lima-semantics} with the differences noted in
+that section.
 
 \subsection{Assertions}
 
@@ -151,8 +122,7 @@ The definitions here correspond to \cref{sec:metamodel-steps}.
     \tag{action step}
   \\
   \intertext{We capture the semantics of a \mdeadlinestep{} using
-  the \tockcsp{} \emph{deadline} operator, whose definition \todo{cite BRC21}
-  we reproduce below.
+  the \tockcsp{} \emph{deadline} operator~\cite{Baxter21-TickTock}, whose definition we reproduce below.
   }
   \stepsema{\adeadline}
   \quad\defeq\quad

@@ -1,6 +1,26 @@
 %!TEX root=../robocert.tex
 
 This section introduces a \tockcsp{} semantics for \langname.
+The behaviour of the \langname{} generator is expected to conform to
+this semantics, except that:
+
+\begin{itemize}
+\item
+  The generator targets \cspm{} instead of CSP, and so \emph{may}
+  use semantically equivalent \cspm{} constructs where the CSP equivalents
+  are missing or not idiomatic;
+\item
+  The generator \emph{must} wrap processes in
+  timed sections and prioritisations to achieve the appropriate \tockcsp{} behaviours of
+  CSP operators;
+\item
+  The generator \emph{may} perform semantics-preserving optimisations,
+  such as substituting \(P\) for \(\tlang{\Stop \interrupt \olang{P}}\).
+\end{itemize}
+
+\todo{Some of the definitions are very loosely typed (as they are expanding from
+a metamodel to textual snippets of something halfway between \tockcsp{} and
+\cspm), and it'd be nice to fix that and/or give explicit result types.}
 
 \section{Core language}\label{sec:semantics-tockcsp-core}
 

@@ -12,9 +12,22 @@ our approaches.
 
 Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
 that of Lima et al.~\cite{lima-semantics} on the SysML profile of UML, with
-some differences to account for a retargeting from CML to \tockcsp.  For
-two-\mactor{} sequences \todo{all of them at the moment}, we can (and do)
-simplify the semantics significantly.
+some differences to account for a retargeting from CML to \tockcsp.
+
+For two-\mactor{} sequences \ghtodo{32}{all of them at the moment}, we can (and do)
+simplify the semantics significantly.  Other differences include:
+
+\begin{itemize}
+\item a focus on \tockcsp{} rather than CML, and consequently a
+  treatment of timing properties based on the former;
+\item
+  the treatment of other concepts in \langname{} but not UML sequence
+  diagrams (see \cref{sec:seq-comparison-features});
+\item simplifications arising from the assumption that all sequences
+  are between two actors whose actions are always either communications with
+  each other or shared control-flow decisions.
+\end{itemize}
+
 The main novelty of our work here is that, by targeting \tockcsp, we can capture
 timing properties and refinement relations.
 
@@ -27,14 +40,21 @@ There is work to generate HDL from MARTE sequence diagrams~\todo{cite}
 \paragraph{Trace semantics of STAIRS}
 
 STAIRS~\cite{Haugen03-STAIRS} gives a trace semantics for UML2 in terms
-of pairs of positive and negative trace sets.  These traces contain
-transmission and consumption events across signals.
+of pairs of positive and negative trace sets (the latter capturing the UML2
+\texttt{neg} operator).  These traces contain
+transmission and consumption events across signals.  STAIRS defines
+refinement operators that are sensitive to the possibility that positive
+traces can be recategorised as negative traces after refinement.  Our
+semantics indirectly provides a similar semantics for \langname{}
+sequences through \tockcsp{} (and its traces and \emph{tick-tock} models~\cite{Baxter21-TickTock}).
 
-Traces for timed
-STAIRS~\cite{Haugen05-TimedSTAIRS} also contain separate reception
+Timed
+STAIRS~\cite{Haugen05-TimedSTAIRS} traces also contain separate reception
 events (capturing the distinction between the time an event reaches
 its destination and the time it is processed), and \(\mathbb R\)-valued
-timestamps capturing timing.
+timestamps capturing timing.  We instead use the discrete \tockcsp{} notion
+of time, and do not directly cater for the reception--consumption distinction
+\todo{would CSP hiding and renaming account for this?}.
 
 \subsection{PSC, TPSC, and PTPSC}
 
@@ -42,6 +62,7 @@ Property Sequence Chart (and its derivatives) is a layer atop
 linear temporal logic, which means that its operational semantics is
 in the form of B\"uchi automata (for TPSC, timed B\"uchi
 automata; it is unclear what needs to be added to these automata for PTPSC \todo{?}).
+There is 
 
 For PSC, a \textsc{Charmy} plugin automates the operational semantics.  A denotational semantics in terms of
 invalid traces also exists.
