@@ -44,9 +44,7 @@ of pairs of positive and negative trace sets (the latter capturing the UML2
 \texttt{neg} operator).  These traces contain
 transmission and consumption events across signals.  STAIRS defines
 refinement operators that are sensitive to the possibility that positive
-traces can be recategorised as negative traces after refinement.  Our
-semantics indirectly provides a similar semantics for \langname{}
-sequences through \tockcsp{} (and its traces and \emph{tick-tock} models~\cite{Baxter21-TickTock}).
+traces can be recategorised as negative traces after refinement.
 
 Timed
 STAIRS~\cite{Haugen05-TimedSTAIRS} traces also contain separate reception
@@ -55,6 +53,12 @@ its destination and the time it is processed), and \(\mathbb R\)-valued
 timestamps capturing timing.  We instead use the discrete \tockcsp{} notion
 of time, and do not directly cater for the reception--consumption distinction
 \todo{would CSP hiding and renaming account for this?}.
+
+Our work indirectly provides a similar semantics for \langname{}
+sequences through \tockcsp{} (and its traces and \emph{tick-tock} models~\cite{Baxter21-TickTock}).
+Our approach achieves automation through existing tools such as FDR,
+and is compatible with the existing \robostar{} ecosystem as well as that of
+\tockcsp.
 
 \subsection{PSC, TPSC, and PTPSC}
 
