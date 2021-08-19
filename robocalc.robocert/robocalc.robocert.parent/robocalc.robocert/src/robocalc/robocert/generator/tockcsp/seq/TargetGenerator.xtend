@@ -20,85 +20,13 @@ class TargetGenerator {
 	@Inject extension CTimedGeneratorUtils
 
 	/**
-	 * Generates an external reference for the 'closed' form of this target.
+	 * Generates a target body, given an instantiation.
 	 * 
-	 * The closed form has no parameters, with all constants assigned values
-	 * either from the target's instantiation or from
-	 * the top-level instantiations.csp file.
-	 * 
-	 * @param it  the target for which we are generating a closed form.
-	 * 
-	 * @return CSP referencing the 'closed' form of this target.
+	 * @param it             the target body.
+	 * @param instantiation  the instantiation to use.
 	 */
-	def CharSequence generateClosedTargetRef(Target it) '''«group.name»::Target'''
-
-	/**
-	 * Generates a process definition for the 'closed' form of this target.
-	 * 
-	 * The closed form has no parameters, with all constants assigned values
-	 * either from the target's instantiation or from
-	 * the top-level instantiations.csp file.
-	 * 
-	 * @param it  the target for which we are generating a closed form.
-	 * 
-	 * @return CSP defining the 'closed' form of this target.
-	 */
-	def CharSequence generateClosedTargetDef(Target it) '''
-		Target =
-			«generateOpenTargetSig(group.instantiation)»
-	'''
-
-	/**
-	 * Generates an external reference for the 'open' form of this target.
-	 * 
-	 * The open form has parameters exposed, and any reference to it must
-	 * fill those parameters using either values in the given instantiation or,
-	 * where values are missing, references to the instantiations CSP file.
-	 * 
-	 * @param it  the context for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the 'open' form of a sequence's target.
-	 */
-	def CharSequence generateOpenTargetRef(Target it, Instantiation instantiation) '''
-		«group.name»::«generateOpenTargetSig(instantiation)»
-	'''
-
-	/**
-	 * Generates a process definition for the 'open' form of this target.
-	 * 
-	 * @param it             the target for which we are generating an open
-	 *                       form.
-	 * @param instantiation  the instantiation (may be null).
-	 * 
-	 * @return generated CSP for the 'open' form of a sequence's target.
-	 */
-	def CharSequence generateOpenTargetDef(Target it) '''
-		«generateOpenTargetSig(null)» =
-			«generateOpenTargetBody»
-	'''
-
-	/**
-	 * Generates the signature of an open target definition or reference.
-	 * 
-	 * Because the parameters used in the definition are just the constant IDs,
-	 * which are also how we refer to any fallback references to the
-	 * instantiations file, both definitions and references can have the same
-	 * signature generator.
-	 * 
-	 * @param it             the target for which we are generating an open
-	 *                       form.
-	 * @param instantiation  the instantiation (may be null).
-	 * 
-	 * @return CSP referring to, or giving the signature of, the 'open' form of
-	 *         this target.
-	 */
-	def private CharSequence generateOpenTargetSig(Target it, Instantiation instantiation) '''
-	OpenTarget«FOR c : uninstantiatedConstants.toIterable BEFORE '(' SEPARATOR ',' AFTER ')'»
-			«instantiation.generateConstant(c)»
-	«ENDFOR»'''
-
-	def private CharSequence generateOpenTargetBody(Target it) '''
-		«generateOpenTargetName»«parameterisation.toList.generateOpenTargetParams(group.instantiation)»
+	def CharSequence generate(Target it, Instantiation instantiation) '''
+		«generateOpenTargetName»«parameterisation.toList.generateOpenTargetParams(instantiation)»
 	'''
 	
 	/*
@@ -128,6 +56,8 @@ class TargetGenerator {
 	
 	static val ID = "{- id -} 0"
 
+	// TODO(@MattWindsor91): move these two.
+
 	/**
 	 * Generates the value of a constant given an instantiation.
 	 * 
@@ -143,7 +73,7 @@ class TargetGenerator {
 	 * 
 	 * @return  a CSP string expanding to the value of the constant.
 	 */
-	private def CharSequence generateConstant(Instantiation it, Variable const) {
+	def CharSequence generateConstant(Instantiation it, Variable const) {
 		it?.getConstant(const)?.generateNamedExpression(const, it) ?: const.constantId
 	}
 

@@ -68,7 +68,7 @@ class ConstantScopeExtensions {
 	 * @return  the target's constants as a scope.
 	 */
 	private def uninstantiatedTargetScope(Target it) {
-		scopeFor(uninstantiatedConstants)
+		scopeFor(uninstantiatedConstants(group?.instantiation))
 	}
 
 	/**

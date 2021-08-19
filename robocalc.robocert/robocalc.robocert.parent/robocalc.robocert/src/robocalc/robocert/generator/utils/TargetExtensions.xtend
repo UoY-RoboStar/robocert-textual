@@ -51,15 +51,16 @@ class TargetExtensions {
 
 	/**
 	 * Gets any constants in this target actor that haven't been instantiated
-	 * at the sequence level.
+	 * by the given instantiation.
 	 * 
 	 * This iterator should return a stable ordering of uninstantiated constants.
 	 * 
-	 * @param it  the target actor.
+	 * @param it    the target.
+	 * @param inst  the instantiation in question.
 	 * @return an iterator of uninstantiated constant names.
 	 */
-	def Iterator<Variable> uninstantiatedConstants(Target it) {
-		val instantiated = group.instantiation.assignments.flatMap[constants].map[constantKey].toSet
+	def Iterator<Variable> uninstantiatedConstants(Target it, Instantiation inst) {
+		val instantiated = inst.assignments.flatMap[constants].map[constantKey].toSet
 		parameterisation.filter[!instantiated.contains(constantKey)]
 	}
 

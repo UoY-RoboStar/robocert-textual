@@ -12,11 +12,13 @@ import robocalc.robocert.model.robocert.ProcessCSPFragment
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.model.robocert.CSPContextSource
+import robocalc.robocert.generator.intf.seq.SequenceLocator
 
 /**
  * Generates CSP assertions.
  */
 class CSPPropertyGenerator {
+	@Inject extension SequenceLocator
 	@Inject extension UnsupportedSubclassHandler
 
 	/**
@@ -100,7 +102,9 @@ class CSPPropertyGenerator {
 	}
 
 	// TODO(@MattWindsor91): unify with Sequence.generateName
-	private def dispatch generateRawProcess(Sequence it) '''«group.name»::Sequences::«name»'''
+	private def dispatch generateRawProcess(Sequence it) {
+		fullCSPName
+	}
 
 	private def dispatch generateRawProcess(Target it) {
 		// TODO(@MattWindsor91): fix instantiations

@@ -14,10 +14,12 @@ import robocalc.robocert.model.robocert.impl.RobocertFactoryImplCustom
 import robocalc.robocert.generator.intf.seq.ActionGenerator
 import robocalc.robocert.generator.tockcsp.seq.ActionGeneratorImpl
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
-import robocalc.robocert.generator.tockcsp.seq.SequenceGenerator
 import robocalc.robocert.generator.intf.seq.StepGenerator
 import robocalc.robocert.generator.tockcsp.seq.StepGeneratorImpl
 import org.eclipse.xtext.conversion.IValueConverterService
+import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl
+import robocalc.robocert.generator.intf.seq.SequenceLocator
+import robocalc.robocert.generator.tockcsp.seq.SequenceLocatorImpl
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -32,11 +34,15 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	}
 	
 	def Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
-		SequenceGenerator
+		SubsequenceGeneratorImpl
 	}
 	
 	def Class<? extends StepGenerator> bindStepGenerator() {
 		StepGeneratorImpl
+	}
+	
+	def Class<? extends SequenceLocator> bindSequenceLocator() {
+		SequenceLocatorImpl
 	}
 	
 	/**

@@ -3,7 +3,6 @@ package robocalc.robocert.generator.tockcsp.top
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.resource.Resource
 import robocalc.robocert.generator.tockcsp.ll.CSPGroupGenerator
-import robocalc.robocert.generator.tockcsp.seq.SequenceGenerator
 import robocalc.robocert.model.robocert.Assertion
 import robocalc.robocert.model.robocert.CSPGroup
 import robocalc.robocert.model.robocert.SequenceGroup
@@ -11,6 +10,7 @@ import java.util.Date
 import java.text.SimpleDateFormat
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import robocalc.robocert.model.robocert.Group
+import robocalc.robocert.generator.tockcsp.seq.SeqGroupGenerator
 
 /**
  * Top-level generator for tock-CSP.
@@ -19,7 +19,7 @@ class TopGenerator {
 	@Inject extension AssertionGenerator
 	@Inject extension CSPGroupGenerator
 	@Inject extension ImportGenerator
-	@Inject extension SequenceGenerator sg
+	@Inject extension SeqGroupGenerator
 	@Inject extension UnsupportedSubclassHandler
 	
 	/**
@@ -93,7 +93,7 @@ class TopGenerator {
 	'''
 	
 	def private dispatch generateGroup(SequenceGroup it) {
-		sg.generateGroup(it)
+		generate
 	}
 	
 	def private dispatch generateGroup(Group it) {
