@@ -31,7 +31,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Group" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A group in a RoboCert package.&#xD;&#xA;&#xD;&#xA;Groups contain specifications in a particular RoboCert notation."/>
+      <details key="documentation" value="A group in a RoboCert package.&#xD;&#xA;&#xD;&#xA;Groups contain specifications in a particular RoboCert notation, instantiating&#xD;&#xA;various constants."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
         eType="#//RAPackage" eOpposite="#//RAPackage/groups">
@@ -39,6 +39,35 @@
         <details key="documentation" value="The parent package."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
+        eType="#//Instantiation" containment="true" eOpposite="#//Instantiation/group">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The instantiation in effect in this group."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Instantiation">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Specifies a (partial) instantiation of targets in a group."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//Group"
+        eOpposite="#//Group/instantiation">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent group of this instantiation."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignments" upperBound="-1"
+        eType="#//ConstAssignment" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Any constant assignments."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstAssignment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="1"
+        upperBound="-1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -278,8 +307,6 @@
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
         eOpposite="#//SequenceGroup/target"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
-        eType="#//TargetInstantiation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="element" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"
         changeable="false" volatile="true" transient="true" derived="true">
@@ -291,16 +318,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="RCModuleTarget" eSuperTypes="#//Target">
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TargetInstantiation">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="assignments" upperBound="-1"
-        eType="#//ConstAssignment" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ConstAssignment">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="1"
-        upperBound="-1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StepWithBody" abstract="true" eSuperTypes="#//SequenceStep">
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
@@ -394,12 +411,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//SequencePropertyType">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Type of assertion."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
-        eType="#//TargetInstantiation" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Assertion-level instantiation applied to this sequence's target."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"

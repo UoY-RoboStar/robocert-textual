@@ -44,10 +44,37 @@ class RAPackage extends robochart.BasicPackage {
 
 @genmodel(documentation="A group in a RoboCert package.
 
-Groups contain specifications in a particular RoboCert notation.")
+Groups contain specifications in a particular RoboCert notation, instantiating
+various constants.")
 abstract class Group {
 	@genmodel(documentation="The parent package.")
 	ref RAPackage[1]#groups parent;
+	
+	@genmodel(documentation="The instantiation in effect in this group.")
+	val Instantiation[1]#group instantiation;
+}
+
+@genmodel(documentation="Specifies a (partial) instantiation of targets in a group.")
+class Instantiation {
+	@genmodel(documentation="The parent group of this instantiation.")
+	ref Group[1]#instantiation group;
+
+	@genmodel(documentation="Any constant assignments.")
+	val ConstAssignment[*] assignments;
+}
+
+/**
+ * Assigns a value to one or more constants.
+ */
+class ConstAssignment {
+	/**
+	 * The constant(s), being assigned.
+	 */
+	ref robochart.Variable[1..*] constants;
+	/**
+	 * The expression containing the new value of the constant(s).
+	 */
+	val robochart.Expression[1] value;
 }
 
 @genmodel(documentation="An assertion.")
@@ -418,12 +445,6 @@ abstract class Target extends Actor, CSPProcessSource {
 	 */
 	ref SequenceGroup[1]#target group;
 	
-	/**
-	 * An initial instantiation to be applied to the target.
-	 * Assertions may apply a further instantiation.
-	 */
-	val TargetInstantiation[1] instantiation;
-	
 	@genmodel(documentation="Lowest common denominator for the targeted element.")
 	derived volatile transient readonly ref robochart.NamedElement[1] element;	
 }
@@ -433,30 +454,6 @@ abstract class Target extends Actor, CSPProcessSource {
  */
 class RCModuleTarget extends Target {
 	ref robochart.RCModule[1] module;
-}
-
-/**
- * Specifies a (partial) instantiation of a target.
- */
-class TargetInstantiation {
-	/**
-	 * Any constant assignments.
-	 */
-	val ConstAssignment[*] assignments;
-}
-
-/**
- * Assigns a value to one or more constants.
- */
-class ConstAssignment {
-	/**
-	 * The constant(s), being assigned.
-	 */
-	ref robochart.Variable[1..*] constants;
-	/**
-	 * The expression containing the new value of the constant(s).
-	 */
-	val robochart.Expression[1] value;
 }
 
 //
@@ -734,9 +731,6 @@ class SequenceProperty extends Property {
 
 	@genmodel(documentation="Type of assertion.")
 	attr SequencePropertyType[1] type;
-	
-	@genmodel(documentation="Assertion-level instantiation applied to this sequence's target.")
-	val TargetInstantiation[1] instantiation;
 	
 	@genmodel(documentation="Model under which this assertion should be checked under CSP.")
 	attr CSPModel[1] model = "TICK_TOCK";	

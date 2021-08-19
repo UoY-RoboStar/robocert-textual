@@ -5,10 +5,10 @@ import robocalc.robocert.generator.utils.VariableExtensions
 import circus.robocalc.robochart.Variable
 import robocalc.robocert.generator.utils.TargetExtensions
 import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
-import robocalc.robocert.model.robocert.TargetInstantiation
 import robocalc.robocert.model.robocert.Target
 import circus.robocalc.robochart.Expression
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
+import robocalc.robocert.model.robocert.Instantiation
 
 /**
  * Generates CSP referring to a target.
@@ -45,7 +45,7 @@ class TargetGenerator {
 	 */
 	def CharSequence generateClosedTargetDef(Target it) '''
 		Target =
-			«generateOpenTargetSig(instantiation)»
+			«generateOpenTargetSig(group.instantiation)»
 	'''
 
 	/**
@@ -59,7 +59,7 @@ class TargetGenerator {
 	 * 
 	 * @return generated CSP for the 'open' form of a sequence's target.
 	 */
-	def CharSequence generateOpenTargetRef(Target it, TargetInstantiation instantiation) '''
+	def CharSequence generateOpenTargetRef(Target it, Instantiation instantiation) '''
 		«group.name»::«generateOpenTargetSig(instantiation)»
 	'''
 
@@ -92,13 +92,13 @@ class TargetGenerator {
 	 * @return CSP referring to, or giving the signature of, the 'open' form of
 	 *         this target.
 	 */
-	def private CharSequence generateOpenTargetSig(Target it, TargetInstantiation instantiation) '''
+	def private CharSequence generateOpenTargetSig(Target it, Instantiation instantiation) '''
 	OpenTarget«FOR c : uninstantiatedConstants.toIterable BEFORE '(' SEPARATOR ',' AFTER ')'»
 			«instantiation.generateConstant(c)»
 	«ENDFOR»'''
 
 	def private CharSequence generateOpenTargetBody(Target it) '''
-		«generateOpenTargetName»«parameterisation.toList.generateOpenTargetParams(instantiation)»
+		«generateOpenTargetName»«parameterisation.toList.generateOpenTargetParams(group.instantiation)»
 	'''
 	
 	/*
@@ -113,7 +113,7 @@ class TargetGenerator {
 		element.getFullProcessName(false)
 	}
 
-	def private generateOpenTargetParams(Iterable<Variable> cs, TargetInstantiation instantiation) '''
+	def private generateOpenTargetParams(Iterable<Variable> cs, Instantiation instantiation) '''
 		«IF cs.isNullOrEmpty»
 			(«ID»)
 		«ELSE»
@@ -143,10 +143,10 @@ class TargetGenerator {
 	 * 
 	 * @return  a CSP string expanding to the value of the constant.
 	 */
-	private def CharSequence generateConstant(TargetInstantiation it, Variable const) {
+	private def CharSequence generateConstant(Instantiation it, Variable const) {
 		it?.getConstant(const)?.generateNamedExpression(const, it) ?: const.constantId
 	}
 
 	private def generateNamedExpression(Expression it, Variable const,
-		TargetInstantiation instantiation) '''{- «const.constantId» -} «compileExpression(instantiation)»'''
+		Instantiation instantiation) '''{- «const.constantId» -} «compileExpression(instantiation)»'''
 }

@@ -62,7 +62,7 @@ enum DoesCSPRefinementOperator returns CSPRefinementOperator:
  * A CSP group.
  */
 CSPGroup:
-	{CSPGroup} (isUntimed?='untimed'? & isPreamble?='preamble'?) 'csp' '{' fragments+=CSPFragment* '}'
+	{CSPGroup} (isUntimed?='untimed'? & isPreamble?='preamble'?) 'csp' instantiation=Instantiation '{' fragments+=CSPFragment* '}'
 ;
 
 /**
@@ -114,6 +114,7 @@ enum CSPModel:
  */
 SequenceGroup:
 	'sequence' 'group' name=ID ':' target=Target '->' world=World
+	instantiation=Instantiation
 	'{'
 	(sequences+=Sequence | messageSets += NamedMessageSet)*
 	'}'
@@ -134,17 +135,10 @@ Subsequence:
 ;
 
 /**
- * The target actor of a sequence diagram.
- */
-Target:
-	BasicTarget instantiation=TargetInstantiation
-;
-
-/**
  * A target override in a sequence diagram.
  */
-TargetInstantiation:
-	{TargetInstantiation} ('with' '{' (assignments += ConstAssignment) (',' assignments += ConstAssignment)* '}')?
+Instantiation:
+	{Instantiation} ('with' '{' (assignments += ConstAssignment) (',' assignments += ConstAssignment)* '}')?
 ;
 
 /**
@@ -168,7 +162,7 @@ fragment ConstName *:
 /**
  * A target of a sequence diagram.
  */
-BasicTarget returns Target:
+Target:
 	 'module' {RCModuleTarget} module=[RCModule|QualifiedName]
 ;
 
@@ -391,7 +385,6 @@ SequenceProperty:
         | 'does' isNegated?='not' type=DoesNotSequencePropertyType
         | type=DoesSequencePropertyType
         )
-    instantiation=TargetInstantiation
     InCSPModelSpec?
 ;
 

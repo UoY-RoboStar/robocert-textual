@@ -6,11 +6,11 @@ import robocalc.robocert.model.robocert.RCModuleTarget
 import robocalc.robocert.model.robocert.Target
 import java.util.Collections
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.TargetInstantiation
 import circus.robocalc.robochart.Expression
 import circus.robocalc.robochart.Context
 import robocalc.robocert.model.robocert.ConstAssignment
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
+import robocalc.robocert.model.robocert.Instantiation
 
 /**
  * Extension methods for dealing with targets.
@@ -59,7 +59,7 @@ class TargetExtensions {
 	 * @return an iterator of uninstantiated constant names.
 	 */
 	def Iterator<Variable> uninstantiatedConstants(Target it) {
-		val instantiated = instantiation.assignments.flatMap[constants].map[constantKey].toSet
+		val instantiated = group.instantiation.assignments.flatMap[constants].map[constantKey].toSet
 		parameterisation.filter[!instantiated.contains(constantKey)]
 	}
 
@@ -72,7 +72,7 @@ class TargetExtensions {
 	 * @return the value of the constant, or null if it isn't instantiated
 	 *         in this instantiation.
 	 */
-	def Expression getConstant(TargetInstantiation it, Variable const) {
+	def Expression getConstant(Instantiation it, Variable const) {
 		assignments.findFirst[hasConstant(const)]?.value
 	}
 	
