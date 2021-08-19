@@ -11,6 +11,7 @@ import robocalc.robocert.model.robocert.EventSetCSPFragment
 import robocalc.robocert.model.robocert.ProcessCSPFragment
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.Target
+import robocalc.robocert.model.robocert.CSPContextSource
 
 /**
  * Generates CSP assertions.
@@ -87,7 +88,7 @@ class CSPPropertyGenerator {
 	}
 
 	private def dispatch generateTickTockContext(Target it) {
-		targetMember(CONTEXT_MODULE)
+		getTickTockContext
 	}
 
 	private def dispatch generateTickTockContext(CSPProcessSource it) {
@@ -110,8 +111,15 @@ class CSPPropertyGenerator {
 		unsupported("CSP process source", "FAIL")
 	}
 
-	// TODO(@MattWindsor91): implement generation code for this
-	private def getTickTockContext(EventSetCSPFragment it) '''«name»::«CONTEXT_MODULE»'''
+	private def dispatch getTickTockContext(EventSetCSPFragment it) '''«name»::«CONTEXT_MODULE»'''
+
+	private def dispatch getTickTockContext(Target it) {
+		targetMember(CONTEXT_MODULE)
+	}
+
+	private def dispatch getTickTockContext(CSPContextSource it) {
+		unsupported("CSP context source", "FAIL")
+	}
 
 	// TODO(@MattWindsor91): unify these two in the metamodel?
 	private def sequenceMember(Sequence it, CharSequence member) '''«group.name»::«member»'''

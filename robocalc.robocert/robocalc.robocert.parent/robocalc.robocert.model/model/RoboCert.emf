@@ -39,7 +39,7 @@ class RAPackage extends robochart.BasicPackage {
 	!ordered val Group[*]#parent groups;
 	
 	@genmodel(documentation="Any assertions in this package.")
-	val Assertion[*] assertions;
+	!ordered val Assertion[*] assertions;
 }
 
 @genmodel(documentation="A group in a RoboCert package.
@@ -122,6 +122,13 @@ This is predominantly a marker, and doesn't hold any state of its own.")
 abstract class CSPProcessSource {
 }
 
+
+@genmodel(documentation="Abstract class of anything that can be interpreted as a tick-tock context.
+
+This is predominantly a marker, and doesn't hold any state of its own.")
+abstract class CSPContextSource {
+}
+
 //
 // CSP fragments
 //
@@ -142,17 +149,16 @@ class NamedCSPFragment extends CSPFragment, robochart.NamedElement {
 }
 
 @genmodel(documentation="A fragment of CSP-M that is bound to an event set.")
-class EventSetCSPFragment extends NamedCSPFragment {
+class EventSetCSPFragment extends NamedCSPFragment, CSPContextSource {
 }
 
 @genmodel(documentation="A fragment of CSP-M that is bound to a process.")
 class ProcessCSPFragment extends NamedCSPFragment, CSPProcessSource {
-	@genmodel(documentation="The set of all events that the process can communicate.
+	@genmodel(documentation="The source of the context used for tick-tock model shifting.
 
-This is used for tick-tock model shifting.  We cannot, and do not,
-check to make sure that this event set is an accurate representation
-of the process's actual event universe.")
-	ref EventSetCSPFragment[0..1] events;
+We cannot, and do not, check to make sure that this accurately represents
+the process's actual event universe.")
+	ref CSPContextSource[0..1] events;
 }
 
 @genmodel(documentation="A fragment of CSP-M that is not bound to anything.
@@ -438,8 +444,8 @@ class World extends Actor {
 @genmodel(documentation="A target of some specification.
 
 Targets are CSP process sources, through appeal to the existing RoboStar
-language semantics.")
-abstract class Target extends Actor, CSPProcessSource {
+language semantics.  They are also CSP context sources.")
+abstract class Target extends Actor, CSPProcessSource, CSPContextSource {
 	/**
 	 * The sequence group to which this actor is attached.
 	 */

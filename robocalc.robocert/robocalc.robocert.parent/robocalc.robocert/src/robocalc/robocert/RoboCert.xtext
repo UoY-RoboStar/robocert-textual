@@ -72,7 +72,7 @@ CSPGroup:
  */
 CSPFragment:
 	( 'event' 'set' {EventSetCSPFragment} name=ID
-	| 'process' {ProcessCSPFragment} name=ID (':' 'events' 'in' events=[EventSetCSPFragment|QualifiedName])?
+	| 'process' {ProcessCSPFragment} name=ID (':' 'events' 'in' events=[CSPContextSource|QualifiedName])?
 	| 'inline' {InlineCSPFragment} name=ID?
 	)
 	contents=CSP_CODE

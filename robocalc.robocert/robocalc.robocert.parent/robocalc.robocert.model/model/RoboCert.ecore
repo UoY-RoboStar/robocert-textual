@@ -22,8 +22,8 @@
         <details key="documentation" value="Any groups in this package."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" upperBound="-1"
-        eType="#//Assertion" containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assertions" ordered="false"
+        upperBound="-1" eType="#//Assertion" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Any assertions in this package."/>
       </eAnnotations>
@@ -119,6 +119,11 @@
       <details key="documentation" value="Abstract class of anything that can be interpreted as a CSP process.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
     </eAnnotations>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPContextSource" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Abstract class of anything that can be interpreted as a tick-tock context.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
+    </eAnnotations>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment of CSP-M.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
@@ -135,7 +140,7 @@
       <details key="documentation" value="A fragment of CSP-M that has a name.&#xD;&#xA;&#xD;&#xA;These are used to bind CSP-M to names that are referred-to elsewhere."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventSetCSPFragment" eSuperTypes="#//NamedCSPFragment">
+  <eClassifiers xsi:type="ecore:EClass" name="EventSetCSPFragment" eSuperTypes="#//NamedCSPFragment #//CSPContextSource">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment of CSP-M that is bound to an event set."/>
     </eAnnotations>
@@ -144,9 +149,9 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment of CSP-M that is bound to a process."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="events" eType="#//EventSetCSPFragment">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="events" eType="#//CSPContextSource">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The set of all events that the process can communicate.&#xD;&#xA;&#xD;&#xA;This is used for tick-tock model shifting.  We cannot, and do not,&#xD;&#xA;check to make sure that this event set is an accurate representation&#xD;&#xA;of the process's actual event universe."/>
+        <details key="documentation" value="The source of the context used for tick-tock model shifting.&#xD;&#xA;&#xD;&#xA;We cannot, and do not, check to make sure that this accurately represents&#xD;&#xA;the process's actual event universe."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -301,9 +306,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
         eOpposite="#//SequenceGroup/world"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Actor #//CSPProcessSource">
+  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Actor #//CSPProcessSource #//CSPContextSource">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A target of some specification.&#xD;&#xA;&#xD;&#xA;Targets are CSP process sources, through appeal to the existing RoboStar&#xD;&#xA;language semantics."/>
+      <details key="documentation" value="A target of some specification.&#xD;&#xA;&#xD;&#xA;Targets are CSP process sources, through appeal to the existing RoboStar&#xD;&#xA;language semantics.  They are also CSP context sources."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
         eOpposite="#//SequenceGroup/target"/>
