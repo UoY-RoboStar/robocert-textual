@@ -5,6 +5,7 @@ import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import robocalc.robocert.model.robocert.CSPFragment
 import robocalc.robocert.model.robocert.NamedCSPFragment
 import robocalc.robocert.model.robocert.InlineCSPFragment
+import robocalc.robocert.model.robocert.EventSetCSPFragment
 
 /**
  * Generator for CSP fragments.
@@ -13,17 +14,31 @@ class CSPFragmentGenerator {
 	@Inject extension UnsupportedSubclassHandler
 
 	/**
-	 * Generates CSP-M for a named (event set or process) CSP fragment.
+	 * Generates CSP-M for an event set CSP fragment.
+	 * 
+	 * @param it  the fragment to generate.
+	 * 
+	 * @return the generated CSP-M.
+	 */
+	def dispatch generate(EventSetCSPFragment it) '''
+		module «name»
+		exports
+			Set = «contents»
+			
+			instance TTContext = model_shifting(Set)
+		endmodule
+	'''
+
+	/**
+	 * Generates CSP-M for an otherwise non-special-cased named CSP fragment.
 	 * 
 	 * @param it  the fragment to generate.
 	 * 
 	 * @return the generated CSP-M.
 	 */
 	def dispatch generate(NamedCSPFragment it) '''
-		-- begin named CSP fragment
 		«name» =
 			«contents»
-		-- end named CSP fragment «name»
 	'''
 
 	/**
@@ -33,11 +48,9 @@ class CSPFragmentGenerator {
 	 * 
 	 * @return the generated CSP-M.
 	 */
-	def dispatch generate(InlineCSPFragment it) '''
-		-- begin inline CSP fragment «nameOrFallback»
-			«contents»
-		-- end inline CSP fragment «nameOrFallback»
-	'''
+	def dispatch generate(InlineCSPFragment it) {
+		contents
+	}
 
 	/**
 	 * Generates fallback CSP-M for an unrecognised CSP fragment.
@@ -48,9 +61,5 @@ class CSPFragmentGenerator {
 	 */
 	def dispatch generate(CSPFragment it) {
 		unsupported("CSP fragment", "")
-	}
-	
-	def private getNameOrFallback(InlineCSPFragment it) {
-		name ?: "(unnamed)"
 	}
 }

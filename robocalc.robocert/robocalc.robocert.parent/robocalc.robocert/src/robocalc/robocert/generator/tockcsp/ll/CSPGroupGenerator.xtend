@@ -21,6 +21,7 @@ class CSPGroupGenerator {
 	 * @return  the generated CSP-M.
 	 */
 	def generate(CSPGroup it) '''
+		-- BEGIN CSP GROUP
 		«IF isUntimed»
 			«generateInner»
 		«ELSE»
@@ -28,6 +29,7 @@ class CSPGroupGenerator {
 				«generateInner»
 			}
 		«ENDIF»
+		-- END CSP GROUP
 	'''
 
 	def private generateInner(CSPGroup it) '''

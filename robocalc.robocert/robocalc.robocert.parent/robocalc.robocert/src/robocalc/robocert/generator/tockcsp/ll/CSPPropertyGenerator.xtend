@@ -61,6 +61,15 @@ class CSPPropertyGenerator {
 
 	private def generateHeader(CSPRefinementProperty it) '''assert«IF isNegated» not«ENDIF»'''
 
+	/**
+	 * Generates CSP-M for the process of a process source, potentially lifted
+	 * into its tick-tock context.
+	 * 
+	 * @param it  the process source to generate.
+	 * @param m   the target semantic model.
+	 * 
+	 * @return  CSP-M for the generated process.
+	 */
 	private def generateProcess(CSPProcessSource it,
 		CSPModel m) '''«IF m.tickTock»«generateTickTockContext»::TT(«ENDIF»«generateRawProcess»«IF m.tickTock»)«ENDIF»'''
 
@@ -70,15 +79,15 @@ class CSPPropertyGenerator {
 
 	// TODO(@MattWindsor91): all of this is provisional
 	private def dispatch generateTickTockContext(ProcessCSPFragment it) {
-		events?.tickTockContext ?: "MISSING"
+		events?.tickTockContext ?: "{}"
 	}
 
 	private def dispatch generateTickTockContext(Sequence it) {
-		sequenceMember(SEQUENCE_CONTEXT_MODULE)
+		sequenceMember(CONTEXT_MODULE)
 	}
 
 	private def dispatch generateTickTockContext(Target it) {
-		targetMember(SEQUENCE_CONTEXT_MODULE)
+		targetMember(CONTEXT_MODULE)
 	}
 
 	private def dispatch generateTickTockContext(CSPProcessSource it) {
@@ -102,7 +111,7 @@ class CSPPropertyGenerator {
 	}
 
 	// TODO(@MattWindsor91): implement generation code for this
-	private def getTickTockContext(EventSetCSPFragment it) '''«FRAGMENT_CONTEXT_MODULE»::«name»'''
+	private def getTickTockContext(EventSetCSPFragment it) '''«name»::«CONTEXT_MODULE»'''
 
 	// TODO(@MattWindsor91): unify these two in the metamodel?
 	private def sequenceMember(Sequence it, CharSequence member) '''«group.name»::«member»'''
@@ -110,8 +119,7 @@ class CSPPropertyGenerator {
 	private def targetMember(Target it, CharSequence member) '''«group.name»::«member»'''
 
 	static val TARGET_PROCESS = "Target"
-	static val FRAGMENT_CONTEXT_MODULE = "FragmentContexts"
-	static val SEQUENCE_CONTEXT_MODULE = "TTContext"
+	static val CONTEXT_MODULE = "TTContext"
 
 	/**
 	 * @return the appropriate FDR tau priority pragma for this model.
