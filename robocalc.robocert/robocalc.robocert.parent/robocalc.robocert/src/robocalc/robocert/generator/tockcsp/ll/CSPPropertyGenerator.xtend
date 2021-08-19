@@ -32,7 +32,7 @@ class CSPPropertyGenerator {
 	def generateProperty(CSPRefinementProperty it) '''
 		«generateRefinement»
 		«IF type == CSPRefinementOperator::EQUALS»
-			{- + equal inverse -} «invert.generateRefinement»
+			«invert.generateRefinement»
 		«ENDIF»
 	'''
 
