@@ -126,7 +126,7 @@ class TargetGenerator {
 		«ENDIF»
 	'''
 	
-	static final String ID = "{- id -} 0"
+	static val ID = "{- id -} 0"
 
 	/**
 	 * Generates the value of a constant given an instantiation.

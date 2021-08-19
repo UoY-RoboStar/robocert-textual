@@ -6,6 +6,7 @@ import robocalc.robocert.model.robocert.Subsequence
 import robocalc.robocert.model.robocert.SequenceGroup
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 import robocalc.robocert.generator.intf.seq.StepGenerator
+import robocalc.robocert.model.robocert.Target
 
 /**
  * A generator that emits CSP for sequences and subsequences.
@@ -24,19 +25,28 @@ class SequenceGenerator implements SubsequenceGenerator {
 	 */
 	def CharSequence generateGroup(SequenceGroup it) '''
 		module «name»
-			-- target «target»
-			-- world «world»
+			-- from: «target»
+			-- to:   «world»
 			
 			«messageSets.generateNamedSets(target)»
 		
 		exports
-			Timed(OneStep) {
-				«target.generateOpenTargetDef»
-				«target.generateClosedTargetDef»
-			}
+			«generateTickTockContext»
+		
+			«target.generateTargetDefs»
 			
 			«sequences.generateSequences»
 		endmodule
+	'''
+	
+	private def generateTickTockContext() '''instance TTContext = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
+
+
+	private def generateTargetDefs(Target it) '''
+		Timed(OneStep) {
+			«generateOpenTargetDef»
+			«generateClosedTargetDef»
+		}	
 	'''
 
 	private def CharSequence generateSequences(Iterable<Sequence> sequences) '''

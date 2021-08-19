@@ -202,12 +202,8 @@ class SequenceGroup extends Group, robochart.NamedElement {
 	derived volatile transient readonly ref Actor[2] actors;
 }
 
-/**
- * A sequence diagram.
- *
- * Well-formed sequence diagrams end with a final or infinite loop action.
- */
-class Sequence extends robochart.NamedElement {
+@genmodel(documentation="A sequence diagram.")
+class Sequence extends robochart.NamedElement, CSPProcessSource {
 	/**
 	 * The group to which this sequence belongs.
 	 */
@@ -412,10 +408,11 @@ class World extends Actor {
 	ref SequenceGroup[1]#world group;
 }
 
-/**
- * A target of a sequence.
- */
-abstract class Target extends Actor {
+@genmodel(documentation="A target of some specification.
+
+Targets are CSP process sources, through appeal to the existing RoboStar
+language semantics.")
+abstract class Target extends Actor, CSPProcessSource {
 	/**
 	 * The sequence group to which this actor is attached.
 	 */

@@ -2,6 +2,7 @@ package robocalc.robocert.generator.tockcsp.top
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.resource.Resource
+import robocalc.robocert.generator.tockcsp.ll.CSPGroupGenerator
 import robocalc.robocert.generator.tockcsp.seq.SequenceGenerator
 import robocalc.robocert.model.robocert.Assertion
 import robocalc.robocert.model.robocert.CSPGroup

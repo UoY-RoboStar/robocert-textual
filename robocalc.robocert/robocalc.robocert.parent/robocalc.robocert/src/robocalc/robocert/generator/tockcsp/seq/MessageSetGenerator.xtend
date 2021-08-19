@@ -31,7 +31,7 @@ class MessageSetGenerator {
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(
+	def dispatch CharSequence generate(
 		ExtensionalMessageSet it) '''{|«FOR g : messages SEPARATOR ', '»«g.generateCSPEventSet»«ENDFOR»|}'''
 
 	/**
@@ -41,7 +41,9 @@ class MessageSetGenerator {
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch generate(UniverseMessageSet it) '''«MODULE_NAME»::«UNIVERSE_NAME»'''
+	def dispatch generate(UniverseMessageSet it) {
+		QUALIFIED_UNIVERSE_NAME
+	}
 
 	/**
 	 * Generates a CSP event set for a reference gap message set.
@@ -105,21 +107,27 @@ endmodule'''
 		set = set.optimise
 		set.generate
 	}
-	
+		
 	/**
 	 * The name of the message set module exposed by RoboCert.
 	 */
-	public static final String MODULE_NAME = "MsgSets"
+	public static val MODULE_NAME = "MsgSets"
 	
 	/**
 	 * The name of the universe set exposed by RoboCert in the message set
 	 * module.
 	 */
-	public static final String UNIVERSE_NAME = "Universe"
+	public static val UNIVERSE_NAME = "Universe"
 	
 	/**
 	 * The name of the events set exposed by the RoboChart/RoboSim semantics
 	 * and which contains all semantically relevant events.
 	 */
-	static final String UNIVERSE_DEF_NAME = "sem__events"
+	static val UNIVERSE_DEF_NAME = "sem__events"
+
+	/**
+	 * The qualified name of the universe set exposed by RoboCert.
+	 */
+	public static val QUALIFIED_UNIVERSE_NAME = '''«MODULE_NAME»::«UNIVERSE_NAME»'''
+
 }
