@@ -125,7 +125,8 @@ We can follow a similar process for \langname{} sequences, as follows:
 
 Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
 that of Lima et al.~\cite{lima-semantics} on the SysML profile of UML, with
-some differences to account for a retargeting from CML to \tockcsp.
+some differences to account for a retargeting from CML to \tockcsp.  This
+semantics postdates the survey above.
 
 For two-\mactor{} sequences \ghtodo{32}{all of them at the moment}, we can (and do)
 simplify the semantics significantly.  Other differences include:
@@ -177,9 +178,12 @@ and is compatible with the existing \robostar{} ecosystem as well as that of
 
 Property Sequence Chart (and its derivatives) is a layer atop
 linear temporal logic, which means that its operational semantics is
-in the form of B\"uchi automata (for TPSC, timed B\"uchi
-automata; it is unclear what needs to be added to these automata for PTPSC \todo{?}).
-There is 
+in the form of B\"uchi automata.\footnote{
+Micskei and Waeselynck also note that several semantic treatments for UML2 also
+target B\"uchi automata.}
+For TPSC, the target is timed B\"uchi
+automata; it is unclear what needs to be added to these automata for PTPSC \todo{?}.
+
 
 For PSC, a \textsc{Charmy} plugin automates the operational semantics.  A denotational semantics in terms of
 invalid traces also exists.
