@@ -306,12 +306,16 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
         eOpposite="#//SequenceGroup/world"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Actor #//CSPProcessSource #//CSPContextSource">
+  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Actor #//OptionallyNamedElement #//CSPProcessSource #//CSPContextSource">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A target of some specification.&#xD;&#xA;&#xD;&#xA;Targets are CSP process sources, through appeal to the existing RoboStar&#xD;&#xA;language semantics.  They are also CSP context sources."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
-        eOpposite="#//SequenceGroup/target"/>
+        eOpposite="#//SequenceGroup/target">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Group to which this actor is attached."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="element" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"
         changeable="false" volatile="true" transient="true" derived="true">

@@ -163,7 +163,7 @@ fragment ConstName *:
  * A target of a sequence diagram.
  */
 Target:
-	 'module' {RCModuleTarget} module=[RCModule|QualifiedName]
+	 ('module' {RCModuleTarget} module=[RCModule|QualifiedName]) AsName
 ;
 
 /**
@@ -208,6 +208,13 @@ SequenceAction:
  */
 TimeUnits returns Expression:
 	Expression 'time'? ('unit' | 'units')
+;
+
+/**
+ * Fragment for tacking a name onto the end of an OptionallyNamedElement.
+ */
+fragment AsName *:
+	('as' name=ID)?
 ;
 
 /**

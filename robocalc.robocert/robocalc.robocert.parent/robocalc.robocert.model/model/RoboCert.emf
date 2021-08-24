@@ -445,10 +445,15 @@ class World extends Actor {
 
 Targets are CSP process sources, through appeal to the existing RoboStar
 language semantics.  They are also CSP context sources.")
-abstract class Target extends Actor, CSPProcessSource, CSPContextSource {
-	/**
-	 * The sequence group to which this actor is attached.
-	 */
+abstract class Target
+extends
+	Actor,
+	OptionallyNamedElement,
+	CSPProcessSource,
+	CSPContextSource
+{
+	// TODO(@MattWindsor91): this may eventually weaken to just Group etc.
+	@genmodel(documentation="Group to which this actor is attached.")
 	ref SequenceGroup[1]#target group;
 	
 	@genmodel(documentation="Lowest common denominator for the targeted element.")

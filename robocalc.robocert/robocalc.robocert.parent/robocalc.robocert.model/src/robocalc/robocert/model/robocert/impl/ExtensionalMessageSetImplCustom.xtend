@@ -12,7 +12,7 @@ class ExtensionalMessageSetImplCustom extends ExtensionalMessageSetImpl {
 	override isActive() {
 		!(messages.isNullOrEmpty)
 	}
-	
+
 	/**
 	 * Extensional gap messages sets are never universal.
 	 * 
