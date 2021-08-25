@@ -11,7 +11,7 @@ import robocalc.robocert.model.robocert.ProcessCSPFragment
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.generator.intf.seq.SequenceLocator
-import robocalc.robocert.generator.intf.seq.SeqGroupField
+import robocalc.robocert.generator.intf.seq.SeqGroupParametricField
 
 /**
  * Generates CSP assertions.
@@ -90,7 +90,7 @@ class CSPPropertyGenerator {
 
 	private def dispatch generateRawProcess(Target it) {
 		// TODO(@MattWindsor91): fix instantiations
-		group.getFullCSPName(SeqGroupField::TARGET)
+		group.getFullCSPName(SeqGroupParametricField::TARGET)
 	}
 
 	private def dispatch generateRawProcess(CSPProcessSource it) {
