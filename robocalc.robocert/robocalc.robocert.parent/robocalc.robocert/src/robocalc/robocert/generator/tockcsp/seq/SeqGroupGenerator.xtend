@@ -6,6 +6,7 @@ import robocalc.robocert.model.robocert.Instantiation
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
+import robocalc.robocert.generator.intf.seq.SeqGroupField
 
 /**
  * Generator for sequence groups.
@@ -15,6 +16,7 @@ class SeqGroupGenerator {
 	@Inject extension TargetExtensions
 	@Inject extension SubsequenceGenerator
 	@Inject extension MessageSetGenerator
+	@Inject extension SeqGroupFieldGenerator
 	
 	/**
 	 * Generates CSP for a sequence group.
@@ -27,17 +29,19 @@ class SeqGroupGenerator {
 		-- SEQUENCE GROUP
 		-- from: «target»
 		-- to:   «world»
-		module «name»
-		exports
-			«generateOpenDef»
-			«generateClosedDef»
-		endmodule
+		«module(name, generateDefs)»
 	'''
+	
+
 	
 	// There are two submodules inside a sequence group:
 	//
 	// - an 'open' one, which holds all of the parameters of the group open;
 	// - a 'closed' one, which instantiates them all to defaults.
+	private def generateDefs(SequenceGroup it) '''
+		«generateOpenDef»
+		«generateClosedDef»
+	'''
 
 	/**
 	 * Generates an external reference for the 'closed' form of this sequence group.
@@ -73,8 +77,6 @@ class SeqGroupGenerator {
 	 * closed definition.
 	 */
 	package static val CLOSED_DEF_MODULE_NAME = '''Instance'''
-	
-	package static val SEQUENCES_MODULE_NAME = '''Sequences'''
 
 	package static val TARGET_DEF_NAME = '''Target'''
 
@@ -109,35 +111,58 @@ class SeqGroupGenerator {
 		exports
 			«generateTickTockContext»
 		
-			«generateTargetDef»
+			«timed(generateTargetDef)»
 			
 			«sequences.generateSequences»
 		endmodule
 	'''
 	
-	private def generateTickTockContext() '''instance TTContext = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
+	private def generateTickTockContext() '''instance «SeqGroupField::TICK_TOCK_CONTEXT.generate» = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
 
 
-	private def generateTargetDef(SequenceGroup it) '''
-		Timed(OneStep) {
-			«TARGET_DEF_NAME» = «target.generate(instantiation)»
-		}	
-	'''
+	private def generateTargetDef(SequenceGroup it) '''«TARGET_DEF_NAME» = «target.generate(instantiation)»'''
 
 	private def CharSequence generateSequences(Iterable<Sequence> sequences) '''
 		«IF sequences.empty»
 			-- No sequences defined in this group
 		«ELSE»
-			module Sequences
-			exports
-				Timed(OneStep) {
-					«FOR sequence : sequences»
-						«sequence.name» =
-							«sequence.body.generate»
-					«ENDFOR»
-				}
-			endmodule
+			«module(SeqGroupField::SEQUENCE_MODULE.generate, timed(sequences.generateSequencesInner))»
 		«ENDIF»
+	'''
+	
+	private def generateSequencesInner(Iterable<Sequence> sequences) '''
+		«FOR sequence : sequences SEPARATOR "\n"»
+			«sequence.name» =
+				«sequence.body.generate»
+		«ENDFOR»
+	'''
+	
+	/**
+	 * Generates a CSP-M module with a name and public body.
+	 * 
+	 * @param name  the name of the module.
+	 * @param pub   the public body of the module.
+	 * 
+	 * @return  CSP-M for the module.
+	 */
+	private def CharSequence module(CharSequence name, CharSequence pub) '''
+		module «name»
+		exports
+			«pub»
+		endmodule
+	'''
+	
+	/**
+	 * Generates a timed section with the appropriate timing function.
+	 * 
+	 * @param inner  the inner body of the timed section.
+	 * 
+	 * @return  CSP-M for the timed section.
+	 */
+	private def CharSequence timed(CharSequence inner) '''
+		Timed(OneStep) {
+			«inner»
+		}
 	'''
 	
 

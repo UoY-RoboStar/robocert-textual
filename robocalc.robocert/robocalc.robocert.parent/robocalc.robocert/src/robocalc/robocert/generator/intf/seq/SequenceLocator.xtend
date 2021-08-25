@@ -26,9 +26,10 @@ interface SequenceLocator {
 	 * 
 	 * We assume that we want the closed form of the sequence group.
 	 * 
-	 * @param it  the sequence group whose target is to be located.
+	 * @param it     the sequence group whose field is to be located.
+	 * @param field  the field in question.
 	 * 
-	 * @return  CSP-M expanding to a module-qualified name of the target.
+	 * @return  CSP-M expanding to a module-qualified name of a field.
 	 */	
-	def CharSequence getFullTargetCSPName(SequenceGroup it)
+	def CharSequence getFullCSPName(SequenceGroup it, SeqGroupField field)
 }

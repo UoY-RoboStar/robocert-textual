@@ -7,18 +7,18 @@ import robocalc.robocert.model.robocert.CSPModel
 import robocalc.robocert.model.robocert.CSPProcessSource
 import robocalc.robocert.model.robocert.CSPRefinementOperator
 import robocalc.robocert.model.robocert.CSPRefinementProperty
-import robocalc.robocert.model.robocert.EventSetCSPFragment
 import robocalc.robocert.model.robocert.ProcessCSPFragment
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.Target
-import robocalc.robocert.model.robocert.CSPContextSource
 import robocalc.robocert.generator.intf.seq.SequenceLocator
+import robocalc.robocert.generator.intf.seq.SeqGroupField
 
 /**
  * Generates CSP assertions.
  */
 class CSPPropertyGenerator {
 	@Inject extension SequenceLocator
+	@Inject extension TickTockContextGenerator
 	@Inject extension UnsupportedSubclassHandler
 
 	/**
@@ -80,58 +80,22 @@ class CSPPropertyGenerator {
 		model == CSPModel::TICK_TOCK
 	}
 
-	// TODO(@MattWindsor91): all of this is provisional
-	private def dispatch generateTickTockContext(ProcessCSPFragment it) {
-		events?.tickTockContext ?: "{}"
-	}
-
-	private def dispatch generateTickTockContext(Sequence it) {
-		sequenceMember(CONTEXT_MODULE)
-	}
-
-	private def dispatch generateTickTockContext(Target it) {
-		getTickTockContext
-	}
-
-	private def dispatch generateTickTockContext(CSPProcessSource it) {
-		unsupported("CSP process source", "FAIL")
-	}
-
 	private def dispatch generateRawProcess(ProcessCSPFragment it) {
 		name
 	}
 
-	// TODO(@MattWindsor91): unify with Sequence.generateName
 	private def dispatch generateRawProcess(Sequence it) {
 		fullCSPName
 	}
 
 	private def dispatch generateRawProcess(Target it) {
 		// TODO(@MattWindsor91): fix instantiations
-		targetMember(TARGET_PROCESS)
+		group.getFullCSPName(SeqGroupField::TARGET)
 	}
 
 	private def dispatch generateRawProcess(CSPProcessSource it) {
-		unsupported("CSP process source", "FAIL")
+		unsupported("CSP process source", "STOP")
 	}
-
-	private def dispatch getTickTockContext(EventSetCSPFragment it) '''«name»::«CONTEXT_MODULE»'''
-
-	private def dispatch getTickTockContext(Target it) {
-		targetMember(CONTEXT_MODULE)
-	}
-
-	private def dispatch getTickTockContext(CSPContextSource it) {
-		unsupported("CSP context source", "FAIL")
-	}
-
-	// TODO(@MattWindsor91): unify these two in the metamodel?
-	private def sequenceMember(Sequence it, CharSequence member) '''«group.name»::«member»'''
-
-	private def targetMember(Target it, CharSequence member) '''«group.name»::«member»'''
-
-	static val TARGET_PROCESS = "Target"
-	static val CONTEXT_MODULE = "TTContext"
 
 	/**
 	 * @return the appropriate FDR tau priority pragma for this model.

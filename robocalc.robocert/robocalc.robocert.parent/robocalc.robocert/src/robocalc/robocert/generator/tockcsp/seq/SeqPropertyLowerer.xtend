@@ -56,6 +56,7 @@ class SeqPropertyLowerer {
 	 * @return the left-hand side process source.
 	 */
 	private def getRhs(SequenceProperty it) {
+		// This should be the mirror image of getLhs, typically.
 		switch type {
 			case HOLDS:
 				target

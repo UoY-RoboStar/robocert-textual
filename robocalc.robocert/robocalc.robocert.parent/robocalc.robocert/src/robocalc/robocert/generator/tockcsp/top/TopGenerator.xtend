@@ -109,7 +109,7 @@ class TopGenerator {
 	 * @param resource  the top-level property model.
 	 */
 	private def generateAssertions(Resource resource) '''
-		«FOR asst : resource.allContents.filter(Assertion).toIterable»
+		«FOR asst : resource.allContents.filter(Assertion).toIterable SEPARATOR "\n"»
 			«asst.generate»
 		«ENDFOR»
 	'''

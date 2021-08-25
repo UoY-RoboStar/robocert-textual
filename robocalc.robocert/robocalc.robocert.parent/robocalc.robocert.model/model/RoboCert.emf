@@ -116,17 +116,19 @@ the timing model depended upon by the tock-CSP encoding.")
 	val CSPFragment[*]#group fragments;
 }
 
-@genmodel(documentation="Abstract class of anything that can be interpreted as a CSP process.
-
-This is predominantly a marker, and doesn't hold any state of its own.")
-abstract class CSPProcessSource {
-}
-
-
 @genmodel(documentation="Abstract class of anything that can be interpreted as a tick-tock context.
 
 This is predominantly a marker, and doesn't hold any state of its own.")
 abstract class CSPContextSource {
+}
+
+@genmodel(documentation="Abstract class of anything that can be interpreted as a CSP process.
+
+All CSP process sources have an underlying tick-tock context source, even if
+it is just the empty set.
+
+This is predominantly a marker, and doesn't hold any state of its own.")
+abstract class CSPProcessSource extends CSPContextSource {
 }
 
 //
@@ -449,8 +451,7 @@ abstract class Target
 extends
 	Actor,
 	OptionallyNamedElement,
-	CSPProcessSource,
-	CSPContextSource
+	CSPProcessSource
 {
 	// TODO(@MattWindsor91): this may eventually weaken to just Group etc.
 	@genmodel(documentation="Group to which this actor is attached.")
