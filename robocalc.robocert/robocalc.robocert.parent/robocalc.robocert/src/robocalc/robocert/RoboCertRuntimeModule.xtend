@@ -28,23 +28,23 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	def Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
 		RoboCertOutputConfigurationProvider
 	}
-	
+
 	def Class<? extends ActionGenerator> bindActionGenerator() {
 		ActionGeneratorImpl
 	}
-	
+
 	def Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
 		SubsequenceGeneratorImpl
 	}
-	
+
 	def Class<? extends StepGenerator> bindStepGenerator() {
 		StepGeneratorImpl
 	}
-	
+
 	def Class<? extends SequenceLocator> bindSequenceLocator() {
 		SequenceLocatorImpl
 	}
-	
+
 	/**
 	 * Binds the RoboChart name converter
 	 * (so that qualified names are '::'-delimited).
@@ -52,23 +52,23 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	def Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
 		RoboChartQualifiedNameConverter
 	}
-	
+
 	override Class<? extends IValueConverterService> bindIValueConverterService() {
 		RoboCertValueConverterService
 	}
-	
+
 	/**
 	 * Binds the RoboCert custom factory.
 	 */
 	def Class<? extends RobocertFactory> bindRobocertFactory() {
 		// TODO(@MattWindsor91): is this the right way to do this?
 		RobocertFactoryImplCustom
-	}	
-	
+	}
+
 	/**
 	 * Binds the RoboChart custom factory.
 	 */
 	def Class<? extends RoboChartFactory> bindRoboChartFactory() {
 		RoboChartFactoryImplCustom
-	}	
+	}
 }

@@ -2,9 +2,6 @@ package robocalc.robocert
 
 import org.eclipse.xtext.conversion.ValueConverter
 import org.eclipse.xtext.conversion.IValueConverter
-import org.eclipse.xtext.conversion.impl.AbstractNullSafeConverter
-import org.eclipse.xtext.nodemodel.INode
-import org.eclipse.xtext.conversion.ValueConverterException
 import org.eclipse.xtext.common.services.Ecore2XtextTerminalConverters
 
 /**
@@ -16,7 +13,7 @@ class RoboCertValueConverterService extends Ecore2XtextTerminalConverters {
 	/**
 	 * @return a converter to deal with inline CSP.
 	 */
-	@ValueConverter(rule = "CSP_CODE")
+	@ValueConverter(rule="CSP_CODE")
 	def IValueConverter<String> getCspCodeConverter() {
 		new DelimitedStringConverter("csp-begin", "csp-end")
 	}
@@ -24,7 +21,7 @@ class RoboCertValueConverterService extends Ecore2XtextTerminalConverters {
 	/**
 	 * @return a converter to deal with shorthand inline passages.
 	 */
-	@ValueConverter(rule = "SHORT_CODE")
+	@ValueConverter(rule="SHORT_CODE")
 	def IValueConverter<String> getShortCodeConverter() {
 		new DelimitedStringConverter("<$", "$>")
 	}
