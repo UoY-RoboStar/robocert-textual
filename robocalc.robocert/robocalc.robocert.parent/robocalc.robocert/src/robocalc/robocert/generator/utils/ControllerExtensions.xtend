@@ -12,12 +12,13 @@ import com.google.inject.Inject
 import com.google.common.collect.Iterators
 import java.util.Iterator
 import circus.robocalc.robochart.Variable
+import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 
 /**
  * Extension methods for dealing with RoboChart controllers.
  */
 class ControllerExtensions {
-	@Inject extension ContextExtensions
+	@Inject extension CTimedGeneratorUtils
 	@Inject extension OperationExtensions
 	@Inject extension StateMachineExtensions
 
@@ -53,9 +54,9 @@ class ControllerExtensions {
 	 */
 	def Iterator<Variable> moduleParameterisation(ControllerDef it) {
 		Iterators.concat(
-			allLocalConstants,
-			machines.iterator.flatMap[definition.allLocalConstants],
-			LOperations.iterator.flatMap[definition.allLocalConstants]
+			allLocalConstants.iterator,
+			machines.flatMap[definition.allLocalConstants].iterator,
+			LOperations.flatMap[definition.allLocalConstants].iterator
 		)
 	}
 }
