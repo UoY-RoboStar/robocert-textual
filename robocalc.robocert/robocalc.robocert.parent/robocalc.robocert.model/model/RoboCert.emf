@@ -63,7 +63,7 @@ class Instantiation {
 	val ConstAssignment[*] assignments;
 
 	@genmodel(documentation="Gets any available instantiation for the constant in this instantiation.")	
-	derived readonly transient volatile op robochart.Expression[0..1] getConstant(robochart.Variable constant); 
+	derived readonly transient volatile op RAExpr[0..1] getConstant(robochart.Variable constant); 
 }
 
 @genmodel(documentation="Assigns a value to one or more constants.")
@@ -72,7 +72,7 @@ class ConstAssignment {
 	ref robochart.Variable[1..*] constants;
 	
 	@genmodel(documentation="The expression containing the new value of the constant(s).")
-	val robochart.Expression[1] value;
+	val RAExpr[1] value;
 	
 	@genmodel(documentation="Checks whether this assignment maps the given constant.")
 	derived readonly transient volatile op boolean[1] hasConstant(robochart.Variable constant);
@@ -91,6 +91,22 @@ abstract class Property {
 
 	@genmodel(documentation="Whether the assertion must fail to hold for the model to be validated.")
 	attr boolean[1] isNegated;
+}
+
+@genmodel(documentation="A RoboCert expression.")
+abstract class RAExpr {
+}
+
+@genmodel(documentation="A reference to a constant in the model.")
+class RAConstExpr extends RAExpr {
+	@genmodel(documentation="The constant being referenced.")
+	ref robochart.Variable[1] constant;
+}
+
+@genmodel(documentation="A RoboCert integer literal.")
+class RAIntLit extends RAExpr {
+	@genmodel(documentation="The value of the expression.")
+	attr int[1] value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -495,7 +511,7 @@ class DeadlineStep extends StepWithBody {
 	 * The deadline, expressed as a number of time units after the start of the
 	 * block.
 	 */
-	val robochart.Expression[1] units;
+	val RAExpr[1] units;
 }
 
 /**
@@ -537,7 +553,7 @@ class DefiniteLoopBound extends LoopBound {
 	 * broken.
 	 * Evaluated once only.
 	 */
- 	val robochart.Expression[1] times;
+ 	val RAExpr[1] times;
 }
 
 /**
@@ -552,7 +568,7 @@ class LowerLoopBound extends LoopBound {
 	 * prematurely broken.
 	 * Evaluated once only.
 	 */
- 	val robochart.Expression[1] lowerTimes;
+ 	val RAExpr[1] lowerTimes;
 }
 
 /**
@@ -567,12 +583,12 @@ class RangeLoopBound extends LoopBound {
 	 * prematurely broken.
 	 * Evaluated once only.	 
 	 */
-	val robochart.Expression[1] lowerTimes;
+	val RAExpr[1] lowerTimes;
 	/**
 	 * The upper number of times the loop must execute.
 	 * Evaluated once only.
 	 */
-	val robochart.Expression[1] upperTimes;
+	val RAExpr[1] upperTimes;
 }
 
 //
@@ -614,7 +630,7 @@ class WaitAction extends SequenceAction {
 	/**
 	 * The number of units to wait.
 	 */
-	val robochart.Expression[1] units;
+	val RAExpr[1] units;
 	
 	// TODO(@MattWindsor91): nondeterministic waits
 }
@@ -727,7 +743,7 @@ class ExpressionArgument extends Argument {
 	/**
 	 * The expression in question.
 	 */
-	val robochart.Expression[1] expr;
+	val RAExpr[1] expr;
 }
 
 /**

@@ -4,11 +4,10 @@ import com.google.inject.Inject
 import robocalc.robocert.generator.utils.VariableExtensions
 import circus.robocalc.robochart.Variable
 import robocalc.robocert.generator.utils.TargetExtensions
-import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.Target
-import circus.robocalc.robochart.Expression
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 import robocalc.robocert.model.robocert.Instantiation
+import robocalc.robocert.model.robocert.RAExpr
 
 /**
  * Generates CSP referring to a target.
@@ -74,9 +73,8 @@ class TargetGenerator {
 	 * @return  a CSP string expanding to the value of the constant.
 	 */
 	def CharSequence generateConstant(Instantiation it, Variable const) {
-		it?.getConstant(const)?.generateNamedExpression(const, it) ?: const.constantId
+		it?.getConstant(const)?.generateNamedExpression(const) ?: const.constantId
 	}
 
-	private def generateNamedExpression(Expression it, Variable const,
-		Instantiation instantiation) '''{- «const.constantId» -} «compileExpression(instantiation)»'''
+	private def generateNamedExpression(RAExpr it, Variable const) '''{- «const.constantId» -} «generate»'''
 }

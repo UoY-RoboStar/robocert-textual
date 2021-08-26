@@ -80,7 +80,7 @@ class MessageSpecFactory {
 
 	def Argument intArg(int v) {
 		rcert.createExpressionArgument => [
-			expr = rc.createIntegerExp => [
+			expr = rcert.createRAIntLit => [
 				value = v
 			]
 		]

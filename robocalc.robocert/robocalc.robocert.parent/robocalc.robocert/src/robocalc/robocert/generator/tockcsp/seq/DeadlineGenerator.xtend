@@ -1,7 +1,6 @@
 package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
-import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.DeadlineStep
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 
@@ -24,7 +23,7 @@ class DeadlineGenerator {
 	 */
 	def generateDeadline(DeadlineStep it) '''«DEADLINE_PROC»(
 		(«body.generate»),
-		{- time units -} «units.compileExpression(it)»
+		{- time units -} «units.generate»
 	)'''
 
 	/**

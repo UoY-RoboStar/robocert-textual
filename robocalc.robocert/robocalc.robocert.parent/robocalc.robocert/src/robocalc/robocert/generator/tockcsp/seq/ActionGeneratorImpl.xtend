@@ -4,7 +4,6 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.ArrowAction
 import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.model.robocert.FinalAction
-import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.WaitAction
 import robocalc.robocert.generator.intf.seq.ActionGenerator
 
@@ -40,7 +39,7 @@ class ActionGeneratorImpl implements ActionGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def dispatch generate(WaitAction it) '''WAIT(«units.compileExpression(it)»)'''
+	def dispatch generate(WaitAction it) '''WAIT(«units.generate»)'''
 
 	/**
 	 * Generates fallback CSP for an unsupported action.

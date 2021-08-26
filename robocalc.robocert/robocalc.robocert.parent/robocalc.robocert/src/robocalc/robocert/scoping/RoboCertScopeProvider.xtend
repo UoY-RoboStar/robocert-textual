@@ -10,6 +10,9 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.ConstAssignment
 import robocalc.robocert.model.robocert.OperationTopic
 import robocalc.robocert.model.robocert.EventTopic
+import circus.robocalc.robochart.RefExp
+import circus.robocalc.robochart.RoboChartPackage
+import robocalc.robocert.generator.utils.EObjectExtensions
 
 /**
  * This class contains custom scoping description.
@@ -18,6 +21,7 @@ import robocalc.robocert.model.robocert.EventTopic
  * on how and when to use it.
  */
 class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
+	@Inject extension EObjectExtensions
 	@Inject extension ConstantScopeExtensions
 	@Inject extension TopicScopeExtensions
 
@@ -79,6 +83,12 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 		}
 	}
 	
+	private def dispatch getScopeInner(RefExp context, EReference reference) {
+		if (reference == RoboChartPackage::Literals::REF_EXP__REF) {
+			context.refScope
+		}
+	}
+	
 	/**
 	 * Fallback scoping for when we haven't manually overridden anything.
 	 * 
@@ -90,5 +100,8 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	private def dispatch getScopeInner(EObject context, EReference reference) {
 	}
 	
-
+	private def refScope(RefExp it) {
+		// TODO(@MattWindsor91): move this.
+		targetOfParentGroup?.targetScope
+	}
 }

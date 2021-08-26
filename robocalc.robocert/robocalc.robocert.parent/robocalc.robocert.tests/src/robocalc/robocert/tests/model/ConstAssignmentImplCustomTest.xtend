@@ -73,7 +73,7 @@ class ConstAssignmentImplCustomTest {
 	private def ConstAssignment assignment(Variable x) {
 		rf.createConstAssignment=>[
 			constants.add(x)
-			value = cf.createIntegerExp=>[value = 4]
+			value = rf.createRAIntLit=>[value = 4]
 		]
 	}
 }

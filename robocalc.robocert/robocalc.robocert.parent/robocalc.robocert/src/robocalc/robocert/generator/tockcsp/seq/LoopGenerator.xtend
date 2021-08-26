@@ -3,7 +3,6 @@ package robocalc.robocert.generator.tockcsp.seq
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.InfiniteLoopBound
 import robocalc.robocert.model.robocert.LowerLoopBound
-import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 import robocalc.robocert.model.robocert.DefiniteLoopBound
 import robocalc.robocert.model.robocert.RangeLoopBound
 import robocalc.robocert.model.robocert.LoopStep
@@ -27,9 +26,11 @@ class LoopGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generateLoop(LoopStep it) '''«bound.generateBound»(
+	def generateLoop(LoopStep it) '''
+	«bound.generateBound»(
 		«body.generate»
-	)'''
+	)
+	'''
 	
 	/**
 	 * Expands to the appropriate stock process for an infinite loop.
@@ -51,7 +52,7 @@ class LoopGenerator {
 	 * @return the parametric process to be instantiated with the
 	 *         process-to-loop to yield the appropriate loop.
 	 */
-	def private dispatch generateBound(LowerLoopBound it) '''loop_at_least(«lowerTimes.compileExpression(it)»)'''
+	def private dispatch generateBound(LowerLoopBound it) '''loop_at_least(«lowerTimes.generate»)'''
 	
 	/**
 	 * Expands to the appropriate stock process for a definite-bounded loop.
@@ -63,7 +64,7 @@ class LoopGenerator {
 	 * @return the parametric process to be instantiated with the
 	 *         process-to-loop to yield the appropriate loop.
 	 */
-	def private dispatch generateBound(DefiniteLoopBound it) '''loop_exactly(«times.compileExpression(it)»)'''
+	def private dispatch generateBound(DefiniteLoopBound it) '''loop_exactly(«times.generate»)'''
 		
 	/**
 	 * Expands to the appropriate stock process for a range-bounded loop.
@@ -75,7 +76,7 @@ class LoopGenerator {
 	 * @return the parametric process to be instantiated with the
 	 *         process-to-loop to yield the appropriate loop.
 	 */
-	def private dispatch generateBound(RangeLoopBound it) '''loop_between(«lowerTimes.compileExpression(it)», «upperTimes.compileExpression(it)»)'''
+	def private dispatch generateBound(RangeLoopBound it) '''loop_between(«lowerTimes.generate», «upperTimes.generate»)'''
 	
 	/**
 	 * Fallback for an unknown loop bound.

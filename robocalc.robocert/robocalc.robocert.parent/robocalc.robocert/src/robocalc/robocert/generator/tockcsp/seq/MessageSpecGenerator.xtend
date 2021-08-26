@@ -8,7 +8,6 @@ import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.RestArgument
 import robocalc.robocert.generator.utils.TopicExtensions
 import robocalc.robocert.generator.utils.TargetExtensions
-import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -79,7 +78,7 @@ class MessageSpecGenerator {
 	 * expressions.
 	 */
 	private def dispatch generateArgument(ExpressionArgument it)
-		'''.«compileExpression(expr, it)»'''
+		'''.«expr.generate»'''
 	
 	/**
 	 * Generates a 'rest' argument.

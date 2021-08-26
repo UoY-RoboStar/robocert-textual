@@ -50,7 +50,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Specifies a (partial) instantiation of targets in a group."/>
     </eAnnotations>
-    <eOperations name="getConstant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression">
+    <eOperations name="getConstant" eType="#//RAExpr">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Gets any available instantiation for the constant in this instantiation."/>
       </eAnnotations>
@@ -85,7 +85,7 @@
         <details key="documentation" value="The constant(s) being assigned."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//RAExpr"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The expression containing the new value of the constant(s)."/>
@@ -111,6 +111,32 @@
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Whether the assertion must fail to hold for the model to be validated."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RAExpr" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A RoboCert expression."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RAConstExpr" eSuperTypes="#//RAExpr">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A reference to a constant in the model."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constant" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The constant being referenced."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RAIntLit" eSuperTypes="#//RAExpr">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A RoboCert integer literal."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The value of the expression."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -356,7 +382,7 @@
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="#//StepWithBody">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//RAExpr"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//StepWithBody #//OptionallyNamedElement">
@@ -366,21 +392,18 @@
   <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="InfiniteLoopBound" eSuperTypes="#//LoopBound"/>
   <eClassifiers xsi:type="ecore:EClass" name="DefiniteLoopBound" eSuperTypes="#//LoopBound">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="#//RAExpr"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LowerLoopBound" eSuperTypes="#//LoopBound">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true"/>
+        eType="#//RAExpr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RangeLoopBound" eSuperTypes="#//LoopBound">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true"/>
+        eType="#//RAExpr" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="upperTimes" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true"/>
+        eType="#//RAExpr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//ActionStep"
@@ -392,7 +415,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction"/>
   <eClassifiers xsi:type="ecore:EClass" name="WaitAction" eSuperTypes="#//SequenceAction">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//RAExpr"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageSpec">
@@ -426,7 +449,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Argument" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="ExpressionArgument" eSuperTypes="#//Argument">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//RAExpr"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RestArgument" eSuperTypes="#//Argument"/>

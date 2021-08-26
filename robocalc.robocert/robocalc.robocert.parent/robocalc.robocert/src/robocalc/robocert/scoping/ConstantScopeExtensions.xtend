@@ -11,12 +11,14 @@ import circus.robocalc.robochart.Variable
 import static extension org.eclipse.xtext.EcoreUtil2.getContainerOfType
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.scoping.IScope
+import robocalc.robocert.generator.utils.EObjectExtensions
 
 /**
  * Scoping logic for constants.
  */
 class ConstantScopeExtensions {
 	@Inject extension TargetExtensions
+	@Inject extension EObjectExtensions
 	@Inject IQualifiedNameProvider qnp
 
 	/**
@@ -35,8 +37,7 @@ class ConstantScopeExtensions {
 	 * target actor, then retrieving its parametrisation.
 	 */
 	private def sequenceConstAssignmentScope(ConstAssignment it) {
-		// TODO(@MattWindsor91): this should be part of the metamodel, somehow.
-		getContainerOfType(Target)?.targetScope
+		targetOfParentGroup?.targetScope
 	}
 
 	/**
@@ -56,7 +57,7 @@ class ConstantScopeExtensions {
 	 * 
 	 * @return  the target's constants as a scope.
 	 */
-	private def targetScope(Target it) {
+	def targetScope(Target it) {
 		scopeFor(parameterisation)
 	}
 

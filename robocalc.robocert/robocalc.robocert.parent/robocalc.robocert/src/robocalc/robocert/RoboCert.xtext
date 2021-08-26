@@ -103,6 +103,19 @@ enum CSPModel:
 ;
 
 ///////////////////////////////////////////////////////////////////////////////
+// Expression language
+//
+// Ideally this shouldn't stray too far from the RoboChart language (and maybe
+// one day it'll merge back into it).
+///////////////////////////////////////////////////////////////////////////////
+
+RAExpr:
+	{RAIntLit} value=INT |
+	{RAConstExpr} constant=[Variable|QualifiedName]
+;
+
+
+///////////////////////////////////////////////////////////////////////////////
 // Sequence diagrams
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -152,7 +165,7 @@ fragment AssignWords *:
  * A constant assignment.
  */
 ConstAssignment:
-	ConstName ('and' ConstName)* AssignWords value=Expression
+	ConstName ('and' ConstName)* AssignWords value=RAExpr
 ;
 
 fragment ConstName *:
@@ -206,8 +219,8 @@ SequenceAction:
 /**
  * A time unit expression.
  */
-TimeUnits returns Expression:
-	Expression 'time'? ('unit' | 'units')
+TimeUnits returns RAExpr:
+	RAExpr 'time'? ('unit' | 'units')
 ;
 
 /**
@@ -242,9 +255,9 @@ LoopStep:
  */
 LoopBound:
 	'forever' {InfiniteLoopBound} |
-	'exactly' {DefiniteLoopBound} times=Expression 'times' |
-	'at' 'least' {LowerLoopBound} lowerTimes=Expression 'times' |
-	'between' {RangeLoopBound} lowerTimes=Expression 'and' upperTimes=Expression 'times'
+	'exactly' {DefiniteLoopBound} times=RAExpr 'times' |
+	'at' 'least' {LowerLoopBound} lowerTimes=RAExpr 'times' |
+	'between' {RangeLoopBound} lowerTimes=RAExpr 'and' upperTimes=RAExpr 'times'
 ;
 
 /**
@@ -356,12 +369,8 @@ enum MessageDirection:
  * An argument pattern.
  */
 Argument:
-	ExpressionArgument |
+	{ExpressionArgument} expr=RAExpr |
 	{RestArgument} '...'
-;
-
-ExpressionArgument:
-	expr=Expression
 ;
 
 /**

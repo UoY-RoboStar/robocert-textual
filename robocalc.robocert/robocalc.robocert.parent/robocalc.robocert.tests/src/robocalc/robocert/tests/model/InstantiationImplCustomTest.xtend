@@ -1,7 +1,5 @@
 package robocalc.robocert.tests.model
 
-import circus.robocalc.robochart.Expression
-import circus.robocalc.robochart.IntegerExp
 import circus.robocalc.robochart.RoboChartFactory
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.util.EcoreUtil
@@ -13,6 +11,8 @@ import robocalc.robocert.model.robocert.RobocertFactory
 import robocalc.robocert.tests.RoboCertInjectorProvider
 
 import static extension org.junit.jupiter.api.Assertions.*
+import robocalc.robocert.model.robocert.RAIntLit
+import robocalc.robocert.model.robocert.RAExpr
 
 /**
  * Tests any custom functionality on Instantiations, and also tests
@@ -40,13 +40,13 @@ class InstantiationImplCustomTest {
 				rf.createConstAssignment=>[
 					constants.add(x1)
 					constants.add(y2)
-					value = cf.createIntegerExp=>[value = 42]
+					value = rf.createRAIntLit=>[value = 42]
 				]
 			)
 			assignments.add(
 				rf.createConstAssignment=>[
 					constants.add(x2)
-					value = cf.createIntegerExp=>[value = 24]
+					value = rf.createRAIntLit=>[value = 24]
 				]
 			)
 		]
@@ -57,8 +57,8 @@ class InstantiationImplCustomTest {
 		inst.getConstant(y2).assertIntWithValue(42)
 	}
 	
-	private def void assertIntWithValue(Expression it, int expected) {
+	private def void assertIntWithValue(RAExpr it, int expected) {
 		assertNotNull
-		expected.assertEquals((it as IntegerExp).value)
+		expected.assertEquals((it as RAIntLit).value)
 	}
 }
