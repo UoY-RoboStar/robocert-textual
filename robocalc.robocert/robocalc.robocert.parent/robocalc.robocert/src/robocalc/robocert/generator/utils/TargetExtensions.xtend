@@ -6,9 +6,7 @@ import robocalc.robocert.model.robocert.RCModuleTarget
 import robocalc.robocert.model.robocert.Target
 import java.util.Collections
 import com.google.inject.Inject
-import circus.robocalc.robochart.Expression
 import circus.robocalc.robochart.Context
-import robocalc.robocert.model.robocert.ConstAssignment
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 import robocalc.robocert.model.robocert.Instantiation
 
@@ -64,34 +62,6 @@ class TargetExtensions {
 		parameterisation.filter[!instantiated.contains(constantKey)]
 	}
 
-	/**
-	 * Looks up a constant in this instantiation and tries to return its value.
-	 * 
-	 * @param it     the instantiation.
-	 * @param const  the constant to look for.
-	 * 
-	 * @return the value of the constant, or null if it isn't instantiated
-	 *         in this instantiation.
-	 */
-	def Expression getConstant(Instantiation it, Variable const) {
-		assignments.findFirst[hasConstant(const)]?.value
-	}
-	
-	private def hasConstant(ConstAssignment it, Variable const) {
-		// The normal RoboChart equality test compares by name, which doesn't
-		// account for the variables being defined in different contexts.
-		// So we can't use constants.contains here.
-		constants.exists[constantEqual(const)]
-	}
-	
-	/**
-	 * @return equality testing such that two constants should compare equal
-	 * if, and only if, they are referencing the same object.
-	 */
-	private def constantEqual(Variable it, Variable other) {
-		constantKey == other.constantKey
-	}
-	
 	/**
 	 * @return a stringification of the given constant so as to be useful for
 	 * equality testing in the presence of multiple instances of constants with
