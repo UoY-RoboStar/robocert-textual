@@ -75,5 +75,19 @@ class RobocertFactoryImplCustom extends RobocertFactoryImpl {
 	 */
 	override createMessageSpec() {
 		new MessageSpecImplCustom
+	}
+	
+	/**
+	 * @return a custom form of InstantiationImpl.
+	 */
+	override createInstantiation() {
+		new InstantiationImplCustom
+	}
+	
+	/**
+	 * @return a custom form of ConstAssignmentImpl.
+	 */
+	override createConstAssignment() {
+		new ConstAssignmentImplCustom
 	}	
 }

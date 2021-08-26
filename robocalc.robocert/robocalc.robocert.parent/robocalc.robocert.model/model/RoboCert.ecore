@@ -50,6 +50,12 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Specifies a (partial) instantiation of targets in a group."/>
     </eAnnotations>
+    <eOperations name="getConstant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Gets any available instantiation for the constant in this instantiation."/>
+      </eAnnotations>
+      <eParameters name="constant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//Group"
         eOpposite="#//Group/instantiation">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -64,10 +70,27 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConstAssignment">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Assigns a value to one or more constants."/>
+    </eAnnotations>
+    <eOperations name="hasConstant" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Checks whether this assignment maps the given constant."/>
+      </eAnnotations>
+      <eParameters name="constant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="1"
-        upperBound="-1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
+        upperBound="-1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The constant(s) being assigned."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The expression containing the new value of the constant(s)."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Assertion" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
