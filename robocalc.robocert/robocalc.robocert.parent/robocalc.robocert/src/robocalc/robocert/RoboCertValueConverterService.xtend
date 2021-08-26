@@ -14,23 +14,18 @@ import org.eclipse.xtext.common.services.Ecore2XtextTerminalConverters
  */
 class RoboCertValueConverterService extends Ecore2XtextTerminalConverters {
 	/**
-	 * @return a converter to deal with CSP fragments.
+	 * @return a converter to deal with inline CSP.
 	 */
 	@ValueConverter(rule = "CSP_CODE")
 	def IValueConverter<String> getCspCodeConverter() {
-		new AbstractNullSafeConverter<String> {
-			
-			override protected internalToString(String value
-			) '''csp-begin
-	«value»
-csp-end'''
-			
-			override protected internalToValue(String string, INode node) throws ValueConverterException {
-				// stripping 'csp-begin' (9 chars) and 'csp-end' (7 chars).
-				// TODO: is this the right way to do this, or do we need a value
-				// converter?
-				string.substring(9, string.length - 7).strip
-			}
-		}
+		new DelimitedStringConverter("csp-begin", "csp-end")
+	}
+
+	/**
+	 * @return a converter to deal with shorthand inline passages.
+	 */
+	@ValueConverter(rule = "SHORT_CODE")
+	def IValueConverter<String> getShortCodeConverter() {
+		new DelimitedStringConverter("<$", "$>")
 	}
 }

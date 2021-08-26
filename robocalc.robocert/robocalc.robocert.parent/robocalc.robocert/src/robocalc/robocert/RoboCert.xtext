@@ -75,14 +75,17 @@ CSPFragment:
 	| 'process' {ProcessCSPFragment} name=ID (':' 'events' 'in' events=[CSPContextSource|QualifiedName])?
 	| 'inline' {InlineCSPFragment} name=ID?
 	)
-	contents=CSP_CODE
+	contents=(CSP_CODE|SHORT_CODE)
 ;
 
 /**
  * The raw CSP code.
  */
 terminal CSP_CODE: 'csp-begin' -> 'csp-end';
-
+/**
+ * Abbreviated form of csp-begin/csp-end.
+ */
+terminal SHORT_CODE: '<$' -> '$>';
 
 /**
  * Explicitly specifying the CSP model of a property.
