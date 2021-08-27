@@ -13,6 +13,7 @@ import robocalc.robocert.model.robocert.EventTopic
 import circus.robocalc.robochart.RefExp
 import circus.robocalc.robochart.RoboChartPackage
 import robocalc.robocert.generator.utils.EObjectExtensions
+import robocalc.robocert.model.robocert.RAConstExpr
 
 /**
  * This class contains custom scoping description.
@@ -83,9 +84,9 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 		}
 	}
 	
-	private def dispatch getScopeInner(RefExp context, EReference reference) {
-		if (reference == RoboChartPackage::Literals::REF_EXP__REF) {
-			context.refScope
+	private def dispatch getScopeInner(RAConstExpr context, EReference reference) {
+		if (reference == RA_CONST_EXPR__CONSTANT) {
+			context.constExprScope
 		}
 	}
 	
@@ -100,7 +101,7 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	private def dispatch getScopeInner(EObject context, EReference reference) {
 	}
 	
-	private def refScope(RefExp it) {
+	private def constExprScope(RAConstExpr it) {
 		// TODO(@MattWindsor91): move this.
 		targetOfParentGroup?.targetScope
 	}
