@@ -1,7 +1,7 @@
 %!TEX root=../../robocert.tex
 
 This section gives the \tockcsp{} semantics of \langname{} sequences.  As
-discussed in \cref{sec:semantics-review-seq}, this
+discussed in \cref{sec:semantics-comparison-review-seq}, this
 semantics is inspired by the work of Lima et al. on the CML semantics of
 SysML sequence diagrams~\cite{lima-semantics} with the differences noted in
 that section.
@@ -15,7 +15,7 @@ The definitions here correspond to \cref{sec:seq-metamodel-assertions}.
 \newcommand{\refop}[3]{\arefop_{#1}^{(#2, #3)}}
 
 The semantics of a
-\msequenceassertion{} relates the \msequence{} of the assertion to the
+\msequenceproperty{} relates the \msequence{} of the assertion to the
 \mtarget{} of the assertion.
 %
 \begin{align*}
@@ -520,7 +520,7 @@ caption={Worked example for the \tockcsp{} sequence semantics.}
 
 Consider the \langname{} script in
 \cref{lst:semantics-tockcsp-seq-example}.  This script contains a
-\msequenceassertion, \texttt{G1}, which we can translate to \tockcsp{} as follows:
+\msequenceproperty, \texttt{G1}, which we can translate to \tockcsp{} as follows:
 
 \todo{TODO}
 

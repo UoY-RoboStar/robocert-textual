@@ -1,8 +1,8 @@
 % !TEX root=../../robocert.tex
 
 This section reviews each of the above notations in turn, comparing
-\langname{} sequences to each.  (We discuss semantics
-later on, in \cref{sec:semantics-review-seq}.)
+\langname{} sequences to each.  (We review semantics
+later on, in \cref{sec:semantics-comparison-review-seq}.)
 
 \subsection{UML 2.5.1 sequence diagrams}
 
@@ -76,6 +76,23 @@ following such development processes:
 	comprehensive specification.
 \end{itemize}
 
+\subsection{Live Sequence Chart (LSC)}
+
+LSC~\cite{lsc} is a
+variant of ITU message sequence charts (similar to UML sequence
+diagrams) that distinguishes visually between
+mandatory and provisional (or `hot' and `cold')
+elements, with charts potentially carrying universal or
+existential semantics.
+Another interesting feature is `pre-charts', charts that specify the previous
+communication that needs to occur for the main chart to become live.
+
+\paragraph{Runtime verification of train control systems with parameterized modal live sequence charts}
+Chai et al. 2021~\cite{Chai21-PMLSC}
+While I don't yet understand the differences between LSCs and PMLSCs (which
+seem to be focused towards runtime verification/monitoring), this paper
+suggests LSCs are still actively considered in verification research.
+
 \subsection{Property Sequence Chart (PSC)}
 
 PSC extends a subset of UML2 sequence diagrams (with inspiration from
@@ -105,18 +122,40 @@ PTPSC add probabilistic
 sections.  Such sections resemble UML combined fragments with inequalities over
 the probability of entering the section.
 
-\subsection{Property Specification Patterns (PSP)}
+\subsection{Non-graphical languages}
+
+\paragraph{Property Specification Patterns (PSP)}
 
 This long-running work by Dwyer et al. forms a repository of
 structured patterns for structuring the specification of temporal
 properties for concurrent and reactive systems.  These patterns have names,
 known modes of composition, and example mappings into temporal logics.
 
-\subsection{Autili, Grunske, Lumpe, Pelliccione, and Tang (AGLPT)}
+\paragraph{Autili, Grunske, Lumpe, Pelliccione, and Tang (AGLPT)}
 
 This work proposes a structured English grammar covering many of the Property
 Specification Patterns.  The grammar provides for timing and probabilistic
 features.
+
+\subsection{Common themes and differences}
+
+\begin{itemize}
+\item
+	Two axes, usually both discrete:
+	one distinguishing between participants in an interaction, another
+	providing some form of time ordering;
+\item
+	Message passing across the participant axis as the main expression of
+	interaction;
+\item
+	Control flow manipulated by blocks 
+	spanning both axes.
+\end{itemize}
+
+\begin{itemize}
+\item
+	Whether 
+\end{itemize}
 
 %%% Local Variables:
 %%% mode: latex

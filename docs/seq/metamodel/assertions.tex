@@ -9,13 +9,13 @@
 \Cref{fig:seq-metamodel-assertions} depicts the part of the metamodel concerning
 sequence assertions.
 
-A \msequenceassertion{} is an assertion about a particular \msequence{} with
+A \msequenceproperty{} is an assertion about a particular \msequence{} with
 respect to its \mtarget.  The \mtarget{} is modified by applying an
 assertion-level \mtargetinstantiation, which may fix any constants not bound
 by the sequence-level instantiation.  (The default is an empty instantiation,
 meaning the target is exactly as specified at the sequence level.)
 
-The specific sequence assertion type comes from the \msequenceassertiontype:
+The specific sequence assertion type comes from the \msequencepropertytype:
 either `sequence holds on target' (refinement), or `sequence is observed on
 target' (reverse refinement).  The assertion can be negated.  The choice of
 \mcspmodel{} affects how the assertion is checked with CSP tools such as FDR
