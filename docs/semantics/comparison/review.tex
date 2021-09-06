@@ -108,9 +108,19 @@ textual notation.}
 
 \paragraph{MARTE}
 
-We are not aware of a particular formal semantics for the MARTE profile.
-\todo{Check}
-There is work to generate HDL from MARTE sequence diagrams~\todo{cite}
+We are aware of two efforts to provide semantics for aspects of MARTE:
+
+\begin{itemize}
+  \item
+    a treatment of sequence diagrams using a discrete-timed extension of
+    the \(\pi\)-calculus~\cite{Jin11-MARTEPiCalculus}; \todo{I'm not sure if
+    this is actually MARTE-specific; it seems to be tracking only discrete
+    time observations, which seem to be in UML 2.5}
+  \item 
+    a treatment of the MARTE \emph{Clock Constraint Specification Language} (in
+    isolation, not attached to sequence diagrams) using time Petri
+    nets~\cite{Mallet09-MARTEClockNets} and the \emph{Signal} language.
+\end{itemize}
 
 \paragraph{Trace semantics of STAIRS}
 
