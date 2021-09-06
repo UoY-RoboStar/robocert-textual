@@ -21,7 +21,8 @@ class DeadlineGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generateDeadline(DeadlineStep it) '''«DEADLINE_PROC»(
+	def generateDeadline(DeadlineStep it) '''
+	«DEADLINE_PROC»(
 		(«body.generate»),
 		{- time units -} «units.generate»
 	)'''
