@@ -39,29 +39,72 @@ This comparison shows that different use cases, interpretations, and backgrounds
 have given rise to many different semantics for UML sequence diagrams, some
 of which differ significantly from the standard.
 
-\paragraph{CML semantics of SysML}
+\paragraph{Lima et al. CML semantics of SysML (2014)}
 
-Our semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration from
-that of Lima et al.~\cite{lima-semantics} on the SysML profile of UML, with
+Our \tockcsp{} semantics (\cref{sec:semantics-tockcsp-seq}) takes heavy inspiration
+from that of Lima et al.~\cite{lima-semantics} on the SysML profile of UML, with
 some differences to account for a retargeting from CML to \tockcsp.  This
 semantics postdates the survey above.
 
 For two-\mactor{} sequences \ghtodo{32}{all of them at the moment}, we can (and do)
-simplify the semantics significantly.  Other differences include:
+simplify the semantics significantly.  We also diverge in other ways:
 
 \begin{itemize}
-\item a focus on \tockcsp{} rather than CML, and consequently a
+\item we focus on \tockcsp{} rather than CML, and so have a
   treatment of timing properties based on the former;
 \item
-  the treatment of other concepts in \langname{} but not UML sequence
-  diagrams (see \cref{sec:seq-comparison-features});
-\item simplifications arising from the assumption that all sequences
-  are between two actors whose actions are always either communications with
-  each other or shared control-flow decisions.
+  we consider concepts that exist in \langname{} but not UML sequence
+  diagrams, and omit the converse
+  (see \cref{sec:seq-comparison-features});
+\item
+  we delegate to the \robostar{} CSP semantics for concepts such as events and
+  operations, which allows the direct refinement analysis of \robostar{} models
+  using sequences.
 \end{itemize}
 
 The main novelty of our work here is that, by targeting \tockcsp, we can capture
 timing properties and refinement relations.
+
+\paragraph{Jacobs and Simpson CSP semantics (2015)}
+
+Another semantics~\cite{Jacobs15-SeqCSP}, developed at a similar time to
+the above, defines SysML sequence diagrams in CSP.
+Though the goals resemble as those of Lima et al.,
+and the points on novelty and differences compared to \langname{} considered
+above broadly apply here, the approach differs in several ways:
+
+\begin{itemize}
+\item
+  Jacob and Simpson place each message into a
+  separate send-receive process; lifeline processes enumerate their
+  sides of the message in order and rely on
+  synchronisation with the message processes.
+  Lima et al. do not
+  distinguish between sends and receives, with
+  cross-lifeline synchronisation pairing the opposite
+  ends of each message.
+\item
+  Jacob and Simpson appear to expand diagrams into CSP by
+  considering diagram \emph{fragments} first, with each semantic rule
+  then enumerating the lifelines and messages to which the fragment applies;
+  Lima et al. consider \emph{lifelines} first, handling each fragment
+  separately per lifeline and using control channels to synchronise the
+  lifelines' contributions to the fragment.
+\item
+  Further, Jacob and Simpson translate many UML operators by adding watchdog
+  processes in parallel with ordinary sequential composition.
+\item
+  Lima et al. use control channels embedded into sequential compositions to
+  encode break fragments;
+  Jacob and Simpson use an elaborate encoding taking the pre-- and
+  post-fragments to execute either side of the break.
+\end{itemize}
+
+To simplify the generated CSP code, our semantics more closely resembles that of
+Lima et al. than that of Jacob and Simpson.
+\todo{For now, but I suspect when we get to
+multi-actor sequences, we'll pick whichever semantic elaboration gives a better
+textual notation.}
 
 \paragraph{MARTE}
 
