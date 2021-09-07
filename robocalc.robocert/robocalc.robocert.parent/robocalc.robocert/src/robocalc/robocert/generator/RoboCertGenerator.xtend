@@ -28,15 +28,22 @@ class RoboCertGenerator extends AbstractGenerator {
 	}
 	
 	def private generateImport(IFileSystemAccess2 fsa) {
-		fsa.generateFile('defs/'+ROBOCERT_DEFS_NAME, importResourceStream)
+		for (filename : #[ROBOCERT_DEFS_NAME, ROBOCERT_SEQ_DEFS_NAME]) {
+			fsa.generateFile('defs/'+filename, filename.importResourceStream)			
+		}
 	}
 	
-	def importResourceStream() {
-		class.classLoader.getResourceAsStream("lib/semantics/"+ROBOCERT_DEFS_NAME)
+	def importResourceStream(String filename) {
+		class.classLoader.getResourceAsStream("lib/semantics/"+filename)
 	}
 
 	/**
-	 * The name of the robocert-defs file.
+	 * The name of the robocert defs file.
 	 */
-	static final String ROBOCERT_DEFS_NAME = "robocert_defs.csp"
+	static val ROBOCERT_DEFS_NAME = "robocert_defs.csp"
+	
+	/**
+	 * The name of the robocert sequence defs file.
+	 */
+	static val ROBOCERT_SEQ_DEFS_NAME = "robocert_seq_defs.csp"	
 }
