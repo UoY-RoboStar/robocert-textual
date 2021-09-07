@@ -32,7 +32,7 @@ class SeqPropertyLowererTest {
 	@Test
 	def void testLower_Traces_Holds() {
 		val prop = property(SequencePropertyType::HOLDS, CSPModel::TRACES)	
-		assertCSP(prop.lower, prop.sequence, prop.sequence?.target, prop.model)
+		assertCSP(prop.lower, prop.sequence?.target, prop.sequence, prop.model)
 	}
 	
 	/**
@@ -41,7 +41,7 @@ class SeqPropertyLowererTest {
 	@Test
 	def void testLower_TickTock_IsObserved() {
 		val prop = property(SequencePropertyType::IS_OBSERVED, CSPModel::TICK_TOCK)	
-		assertCSP(prop.lower, prop.sequence?.target, prop.sequence, prop.model)
+		assertCSP(prop.lower, prop.sequence, prop.sequence?.target, prop.model)
 	}
 	
 	/**

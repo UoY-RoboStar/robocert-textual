@@ -50,16 +50,17 @@ class CSPPropertyGenerator {
 	}
 
 	/**
-	 * Generates a refinement between two CSP process sources.
-	 * 
-	 * @param lhs    the left-hand side.
-	 * @param rhs    the right-hand side.
-	 * @param model  the CSP semantic model.
+	 * Generates a refinement for a refinement property.
+	 *
+	 * Note that 'lhs' and 'rhs' on the property get flipped during generation,
+	 * as CSP-M's refinement operator is 'is-refined-by', not 'refined'.
+	 *
+	 * @param it  the property for which we are generating a property.
 	 * 
 	 * @return  CSP-M for the generated refinement.
 	 */
 	def generateRefinement(CSPRefinementProperty it) '''
-		«generateHeader» «lhs.generateProcess(model)» [T= «rhs.generateProcess(model)»«model.generateTauPriority»
+		«generateHeader» «rhs.generateProcess(model)» [T= «lhs.generateProcess(model)»«model.generateTauPriority»
 	'''
 
 	private def generateHeader(CSPRefinementProperty it) '''assert«IF isNegated» not«ENDIF»'''

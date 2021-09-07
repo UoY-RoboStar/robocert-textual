@@ -35,33 +35,37 @@ class SeqPropertyLowerer {
 	/**
 	 * Gets the appropriate refinement left-hand side for this sequence property.
 	 * 
+	 * Note that this is the left-hand side of a 'X refines Y' relationship.
+	 * 
 	 * @param it  the property for which we are generating CSP.
 	 * 
 	 * @return the left-hand side process source.
 	 */
 	private def getLhs(SequenceProperty it) {
+		// [?] refines RHS
 		switch type {
 			case HOLDS:
-				sequence
+				target // ...refines sequence
 			case IS_OBSERVED:
-				target
+				sequence // ...refines target
 		}
 	}
 
 	/**
 	 * Gets the appropriate refinement left-hand side for this sequence property.
 	 * 
+	 * This is always the mirror image of getLhs.
+	 * 
 	 * @param it  the property for which we are generating CSP.
 	 * 
 	 * @return the left-hand side process source.
 	 */
 	private def getRhs(SequenceProperty it) {
-		// This should be the mirror image of getLhs, typically.
 		switch type {
 			case HOLDS:
-				target
-			case IS_OBSERVED:
 				sequence
+			case IS_OBSERVED:
+				target
 		}
 	}
 
