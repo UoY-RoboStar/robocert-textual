@@ -16,7 +16,10 @@
    
    It is intended to be auto-included into the output of the RoboCert CSP
    generator, and expects the RoboChart 'core_timed_defs' to be open. -}
-   
+
+-- Combinator for allowing an action to be put off, perhaps indefinitely.
+eventually(A) = A |~| tock -> eventually(A)
+
 {-
  - Gaps
  -}
