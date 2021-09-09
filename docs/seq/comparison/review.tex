@@ -80,7 +80,7 @@ following such development processes:
 
 LSC~\cite{lsc} is a
 variant of ITU message sequence charts (similar to UML sequence
-diagrams).  While MSC has largely been subsumed by UML2 sequence diagrams,
+diagrams).
 LSC has several features that are of interest from a \langname{} perspective:
 
 \begin{itemize}
@@ -103,9 +103,16 @@ from existential to universal as more use case information appears,
 and parts of charts move from cold to hot as more knowledge about
 liveness appears.
 
+While the \emph{assert} and \emph{negate} aspects of UML2 sequence diagrams
+are similar to LSC temperature, Harel and Maoz~\cite{Harel08-ModalSD} argue
+that temperature is not compatible with the trace-set-pair semantics typically
+given to UML.  They instead propose a profile of UML implementing the
+dichotomy as a modality, with a formal semantics in terms of B\"uchi automata.
+
 LSC variants are still in use today.  For instance,
 Chai et al. 2021~\cite{Chai21-PMLSC} report on a use of `parameterized modal
 live sequence charts' to verify train control systems at run-time.
+
 
 \subsection{Property Sequence Chart (PSC)}
 

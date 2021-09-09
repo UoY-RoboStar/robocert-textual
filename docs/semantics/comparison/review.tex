@@ -145,6 +145,15 @@ Our approach achieves automation through existing tools such as FDR,
 and is compatible with the existing \robostar{} ecosystem as well as that of
 \tockcsp.
 
+\paragraph{LSC}
+
+The introductory paper for Live Sequence Charts~\cite{lsc} gives a
+semantics in terms of skeleton automata.
+The semantics for modal sequence diagrams~\cite{Harel08-ModalSD}, the
+UML profile adapting aspects of LSC as modalities, is also in terms of
+automata, in this case being
+non-deterministic B\"uchi automata.
+
 \paragraph{PSC and derivatives}
 
 Property Sequence Chart (and its derivatives) is a layer atop
@@ -158,3 +167,8 @@ automata; it is unclear what needs to be added to these automata for PTPSC \todo
 
 For PSC, a \textsc{Charmy} plugin automates the operational semantics.  A denotational semantics in terms of
 invalid traces also exists.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../../robocert"
+%%% End:
