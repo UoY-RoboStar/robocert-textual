@@ -27,23 +27,14 @@ class ActionStepGenerator {
 	 * 
 	 * @return the generated CSP-M.
 	 */
-	def generateActionStep(ActionStep it) '''(«generateGapPrefix»«EVENTUALLY_PROC»(«action.generate»))'''
-
-	/**
-	 * Generates CSP-M for any prefix generated for an action step by the
-	 * presence of a gap.
-	 * 
-	 * This introduces a gap followed by an interrupt operator, but only if
-	 * the gap is active.
-	 * 
-	 * @param it  the action step.
-	 * 
-	 * @return the generated CSP-M.
-	 */
-	private def generateGapPrefix(ActionStep it) '''«IF gap.isActive»«generateGap» /\ «ENDIF»'''
+	def generateActionStep(ActionStep it) '''«generateGap»(«EVENTUALLY_PROC»(«action.generate»))'''
 
 	/**
 	 * Generates CSP-M for an action step gap.
+	 *
+	 * Currently, we generate gaps for all action steps regardless of
+	 * whether the gap is active.  This part of the semantics is subject
+	 * to change.
 	 * 
 	 * @param it  the action step.
 	 * 
@@ -95,10 +86,10 @@ class ActionStepGenerator {
 	/**
 	 * Name of the process that implements eventually-lifts.
 	 */
-	static val EVENTUALLY_PROC = "eventually" // in robocert_seq_defs
+	static val EVENTUALLY_PROC = "Cold" // in robocert_seq_defs
 
 	/**
 	 * Name of the process that implements gaps.
 	 */
-	static val GAP_PROC = "gap" // in robocert_seq_defs
+	static val GAP_PROC = "Action" // in robocert_seq_defs
 }
