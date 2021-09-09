@@ -195,10 +195,54 @@ loop L4 : between 3 and 6 times {
 \subsection{\mactionstep}\label{ssec:metamodel-steps-actions}
 
 An \mactionstep{} contains a specification of a
-\msequenceaction{} (\cref{sec:metamodel-actions}), as well as
+\msequenceaction{} (\cref{sec:seq-metamodel-actions}), as well as
 a \mmessageset{}
 capturing any communications implicitly allowed to happen
 in the \emph{gap} before the action.
+
+\begin{remark}
+  As explained in \cref{sec:seq-metamodel-actions},
+  an \mactionstep{} permits an unbounded amount of
+  time before the action occurs.
+  To restrict this, wrap the \mactionstep{} in a \mdeadlinestep.
+\end{remark}
+
+\ghtodo{65}{In tick-tock, gaps can timestop, which is a semantic oddity.}
+
+\paragraph{Temperature}
+
+\todo{There may be subtle differences between this and reality, as this is
+  hitting part of tock-CSP I don't feel like I properly understand yet.}
+
+By default, a \mactionstep{} is `cold': the target can refuse to engage
+in the action for an arbitrary amount of time, but, once it does, the
+sequence will progress downwards.
+For instance, the
+\marrowaction{} \lstinline[language=RoboCert]{<-event E}
+only specifies that \emph{when} the target accepts event \texttt{E} from
+the world, the sequence will progress; the target may refuse to accept
+\texttt{E} for an arbitrary amount of time.
+Similarly, the \mactionstep{} \lstinline[language=RoboCert]{anything until <-event E}
+allows the target to engage in any communications with the world
+until it accepts \texttt{E}, but does not require that said
+acceptance is readily available.
+
+Setting the \metafeature{temperature} of a \marrowaction{} to
+\texttt{HOT} specifies instead
+that the target \emph{must}, in all cases, be able to participate in the
+arrow.
+For instance, the
+\mactionstep{} \lstinline[language=RoboCert]{hot <-event E}
+specifies that the target must be willing to accept \texttt{E} immediately;
+\lstinline[language=RoboCert]{anything until hot <-event E}
+allows the target to engage in any communications with the world
+but requires that it is \emph{always} ready to accept \texttt{E}; this is
+a strong requirement, hence why it is not the default meaning.
+
+\ghtodo{67}{Unimplemented.}
+
+\ghtodo{67}{No graphical syntax yet.}
+
 
 \begin{figure}[H]
   \begin{subfigure}[c]{\egtextwidth}
@@ -207,10 +251,12 @@ anything in set MS except ->op O()
 until ->event E
 
 anything except ->op O() until <-event E
-// shorthand for 'in {||} except ->op O2()'
+// shorthand for 'in universe except ->op O()'
 
 anything until ->event E
 // shorthand for 'in universe'
+
+anything until hot ->event E
     \end{lstlisting}
   \end{subfigure}
   \hfill
@@ -223,10 +269,11 @@ anything until ->event E
         \coordinate(m1); & \coordinate(w1); \\
         \coordinate(m2); & \coordinate(w2); \\
         \coordinate(m3); & \coordinate(w3); \\
+        \coordinate(m4); & \coordinate(w4); \\
       };
 
-      \draw[lifeline] (mstart) -- (m1) -- (m2) -- (m3);
-      \draw[lifeline] (wstart) -- (w1) -- (w2) -- (w3);
+      \draw[lifeline] (mstart) -- (m1) -- (m2) -- (m3) -- (m4);
+      \draw[lifeline] (wstart) -- (w1) -- (w2) -- (w3) -- (w4);
       
       \draw (m1) edge[earrow, "E"] (w1);
       \ggapout{m1}{\gdiff{\grefset{MS}}\gextset{\text{\lstinline[language=RoboCert]{->op O()}}}}
@@ -236,6 +283,9 @@ anything until ->event E
       
       \draw (m3) edge[earrow, "E"] (w3);
       \ggapout{m3}{\guniverse}
+
+      \draw (m4) edge[earrow, hot, "E"] (w4);
+      \ggapout{m4}{\guniverse}
     \end{tikzpicture}
   \end{subfigure}
 \end{figure}
