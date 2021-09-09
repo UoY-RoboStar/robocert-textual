@@ -80,18 +80,32 @@ following such development processes:
 
 LSC~\cite{lsc} is a
 variant of ITU message sequence charts (similar to UML sequence
-diagrams) that distinguishes visually between
-mandatory and provisional (or `hot' and `cold')
-elements, with charts potentially carrying universal or
-existential semantics.
-Another interesting feature is `pre-charts', charts that specify the previous
-communication that needs to occur for the main chart to become live.
+diagrams).  While MSC has largely been subsumed by UML2 sequence diagrams,
+LSC has several features that are of interest from a \langname{} perspective:
 
-\paragraph{Runtime verification of train control systems with parameterized modal live sequence charts}
-Chai et al. 2021~\cite{Chai21-PMLSC}
-While I don't yet understand the differences between LSCs and PMLSCs (which
-seem to be focused towards runtime verification/monitoring), this paper
-suggests LSCs are still actively considered in verification research.
+\begin{itemize}
+\item visual distinction between mandatory and provisional (or `hot'
+  and `cold') elements, the metaphor being that `hot' areas of the
+  chart are too hot to stay in for any period of time;
+\item conditions that also have a dichotomy between `hot' (abort the
+  chart) and `cold' (exit control flow);
+\item charts directly carrying universal or existential semantics (with the
+  goal of allowing a transition from use-case analysis to specifications);
+\item time constraints using the setting, resetting, and comparing of timers;
+\item an explicit environment lifeline, to which constraints on the
+  environment can be added;
+\item `pre-charts', charts that specify the previous communication
+  that needs to occur for the main chart to become live.
+\end{itemize}
+
+A theme in the LSC development is progressive enhancement: charts move
+from existential to universal as more use case information appears,
+and parts of charts move from cold to hot as more knowledge about
+liveness appears.
+
+LSC variants are still in use today.  For instance,
+Chai et al. 2021~\cite{Chai21-PMLSC} report on a use of `parameterized modal
+live sequence charts' to verify train control systems at run-time.
 
 \subsection{Property Sequence Chart (PSC)}
 
