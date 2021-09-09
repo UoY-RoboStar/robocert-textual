@@ -62,7 +62,10 @@ enum DoesCSPRefinementOperator returns CSPRefinementOperator:
  * A CSP group.
  */
 CSPGroup:
-	{CSPGroup} (isUntimed?='untimed'? & isPreamble?='preamble'?) 'csp' instantiation=Instantiation '{' fragments+=CSPFragment* '}'
+	{CSPGroup} (isUntimed?='untimed'? & isPreamble?='preamble'?) 'csp' instantiation=Instantiation
+	( fragments+=CSPFragment | // Singleton syntax
+	  '{' fragments+=CSPFragment* '}' // Group syntax
+	)
 ;
 
 /**
