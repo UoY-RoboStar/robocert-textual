@@ -8,6 +8,10 @@ our approaches.
 
 This section reviews formal semantics development efforts for sequence diagram
 notations.
+A common theme in these developments is the
+targeting of automata, especially B\"uchi automata.  This
+is reflective of a relationship between sequence diagrams
+and linear temporal logic.
 
 \paragraph{Micskei--Waeselynck survey of UML2}
 
@@ -105,6 +109,24 @@ Lima et al. than that of Jacob and Simpson.
 \todo{For now, but I suspect when we get to
 multi-actor sequences, we'll pick whichever semantic elaboration gives a better
 textual notation.}
+
+\paragraph{Translation of SysML to hMSC}
+
+Busardi et al.~\cite{Busard21-SDviaHMSC} consider the translation of SysML diagrams to high-level Message Sequence
+Charts (hMSC) through model-to-model transformation.  This enables
+the use of existing hMSC semantics, such as translations to
+automata.  Specifically, Busardi et al. use the NuSMV model
+checker to perform the transformation into automata it can
+model-check, verify, and emit counter-examples.
+
+The main goal of this exercise is to facilitate a round-trip
+verification system using the Capella modelling toolkit as a
+high-level, user-facing interface; a notion similar to translating results
+back to Capella may be useful in \langname.  Further, the case study explored is
+in the field of unmanned aerial vehicles.
+However, in this setup, the
+sequence diagrams are the \emph{subjects} of verification (by LTL properties)
+and not the means of verification.
 
 \paragraph{MARTE}
 
