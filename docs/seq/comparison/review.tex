@@ -160,22 +160,48 @@ features.
 
 \subsection{Common themes and differences}
 
+Summarising the above, we can find the following common
+themes and differences in existing sequence
+diagram languages:
+
+\paragraph{Themes}
+
 \begin{itemize}
 \item
-	Two axes, usually both discrete:
-	one distinguishing between participants in an interaction, another
-	providing some form of time ordering;
+	Two axes, usually discrete:
+	\begin{itemize}
+		\item
+			one distinguishing between participants in an interaction;
+		\item
+			another providing some form of time ordering;
+	\end{itemize}
 \item
 	Message passing across the participant axis as the main expression of
 	interaction;
 \item
 	Control flow manipulated by blocks 
-	spanning both axes.
+	spanning both axes;
+\item
+  Often, \emph{some} notion of mandatory and provisional
+  (sometimes also forbidden) behaviour.
 \end{itemize}
+
+\paragraph{Differences}
 
 \begin{itemize}
 \item
-	Whether 
+	The target semantics (see \cref{sec:semantics-comparison-review});
+\item
+	Whether time constraints are available and, if so, how they work
+	(for instance, clocks versus duration spans);
+\item
+	The specifics of event ordering, especially with respect to communications
+	happening on vertically disjoint lifelines but horizontally
+	similar time-slices;
+\item
+	The precise form of the mandatory and provisional
+	behaviour specification; for instance, temperature in LSC
+	vs message types in PSC vs control blocks.
 \end{itemize}
 
 %%% Local Variables:
