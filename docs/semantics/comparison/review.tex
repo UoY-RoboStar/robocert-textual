@@ -79,7 +79,7 @@ above broadly apply here, the approach differs in several ways:
 
 \begin{itemize}
 \item
-  Jacob and Simpson place each message into a
+  Jacobs and Simpson place each message into a
   separate send-receive process; lifeline processes enumerate their
   sides of the message in order and rely on
   synchronisation with the message processes.
@@ -88,24 +88,24 @@ above broadly apply here, the approach differs in several ways:
   cross-lifeline synchronisation pairing the opposite
   ends of each message.
 \item
-  Jacob and Simpson appear to expand diagrams into CSP by
+  Jacobs and Simpson appear to expand diagrams into CSP by
   considering diagram \emph{fragments} first, with each semantic rule
   then enumerating the lifelines and messages to which the fragment applies;
   Lima et al. consider \emph{lifelines} first, handling each fragment
   separately per lifeline and using control channels to synchronise the
   lifelines' contributions to the fragment.
 \item
-  Further, Jacob and Simpson translate many UML operators by adding watchdog
+  Further, Jacobs and Simpson translate many UML operators by adding watchdog
   processes in parallel with ordinary sequential composition.
 \item
   Lima et al. use control channels embedded into sequential compositions to
   encode break fragments;
-  Jacob and Simpson use an elaborate encoding taking the pre-- and
+  Jacobs and Simpson use an elaborate encoding taking the pre-- and
   post-fragments to execute either side of the break.
 \end{itemize}
 
 To simplify the generated CSP code, our semantics more closely resembles that of
-Lima et al. than that of Jacob and Simpson.
+Lima et al. than that of Jacobs and Simpson.
 \todo{For now, but I suspect when we get to
 multi-actor sequences, we'll pick whichever semantic elaboration gives a better
 textual notation.}

@@ -47,7 +47,7 @@ future-unwanted-message or chain constraints.  Currently, all
 ordering is assumed strict unless modified by a gap; this
 deviates from PSC \emph{and} some readings of UML.
     
-\subsection{Actions~(\ref{sec:metamodel-actions})}
+\subsection{Actions~(\ref{sec:seq-metamodel-actions})}
 
 \paragraph{\marrowaction}
 \begin{featset}
@@ -140,13 +140,14 @@ in other notations:
 \begin{table}[htb!]
   \centering
 
-  \begin{tabular}{rl|lllllll}
+  \begin{tabular}{rl|llllllll}
   \toprule
 
   & \rot{\thead{\langname}}
   & \rot{\thead{\featname{UML}}}
   & \rot{\thead{\featname{MARTE}}}
   & \rot{\thead{\featname{STAIRS}}}
+  & \rot{\thead{\featname{MSC}}}
   & \rot{\thead{\featname{LSC}}}
   & \rot{\thead{\featname{PSC}}}
   & \rot{\thead{\featname{PSP}}}
@@ -157,9 +158,10 @@ in other notations:
   \\
   Universal specification
   & \OK  % Us
-  & ?  % UML
-  & ?  % MARTE
-  & ?  % STAIRS
+  & \OK  % UML
+  & \OK  % MARTE
+  & \OK  % STAIRS
+  & \OK  % MSC
   & \OK  % LSC
   & ?  % PSC
   & ?  % PSP
@@ -170,6 +172,7 @@ in other notations:
   & ?  % UML
   & ?  % MARTE
   & ?  % STAIRS
+  & ?  % MSC
   & \OK  % LSC
   & ?  % PSC
   & ?  % PSP
@@ -180,7 +183,8 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & \OK?  % LSC
+  & ?  % MSC
+  & \NO  % LSC
   & \NO  % PSC
   & ?  % PSP
   & ?  % AGLPT 
@@ -190,7 +194,8 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % LSC
+  & ?  % MSC
+  & \NO  % LSC
   & \NO  % PSC
   & ?  % PSP
   & ?  % AGLPT 
@@ -200,6 +205,7 @@ in other notations:
   & ?  % UML
   & ?  % MARTE
   & ?  % STAIRS
+  & ?  % MSC
   & \OK  % LSC
   & ?  % PSC
   & ?  % PSP
@@ -213,7 +219,8 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % LSC
+  & ?  % MSC
+  & \OK  % LSC
   & \NO  % PSC
   & ?  % PSP
   & ?  % AGLPT
@@ -223,18 +230,31 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % LSC
+  & ?  % MSC
+  & \OK  % LSC
   & \OK  % PSC
   & ?  % PSP
   & ?  % AGLPT
   \\
-  Expected/fail
-  & \NO  % Us
-  & \NO  % UML
-  & \NO  % MARTE
-  & \NO  % STAIRS
+  Mandatory
+  & \NO?  % Us
+  & \ISH  % UML
+  & \ISH  % MARTE
+  & \ISH  % STAIRS
+  & ?  % MSC
   & \OK  % LSC
   & \OK  % PSC
+  & ?  % PSP
+  & ?  % AGLPT
+  \\
+  Forbidden
+  & \NO?  % Us
+  & \ISH  % UML
+  & \ISH  % MARTE
+  & \ISH  % STAIRS
+  & ?  % MSC
+  & \OK  % LSC
+  & ?  % PSC
   & ?  % PSP
   & ?  % AGLPT
   \\
@@ -246,6 +266,7 @@ in other notations:
   & \ISH  % UML
   & \ISH  % MARTE
   & \INTIMED  % STAIRS
+  & ?  % MSC
   & ?  % LSC
   & \INTIMED?  % PSC
   & ?  % PSP
@@ -256,6 +277,7 @@ in other notations:
   & \ISH  % UML
   & \ISH  % MARTE
   & \INTIMED  % STAIRS
+  & ?  % MSC
   & ?  % LSC
   & \INTIMED?  % PSC
   & ?  % PSP
@@ -269,6 +291,7 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \INTIMED  % STAIRS
+  & ?  % MSC
   & ?  % LSC
   & \INTIMED?  % PSC
   & ?  % PSP
@@ -279,6 +302,7 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \INTIMED  % STAIRS
+  & ?  % MSC
   & \OK  % LSC
   & \INTIMED  % PSC
   & ?  % PSP
@@ -292,7 +316,8 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % LSC
+  & ?  % MSC
+  & \NO?  % LSC
   & \ISH  % PSC
   & ?  % PSP
   & ?  % AGLPT
@@ -302,7 +327,8 @@ in other notations:
   & \NO  % UML
   & \NO  % MARTE
   & \NO  % STAIRS
-  & ?  % LSC
+  & ?  % MSC
+  & \NO?  % LSC
   & \INPROB  % PSC
   & ?  % PSP
   & ?  % AGLPT
@@ -312,7 +338,8 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % LSC
+  & ?  % MSC
+  & \NO?  % LSC
   & \OK  % PSC
   & ?  % PSP
   & ?  % AGLPT
@@ -322,7 +349,8 @@ in other notations:
   & \NO  % UML
   & \NO  % MARTE
   & \OK  % STAIRS
-  & ?  % LSC
+  & ?  % MSC
+  & \NO?  % LSC
   & \OK  % PSC
   & ?  % PSP
   & ?  % AGLPT
@@ -332,8 +360,56 @@ in other notations:
   & \NO  % UML
   & \NO  % MARTE
   & \INPROB  % STAIRS
-  & ?  % LSC
+  & ?  % MSC
+  & \NO?  % LSC
   & ?  % PSC
+  & ?  % PSP
+  & ?  % AGLPT
+  \\
+  \midrule
+  \multicolumn{7}{l}{\tsubhead{Other control flows}}
+  \\
+  Loops (\mloopstep)
+  & \OK  % Us
+  & \OK  % UML
+  & \OK  % MARTE
+  & \OK  % STAIRS
+  & ?  % MSC
+  & \NO?  % LSC
+  & \OK  % PSC
+  & ?  % PSP
+  & ?  % AGLPT
+  \\
+  Breaks
+  & \SOON  % Us
+  & \OK  % UML
+  & \OK  % MARTE
+  & \OK  % STAIRS
+  & ?  % MSC
+  & \OK  % LSC
+  & \OK  % PSC
+  & ?  % PSP
+  & ?  % AGLPT
+  \\
+  Sub-charts
+  & \NO?  % Us
+  & \NO?  % UML
+  & \NO?  % MARTE
+  & \NO?  % STAIRS
+  & ?  % MSC
+  & \OK  % LSC
+  & \NO  % PSC
+  & ?  % PSP
+  & ?  % AGLPT
+  \\
+  Pre-charts
+  & \NO  % Us
+  & \NO  % UML
+  & \NO  % MARTE
+  & \NO  % STAIRS
+  & ?  % MSC
+  & \OK  % LSC
+  & \NO  % PSC
   & ?  % PSP
   & ?  % AGLPT
   \\
@@ -345,28 +421,20 @@ in other notations:
   & \NO  % UML
   & \NO  % MARTE
   & \NO  % STAIRS
+  & ?  % MSC
   & ?  % LSC
   & \OK  % PSC
   & ?  % PSP
   & \ISH?  % AGLPT
   \\
-  Loops (\mloopstep)
-  & \OK  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & ?  % LSC
-  & \OK  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Breaks
-  & \SOON  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & ?  % LSC
-  & \OK  % PSC
+  Enforced progress (hot locations)
+  & \NO  % Us
+  & \NO  % UML
+  & \NO  % MARTE
+  & \NO  % STAIRS
+  & ?  % MSC
+  & \OK  % LSC
+  & \NO  % PSC
   & ?  % PSP
   & ?  % AGLPT
   \\
