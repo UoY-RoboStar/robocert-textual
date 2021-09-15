@@ -45,7 +45,7 @@ and global scope\todo{Getting this from Ebeid et al, but I'm not sure that's the
 right citation}.  We do not yet support this level of richness.
 
 \paragraph{Probabilistic features}
-None.  \todo{check}
+None of which we are aware.
 
 \subsection{STAIRS}
 
@@ -78,11 +78,22 @@ following such development processes:
 
 \subsection{Message Sequence Chart (MSC)}
 
-ITU message sequence charts are a form of sequence diagram that
-serves as a precursor to many of the other notations
+ITU message sequence charts~\cite{Harel03-MSC} are a form of sequence diagram
+that serves as a precursor to many of the other notations
 discussed here, including version 2 and onward of UML.
 
+\paragraph{Timing features}
+MSCs have been extended to deal with timing constraints.
+
 \paragraph{High-level MSC}
+
+While MSCs do not directly support concepts such as choice and iteration
+(to the best of our knowledge), there are extensions that do.  One extension
+of interest is \emph{high-level} message sequence charts, which are finite state
+automata whose states are labelled with message sequence charts.  This concept
+leads to high levels of expressivity (while still being possible to capture in
+terms of a semantics), but means that the overall diagram is no longer a single
+chart.
 
 \subsection{Live Sequence Chart (LSC)}
 
@@ -121,6 +132,12 @@ LSC variants are still in use today.
 Chai et al. 2021~\cite{Chai21-PMLSC} report on a use of `parameterized modal
 live sequence charts' to verify train control systems at run-time.
 
+\paragraph{Timing features}
+Harel et al. propose an encoding of timing constraints in LSC using a
+straightforward extension of their existing notation for
+constraints~\cite{Harel03-MSC}.
+\todo{Wasn't there another version here?}
+
 \begin{remark}
 It is unclear as to whether LSC supports optional and
 alternative blocks,
@@ -154,7 +171,7 @@ specify that the occurrence of certain messages satisfies an inequality against
 a named and resettable clock.
 
 \paragraph{Probabilistic features}
-PTPSC add probabilistic
+PTPSC adds probabilistic
 sections.  Such sections resemble UML combined fragments with inequalities over
 the probability of entering the section.
 
@@ -199,6 +216,9 @@ diagram languages:
 \item
   Often, \emph{some} notion of mandatory and provisional
   (sometimes also forbidden) behaviour.
+\item
+	Often, \emph{some} notion of time and duration constraints.  Where notations
+	do not have such constraints, extensions tend to appear later that add them.
 \end{itemize}
 
 \paragraph{Differences}
@@ -209,6 +229,8 @@ diagram languages:
 \item
 	Whether time constraints are available and, if so, how they work
 	(for instance, clocks versus duration spans);
+\item
+  Whether probabilistic choices are available;
 \item
 	The specifics of event ordering, especially with respect to communications
 	happening on vertically disjoint lifelines but horizontally

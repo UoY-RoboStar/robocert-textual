@@ -10,6 +10,13 @@ using \insp{underlines}.
 
 \subsection{Steps~(\ref{sec:metamodel-steps})}
 
+\paragraph{\msequencestep}
+\begin{featset}
+\item[UML] \insp{interaction fragment}
+\end{featset}
+
+Not all \msequencestep s correspond directly to interaction fragments.
+
 \paragraph{\mdeadlinestep}
 \begin{featset}
 \item[UML] \insp{duration constraint}, time observations and constraints
@@ -93,15 +100,17 @@ Notion of direction (inbound/outbound) rather than sender/receiver labels.
 \paragraph{\mactor}
 \begin{featset}
 \item[UML] lifeline
+\item[MSC] \insp{lifeline}
+\item[LSC] \insp{lifeline}
 \item[PSC] \insp{component instance}
 \end{featset}
 
-Unlike UML and PSC, we fix the number of actors at two
+Unlike most notations, we fix the number of actors at two
 \ghtodo{32}{for now} in \langname: a \mtarget{} and a \mworld{}.
 Neither are named, though the \mtarget{} will refer to a
 named component such as a \mrcmodule.
 
-Like PSC, but unlike UML, there are no executions.
+Like MSC, LSC, and PSC (but unlike UML), there are no executions.
 
 \subsection{Assertions~(\ref{sec:seq-metamodel-assertions})}
 
@@ -140,7 +149,7 @@ in other notations:
 \begin{table}[htb!]
   \centering
 
-  \begin{tabular}{rl|llllllll}
+  \begin{tabular}{ll|lllllllll}
   \toprule
 
   & \rot{\thead{\langname}}
@@ -148,56 +157,64 @@ in other notations:
   & \rot{\thead{\featname{MARTE}}}
   & \rot{\thead{\featname{STAIRS}}}
   & \rot{\thead{\featname{MSC}}}
+  & \rot{\thead{\featname{HMSC}}}
   & \rot{\thead{\featname{LSC}}}
   & \rot{\thead{\featname{PSC}}}
   & \rot{\thead{\featname{PSP}}}
   & \rot{\thead{\featname{AGLPT}}}
   \\
   \midrule
-  \multicolumn{7}{l}{\tsubhead{Modalities}}
+  \multicolumn{7}{l}{\tsubhead{Specification-level quantifications}}
   \\
-  Universal specification
+  \(\forall\) (`characterises all executions')
   & \OK  % Us
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
   & \OK  % MSC
+  & \OK  % HMSC
   & \OK  % LSC
   & ?  % PSC
   & ?  % PSP
   & ?  % AGLPT
   \\
-  Existential specification
+  \(\exists\) (`observable in at least one execution')
   & \ASST  % Us
   & ?  % UML
   & ?  % MARTE
   & ?  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & ?  % PSC
   & ?  % PSP
   & ?  % AGLPT 
   \\
-  Assertion block
+  \midrule
+  \multicolumn{7}{l}{\tsubhead{Modalities}}
+  \\
+  Assertion block (`X must not happen')
   & \NO  % Us
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \NO  % LSC
   & \NO  % PSC
   & ?  % PSP
   & ?  % AGLPT 
   \\ 
-  Negation block
+  Negation block (`X must happen')
   & \NO  % Us
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \NO  % LSC
   & \NO  % PSC
-  & ?  % PSP
+  & \OK  % PSP
   & ?  % AGLPT 
   \\ 
   Mandatory progress (liveness)
@@ -206,6 +223,7 @@ in other notations:
   & ?  % MARTE
   & ?  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & ?  % PSC
   & ?  % PSP
@@ -219,7 +237,8 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % MSC
+  & \OK  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & \NO  % PSC
   & ?  % PSP
@@ -230,7 +249,8 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % MSC
+  & \NO  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & \OK  % PSC
   & ?  % PSP
@@ -242,6 +262,7 @@ in other notations:
   & \ISH  % MARTE
   & \ISH  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & \OK  % PSC
   & ?  % PSP
@@ -253,6 +274,7 @@ in other notations:
   & \ISH  % MARTE
   & \ISH  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & ?  % PSC
   & ?  % PSP
@@ -266,8 +288,9 @@ in other notations:
   & \ISH  % UML
   & \ISH  % MARTE
   & \INTIMED  % STAIRS
-  & ?  % MSC
-  & ?  % LSC
+  & \ISH  % MSC
+  & ?  % HMSC
+  & \ISH  % LSC
   & \INTIMED?  % PSC
   & ?  % PSP
   & ?  % AGLPT
@@ -277,8 +300,9 @@ in other notations:
   & \ISH  % UML
   & \ISH  % MARTE
   & \INTIMED  % STAIRS
-  & ?  % MSC
-  & ?  % LSC
+  & \ISH  % MSC
+  & ?  % HMSC
+  & \ISH  % LSC
   & \INTIMED?  % PSC
   & ?  % PSP
   & ?  % AGLPT
@@ -287,12 +311,13 @@ in other notations:
   \multicolumn{7}{l}{\tsubhead{Duration constraints}}
   \\
   Lower-bound
-  & \SOON?  % Us
+  & \SOON  % Us
   & \OK  % UML
   & \OK  % MARTE
   & \INTIMED  % STAIRS
-  & ?  % MSC
-  & ?  % LSC
+  & \INTIMED  % MSC
+  & ?  % HMSC
+  & \OK  % LSC
   & \INTIMED?  % PSC
   & ?  % PSP
   & ?  % AGLPT
@@ -302,7 +327,8 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \INTIMED  % STAIRS
-  & ?  % MSC
+  & \INTIMED  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & \INTIMED  % PSC
   & ?  % PSP
@@ -312,22 +338,24 @@ in other notations:
   \multicolumn{7}{l}{\tsubhead{Conditionally executed blocks}}
   \\
   Optional (\texttt{opt})
-  & \SOON?  % Us
+  & \NO  % Us
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % MSC
+  & \NO  % MSC
+  & \ISH  % HMSC
   & \NO?  % LSC
   & \ISH  % PSC
   & ?  % PSP
   & ?  % AGLPT
   \\
   Probabilistic optional
-  & \SOON  % Us
+  & \NO  % Us
   & \NO  % UML
   & \NO  % MARTE
   & \NO  % STAIRS
-  & ?  % MSC
+  & \NO  % MSC
+  & \NO?  % HMSC
   & \NO?  % LSC
   & \INPROB  % PSC
   & ?  % PSP
@@ -338,18 +366,20 @@ in other notations:
   & \OK  % UML
   & \OK  % MARTE
   & \OK  % STAIRS
-  & ?  % MSC
+  & \NO  % MSC
+  & \ISH  % HMSC
   & \NO?  % LSC
   & \OK  % PSC
   & ?  % PSP
   & ?  % AGLPT
   \\
   Mandatory alternative (\texttt{xalt}, \(\extchoice\))
-  & \SOON?  % Us
+  & \SOON  % Us
   & \NO  % UML
   & \NO  % MARTE
   & \OK  % STAIRS
   & ?  % MSC
+  & \NO?  % HMSC
   & \NO?  % LSC
   & \OK  % PSC
   & ?  % PSP
@@ -361,6 +391,7 @@ in other notations:
   & \NO  % MARTE
   & \INPROB  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \NO?  % LSC
   & ?  % PSC
   & ?  % PSP
@@ -375,6 +406,7 @@ in other notations:
   & \OK  % MARTE
   & \OK  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \NO?  % LSC
   & \OK  % PSC
   & ?  % PSP
@@ -386,6 +418,7 @@ in other notations:
   & \OK  % MARTE
   & \OK  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & \OK  % PSC
   & ?  % PSP
@@ -397,6 +430,7 @@ in other notations:
   & \NO?  % MARTE
   & \NO?  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & \NO  % PSC
   & ?  % PSP
@@ -408,6 +442,7 @@ in other notations:
   & \NO  % MARTE
   & \NO  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & \NO  % PSC
   & ?  % PSP
@@ -422,6 +457,7 @@ in other notations:
   & \NO  % MARTE
   & \NO  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & ?  % LSC
   & \OK  % PSC
   & ?  % PSP
@@ -433,6 +469,7 @@ in other notations:
   & \NO  % MARTE
   & \NO  % STAIRS
   & ?  % MSC
+  & ?  % HMSC
   & \OK  % LSC
   & \NO  % PSC
   & ?  % PSP
@@ -462,9 +499,9 @@ The symbols in this table have the following meaning:
   assertion language.  For example, \langname{} handles
   the difference between universal and existential
   quantifications in assertions.
-  \item[\INTIMED] Supported, but only in timed variants of this
+  \item[\INTIMED] Supported in timed variants of this
   notation (for example, timed STAIRS).
-  \item[\INPROB] Supported, but only in
+  \item[\INPROB] Supported in
   probabilistic variants of this
   notation (for example, probabilistic PSC). 
   \item[?] No or incomplete data.
