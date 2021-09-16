@@ -6,7 +6,7 @@ corresponding features in the other notations.
 For each feature, we highlight the main source of inspiration (if any)
 using \insp{underlines}.
 
-%\subsection{Sequences~(\ref{sec:metamodel-sequences})}
+% \subsection{Sequences~(\ref{sec:metamodel-sequences})}
 
 \subsection{Steps~(\ref{sec:metamodel-steps})}
 
@@ -31,7 +31,7 @@ constraint.  We do not yet capture observations.
 
 While \robochart{} has clocks, we do not yet expose them in
 \langname, as we consider them to be an implementation concern.
-      
+
 \paragraph{\mloopstep}
 \begin{featset}
 \item[UML] \insp{loop combined fragment}
@@ -53,7 +53,7 @@ modification of PSC syntax.  We do not cover
 future-unwanted-message or chain constraints.  Currently, all
 ordering is assumed strict unless modified by a gap; this
 deviates from PSC \emph{and} some readings of UML.
-    
+
 \subsection{Actions~(\ref{sec:seq-metamodel-actions})}
 
 \paragraph{\marrowaction}
@@ -64,7 +64,7 @@ deviates from PSC \emph{and} some readings of UML.
 
 Arrows are named for the PSC \emph{arrowMSG} concept but are closer
 to UML.
-      
+
 \paragraph{\mwaitaction}
 \begin{featset}
 \item[UML] combination of time observations and constraints(?)
@@ -122,15 +122,15 @@ concepts that are part of the diagram language
 in other notations:
 
 \begin{itemize}
-  \item
-    LSC
-    existential charts (specifying behaviour we expect to see at least once
-    in the model) become is-observed properties in
-    \langname;
-  \item
-    LSC notions of mandatory progress can be
-    captured partially by use of tick-tock reasoning
-    in \langname, though this applies to whole diagrams.
+\item
+  LSC
+  existential charts (specifying behaviour we expect to see at least once
+  in the model) become is-observed properties in
+  \langname;
+\item
+  LSC notions of mandatory progress can be
+  captured partially by use of tick-tock reasoning
+  in \langname, though this applies to whole diagrams.
 \end{itemize}
 
 \subsection{Matrix}
@@ -150,335 +150,335 @@ in other notations:
   \centering
 
   \begin{tabular}{ll|lllllllll}
-  \toprule
-
-  & \rot{\thead{\langname}}
-  & \rot{\thead{\featname{UML}}}
-  & \rot{\thead{\featname{MARTE}}}
-  & \rot{\thead{\featname{STAIRS}}}
-  & \rot{\thead{\featname{MSC}}}
-  & \rot{\thead{\featname{HMSC}}}
-  & \rot{\thead{\featname{LSC}}}
-  & \rot{\thead{\featname{PSC}}}
-  & \rot{\thead{\featname{PSP}}}
-  & \rot{\thead{\featname{AGLPT}}}
-  \\
-  \midrule
-  \multicolumn{7}{l}{\tsubhead{Specification-level quantifications}}
-  \\
-  \(\forall\) (`characterises all executions')
-  & \OK  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & \OK  % MSC
-  & \OK  % HMSC
-  & \OK  % LSC
-  & ?  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  \(\exists\) (`observable in at least one execution')
-  & \ASST  % Us
-  & ?  % UML
-  & ?  % MARTE
-  & ?  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & ?  % PSC
-  & ?  % PSP
-  & ?  % AGLPT 
-  \\
-  \midrule
-  \multicolumn{7}{l}{\tsubhead{Modalities}}
-  \\
-  Assertion block (`X must not happen')
-  & \NO  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \NO  % LSC
-  & \NO  % PSC
-  & ?  % PSP
-  & ?  % AGLPT 
-  \\ 
-  Negation block (`X must happen')
-  & \NO  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \NO  % LSC
-  & \NO  % PSC
-  & \OK  % PSP
-  & ?  % AGLPT 
-  \\ 
-  Mandatory progress (liveness)
-  & \ASST  % Us
-  & ?  % UML
-  & ?  % MARTE
-  & ?  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & ?  % PSC
-  & ?  % PSP
-  & ?  % AGLPT 
-  \\  
-  \midrule
-  \multicolumn{7}{l}{\tsubhead{Messages}}
-  \\
-  Asynchronous
-  & \OK  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & \OK  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \NO  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Synchronous
-  & \SOON?  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & \NO  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \OK  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Mandatory
-  & \NO?  % Us
-  & \ISH  % UML
-  & \ISH  % MARTE
-  & \ISH  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \OK  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Forbidden
-  & \NO?  % Us
-  & \ISH  % UML
-  & \ISH  % MARTE
-  & \ISH  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & ?  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  \midrule
-  \multicolumn{7}{l}{\tsubhead{Waits}}
-  \\
-  Explicit (\mwaitaction)
-  & \OK  % Us
-  & \ISH  % UML
-  & \ISH  % MARTE
-  & \INTIMED  % STAIRS
-  & \ISH  % MSC
-  & ?  % HMSC
-  & \ISH  % LSC
-  & \INTIMED?  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Ranged
-  & \SOON  % Us
-  & \ISH  % UML
-  & \ISH  % MARTE
-  & \INTIMED  % STAIRS
-  & \ISH  % MSC
-  & ?  % HMSC
-  & \ISH  % LSC
-  & \INTIMED?  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  \midrule
-  \multicolumn{7}{l}{\tsubhead{Duration constraints}}
-  \\
-  Lower-bound
-  & \SOON  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \INTIMED  % STAIRS
-  & \INTIMED  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \INTIMED?  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Upper-bound/deadline
-  & \OK  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \INTIMED  % STAIRS
-  & \INTIMED  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \INTIMED  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  \midrule
-  \multicolumn{7}{l}{\tsubhead{Conditionally executed blocks}}
-  \\
-  Optional (\texttt{opt})
-  & \NO  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & \NO  % MSC
-  & \ISH  % HMSC
-  & \NO?  % LSC
-  & \ISH  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Probabilistic optional
-  & \NO  % Us
-  & \NO  % UML
-  & \NO  % MARTE
-  & \NO  % STAIRS
-  & \NO  % MSC
-  & \NO?  % HMSC
-  & \NO?  % LSC
-  & \INPROB  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Potential alternative (\texttt{alt}, \(\sqcap\))
-  & \SOON  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & \NO  % MSC
-  & \ISH  % HMSC
-  & \NO?  % LSC
-  & \OK  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Mandatory alternative (\texttt{xalt}, \(\extchoice\))
-  & \SOON  % Us
-  & \NO  % UML
-  & \NO  % MARTE
-  & \OK  % STAIRS
-  & ?  % MSC
-  & \NO?  % HMSC
-  & \NO?  % LSC
-  & \OK  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Probabilistic alternative (\texttt{palt})
-  & \SOON?  % Us
-  & \NO  % UML
-  & \NO  % MARTE
-  & \INPROB  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \NO?  % LSC
-  & ?  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  \midrule
-  \multicolumn{7}{l}{\tsubhead{Other control flows}}
-  \\
-  Loops (\mloopstep)
-  & \OK  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \NO?  % LSC
-  & \OK  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Breaks
-  & \SOON  % Us
-  & \OK  % UML
-  & \OK  % MARTE
-  & \OK  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \OK  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Sub-charts
-  & \NO?  % Us
-  & \NO?  % UML
-  & \NO?  % MARTE
-  & \NO?  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \NO  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  Pre-charts
-  & \NO  % Us
-  & \NO  % UML
-  & \NO  % MARTE
-  & \NO  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \NO  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  \midrule
-  \multicolumn{7}{l}{\tsubhead{Other}}
-  \\
-  Gaps (or similar)
-  & \OK  % Us
-  & \NO  % UML
-  & \NO  % MARTE
-  & \NO  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & ?  % LSC
-  & \OK  % PSC
-  & ?  % PSP
-  & \ISH?  % AGLPT
-  \\
-  Enforced progress (hot locations)
-  & \NO  % Us
-  & \NO  % UML
-  & \NO  % MARTE
-  & \NO  % STAIRS
-  & ?  % MSC
-  & ?  % HMSC
-  & \OK  % LSC
-  & \NO  % PSC
-  & ?  % PSP
-  & ?  % AGLPT
-  \\
-  \bottomrule
+    \toprule
+    
+    & \rot{\thead{\langname}}
+    & \rot{\thead{\featname{UML}}}
+    & \rot{\thead{\featname{MARTE}}}
+    & \rot{\thead{\featname{STAIRS}}}
+    & \rot{\thead{\featname{MSC}}}
+    & \rot{\thead{\featname{HMSC}}}
+    & \rot{\thead{\featname{LSC}}}
+    & \rot{\thead{\featname{PSC}}}
+    & \rot{\thead{\featname{PSP}}}
+    & \rot{\thead{\featname{AGLPT}}}
+    \\
+    \midrule
+    \multicolumn{7}{l}{\tsubhead{Specification-level quantifications}}
+    \\
+    \(\forall\) (`characterises all executions')
+    & \OK  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & \OK  % MSC
+    & \OK  % HMSC
+    & \OK  % LSC
+    & ?  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    \(\exists\) (`observable in at least one execution')
+    & \ASST  % Us
+    & ?  % UML
+    & ?  % MARTE
+    & ?  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & ?  % PSC
+    & ?  % PSP
+    & ?  % AGLPT 
+    \\
+    \midrule
+    \multicolumn{7}{l}{\tsubhead{Modalities}}
+    \\
+    Assertion block (`X must not happen')
+    & \NO  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \NO  % LSC
+    & \NO  % PSC
+    & ?  % PSP
+    & ?  % AGLPT 
+    \\ 
+    Negation block (`X must happen')
+    & \NO  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \NO  % LSC
+    & \NO  % PSC
+    & \OK  % PSP
+    & ?  % AGLPT 
+    \\ 
+    Mandatory progress (liveness)
+    & \ASST  % Us
+    & ?  % UML
+    & ?  % MARTE
+    & ?  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & ?  % PSC
+    & ?  % PSP
+    & ?  % AGLPT 
+    \\  
+    \midrule
+    \multicolumn{7}{l}{\tsubhead{Messages}}
+    \\
+    Asynchronous
+    & \OK  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & \OK  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & \NO  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Synchronous
+    & \SOON?  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & \NO  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & \OK  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Mandatory
+    & \NO?  % Us
+    & \ISH  % UML
+    & \ISH  % MARTE
+    & \ISH  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & \OK  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Forbidden
+    & \NO?  % Us
+    & \ISH  % UML
+    & \ISH  % MARTE
+    & \ISH  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & ?  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    \midrule
+    \multicolumn{7}{l}{\tsubhead{Conditionally executed blocks}}
+    \\
+    Optional (\texttt{opt})
+    & \NO  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & \NO  % MSC
+    & \ISH  % HMSC
+    & \NO?  % LSC
+    & \ISH  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Potential alternative (\texttt{alt}, \(\sqcap\))
+    & \SOON  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & \NO  % MSC
+    & \ISH  % HMSC
+    & \NO?  % LSC
+    & \OK  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Mandatory alternative (\texttt{xalt}, \(\extchoice\))
+    & \SOON  % Us
+    & \NO  % UML
+    & \NO  % MARTE
+    & \OK  % STAIRS
+    & ?  % MSC
+    & \NO?  % HMSC
+    & \NO?  % LSC
+    & \OK  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    \midrule
+    \multicolumn{7}{l}{\tsubhead{Other control flows}}
+    \\
+    Loops (\mloopstep)
+    & \OK  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \NO?  % LSC
+    & \OK  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Breaks
+    & \SOON  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \OK  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & \OK  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Sub-charts
+    & \NO?  % Us
+    & \NO?  % UML
+    & \NO?  % MARTE
+    & \NO?  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & \NO  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Pre-charts
+    & \NO  % Us
+    & \NO  % UML
+    & \NO  % MARTE
+    & \NO  % STAIRS
+    & \NO  % MSC
+    & \NO  % HMSC
+    & \OK  % LSC
+    & \INPROB  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    \midrule
+    \multicolumn{7}{l}{\tsubhead{Timing features}}
+    \\
+    Explicit wait
+    & \OK  % Us
+    & \ISH  % UML
+    & \ISH  % MARTE
+    & \INTIMED  % STAIRS
+    & \ISH  % MSC
+    & ?  % HMSC
+    & \ISH  % LSC
+    & \INTIMED?  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Ranged wait
+    & \SOON  % Us
+    & \ISH  % UML
+    & \ISH  % MARTE
+    & \INTIMED  % STAIRS
+    & \ISH  % MSC
+    & ?  % HMSC
+    & \ISH  % LSC
+    & \INTIMED?  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Lower-bounded duration
+    & \SOON  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \INTIMED  % STAIRS
+    & \INTIMED  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & \INTIMED?  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Upper-bounded duration (deadline)
+    & \OK  % Us
+    & \OK  % UML
+    & \OK  % MARTE
+    & \INTIMED  % STAIRS
+    & \INTIMED  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & \INTIMED  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    \midrule
+    \multicolumn{7}{l}{\tsubhead{Probabilistic features}}
+    \\
+    Main chart/diagram
+    & \NO  % Us
+    & \NO  % UML
+    & \NO  % MARTE
+    & \NO  % STAIRS
+    & \NO  % MSC
+    & \NO?  % HMSC
+    & \NO?  % LSC
+    & \INPROB  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    Alternative (\texttt{palt})
+    & \SOON  % Us
+    & \NO?  % UML
+    & \NO  % MARTE
+    & \INPROB  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \INPROB  % LSC
+    & \NO  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    \midrule
+    \multicolumn{7}{l}{\tsubhead{Other}}
+    \\
+    Gaps (or similar)
+    & \OK  % Us
+    & \NO  % UML
+    & \NO  % MARTE
+    & \NO  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & ?  % LSC
+    & \OK  % PSC
+    & ?  % PSP
+    & \ISH?  % AGLPT
+    \\
+    Enforced progress (hot locations)
+    & \NO  % Us
+    & \NO  % UML
+    & \NO  % MARTE
+    & \NO  % STAIRS
+    & ?  % MSC
+    & ?  % HMSC
+    & \OK  % LSC
+    & \NO  % PSC
+    & ?  % PSP
+    & ?  % AGLPT
+    \\
+    \bottomrule
   \end{tabular}
   \caption{Matrix of features available in \langname{} sequences compared to
-  other notations.}
+    other notations.}
   \label{tab:seq-comparison-features}
 \end{table}
 
@@ -488,23 +488,23 @@ notations) as well as features in other notations for which \langname{} does not
 The symbols in this table have the following meaning:
 
 \begin{description}
-  \item[\OK] Directly supported.
-  \item[\SOON] Not yet supported, but
+\item[\OK] Directly supported.
+\item[\SOON] Not yet supported, but
   support is planned.
-  \item[\NO] Not supported or planned.
-  \item[\ISH] Not directly supported, but can be encoded using other
+\item[\NO] Not supported or planned.
+\item[\ISH] Not directly supported, but can be encoded using other
   features.
-  \item[\ASST] Not directly supported in the
+\item[\ASST] Not directly supported in the
   diagram language, but can be encoded using the
   assertion language.  For example, \langname{} handles
   the difference between universal and existential
   quantifications in assertions.
-  \item[\INTIMED] Supported in timed variants of this
+\item[\INTIMED] Supported in timed variants of this
   notation (for example, timed STAIRS).
-  \item[\INPROB] Supported in
+\item[\INPROB] Supported in
   probabilistic variants of this
   notation (for example, probabilistic PSC). 
-  \item[?] No or incomplete data.
+\item[?] No or incomplete data.
 \end{description}
 
 %%% Local Variables:

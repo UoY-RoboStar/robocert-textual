@@ -132,12 +132,6 @@ LSC variants are still in use today.
 Chai et al. 2021~\cite{Chai21-PMLSC} report on a use of `parameterized modal
 live sequence charts' to verify train control systems at run-time.
 
-\paragraph{Timing features}
-Harel et al. propose an encoding of timing constraints in LSC using a
-straightforward extension of their existing notation for
-constraints~\cite{Harel03-MSC}.
-\todo{Wasn't there another version here?}
-
 \begin{remark}
 It is unclear as to whether LSC supports optional and
 alternative blocks,
@@ -145,6 +139,18 @@ as they are not discussed in the original papers.
 LSC does support bounded and unbounded loops~\cite{Harel03-MSC}, with a combination of
 However, MSC supported these, and LSC is 
 \end{remark}
+
+\paragraph{Timing features}
+Harel et al. propose an encoding of timing constraints in LSC using a
+straightforward extension of their existing notation for
+constraints~\cite{Harel03-MSC}.
+\todo{Wasn't there another version here?}
+
+\paragraph{Probabilistic features}
+Kai et al.~\cite{Kai14-PLSC} propose an extension to LSC to capture
+probabilistic choice (`probabilistic switch'), as well as
+probabilities over aspects of the sending, transmitting, and receiving
+of events.
 
 \subsection{Property Sequence Chart (PSC)}
 
@@ -171,9 +177,9 @@ specify that the occurrence of certain messages satisfies an inequality against
 a named and resettable clock.
 
 \paragraph{Probabilistic features}
-PTPSC adds probabilistic
-sections.  Such sections resemble UML combined fragments with inequalities over
-the probability of entering the section.
+PTPSC divides sequences into two sections: a LSC-style pre-chart where no messages can be required,
+and a main chart with a probability inequality.  This gives a coarse-grained notion of `if we see
+this behaviour, then this behaviour occurs with a certain probability'.
 
 \subsection{Non-graphical languages}
 
@@ -200,45 +206,45 @@ diagram languages:
 
 \begin{itemize}
 \item
-	Two axes, usually discrete:
-	\begin{itemize}
-		\item
-			one distinguishing between participants in an interaction;
-		\item
-			another providing some form of time ordering;
-	\end{itemize}
+  Two axes, usually discrete:
+  \begin{itemize}
+  \item
+    one distinguishing between participants in an interaction;
+  \item
+    another providing some form of time ordering;
+  \end{itemize}
 \item
-	Message passing across the participant axis as the main expression of
-	interaction;
+  Message passing across the participant axis as the main expression of
+  interaction;
 \item
-	Control flow manipulated by blocks 
-	spanning both axes;
+  Control flow manipulated by blocks 
+  spanning both axes;
 \item
   Often, \emph{some} notion of mandatory and provisional
   (sometimes also forbidden) behaviour.
 \item
-	Often, \emph{some} notion of time and duration constraints.  Where notations
-	do not have such constraints, extensions tend to appear later that add them.
+  Often, \emph{some} notion of time and duration constraints.  Where notations
+  do not have such constraints, extensions tend to appear later that add them.
 \end{itemize}
 
 \paragraph{Differences}
 
 \begin{itemize}
 \item
-	The target semantics (see \cref{sec:semantics-comparison-review});
+  The target semantics (see \cref{sec:semantics-comparison-review});
 \item
-	Whether time constraints are available and, if so, how they work
-	(for instance, clocks versus duration spans);
+  Whether time constraints are available and, if so, how they work
+  (for instance, clocks versus duration spans);
 \item
   Whether probabilistic choices are available;
 \item
-	The specifics of event ordering, especially with respect to communications
-	happening on vertically disjoint lifelines but horizontally
-	similar time-slices;
+  The specifics of event ordering, especially with respect to communications
+  happening on vertically disjoint lifelines but horizontally
+  similar time-slices;
 \item
-	The precise form of the mandatory and provisional
-	behaviour specification; for instance, temperature in LSC
-	vs message types in PSC vs control blocks.
+  The precise form of the mandatory and provisional
+  behaviour specification; for instance, temperature in LSC
+  vs message types in PSC vs control blocks.
 \end{itemize}
 
 %%% Local Variables:
