@@ -113,7 +113,8 @@ MSCs have very little inherent control flow, being primarily just
 sequences of messages (possibly with timing constraints)
 
 \paragraph{Timing features}
-MSCs have been extended to deal with timing constraints.
+As of MSC-96, MSCs had time constraints in the form of both interval
+constraints and timer/timeout pairs.
 
 \paragraph{Probabilistic features}
 There are no innate probabilistic features in MSCs.
@@ -163,13 +164,12 @@ LSC variants are still in use as of 2021.  For instance,
 \textcite{Chai21-PMLSC} report on a use of `parameterized modal
 live sequence charts' to verify train control systems at run-time.
 
-\begin{remark}
-It is unclear as to whether LSC supports optional and
-alternative blocks,
-as they are not discussed in the original papers.
-LSC does support bounded and unbounded loops~\cite{Harel03-MSC}, with a combination of
-However, MSC supported these, and LSC is 
-\end{remark}
+\paragraph{Control flow features}
+
+While the original formulation of LSC~\cite{lsc} seems not to have any
+control flow features other than those available in ordinary MSC,
+\textcite{Harel03-MSC} attribute both bounded/unbounded loops and some
+form of alternative blocks to LSC.
 
 \paragraph{Timing features}
 While the original formulation of LSC~\cite{lsc} had no timing
@@ -204,6 +204,11 @@ expressible as linear temporal logic.  We do not yet target LTL,
 either directly or by any work that encodes fragments of LTL into
 CSP~\cite{fdrspin,Lowe08-CommunicatingProcessSpecification}.
 
+\paragraph{Control flow features}
+PSC is considerably streamlined from UML and HMSC, with a small set of operators: strict
+ordering; looping; alternative; parallel composition; messages; and constraints.
+UML assertion and negation blocks do not exist, in favour of message modalities.
+
 \paragraph{Timing features}
 TPSC and PTPSC have clock constraints.  These complement the existing PSC constraint system
 (which loosely corresponds to our concept of gaps), adding the ability to
@@ -216,6 +221,9 @@ and a main chart with a probability inequality.  This gives a coarse-grained not
 this behaviour, then this behaviour occurs with a certain probability'.
 
 \subsection{Non-graphical languages}
+
+We also consider the following languages and projects that, while not
+graphical, are important in the area of property specification.
 
 \paragraph{Property Specification Patterns (PSP)}
 
