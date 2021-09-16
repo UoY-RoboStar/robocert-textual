@@ -26,7 +26,7 @@ At the moment, our \mdeadlinestep{} construct resembles a UML duration
 constraint with minimum duration \(0\).  We do not support observations.
 
 \paragraph{Probabilistic features}
-None.  \todo{check}
+None of which we are aware, outside of extensions to STAIRS (see below).
 
 \subsection{MARTE}
 
@@ -82,9 +82,6 @@ ITU message sequence charts~\cite{Harel03-MSC} are a form of sequence diagram
 that serves as a precursor to many of the other notations
 discussed here, including version 2 and onward of UML.
 
-\paragraph{Timing features}
-MSCs have been extended to deal with timing constraints.
-
 \paragraph{High-level MSC}
 
 While MSCs do not directly support concepts such as choice and iteration
@@ -95,11 +92,25 @@ leads to high levels of expressivity (while still being possible to capture in
 terms of a semantics), but means that the overall diagram is no longer a single
 chart.
 
+\paragraph{Timing features}
+MSCs have been extended to deal with timing constraints.
+
+\paragraph{Probabilistic features}
+There are no innate probabilistic features in MSCs.
+
+\textcite{Krivanek09-PMSC}, in his bachelor dissertation, proposes a
+probabilistic extension of MSC that adds probability in two
+ways: first, in attaching probability \emph{distributions} to
+durations of messages; second, in the transitions of a HMSC.  While
+this proposal seems not to have been realised, the same
+dissertation mentions stochastic message sequence charts (which
+achieve the first point) and translation into deterministic and
+stochastic Petri nets (which achieve part of the second point).
+
 \subsection{Live Sequence Chart (LSC)}
 
 LSC~\cite{lsc} is a
-variant of ITU message sequence charts (similar to UML sequence
-diagrams).
+variant of MSC addressing a perceived lack of expressivity.
 LSC has several features that are of interest from a \langname{} perspective:
 
 \begin{itemize}
