@@ -149,7 +149,7 @@ in other notations:
 \begin{table}[htb!]
   \centering
 
-  \begin{tabular}{ll|lllllllll}
+  \begin{tabular}{rc|ccccccccc}
     \toprule
     
     & \rot{\thead{\langname}}
@@ -223,45 +223,45 @@ in other notations:
     & \OK  % MARTE
     & \OK  % STAIRS
     & \OK  % MSC
-    & ?  % HMSC
+    & \OK  % HMSC
     & \OK  % LSC
     & \NO  % PSC
     & ?  % PSP
     & ?  % AGLPT
     \\
     Synchronous
-    & \SOON?  % Us
+    & \SOON  % Us
     & \OK  % UML
     & \OK  % MARTE
     & \OK  % STAIRS
     & \NO  % MSC
-    & ?  % HMSC
+    & \NO  % HMSC
     & \OK  % LSC
     & \OK  % PSC
     & ?  % PSP
     & ?  % AGLPT
     \\
     Mandatory
-    & \NO?  % Us
+    & \NO  % Us
     & \ISH  % UML
     & \ISH  % MARTE
     & \ISH  % STAIRS
-    & ?  % MSC
-    & ?  % HMSC
+    & \NO  % MSC
+    & \NO  % HMSC
     & \OK  % LSC
     & \OK  % PSC
     & ?  % PSP
     & ?  % AGLPT
     \\
     Forbidden
-    & \NO?  % Us
+    & \NO  % Us
     & \ISH  % UML
     & \ISH  % MARTE
     & \ISH  % STAIRS
-    & ?  % MSC
-    & ?  % HMSC
-    & \OK  % LSC
-    & ?  % PSC
+    & \NO  % MSC
+    & \NO  % HMSC
+    & \NO  % LSC
+    & \OK  % PSC
     & ?  % PSP
     & ?  % AGLPT
     \\
@@ -307,7 +307,7 @@ in other notations:
     \midrule
     \multicolumn{7}{l}{\tsubhead{Other control flows}}
     \\
-    Loops (\mloopstep)
+    Loops
     & \OK  % Us
     & \OK  % UML
     & \OK  % MARTE
@@ -332,7 +332,7 @@ in other notations:
     & ?  % AGLPT
     \\
     Sub-charts
-    & \NO?  % Us
+    & \NO  % Us
     & \NO?  % UML
     & \NO?  % MARTE
     & \NO?  % STAIRS
@@ -364,9 +364,9 @@ in other notations:
     & \ISH  % MARTE
     & \INTIMED  % STAIRS
     & \ISH  % MSC
-    & ?  % HMSC
+    & \ISH  % HMSC
     & \ISH  % LSC
-    & \INTIMED?  % PSC
+    & \INTIMED  % PSC
     & ?  % PSP
     & ?  % AGLPT
     \\
@@ -376,7 +376,7 @@ in other notations:
     & \ISH  % MARTE
     & \INTIMED  % STAIRS
     & \ISH  % MSC
-    & ?  % HMSC
+    & \ISH  % HMSC
     & \ISH  % LSC
     & \INTIMED?  % PSC
     & ?  % PSP
@@ -400,7 +400,7 @@ in other notations:
     & \OK  % MARTE
     & \INTIMED  % STAIRS
     & \INTIMED  % MSC
-    & ?  % HMSC
+    & \INTIMED  % HMSC
     & \OK  % LSC
     & \INTIMED  % PSC
     & ?  % PSP
@@ -415,19 +415,19 @@ in other notations:
     & \NO  % MARTE
     & \NO  % STAIRS
     & \NO  % MSC
-    & \NO?  % HMSC
-    & \NO?  % LSC
+    & \NO  % HMSC
+    & \NO  % LSC
     & \INPROB  % PSC
     & ?  % PSP
     & ?  % AGLPT
     \\
     Alternative (\texttt{palt})
     & \SOON  % Us
-    & \NO?  % UML
+    & \NO  % UML
     & \NO  % MARTE
     & \INPROB  % STAIRS
-    & ?  % MSC
-    & ?  % HMSC
+    & \NO  % MSC
+    & \INPROB  % HMSC
     & \INPROB  % LSC
     & \NO  % PSC
     & ?  % PSP
@@ -441,9 +441,9 @@ in other notations:
     & \NO  % UML
     & \NO  % MARTE
     & \NO  % STAIRS
-    & ?  % MSC
-    & ?  % HMSC
-    & ?  % LSC
+    & \NO  % MSC
+    & \NO  % HMSC
+    & \NO  % LSC
     & \OK  % PSC
     & ?  % PSP
     & \ISH?  % AGLPT
@@ -453,8 +453,8 @@ in other notations:
     & \NO  % UML
     & \NO  % MARTE
     & \NO  % STAIRS
-    & ?  % MSC
-    & ?  % HMSC
+    & \NO  % MSC
+    & \NO  % HMSC
     & \OK  % LSC
     & \NO  % PSC
     & ?  % PSP
@@ -476,7 +476,7 @@ The symbols in this table have the following meaning:
 \item[\OK] Directly supported.
 \item[\SOON] Not yet supported, but
   support is planned.
-\item[\NO] Not supported or planned.
+\item[\NO] Not supported or planned, to the best of our knowledge.
 \item[\ISH] Not directly supported, but can be encoded using other
   features.
 \item[\ASST] Not directly supported in the
@@ -484,12 +484,11 @@ The symbols in this table have the following meaning:
   assertion language.  For example, \langname{} handles
   the difference between universal and existential
   quantifications in assertions.
-\item[\INTIMED] Supported in timed variants of this
+\item[\INTIMED] Supported, or encodable, in timed variants of this
   notation (for example, timed STAIRS).
-\item[\INPROB] Supported in
+\item[\INPROB] Supported, or encodable, in
   probabilistic variants of this
-  notation (for example, probabilistic PSC). 
-\item[?] No or incomplete data.
+  notation (for example, PTPSC).
 \end{description}
 
 %%% Local Variables:
