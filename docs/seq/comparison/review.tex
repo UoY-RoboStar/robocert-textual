@@ -221,30 +221,28 @@ diagram languages:
   spanning both axes;
 \item
   Often, \emph{some} notion of mandatory and provisional
-  (sometimes also forbidden) behaviour.
+  (sometimes also forbidden) behaviour;
 \item
-  Often, \emph{some} notion of time and duration constraints.  Where notations
-  do not have such constraints, extensions tend to appear later that add them.
+  Time and duration constraints, whether natively or through extension;
+\item
+  Support for probabilities, whether natively or through extension.
 \end{itemize}
 
 \paragraph{Differences}
 
 \begin{itemize}
-\item
-  The target semantics (see \cref{sec:semantics-comparison-review});
-\item
-  Whether time constraints are available and, if so, how they work
+\item The target semantics (see
+  \cref{sec:semantics-comparison-review});
+\item Whether time constraints are available and, if so, how they work
   (for instance, clocks versus duration spans);
-\item
-  Whether probabilistic choices are available;
-\item
-  The specifics of event ordering, especially with respect to communications
-  happening on vertically disjoint lifelines but horizontally
-  similar time-slices;
-\item
-  The precise form of the mandatory and provisional
-  behaviour specification; for instance, temperature in LSC
-  vs message types in PSC vs control blocks.
+\item Whether probabilistic operators are available and, if so, how
+  they work and their granularity;
+\item The specifics of event ordering, especially with respect to
+  communications happening on vertically disjoint lifelines but
+  horizontally similar time-slices;
+\item The precise form of the mandatory and provisional behaviour
+  specification; for instance, temperature in LSC vs message types in
+  PSC vs control blocks.
 \end{itemize}
 
 %%% Local Variables:
