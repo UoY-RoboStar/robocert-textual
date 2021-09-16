@@ -67,8 +67,8 @@ following such development processes:
 	parallels the distinction in CSP between
 	\(\intchoice\) and \(\extchoice\);
 \item
-	in the probabilistic form of STAIRS, an
-	\texttt{alt} operator where choices have associated probability
+	in its probabilistic form, a
+	\texttt{palt} operator where choices have associated probability
 	sets;
 \item
 	notions of \emph{supplementing}, \emph{narrowing}, and
@@ -106,8 +106,8 @@ LSC has several features that are of interest from a \langname{} perspective:
 \item visual distinction between mandatory and provisional (or `hot'
   and `cold') elements, the metaphor being that `hot' areas of the
   chart are too hot to stay in for any period of time;
-\item conditions that also have a dichotomy between `hot' (abort the
-  chart) and `cold' (exit control flow);
+\item conditions that may also be `hot' (abort the
+  chart) or `cold' (exit control flow);
 \item charts directly carrying universal or existential semantics (with the
   goal of allowing a transition from use-case analysis to specifications);
 \item time constraints using the setting, resetting, and comparing of timers;
@@ -129,7 +129,7 @@ given to UML.  They instead propose a profile of UML implementing the
 dichotomy as a modality, with a formal semantics in terms of B\"uchi automata.
 
 LSC variants are still in use today. 
-Chai et al. 2021~\cite{Chai21-PMLSC} report on a use of `parameterized modal
+Chai et al. ~\cite{Chai21-PMLSC} report on a use of `parameterized modal
 live sequence charts' to verify train control systems at run-time.
 
 \begin{remark}
