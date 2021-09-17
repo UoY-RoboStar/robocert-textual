@@ -94,9 +94,27 @@ sets.
 
 \subsection{Message Sequence Chart (MSC)}
 
-ITU message sequence charts~\cite{Harel03-MSC} are a form of sequence diagram
+ITU message sequence charts~\cite{Harel03-MSC} (recommendation Z.120)
+are a form of sequence diagram
 that serves as a precursor to many of the other notations
-discussed here, including version 2 and onward of UML.
+discussed here, including version 2 of UML.
+
+There have been several revisions of MSC:
+
+\begin{itemize}
+\item
+	MSC-93~\cite{MSC93} is the original iteration;
+\item
+	MSC-96~\cite{MSC96} adds (amongst other features) support for alternative
+	choice, parallel composition,
+	loops, optionality, and exceptions, largely resembling their UML
+	counterparts;
+\item
+	MSC-2000~\cite{MSC2000} adds (amongst other features) richer time primitives;
+\item
+	MSC-2004~\cite{MSC2004} and MSC-2011~\cite{MSC2011} (the most recent) are further
+ 	developments.
+\end{itemize}
 
 \paragraph{High-level MSC}
 
@@ -109,15 +127,17 @@ terms of a semantics), but means that the overall diagram is no longer a single
 chart.
 
 \paragraph{Control flow features}
-MSCs have very little inherent control flow, being primarily just
-sequences of messages (possibly with timing constraints)
+MSC originally had very little inherent control flow, being primarily just
+sequences of messages with basic timing constraints.  Subsequent iterations
+of MSC, as well as HMSC, have improved this.
 
 \paragraph{Timing features}
-As of MSC-96, MSCs had time constraints in the form of both interval
-constraints and timer/timeout pairs.
+MSCs have always had the ability to express the setting and timing-out of
+timers, though the syntax has varied.  MSC-2000~\cite{Haugen01-MSC2000} added a richer set of operators,
+such as duration constraints.
 
 \paragraph{Probabilistic features}
-There are no innate probabilistic features in MSCs.
+There are no innate probabilistic features in MSC.
 
 \textcite{Krivanek09-PMSC}, in his bachelor dissertation, proposes a
 probabilistic extension of MSC that adds probability in two

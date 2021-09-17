@@ -8,10 +8,20 @@ our approaches.
 
 This section reviews formal semantics development efforts for sequence diagram
 notations.
-A common theme in these developments is the
-targeting of automata, especially B\"uchi automata.  This
+These developments often
+target automata, especially B\"uchi automata; this
 is reflective of a relationship between sequence diagrams
 and linear temporal logic.
+Other approaches include:
+
+\begin{itemize}
+  \item trace semantics (as per the UML standard);
+  \item variations of Petri nets;
+  \item some characterisation of partial orders, such as posets;
+  \item reduction to some intermediate form (such as process algebras or other
+    sequence notations) to use the semantics of that form.  To target B\"uchi
+    automata, one might use fragments of LTL.
+\end{itemize}
 
 \paragraph{Micskei--Waeselynck survey of UML2}
 
@@ -110,6 +120,15 @@ Lima et al. than that of Jacobs and Simpson.
 multi-actor sequences, we'll pick whichever semantic elaboration gives a better
 textual notation.}
 
+\paragraph{Li and Li CSP semantics (2010)}
+
+A third semantics~\cite{Li10-SeqCSP} captures UML in CSP in a similar
+way to Jacobs and Simpson.  This semantics appears to be an ancestor of both
+of the approaches above, and captures only a small fragment of UML (for
+instance, the `alt', `loop', `break', and `opt' combined fragments only).
+This semantics backs a model-to-model
+transformation from an XML representation of sequence diagrams to CSP.
+
 \paragraph{Translation of SysML to HMSC}
 
 \textcite{Busard21-SDviaHMSC} consider the translation of SysML diagrams to high-level message sequence
@@ -173,9 +192,10 @@ and is compatible with the existing \robostar{} ecosystem as well as that of
 sequence charts in terms of timed lposets (labelled partially ordered
 sets).  Their paper also characterises other forms of semantics
 available for forms of MSC: process algebra, automata, partial order,
-and Petri nets.  While the process-algebra approach is similar in
+and Petri nets.  While the process-algebra approach~\cite{Mauw99-MSCOpSem} is similar in
 style to our \tockcsp{} semantics, it seems to target a bespoke
-algebra (providing, in turn, an operational semantics).
+algebra (to achieve an operational semantics, rather than a notion of
+refinement).
 
 \paragraph{LSC}
 
@@ -193,9 +213,12 @@ Property Sequence Chart (and its derivatives) is a layer atop linear
 temporal logic, which means that its operational semantics is in the
 form of B\"uchi automata.\footnote{ Micskei and Waeselynck also note
   that several semantic treatments for UML2 also target B\"uchi
-  automata.}  For TPSC, the target is timed B\"uchi automata; it is
-unclear what needs to be added to these automata for PTPSC \todo{?}.
+  automata.}  
 A denotational semantics in terms of invalid traces also exists.
+
+For TPSC, the target is timed B\"uchi automata; this also
+seems to be the target for PTPSC, with statistical hypothesis testing
+proposed to cover the additions~\cite{ptpsc}.
 
 %%% Local Variables:
 %%% mode: latex
