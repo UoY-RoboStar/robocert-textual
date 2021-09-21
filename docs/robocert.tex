@@ -31,6 +31,7 @@
 
 \begin{document}
 
+
 \frontmatter
 
 %
@@ -43,7 +44,7 @@
 \begin{tikzpicture}[remember picture,overlay]
   \draw (current page.center) node [fill=ocre!30!white,fill opacity=0.6,text opacity=1,inner sep=1cm]{
     \Huge\centering\bfseries\sffamily\parbox[c][][t]{\paperwidth}{\centering \@title\\[15pt] % Book title
-      {\Large Draft of \@date}\\[20pt] % Subtitle
+      {\Large Version \robocertversion\ifdraft --- draft of \@date\fi}\\[20pt] % Subtitle
       {\huge \@author}}}; % Author name
 \end{tikzpicture}
 \makeatother

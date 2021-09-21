@@ -21,10 +21,36 @@
 \newcommand{\rfcoptional}{\rfckw{optional}}
 
 
+%
+% LANGUAGE NAMES AND VERSIONS
+%
+
+% Typography for a Robo* language name.
+\newcommand{\robolang}[1]{{\sffamily\itshape #1}}
+
+% Standard Robo* language names follow:
+\newcommand{\robocert}{\robolang{RoboCert}}
+\newcommand{\robochart}{\robolang{RoboChart}}
+\newcommand{\robosim}{\robolang{RoboSim}}
+\newcommand{\robostar}{\robolang{RoboStar}}
+
+% Deprecated
+\newcommand{\langname}{\robocert}
+
+\newcommand{\robocertversion}{0.1}
+
+
+%
+% DRAFTING
+%
+
+\newif\ifdraft
+\drafttrue
+
 \colorlet{TodoColor}{ocre!70!white}
 
 % Open question.
-\newcommand{\todo}[1]{\textcolor{TodoColor}{(todo: #1)}}
+\newcommand{\todo}[1]{\ifdraft \textcolor{TodoColor}{(todo: #1)} \fi}
 % GitHub issue.
 \newcommand{\ghissue}[1]{\href{https://github.com/UoY-RoboStar/robocert-sequences/#1}{\##1}}
 % Combination of the two above
@@ -32,9 +58,9 @@
 % 2: description of the issue
 \newcommand{\ghtodo}[2]{\textcolor{TodoColor}{(todo (\ghissue{#1}): #2)}}
 
-\newcommand{\langname}{{\sffamily\itshape RoboCert}}
-\newcommand{\robochart}{{\sffamily\itshape RoboChart}}
-\newcommand{\robostar}{{\sffamily\itshape RoboStar}}
+%
+% TABLES
+%
 
 % table headings
 \newcommand{\thead}[1]{\textbf{#1}}
