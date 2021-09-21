@@ -30,7 +30,7 @@ class ActionGeneratorImpl implements ActionGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def dispatch generate(FinalAction it) '''SKIP'''
+	def dispatch generate(FinalAction it) '''STOP'''
 
 	/**
 	 * Generates CSP for a wait action.

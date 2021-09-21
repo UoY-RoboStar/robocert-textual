@@ -46,9 +46,12 @@ class SeqGroupParametricGenerator {
 	private def generateSequencesInner(Iterable<Sequence> sequences) '''
 		«FOR sequence : sequences SEPARATOR "\n"»
 			«sequence.name» =
-				«sequence.body.generate»
+				«sequence.generate»
 		«ENDFOR»
 	'''
-
 	
+	private def generate(Sequence it) '''
+		«body.generate»; -- end of defined steps
+		TCHAOS(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)
+	'''
 }
