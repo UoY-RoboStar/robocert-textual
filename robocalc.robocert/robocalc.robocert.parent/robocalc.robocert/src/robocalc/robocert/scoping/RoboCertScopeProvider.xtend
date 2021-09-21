@@ -10,8 +10,6 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.ConstAssignment
 import robocalc.robocert.model.robocert.OperationTopic
 import robocalc.robocert.model.robocert.EventTopic
-import circus.robocalc.robochart.RefExp
-import circus.robocalc.robochart.RoboChartPackage
 import robocalc.robocert.generator.utils.EObjectExtensions
 import robocalc.robocert.model.robocert.RAConstExpr
 

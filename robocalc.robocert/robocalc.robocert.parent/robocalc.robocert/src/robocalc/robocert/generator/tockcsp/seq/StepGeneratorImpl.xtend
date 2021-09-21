@@ -6,6 +6,8 @@ import robocalc.robocert.model.robocert.ActionStep
 import robocalc.robocert.model.robocert.LoopStep
 import robocalc.robocert.model.robocert.DeadlineStep
 import robocalc.robocert.generator.intf.seq.StepGenerator
+import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
+import robocalc.robocert.model.robocert.BranchStep
 
 /**
  * Generator for sequence steps.
@@ -13,9 +15,11 @@ import robocalc.robocert.generator.intf.seq.StepGenerator
  * This generator mainly just delegates into lower-level generators.
  */
 class StepGeneratorImpl implements StepGenerator {
-	@Inject extension ActionStepGenerator	
+	@Inject extension ActionStepGenerator
+	@Inject extension BranchStepGenerator
 	@Inject extension DeadlineGenerator
 	@Inject extension LoopGenerator
+	@Inject extension UnsupportedSubclassHandler
 	
 	override generate(SequenceStep it) { generateStep }
 	
@@ -27,7 +31,16 @@ class StepGeneratorImpl implements StepGenerator {
 	 * @return generated CSP for one sequence step.
 	 */
 	private def dispatch generateStep(ActionStep it) { generateActionStep }
-	
+
+
+	/**
+	 * Generates CSP for a branch step.
+	 * 
+	 * @param it  the loop step.
+	 * 
+	 * @return the generated CSP.
+	 */
+	private def dispatch generateStep(BranchStep it) { generateBranch }
 
 	/**
 	 * Generates CSP for a loop step.
@@ -54,5 +67,5 @@ class StepGeneratorImpl implements StepGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	private def dispatch generateStep(SequenceStep it) '''{- UNKNOWN STEP: «it» -} STOP'''
+	private def dispatch generateStep(SequenceStep it) { unsupported("step", "STOP") }
 }

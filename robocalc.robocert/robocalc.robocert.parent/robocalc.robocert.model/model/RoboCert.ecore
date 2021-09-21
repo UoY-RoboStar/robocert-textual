@@ -295,8 +295,12 @@
         derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Subsequence">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="steps" lowerBound="1" upperBound="-1"
-        eType="#//SequenceStep" containment="true" eOpposite="#//SequenceStep/parent"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="steps" upperBound="-1"
+        eType="#//SequenceStep" containment="true" eOpposite="#//SequenceStep/parent">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The steps contained within the subsequence."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
@@ -309,6 +313,12 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="1"
         eType="#//SequenceAction" containment="true" eOpposite="#//SequenceAction/step"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
+        eType="#//Temperature">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The temperature of this action."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedMessageSet" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//SequenceGroup"
@@ -384,6 +394,33 @@
   <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="#//StepWithBody">
     <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//RAExpr"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BranchStep" abstract="true" eSuperTypes="#//SequenceStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Abstract step containing one or more branches."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="branches" lowerBound="1"
+        upperBound="-1" eType="#//Subsequence" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The branches available in this step."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AlternativeStep" eSuperTypes="#//BranchStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An alternative choice step."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
+        eType="#//Temperature">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The temperature of this alternative."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InterleaveStep" eSuperTypes="#//BranchStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An interleaving composition step."/>
+    </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//StepWithBody #//OptionallyNamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
@@ -487,6 +524,21 @@
     <eLiterals name="IS_OBSERVED" value="1">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="All behaviours of the sequence are observable on the target."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Temperature">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Temperature modality."/>
+    </eAnnotations>
+    <eLiterals name="COLD">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Cold temperature; no obligation on model to ensure progress."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="HOT" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Hot temperature; obligation on model to ensure progress."/>
       </eAnnotations>
     </eLiterals>
   </eClassifiers>

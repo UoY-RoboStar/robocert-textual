@@ -69,7 +69,7 @@ class Instantiation {
 @genmodel(documentation="Assigns a value to one or more constants.")
 class ConstAssignment {
 	@genmodel(documentation="The constant(s) being assigned.")
-	ref robochart.Variable[1..*] constants;
+	ref robochart.Variable[+] constants;
 	
 	@genmodel(documentation="The expression containing the new value of the constant(s).")
 	val RAExpr[1] value;
@@ -287,11 +287,8 @@ class Sequence extends robochart.NamedElement, CSPProcessSource {
  * A sequence of steps, forming part or all of a sequence diagram.
  */
 class Subsequence {
-	/**
-	 * The steps contained within the subsequence.
-	 * There is always at least one step.
-	 */
-	val SequenceStep[+]#parent steps;
+	@genmodel(documentation="The steps contained within the subsequence.")
+	val SequenceStep[*]#parent steps;
 	
 	/**
 	 * The parent sequence.
@@ -322,6 +319,9 @@ class ActionStep extends SequenceStep {
 	 * The action proper.
 	 */
 	val SequenceAction[1]#step action;
+	
+	@genmodel(documentation="The temperature of this action.")
+	attr Temperature[1] temperature;
 }
 
 /**
@@ -512,6 +512,22 @@ class DeadlineStep extends StepWithBody {
 	 * block.
 	 */
 	val RAExpr[1] units;
+}
+
+@genmodel(documentation="Abstract step containing one or more branches.")
+abstract class BranchStep extends SequenceStep {
+	@genmodel(documentation="The branches available in this step.")
+	val Subsequence[+] branches;
+}
+
+@genmodel(documentation="An alternative choice step.")
+class AlternativeStep extends BranchStep {
+	@genmodel(documentation="The temperature of this alternative.")
+	attr Temperature[1] temperature;
+}
+
+@genmodel(documentation="An interleaving composition step.")
+class InterleaveStep extends BranchStep {
 }
 
 /**
@@ -772,4 +788,14 @@ enum SequencePropertyType {
 
 	@genmodel(documentation="All behaviours of the sequence are observable on the target.")
 	IS_OBSERVED;
+}
+
+// Unsorted
+
+@genmodel(documentation="Temperature modality.")
+enum Temperature {
+	@genmodel(documentation="Cold temperature; no obligation on model to ensure progress.")
+	COLD;
+	@genmodel(documentation="Hot temperature; obligation on model to ensure progress.")
+	HOT;	
 }

@@ -210,7 +210,8 @@ World:
 SequenceStep:
 	'within' {DeadlineStep} units=TimeUnits body=Subsequence |
 	LoopStep |
-	{ActionStep} gap=Gap action=SequenceAction
+	BranchStep |
+	{ActionStep} gap=Gap action=SequenceAction (temperature=Temperature)?
 ;
 
 /**
@@ -271,6 +272,28 @@ LoopBound:
  */
 SilentInfiniteLoopBound returns LoopBound:
 	{InfiniteLoopBound}
+;
+
+/**
+ * A branching construct.
+ */
+BranchStep:
+	(
+		'in'? 'parallel' {InterleaveStep} |
+		'choice' {AlternativeStep} (':' temperature=Temperature)?
+	)
+	'{'
+		branches += Subsequence
+		(',' branches += Subsequence)*
+	'}'
+;
+
+/**
+ * A temperature specification.
+ */
+enum Temperature:
+	COLD="cold" |
+	HOT="hot"
 ;
 
 /**
