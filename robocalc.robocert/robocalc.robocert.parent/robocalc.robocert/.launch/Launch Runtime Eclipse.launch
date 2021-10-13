@@ -12,7 +12,7 @@
     <booleanAttribute key="clearws" value="false"/>
     <booleanAttribute key="clearwslog" value="false"/>
     <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/Launch Runtime Eclipse"/>
-    <booleanAttribute key="default" value="true"/>
+    <booleanAttribute key="default" value="false"/>
     <setAttribute key="deselected_workspace_bundles">
         <setEntry value="circus.robocalc.robochart"/>
         <setEntry value="circus.robocalc.robochart.assertions"/>
@@ -20,9 +20,6 @@
         <setEntry value="circus.robocalc.robochart.assertions.tests"/>
         <setEntry value="circus.robocalc.robochart.assertions.ui"/>
         <setEntry value="circus.robocalc.robochart.assertions.ui.tests"/>
-        <setEntry value="circus.robocalc.robochart.edit"/>
-        <setEntry value="circus.robocalc.robochart.editor"/>
-        <setEntry value="circus.robocalc.robochart.generator.csp"/>
     </setAttribute>
     <stringAttribute key="featureDefaultLocation" value="workspace"/>
     <stringAttribute key="featurePluginResolution" value="workspace"/>
@@ -76,8 +73,9 @@
         <setEntry value="com.sun.jna.platform@default:default"/>
         <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="io.github.classgraph@default:default"/>
+        <setEntry value="jakarta.activation@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
-        <setEntry value="javax.activation*1.2.2.v20201119-1642@default:default"/>
+        <setEntry value="javax.activation*2.0.0.v20201118-1818@default:default"/>
         <setEntry value="javax.annotation@default:default"/>
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.xml@default:default"/>
@@ -283,13 +281,20 @@
         <setEntry value="org.eclipse.jdt.junit@default:default"/>
         <setEntry value="org.eclipse.jdt.launching@default:default"/>
         <setEntry value="org.eclipse.jdt.ui@default:default"/>
-        <setEntry value="org.eclipse.jetty.http@default:default"/>
-        <setEntry value="org.eclipse.jetty.io@default:default"/>
-        <setEntry value="org.eclipse.jetty.security@default:default"/>
-        <setEntry value="org.eclipse.jetty.server@default:default"/>
-        <setEntry value="org.eclipse.jetty.servlet@default:default"/>
-        <setEntry value="org.eclipse.jetty.util.ajax@default:default"/>
-        <setEntry value="org.eclipse.jetty.util@default:default"/>
+        <setEntry value="org.eclipse.jetty.http*10.0.6@default:default"/>
+        <setEntry value="org.eclipse.jetty.http*9.4.37.v20210219@default:default"/>
+        <setEntry value="org.eclipse.jetty.io*10.0.6@default:default"/>
+        <setEntry value="org.eclipse.jetty.io*9.4.37.v20210219@default:default"/>
+        <setEntry value="org.eclipse.jetty.security*10.0.6@default:default"/>
+        <setEntry value="org.eclipse.jetty.security*9.4.37.v20210219@default:default"/>
+        <setEntry value="org.eclipse.jetty.server*10.0.6@default:default"/>
+        <setEntry value="org.eclipse.jetty.server*9.4.37.v20210219@default:default"/>
+        <setEntry value="org.eclipse.jetty.servlet*10.0.6@default:default"/>
+        <setEntry value="org.eclipse.jetty.servlet*9.4.37.v20210219@default:default"/>
+        <setEntry value="org.eclipse.jetty.util*10.0.6@default:default"/>
+        <setEntry value="org.eclipse.jetty.util*9.4.37.v20210219@default:default"/>
+        <setEntry value="org.eclipse.jetty.util.ajax*10.0.6@default:default"/>
+        <setEntry value="org.eclipse.jetty.util.ajax*9.4.37.v20210219@default:default"/>
         <setEntry value="org.eclipse.jface.databinding@default:default"/>
         <setEntry value="org.eclipse.jface.notifications@default:default"/>
         <setEntry value="org.eclipse.jface.text@default:default"/>
@@ -422,7 +427,7 @@
         <setEntry value="org.junit.platform.engine@default:default"/>
         <setEntry value="org.junit.platform.launcher@default:default"/>
         <setEntry value="org.junit@default:default"/>
-        <setEntry value="org.objectweb.asm*9.1.0.v20210209-1849@default:default"/>
+        <setEntry value="org.objectweb.asm@default:default"/>
         <setEntry value="org.opentest4j@default:default"/>
         <setEntry value="org.sat4j.core@default:default"/>
         <setEntry value="org.sat4j.pb@default:default"/>

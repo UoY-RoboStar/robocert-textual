@@ -75,7 +75,7 @@ CSPGroup:
  */
 CSPFragment:
 	( 'event' 'set' {EventSetCSPFragment} name=ID
-	| 'process' {ProcessCSPFragment} name=ID (':' 'events' 'in' events=[CSPContextSource|QualifiedName])?
+	| 'process' {ProcessCSPFragment} name=ID ('(' 'events' 'in' events=[CSPContextSource|QualifiedName] ')')?
 	| 'inline' {InlineCSPFragment} name=ID?
 	)
 	contents=(CSP_CODE|SHORT_CODE)
@@ -132,8 +132,8 @@ RAExpr:
  * sequences and message sets.
  */
 SequenceGroup:
-	'sequence' 'group' name=ID ':' target=Target '->' world=World
-	instantiation=Instantiation
+	'sequence' 'group' name=ID
+	'(' target=Target '->' world=World instantiation=Instantiation ')'
 	'{'
 	(sequences+=Sequence | messageSets += NamedMessageSet)*
 	'}'
@@ -211,7 +211,7 @@ SequenceStep:
 	'within' {DeadlineStep} units=TimeUnits body=Subsequence |
 	LoopStep |
 	BranchStep |
-	{ActionStep} gap=Gap action=SequenceAction (temperature=Temperature)?
+	{ActionStep} gap=Gap action=SequenceAction OptTemperature
 ;
 
 /**
@@ -243,17 +243,11 @@ fragment AsName *:
  * Without a specification, loops will iterate forever.
  */
 LoopStep:
-	'loop' {LoopStep} 
-	// Slightly complicated rule to ensure that, if the loop has an explicit
-	// bound, ':' is optional if there is no name, but mandatory (for
-	// disambiguation) if there is one.
-	( bound=SilentInfiniteLoopBound // loop {
-	| ':'? bound=LoopBound // loop exactly 4 times {
-	| name=ID
-		( bound=SilentInfiniteLoopBound // loop L {
-		| ':' bound=LoopBound // loop L: exactly 4 times {
-		)
+	'loop' {LoopStep}
+	( bound=SilentInfiniteLoopBound // loop, loop as N
+	| '(' bound=LoopBound ')' // loop (bound), loop (bound) as N
 	)
+	AsName
 	body=Subsequence
 ;
 
@@ -280,12 +274,19 @@ SilentInfiniteLoopBound returns LoopBound:
 BranchStep:
 	(
 		'in'? 'parallel' {InterleaveStep} |
-		'choice' {AlternativeStep} (':' temperature=Temperature)?
+		'choice' {AlternativeStep} OptTemperature
 	)
 	'{'
 		branches += Subsequence
 		(',' branches += Subsequence)*
 	'}'
+;
+
+/**
+ * Captures an optional temperature with no other related side-material.
+ */
+fragment OptTemperature *:
+	('(' temperature=Temperature ')')?
 ;
 
 /**
