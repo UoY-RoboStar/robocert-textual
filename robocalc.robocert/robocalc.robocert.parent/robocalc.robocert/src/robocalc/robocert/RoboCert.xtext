@@ -182,7 +182,7 @@ fragment ConstName *:
  * A target of a sequence diagram.
  */
 Target:
-	 ('module' {RCModuleTarget} module=[RCModule|QualifiedName]) AsName
+	 ('module' {RCModuleTarget} (name=ID ':')? module=[RCModule|QualifiedName])
 ;
 
 /**
@@ -231,24 +231,22 @@ TimeUnits returns RAExpr:
 ;
 
 /**
- * Fragment for tacking a name onto the end of an OptionallyNamedElement.
- */
-fragment AsName *:
-	('as' name=ID)?
-;
-
-/**
  * A loop.
  * 
  * Without a specification, loops will iterate forever.
  */
 LoopStep:
 	'loop' {LoopStep}
-	( bound=SilentInfiniteLoopBound // loop, loop as N
-	| '(' bound=LoopBound ')' // loop (bound), loop (bound) as N
-	)
-	AsName
+	(name=ID)?
+	bound=MaybeLoopBound
 	body=Subsequence
+;
+
+/**
+ * A loop bound, possibly.  Defaults to InfiniteLoopBound.
+ */
+MaybeLoopBound returns LoopBound:
+	{InfiniteLoopBound} | '(' LoopBound ')'
 ;
 
 /**
@@ -259,13 +257,6 @@ LoopBound:
 	'exactly' {DefiniteLoopBound} times=RAExpr 'times' |
 	'at' 'least' {LowerLoopBound} lowerTimes=RAExpr 'times' |
 	'between' {RangeLoopBound} lowerTimes=RAExpr 'and' upperTimes=RAExpr 'times'
-;
-
-/**
- * Used to default to an infinite loop bound if none is explicitly given.
- */
-SilentInfiniteLoopBound returns LoopBound:
-	{InfiniteLoopBound}
 ;
 
 /**
