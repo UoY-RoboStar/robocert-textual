@@ -40,7 +40,7 @@ class ActionStepGenerator {
 	 * 
 	 * @return the generated CSP-M.
 	 */
-	private def generateGap(ActionStep it) '''«GAP_PROC»(«generateGapSet», «action.generateActionSet»)'''
+	private def generateGap(ActionStep it) '''«GAP_PROC»(«generateGapSet», «generateActionSet»)'''
 
 	/**
 	 * Optimises the gap set in place, then generates it.
@@ -58,22 +58,18 @@ class ActionStepGenerator {
 	}
 
 	/**
-	 * Generates a CSP event set for an action.
+	 * Generates the gap action set for an action step.
 	 * 
 	 * This is to avoid the possibility of both the gap and the action
 	 * accepting the same events.
 	 * 
-	 * Eventually we'd like to roll this into the main allow set generation,
-	 * but some issues with making sure the resulting set 
-	 * 
-	 * @param it  the gap for which we are generating CSP.
-	 * @param action  the action after the gap.
+	 * @param it  the step for which we are generating CSP.
 	 * 
 	 * @return the generated CSP sequence.
 	 */
-	private def generateActionSet(SequenceAction action)
-	'''{|«FOR i : action.messageSpecs.toIterable SEPARATOR ','»«i.generateCSPEventSet»«ENDFOR»|}'''
-
+	private def generateActionSet(ActionStep it) {
+		action.messageSpecs.toIterable.generateBulkCSPEventSet
+	}
 	
 	private def dispatch Iterator<MessageSpec> messageSpecs(ArrowAction it) {
 		Iterators.singletonIterator(body)

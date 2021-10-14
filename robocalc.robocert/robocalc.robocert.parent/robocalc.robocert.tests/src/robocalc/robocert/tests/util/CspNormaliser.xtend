@@ -15,6 +15,6 @@ class CspNormaliser {
 	 * @returns a tidied string.
 	 */
 	def String tidy(CharSequence it) {
-		toString.strip.replaceAll("  *", " ")
+		toString.strip.replaceAll("\\s+", " ")
 	}
 }

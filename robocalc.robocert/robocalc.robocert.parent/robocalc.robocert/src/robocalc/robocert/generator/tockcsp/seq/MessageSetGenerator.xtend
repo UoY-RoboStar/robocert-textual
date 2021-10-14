@@ -31,8 +31,9 @@ class MessageSetGenerator {
 	 * 
 	 * @return generated CSP for the gap message set.
 	 */
-	def dispatch CharSequence generate(
-		ExtensionalMessageSet it) '''{|«FOR g : messages SEPARATOR ', '»«g.generateCSPEventSet»«ENDFOR»|}'''
+	def dispatch CharSequence generate(ExtensionalMessageSet it) {
+		messages.generateBulkCSPEventSet
+	}
 
 	/**
 	 * Generates a CSP event set for a universe gap message set.

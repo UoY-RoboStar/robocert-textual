@@ -2,43 +2,80 @@ package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Argument
-import robocalc.robocert.model.robocert.ExpressionArgument
 import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSpec
-import robocalc.robocert.model.robocert.RestArgument
-import robocalc.robocert.generator.utils.TopicExtensions
 import robocalc.robocert.generator.utils.TargetExtensions
+import robocalc.robocert.model.robocert.WildcardArgument
 
 /**
  * Generates CSP for various aspects of message specs.
  */
 class MessageSpecGenerator {
-	@Inject extension TopicExtensions
 	@Inject extension TopicGenerator
 	@Inject extension TargetExtensions
-	@Inject extension ExpressionGenerator
+	@Inject extension ArgumentGenerator
 
 	/**
-	 * Generates a CSP event set for a gap message spec (less the set delimiters).
+	 * Generates a CSP prefix for one message spec.
+	 * 
+	 * @param it  the spec for which we are generating CSP.
+	 * 
+	 * @return generated CSP for the message spec.
+	 */
+	def generatePrefix(MessageSpec it)
+		'''«generateChannel»«FOR x: arguments»«x.generateForPrefix»«ENDFOR»'''
+
+	/**
+	 * Generates a CSP event set for multiple message specs.
+	 * 
+	 * @param it  the specs for which we are generating CSP.
+	 * 
+	 * @return generated CSP for the event set of multiple message spec.
+	 */
+	def generateBulkCSPEventSet(Iterable<MessageSpec> it)
+		'''Union({«FOR x: it SEPARATOR ','»«x.generateCSPEventSet»«ENDFOR»})'''
+
+	// TODO(@MattWindsor91): optimise the above
+
+	/**
+	 * Generates a CSP event set for a message spec.
 	 * 
 	 * @param it  the spec for which we are generating CSP.
 	 * 
 	 * @return generated CSP for the event set of one message spec.
 	 */
-	def generateCSPEventSet(MessageSpec it)
-		'''«generateHeader»«arguments.generateArguments»'''
+	def generateCSPEventSet(MessageSpec it) {
+		val wcs = wildcards
+		if (wcs.empty) {
+			'''{| «generatePrefix» |}'''
+		} else {
+			'''{ «generateCSPEventSetComprehensionLHS» | «topic.generateRanges(wcs)» }'''
+		}
+	}
 
-	/**
-	 * Generates a CSP prefix for one sequence arrow action.
-	 * 
-	 * @param spec  the spec for which we are generating CSP.
-	 * 
-	 * @return generated CSP for the message spec.
-	 */
-	def generatePrefix(MessageSpec it)
-		'''«generateHeader»«arguments.generateArguments»«generateFiller»'''
+	private def generateCSPEventSetComprehensionLHS(MessageSpec it) '''
+		«generateChannel»«FOR x: arguments.indexed»«x.value.generateForSet(x.key)»«ENDFOR»
+	'''
+
+	// TODO(@MattWindsor91): reimplement filler, simplifications
+
+	private def Iterable<Integer> wildcards(MessageSpec it) {
+		arguments.indexed.filter[value.binding].map[key]
+	}
 	
-	private def generateHeader(MessageSpec it)
+	// TODO(@MattWindsor91): move to metamodel
+	private def isBinding(Argument it) {
+		// for now
+		it instanceof WildcardArgument
+	}
+	
+	/**
+	 * Generates the main message channel for a message spec.
+	 * 
+	 * This needs to be extended with the arguments for a prefix, and
+	 * lifted into a set comprehension for an event set.
+	 */
+	private def generateChannel(MessageSpec it)
 		'''«namespace»::«topic.generate»«IF topic.hasDirection».«direction.cspDir»«ENDIF»'''
 	
 	private def getNamespace(MessageSpec it) {
@@ -55,41 +92,6 @@ class MessageSpecGenerator {
 	 * @return a placeholder character sequence.
 	 */
 	private def missingNamespace(MessageSpec it) '''{- missing namespace: «it» -} MISSING'''
-	
-	private def<T extends Argument> generateArguments(Iterable<T> it)
-		'''«FOR x: it»«x.generateArgument»«ENDFOR»'''
-
-	/**
-	 * Generates any prefix '?_' padding induced by a rest argument.
-	 */	
-	private def generateFiller(MessageSpec it)
-		'''«FOR x: parametersToFill.toIterable»?_«ENDFOR»'''
-	
-	private def parametersToFill(MessageSpec it) {
-		val amount = arguments.takeWhile[!(it instanceof RestArgument)].length
-		topic.params.drop(amount)
-	}
-	
-	/**
-	 * Generates an expression argument.
-	 * 
-	 * Right now, we just generate the expression inline and hope the result
-	 * is well-formed CSP.  This will eventually change for non-literal
-	 * expressions.
-	 */
-	private def dispatch generateArgument(ExpressionArgument it)
-		'''.«expr.generate»'''
-	
-	/**
-	 * Generates a 'rest' argument.
-	 * 
-	 * This doesn't actually expand to anything, as we handle filling in
-	 * rest arguments separately.
-	 */	
-	private def dispatch generateArgument(RestArgument it) ''''''
-	
-	private def dispatch generateArgument(Argument it)
-		'''{- UNKNOWN ARGUMENT: «it» -}'''
 		
 	def private cspDir(MessageDirection it) {
 		switch(it) {

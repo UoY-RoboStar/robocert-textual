@@ -30,7 +30,7 @@ class ExpressionGenerator {
 	def dispatch generate(RAIntLit it) '''«value»'''
 	
 	/**
-	 * Generates an expression for an integer literal.
+	 * Generates an expression for RoboChart constant.
 	 * 
 	 * @param it  the expression to generate.
 	 * @return  CSP-M for the expression.

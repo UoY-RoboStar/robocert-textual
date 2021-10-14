@@ -86,8 +86,13 @@ class MessageSpecFactory {
 		]
 	}
 
-	def Argument restArg() {
-		rcert.createRestArgument
+	/**
+	 * Shorthand for creating a wildcard argument.
+	 * 
+	 * @return  a wildcard argument.
+	 */
+	def Argument wildcardArg() {
+		rcert.createWildcardArgument
 	}
 
 	def MessageTopic topic(Event e) {

@@ -3,11 +3,19 @@ package robocalc.robocert.generator.tockcsp.seq
 import robocalc.robocert.model.robocert.EventTopic
 import robocalc.robocert.model.robocert.OperationTopic
 import robocalc.robocert.model.robocert.MessageTopic
+import com.google.inject.Inject
+import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
+import circus.robocalc.robochart.generator.csp.untimed.TypeGenerator
+import circus.robocalc.robochart.Type
 
 /**
  * Generates CSP for message topics.
  */
 class TopicGenerator {
+	@Inject extension TypeGenerator
+	@Inject extension ArgumentGenerator
+	@Inject extension UnsupportedSubclassHandler
+	
 	/**
 	 * Generates CSP for an event topic.
 	 * 
@@ -36,7 +44,9 @@ class TopicGenerator {
 	 * 
 	 * @return generated CSP.
 	 */
-	def dispatch CharSequence generate(MessageTopic it) '''{- unsupported topic: topic=«it» -} tock'''
+	def dispatch CharSequence generate(MessageTopic it) {
+		unsupported("topic", "tock")
+	}
 
 	/**
 	 * Gets whether the CSP semantics of this topic requires an explicit
@@ -48,5 +58,24 @@ class TopicGenerator {
 	 */
 	def boolean hasDirection(MessageTopic it) {
 		it instanceof EventTopic
+	}
+	
+	
+	def generateRanges(MessageTopic it, Iterable<Integer> indices)
+	    '''«FOR i : indices SEPARATOR ', '»
+			«comprehensionVar(i)» <- «paramTypeAt(i)?.compileType ?: "{- missing type -} int"»
+		«ENDFOR»'''
+	
+	private def dispatch Type paramTypeAt(EventTopic it, int index) {
+		index == 0 ? event.type : null
+	}
+	
+	private def dispatch Type paramTypeAt(OperationTopic it, int index) {
+		val it = operation.parameters
+		index < size ? get(index).type : null
+	}
+	
+	private def dispatch Type paramTypeAt(MessageTopic it, int index) {
+		null
 	}
 }

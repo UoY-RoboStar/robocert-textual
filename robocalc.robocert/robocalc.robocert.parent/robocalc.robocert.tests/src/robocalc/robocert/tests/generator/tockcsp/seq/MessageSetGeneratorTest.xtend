@@ -27,6 +27,6 @@ class MessageSetGeneratorTest {
 	 */
 	@Test
 	def void generateEmptyExtensional() {
-		"{||}".assertEquals(rf.createExtensionalMessageSet.generate.tidy)
+		"Union({})".assertEquals(rf.createExtensionalMessageSet.generate.tidy)
 	}
 }

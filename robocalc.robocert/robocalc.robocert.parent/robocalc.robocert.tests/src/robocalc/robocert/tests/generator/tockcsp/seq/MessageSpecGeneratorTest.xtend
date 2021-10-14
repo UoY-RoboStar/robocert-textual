@@ -28,7 +28,7 @@ class MessageSpecGeneratorTest {
 	 */
 	@Test
 	def void generatePrefixIntEventArrowWithRest() {
-		"test::event.in?_".assertEquals(intEvent.topic.arrowSpec(MessageDirection::INBOUND, restArg).generatePrefix.tidy)
+		"test::event.in?_".assertEquals(intEvent.topic.arrowSpec(MessageDirection::INBOUND, wildcardArg).generatePrefix.tidy)
 	}
 	
 	/**
@@ -46,8 +46,7 @@ class MessageSpecGeneratorTest {
 	 */
 	@Test
 	def void generateCSPEventSetIntEventArrowWithRest() {
-		// note the lack of ?_
-		"test::event.in".assertEquals(intEvent.topic.arrowSpec(MessageDirection::INBOUND, restArg).generateCSPEventSet.tidy)
+		"{ test::event.in.Wc__0 | Wc__0 <- int }".assertEquals(intEvent.topic.arrowSpec(MessageDirection::INBOUND, wildcardArg).generateCSPEventSet.tidy)
 	}
 	
 	/**
@@ -56,7 +55,7 @@ class MessageSpecGeneratorTest {
 	 */
 	@Test
 	def void generateCSPEventSetIntEventArrowWithInt() {
-		"test::event.out.56".assertEquals(intEvent.topic.arrowSpec(MessageDirection::OUTBOUND, intArg(56)).generateCSPEventSet.tidy)
+		"{| test::event.out.56 |}".assertEquals(intEvent.topic.arrowSpec(MessageDirection::OUTBOUND, intArg(56)).generateCSPEventSet.tidy)
 	}
 
 

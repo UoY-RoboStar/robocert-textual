@@ -391,7 +391,7 @@ enum MessageDirection:
  */
 Argument:
 	{ExpressionArgument} expr=RAExpr |
-	{RestArgument} '...'
+	{WildcardArgument} '_'
 ;
 
 /**

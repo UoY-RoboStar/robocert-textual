@@ -484,12 +484,27 @@
     <eLiterals name="INBOUND"/>
     <eLiterals name="OUTBOUND" value="1"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Argument" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ExpressionArgument" eSuperTypes="#//Argument">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//RAExpr"
-        containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Argument" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Argument pattern."/>
+    </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RestArgument" eSuperTypes="#//Argument"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ExpressionArgument" eSuperTypes="#//Argument">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Argument pattern specifying an expression."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//RAExpr"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The expression in question."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WildcardArgument" eSuperTypes="#//Argument">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Argument pattern specifying that one specific argument is unbound."/>
+    </eAnnotations>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceProperty" eSuperTypes="#//Property">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A property of a sequence."/>

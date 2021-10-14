@@ -746,28 +746,27 @@ enum MessageDirection {
 	OUTBOUND;
 }
 
-/**
- * An argument pattern.
- */
+//
+// ARGUMENTS
+//
+
+@genmodel(documentation="Argument pattern.")
 abstract class Argument {
 }
 
-/**
- * An argument pattern specifying an expression.
- */
+@genmodel(documentation="Argument pattern specifying an expression.")
 class ExpressionArgument extends Argument {
-	/**
-	 * The expression in question.
-	 */
+	@genmodel(documentation="The expression in question.")
 	val RAExpr[1] expr;
 }
 
-/**
- * An argument pattern specifying that all following arguments are unbound.
- */ 
-class RestArgument extends Argument {
+@genmodel(documentation="Argument pattern specifying that one specific argument is unbound.")
+class WildcardArgument extends Argument {
 }
 
+//
+// PROPERTIES
+//
 
 @genmodel(documentation="A property of a sequence.")
 class SequenceProperty extends Property {
