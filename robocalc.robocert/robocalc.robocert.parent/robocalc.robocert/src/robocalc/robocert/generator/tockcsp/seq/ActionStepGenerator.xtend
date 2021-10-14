@@ -68,7 +68,7 @@ class ActionStepGenerator {
 	 * @return the generated CSP sequence.
 	 */
 	private def generateActionSet(ActionStep it) {
-		action.messageSpecs.toIterable.generateBulkCSPEventSet
+		action.messageSpecs.toList.generateBulkCSPEventSet
 	}
 	
 	private def dispatch Iterator<MessageSpec> messageSpecs(ArrowAction it) {

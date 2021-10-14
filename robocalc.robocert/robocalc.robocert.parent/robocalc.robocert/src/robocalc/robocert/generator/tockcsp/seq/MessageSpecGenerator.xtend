@@ -6,6 +6,7 @@ import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.generator.utils.TargetExtensions
 import robocalc.robocert.model.robocert.WildcardArgument
+import java.util.List
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -28,14 +29,23 @@ class MessageSpecGenerator {
 	/**
 	 * Generates a CSP event set for multiple message specs.
 	 * 
-	 * @param it  the specs for which we are generating CSP.
+	 * @param it  the specs for which we are generating CSP (may be null)
 	 * 
 	 * @return generated CSP for the event set of multiple message spec.
 	 */
-	def generateBulkCSPEventSet(Iterable<MessageSpec> it)
-		'''Union({«FOR x: it SEPARATOR ','»«x.generateCSPEventSet»«ENDFOR»})'''
-
-	// TODO(@MattWindsor91): optimise the above
+	def CharSequence generateBulkCSPEventSet(List<MessageSpec> it) {
+		if (nullOrEmpty) {
+			'''{}'''
+		} else {
+			switch size {
+				case 1: get(0).generateCSPEventSet
+				case 2: '''union(«get(0).generateCSPEventSet», «get(1).generateCSPEventSet»)'''
+				default: '''Union({«FOR x: it SEPARATOR ','»«x.generateCSPEventSet»«ENDFOR»})'''
+			}
+		}
+	}
+	
+	// TODO(@MattWindsor91): optimise the above some more
 
 	/**
 	 * Generates a CSP event set for a message spec.
@@ -44,7 +54,7 @@ class MessageSpecGenerator {
 	 * 
 	 * @return generated CSP for the event set of one message spec.
 	 */
-	def generateCSPEventSet(MessageSpec it) {
+	def CharSequence generateCSPEventSet(MessageSpec it) {
 		val wcs = wildcards
 		if (wcs.empty) {
 			'''{| «generatePrefix» |}'''

@@ -12,6 +12,7 @@ import circus.robocalc.robochart.RoboChartFactory
 import circus.robocalc.robochart.Event
 import com.google.inject.Inject
 import static extension org.junit.jupiter.api.Assertions.*
+import robocalc.robocert.model.robocert.ExtensionalMessageSet
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -34,7 +35,17 @@ class MessageSpecFactory {
 		spec(t, dir, args) => [s|arrowParent.body = s]
 	}
 
-	def private spec(MessageTopic t, MessageDirection dir, Argument... args) {
+	/**
+	 * Creates a message spec with the given topic, direction, and
+	 * arguments.
+	 * 
+	 * @param t     the desired topic.
+	 * @param dir   the desired direction.
+	 * @param args  the desired arguments.
+	 * 
+	 * @return a constructed message spec.
+	 */
+	def spec(MessageTopic t, MessageDirection dir, Argument... args) {
 		rcert.createMessageSpec => [
 			topic = t
 			direction = dir
@@ -69,13 +80,19 @@ class MessageSpecFactory {
 	 * Sets up a gap message spec parent that has enough context for a
 	 * sequence group to be located.
 	 */
-	def private gapParent() {
-		rcert.createExtensionalMessageSet => [ g |
-			rcert.createActionStep => [
-				gap = g
-				parent = sseq
-			]
-		]
+	def gapParent() {
+		rcert.createExtensionalMessageSet => [ g | g.setupAsGap ]
+	}
+
+	/**
+	 * Hoists the given set into being the gap set for an action step that
+	 * is attached to the test subsequence.
+	 */
+	def private setupAsGap(ExtensionalMessageSet g) {
+		rcert.createActionStep => [
+			gap = g
+			parent = sseq
+		]		
 	}
 
 	def Argument intArg(int v) {
