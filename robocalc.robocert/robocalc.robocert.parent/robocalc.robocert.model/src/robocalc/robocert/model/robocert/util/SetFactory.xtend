@@ -21,6 +21,14 @@ class SetFactory {
 	}
 	
 	/**
+	 * @param element  the content to put into the set.
+	 * @return a singleton extensional set with the given element.
+	 */
+	def singleton(MessageSpec element) {
+		rf.createExtensionalMessageSet=>[messages.add(element)]
+	}
+	
+	/**
 	 * @return a universe set.
 	 */
 	def universe() {

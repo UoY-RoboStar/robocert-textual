@@ -12,7 +12,7 @@ import circus.robocalc.robochart.RoboChartFactory
 import circus.robocalc.robochart.Event
 import com.google.inject.Inject
 import static extension org.junit.jupiter.api.Assertions.*
-import robocalc.robocert.model.robocert.ExtensionalMessageSet
+import robocalc.robocert.model.robocert.MessageSet
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -87,8 +87,12 @@ class MessageSpecFactory {
 	/**
 	 * Hoists the given set into being the gap set for an action step that
 	 * is attached to the test subsequence.
+	 * 
+	 * Acts in-place.
+	 * 
+	 * @param g  the set to hoist.
 	 */
-	def private setupAsGap(ExtensionalMessageSet g) {
+	def setupAsGap(MessageSet g) {
 		rcert.createActionStep => [
 			gap = g
 			parent = sseq
