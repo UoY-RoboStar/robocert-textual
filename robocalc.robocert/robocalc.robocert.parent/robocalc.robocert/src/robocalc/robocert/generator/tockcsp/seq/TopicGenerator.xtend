@@ -7,6 +7,7 @@ import com.google.inject.Inject
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import circus.robocalc.robochart.generator.csp.untimed.TypeGenerator
 import circus.robocalc.robochart.Type
+import robocalc.robocert.model.robocert.BindingArgument
 
 /**
  * Generates CSP for message topics.
@@ -61,9 +62,9 @@ class TopicGenerator {
 	}
 	
 	
-	def generateRanges(MessageTopic it, Iterable<Integer> indices)
-	    '''«FOR i : indices SEPARATOR ', '»
-			«comprehensionVar(i)» <- «paramTypeAt(i)?.compileType ?: "{- missing type -} int"»
+	def generateRanges(MessageTopic it, Iterable<Pair<Integer, BindingArgument>> args)
+	    '''«FOR p : args SEPARATOR ', '»
+			«comprehensionVar(p.value?.name, p.key)» <- «paramTypeAt(p.key)?.compileType ?: "{- missing type -} int"»
 		«ENDFOR»'''
 	
 	private def dispatch Type paramTypeAt(EventTopic it, int index) {

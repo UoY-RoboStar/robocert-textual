@@ -93,6 +93,10 @@ abstract class Property {
 	attr boolean[1] isNegated;
 }
 
+//
+// EXPRESSIONS
+//
+
 @genmodel(documentation="A RoboCert expression.")
 abstract class RAExpr {
 }
@@ -107,6 +111,14 @@ class RAConstExpr extends RAExpr {
 class RAIntLit extends RAExpr {
 	@genmodel(documentation="The value of the expression.")
 	attr int[1] value;
+}
+
+@genmodel(documentation="A reference to a previously-bound RoboCert variable.")
+class BindingExpr extends RAExpr {
+	@genmodel(documentation="The source of the variable being bound.") 
+	ref BindingArgument[1] source;
+
+	// We could track a bidirectional reference here, but Xtext doesn't like it
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -760,8 +772,10 @@ class ExpressionArgument extends Argument {
 	val RAExpr[1] expr;
 }
 
-@genmodel(documentation="Argument pattern specifying that one specific argument is unbound.")
-class WildcardArgument extends Argument {
+@genmodel(documentation="Argument pattern binding the argument to an (optional) name.
+
+If the name is missing, the argument is discarded.")
+class BindingArgument extends Argument, OptionallyNamedElement {
 }
 
 //

@@ -1,12 +1,11 @@
 package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.Argument
+import java.util.List
+import robocalc.robocert.generator.utils.TargetExtensions
+import robocalc.robocert.model.robocert.BindingArgument
 import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSpec
-import robocalc.robocert.generator.utils.TargetExtensions
-import robocalc.robocert.model.robocert.WildcardArgument
-import java.util.List
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -23,8 +22,7 @@ class MessageSpecGenerator {
 	 * 
 	 * @return generated CSP for the message spec.
 	 */
-	def generatePrefix(MessageSpec it)
-		'''«generateChannel»«FOR x: arguments»«x.generateForPrefix»«ENDFOR»'''
+	def generatePrefix(MessageSpec it) '''«generateChannel»«FOR x : arguments»«x.generateForPrefix»«ENDFOR»'''
 
 	/**
 	 * Generates a CSP event set for multiple message specs.
@@ -38,15 +36,22 @@ class MessageSpecGenerator {
 			'''{}'''
 		} else {
 			switch size {
-				case 1: get(0).generateCSPEventSet
-				case 2: '''union(«get(0).generateCSPEventSet», «get(1).generateCSPEventSet»)'''
-				default: '''Union({«FOR x: it SEPARATOR ','»«x.generateCSPEventSet»«ENDFOR»})'''
+				case 1:
+					get(0).generateCSPEventSet
+				case 2: generatePairCSPEventSet(get(0), get(1))
+				default: generateManyCSPEventSet
 			}
 		}
 	}
 	
-	// TODO(@MattWindsor91): optimise the above some more
+	private def CharSequence generatePairCSPEventSet(MessageSpec fst, MessageSpec snd)
+		'''union(«fst.generateCSPEventSet», «snd.generateCSPEventSet»)'''
+		
+	private def generateManyCSPEventSet(List<MessageSpec> it)
+		'''Union({«FOR x : it SEPARATOR ','»«x.generateCSPEventSet»«ENDFOR»})'''
+	
 
+	// TODO(@MattWindsor91): optimise the above some more
 	/**
 	 * Generates a CSP event set for a message spec.
 	 * 
@@ -64,34 +69,34 @@ class MessageSpecGenerator {
 	}
 
 	private def generateCSPEventSetComprehensionLHS(MessageSpec it) '''
-		«generateChannel»«FOR x: arguments.indexed»«x.value.generateForSet(x.key)»«ENDFOR»
+		«generateChannel»«FOR x : arguments.indexed»«x.value.generateForSet(x.key)»«ENDFOR»
 	'''
 
 	// TODO(@MattWindsor91): reimplement filler, simplifications
+	private def Iterable<Pair<Integer, BindingArgument>> wildcards(MessageSpec it) {
+		// Indexes must be positions in the whole argument list, not just binding ones
+		// so we can't move 'indexed' later in the chain.
+		arguments.indexed.map [
+			switch v: value {
+				BindingArgument: (key -> v)
+				default: null
+			}
+		].filterNull
+	}
 
-	private def Iterable<Integer> wildcards(MessageSpec it) {
-		arguments.indexed.filter[value.binding].map[key]
-	}
-	
-	// TODO(@MattWindsor91): move to metamodel
-	private def isBinding(Argument it) {
-		// for now
-		it instanceof WildcardArgument
-	}
-	
 	/**
 	 * Generates the main message channel for a message spec.
 	 * 
 	 * This needs to be extended with the arguments for a prefix, and
 	 * lifted into a set comprehension for an event set.
 	 */
-	private def generateChannel(MessageSpec it)
-		'''«namespace»::«topic.generate»«IF topic.hasDirection».«direction.cspDir»«ENDIF»'''
-	
+	private def generateChannel(
+		MessageSpec it) '''«namespace»::«topic.generate»«IF topic.hasDirection».«direction.cspDir»«ENDIF»'''
+
 	private def getNamespace(MessageSpec it) {
 		target?.namespace ?: missingNamespace
 	}
-	
+
 	/**
 	 * Expands to a placeholder for a missing namespace.
 	 * 
@@ -102,9 +107,9 @@ class MessageSpecGenerator {
 	 * @return a placeholder character sequence.
 	 */
 	private def missingNamespace(MessageSpec it) '''{- missing namespace: «it» -} MISSING'''
-		
+
 	def private cspDir(MessageDirection it) {
-		switch(it) {
+		switch (it) {
 			case INBOUND:
 				"in"
 			case OUTBOUND:

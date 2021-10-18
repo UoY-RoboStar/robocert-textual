@@ -2,9 +2,9 @@ package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.ExpressionArgument
-import robocalc.robocert.model.robocert.WildcardArgument
 import robocalc.robocert.model.robocert.Argument
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
+import robocalc.robocert.model.robocert.BindingArgument
 
 /**
  * Generates fragments of CSP prefixes and event sets relating to arguments.
@@ -28,15 +28,21 @@ class ArgumentGenerator {
 	}	
 	
 	/**
-	 * Generates a wildcard argument in prefix position.
+	 * Generates a binding argument in prefix position.
 	 * 
-	 * This expands to a wildcard input at the CSP level.
+	 * This expands to an input at the CSP level.  If there is a name
+	 * associated with the binding, the input reflects it, with the intent that
+	 * the introduced variable is then used to store the input to memory.
+	 * Otherwise, the input is a wildcard.
 	 * 
-	 * @param it  the wildcard argument.
+	 * @param it  the binding argument.
 	 * 
-	 * @return  generated CSP-M for the wildcard argument.
+	 * @return  generated CSP-M for the binding argument.
 	 */	
-	def dispatch generateForPrefix(WildcardArgument it) '''?_'''
+	def dispatch generateForPrefix(BindingArgument it)
+		'''?«IF name === null»_«ELSE»«comprehensionVar(name, -1)»«ENDIF»'''
+	
+	// the -1 above is arbitrary; that code should not be reached.
 	
 	/**
 	 * Generates an unsupported argument in prefix position.
@@ -64,7 +70,7 @@ class ArgumentGenerator {
 	}	
 	
 	/**
-	 * Generates a wildcard argument in prefix position.
+	 * Generates a binding argument in prefix position.
 	 * 
 	 * This expands to a wildcard input at the CSP level.
 	 * 
@@ -75,8 +81,8 @@ class ArgumentGenerator {
 	 * 
 	 * @return  generated CSP-M for the wildcard argument.
 	 */	
-	def dispatch generateForSet(WildcardArgument it, int index)
-		'''.«comprehensionVar(index)»'''
+	def dispatch generateForSet(BindingArgument it, int index)
+		'''.«comprehensionVar(name, index)»'''
 	
 	/**
 	 * Generates an unsupported argument in prefix position.
@@ -96,13 +102,17 @@ class ArgumentGenerator {
 	/**
 	 * Generates the set comprehension variable for some bound or wildcard
 	 * variable.
+	 * 
+	 * If the name is non-null, it will be used for the variable; otherwise,
+	 * we use the index.
 	 *
 	 * This is chosen to be short, but unlikely to be used anywhere else.
-	 *  
-	 * @param index  the index of the variable.
 	 *
+	 * @param name   the optional name of the variable.
+	 * @param index  the index of the variable.
+	 * 
 	 * @return  the name that will be assigned to the set comprehension
 	 *          variable for that index.
 	 */
-	def comprehensionVar(int index) '''Wc__«index»'''
+	def comprehensionVar(String name, int index) '''Bnd__«name ?: index.toString»'''
 }

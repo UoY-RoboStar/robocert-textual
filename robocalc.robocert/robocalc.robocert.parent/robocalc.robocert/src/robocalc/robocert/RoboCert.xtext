@@ -117,7 +117,8 @@ enum CSPModel:
 
 RAExpr:
 	{RAIntLit} value=INT |
-	{RAConstExpr} constant=[Variable|QualifiedName]
+	{RAConstExpr} constant=[Variable|QualifiedName] |
+	'<-' {BindingExpr} source=[BindingArgument]
 ;
 
 
@@ -391,7 +392,7 @@ enum MessageDirection:
  */
 Argument:
 	{ExpressionArgument} expr=RAExpr |
-	{WildcardArgument} '_'
+	{BindingArgument} 'any' ('as' name=ID)?
 ;
 
 /**

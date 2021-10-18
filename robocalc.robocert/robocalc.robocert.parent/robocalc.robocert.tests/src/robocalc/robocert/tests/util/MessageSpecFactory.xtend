@@ -113,7 +113,18 @@ class MessageSpecFactory {
 	 * @return  a wildcard argument.
 	 */
 	def Argument wildcardArg() {
-		rcert.createWildcardArgument
+		rcert.createBindingArgument
+	}
+
+	/**
+	 * Shorthand for creating a bound argument with the given name.
+	 * 
+	 * @param n  the name to bind to.
+	 * 
+	 * @return  a bound argument.
+	 */
+	def Argument boundArg(String n) {
+		rcert.createBindingArgument => [name = n]
 	}
 
 	def MessageTopic topic(Event e) {

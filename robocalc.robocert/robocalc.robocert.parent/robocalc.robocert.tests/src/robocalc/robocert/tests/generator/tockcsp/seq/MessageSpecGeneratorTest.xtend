@@ -11,6 +11,7 @@ import static extension org.junit.Assert.assertEquals
 import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.tests.util.MessageSpecFactory
 import robocalc.robocert.tests.util.CspNormaliser
+import robocalc.robocert.model.robocert.MessageSpec
 
 /**
  * Tests the message spec CSP generator.
@@ -24,12 +25,22 @@ class MessageSpecGeneratorTest {
 
 	/**
 	 * Tests prefix generation of an arrow message set concerning an integer event
-	 * against an argument list containing a rest ('...') argument only.
+	 * against an argument list containing a wildcard ('any') argument only.
 	 */
 	@Test
-	def void generatePrefixIntEventArrowWithRest() {
-		"test::event.in?_".assertEquals(
-			intEvent.topic.arrowSpec(MessageDirection::INBOUND, wildcardArg).generatePrefix.tidy)
+	def void generatePrefixIntEventArrowWithWildcard() {
+		assertGeneratesPrefix(
+			intEvent.topic.arrowSpec(MessageDirection::INBOUND, wildcardArg),
+			"test::event.in?_"
+		)
+	}
+
+	@Test
+	def void generatePrefixIntEventArrowWithBinding() {
+		assertGeneratesPrefix(
+			intEvent.topic.arrowSpec(MessageDirection::INBOUND, boundArg("A")),
+			"test::event.in?Bnd__A"
+		)
 	}
 
 	/**
@@ -38,8 +49,12 @@ class MessageSpecGeneratorTest {
 	 */
 	@Test
 	def void generatePrefixIntEventArrowWithInt() {
-		"test::event.out.42".assertEquals(
-			intEvent.topic.arrowSpec(MessageDirection::OUTBOUND, intArg(42)).generatePrefix.tidy)
+		assertGeneratesPrefix(intEvent.topic.arrowSpec(MessageDirection::OUTBOUND, intArg(42)),
+		"test::event.out.42")
+	}
+	
+	def private assertGeneratesPrefix(MessageSpec it, CharSequence expected) {
+		expected.assertEquals(generatePrefix.tidy)
 	}
 
 	/**
@@ -48,7 +63,7 @@ class MessageSpecGeneratorTest {
 	 */
 	@Test
 	def void generateCSPEventSetIntEventArrowWithRest() {
-		"{ test::event.in.Wc__0 | Wc__0 <- int }".assertEquals(
+		"{ test::event.in.Bnd__0 | Bnd__0 <- int }".assertEquals(
 			intEvent.topic.arrowSpec(MessageDirection::INBOUND, wildcardArg).generateCSPEventSet.tidy)
 	}
 

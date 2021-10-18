@@ -140,6 +140,17 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BindingExpr" eSuperTypes="#//RAExpr">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A reference to a previously-bound RoboCert variable."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" lowerBound="1"
+        eType="#//BindingArgument">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The source of the variable being bound."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//Group">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group of raw CSP-M declarations.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
@@ -500,9 +511,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WildcardArgument" eSuperTypes="#//Argument">
+  <eClassifiers xsi:type="ecore:EClass" name="BindingArgument" eSuperTypes="#//Argument #//OptionallyNamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Argument pattern specifying that one specific argument is unbound."/>
+      <details key="documentation" value="Argument pattern binding the argument to an (optional) name.&#xD;&#xA;&#xD;&#xA;If the name is missing, the argument is discarded."/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceProperty" eSuperTypes="#//Property">
