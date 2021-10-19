@@ -3,9 +3,9 @@ package robocalc.robocert.generator.tockcsp.seq
 import com.google.inject.Inject
 import java.util.List
 import robocalc.robocert.generator.utils.TargetExtensions
-import robocalc.robocert.model.robocert.BindingArgument
 import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSpec
+import robocalc.robocert.model.robocert.WildcardArgument
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -73,12 +73,12 @@ class MessageSpecGenerator {
 	'''
 
 	// TODO(@MattWindsor91): reimplement filler, simplifications
-	private def Iterable<Pair<Integer, BindingArgument>> wildcards(MessageSpec it) {
+	private def Iterable<Pair<Integer, WildcardArgument>> wildcards(MessageSpec it) {
 		// Indexes must be positions in the whole argument list, not just binding ones
 		// so we can't move 'indexed' later in the chain.
 		arguments.indexed.map [
 			switch v: value {
-				BindingArgument: (key -> v)
+				WildcardArgument: (key -> v)
 				default: null
 			}
 		].filterNull

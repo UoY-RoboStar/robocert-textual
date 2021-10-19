@@ -116,7 +116,7 @@ class RAIntLit extends RAExpr {
 @genmodel(documentation="A reference to a previously-bound RoboCert variable.")
 class BindingExpr extends RAExpr {
 	@genmodel(documentation="The source of the variable being bound.") 
-	ref BindingArgument[1] source;
+	ref WildcardArgument[1] source;
 
 	// We could track a bidirectional reference here, but Xtext doesn't like it
 }
@@ -772,10 +772,10 @@ class ExpressionArgument extends Argument {
 	val RAExpr[1] expr;
 }
 
-@genmodel(documentation="Argument pattern binding the argument to an (optional) name.
+@genmodel(documentation="Argument pattern accepting any value.
 
-If the name is missing, the argument is discarded.")
-class BindingArgument extends Argument, OptionallyNamedElement {
+If this argument is given a name, it introduces a binding for the value.")
+class WildcardArgument extends Argument, OptionallyNamedElement {
 }
 
 //

@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.ExpressionArgument
 import robocalc.robocert.model.robocert.Argument
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
-import robocalc.robocert.model.robocert.BindingArgument
+import robocalc.robocert.model.robocert.WildcardArgument
 
 /**
  * Generates fragments of CSP prefixes and event sets relating to arguments.
@@ -39,7 +39,7 @@ class ArgumentGenerator {
 	 * 
 	 * @return  generated CSP-M for the binding argument.
 	 */	
-	def dispatch generateForPrefix(BindingArgument it)
+	def dispatch generateForPrefix(WildcardArgument it)
 		'''?«IF name === null»_«ELSE»«comprehensionVar(name, -1)»«ENDIF»'''
 	
 	// the -1 above is arbitrary; that code should not be reached.
@@ -81,7 +81,7 @@ class ArgumentGenerator {
 	 * 
 	 * @return  generated CSP-M for the wildcard argument.
 	 */	
-	def dispatch generateForSet(BindingArgument it, int index)
+	def dispatch generateForSet(WildcardArgument it, int index)
 		'''.«comprehensionVar(name, index)»'''
 	
 	/**
