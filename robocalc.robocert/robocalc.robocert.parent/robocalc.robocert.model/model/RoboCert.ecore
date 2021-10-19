@@ -398,19 +398,53 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StepWithBody" abstract="true" eSuperTypes="#//SequenceStep">
+  <eClassifiers xsi:type="ecore:EClass" name="BlockStep" abstract="true" eSuperTypes="#//SequenceStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Step that contains exactly one body.&#xD;&#xA;&#xD;&#xA;Often, but not always, these will be (what UML would call) combined&#xD;&#xA;fragments."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The body of the block."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="#//BlockStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Step imposing a termination deadline on a block."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//RAExpr"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Deadline, in time units after the start of the block."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//BlockStep #//OptionallyNamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="#//StepWithBody">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//RAExpr"
+  <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InfiniteLoopBound" eSuperTypes="#//LoopBound"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DefiniteLoopBound" eSuperTypes="#//LoopBound">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="#//RAExpr"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LowerLoopBound" eSuperTypes="#//LoopBound">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
+        eType="#//RAExpr" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RangeLoopBound" eSuperTypes="#//LoopBound">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
+        eType="#//RAExpr" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="upperTimes" lowerBound="1"
+        eType="#//RAExpr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BranchStep" abstract="true" eSuperTypes="#//SequenceStep">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Abstract step containing one or more branches."/>
+      <details key="documentation" value="Abstract step containing two or more branches."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="branches" lowerBound="1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="branches" lowerBound="2"
         upperBound="-1" eType="#//Subsequence" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The branches available in this step."/>
@@ -432,26 +466,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An interleaving composition step."/>
     </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//StepWithBody #//OptionallyNamedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="InfiniteLoopBound" eSuperTypes="#//LoopBound"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DefiniteLoopBound" eSuperTypes="#//LoopBound">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="#//RAExpr"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LowerLoopBound" eSuperTypes="#//LoopBound">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="#//RAExpr" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RangeLoopBound" eSuperTypes="#//LoopBound">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="#//RAExpr" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="upperTimes" lowerBound="1"
-        eType="#//RAExpr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//ActionStep"

@@ -501,45 +501,19 @@ class RCModuleTarget extends Target {
 // CONTROL FLOW
 //
 
-/**
- * A sequence step that contains exactly one body.
- *
- * Often, but not always, these will be (what UML would call) combined
- * fragments.
- */
-abstract class StepWithBody extends SequenceStep {
-	/**
-	 * The body of the action.
-	 */
+@genmodel(documentation="Step that contains exactly one body.
+
+Often, but not always, these will be (what UML would call) combined
+fragments.")
+abstract class BlockStep extends SequenceStep {
+	@genmodel(documentation="The body of the block.")
 	val Subsequence[1] body;
 }
 
-/**
- * A step containing one or more sequence elements alongside a deadline
- * for all of those elements to terminate, expressed in time units.
- */
-class DeadlineStep extends StepWithBody {
-	/**
-	 * The deadline, expressed as a number of time units after the start of the
-	 * block.
-	 */
+@genmodel(documentation="Step imposing a termination deadline on a block.")
+class DeadlineStep extends BlockStep {
+	@genmodel(documentation="Deadline, in time units after the start of the block.")
 	val RAExpr[1] units;
-}
-
-@genmodel(documentation="Abstract step containing one or more branches.")
-abstract class BranchStep extends SequenceStep {
-	@genmodel(documentation="The branches available in this step.")
-	val Subsequence[+] branches;
-}
-
-@genmodel(documentation="An alternative choice step.")
-class AlternativeStep extends BranchStep {
-	@genmodel(documentation="The temperature of this alternative.")
-	attr Temperature[1] temperature;
-}
-
-@genmodel(documentation="An interleaving composition step.")
-class InterleaveStep extends BranchStep {
 }
 
 /**
@@ -547,7 +521,7 @@ class InterleaveStep extends BranchStep {
  *
  * A loop action may have a name, which is useful when specifying break actions.
  */
-class LoopStep extends StepWithBody, OptionallyNamedElement {
+class LoopStep extends BlockStep, OptionallyNamedElement {
 	/**
 	 * The loop bound.
 	 */
@@ -617,6 +591,22 @@ class RangeLoopBound extends LoopBound {
 	 * Evaluated once only.
 	 */
 	val RAExpr[1] upperTimes;
+}
+
+@genmodel(documentation="Abstract step containing two or more branches.")
+abstract class BranchStep extends SequenceStep {
+	@genmodel(documentation="The branches available in this step.")
+	val Subsequence[2..*] branches;
+}
+
+@genmodel(documentation="An alternative choice step.")
+class AlternativeStep extends BranchStep {
+	@genmodel(documentation="The temperature of this alternative.")
+	attr Temperature[1] temperature;
+}
+
+@genmodel(documentation="An interleaving composition step.")
+class InterleaveStep extends BranchStep {
 }
 
 //
