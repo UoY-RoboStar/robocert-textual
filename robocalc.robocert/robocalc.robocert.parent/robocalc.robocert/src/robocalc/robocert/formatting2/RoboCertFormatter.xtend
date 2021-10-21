@@ -19,9 +19,6 @@ class RoboCertFormatter extends RoboChartFormatter {
 		for (group : rAPackage.groups) {
 			group.format
 		}
-		for (assertion : rAPackage.assertions) {
-			assertion.format
-		}
 	}
 
 	def dispatch void format(Sequence sequence, extension IFormattableDocument document) {

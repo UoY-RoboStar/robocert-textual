@@ -6,11 +6,12 @@ import robocalc.robocert.generator.tockcsp.seq.SeqPropertyLowerer
 import robocalc.robocert.model.robocert.Assertion
 import robocalc.robocert.model.robocert.CSPRefinementProperty
 import robocalc.robocert.model.robocert.SequenceProperty
+import robocalc.robocert.model.robocert.AssertionGroup
 
 /**
- * Generates CSP for assertions.
+ * Generates CSP for assertion groups.
  */
-class AssertionGenerator {
+class AssertionGroupGenerator {
 	@Inject extension CSPPropertyGenerator
 	@Inject extension SeqPropertyLowerer
 
@@ -18,9 +19,20 @@ class AssertionGenerator {
 	// TODO(@MattWindsor91): make both sides of a sequence CSPProcessSources, then more directly reduce sequences into CSP refinements.
 
 	/**
+	 * @return generated CSP for the assertion group.
+	 */
+	def CharSequence generate(AssertionGroup it) '''
+	-- BEGIN SEQUENCE GROUP «name ?: "(untitled)"»
+		«FOR a : assertions»
+			«a.generateAssertion»
+		«ENDFOR»
+	-- END SEQUENCE GROUP
+	'''
+
+	/**
 	 * @return generated CSP for the assertion.
 	 */
-	def CharSequence generate(Assertion it) '''
+	private def CharSequence generateAssertion(Assertion it) '''
 		-- Assertion «name»
 		«property.generateBody»
 	'''

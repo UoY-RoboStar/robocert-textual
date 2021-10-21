@@ -35,11 +35,11 @@ abstract class OptionallyNamedElement {
 
 @genmodel(documentation="A RoboCert package.")
 class RAPackage extends robochart.BasicPackage {
-	@genmodel(documentation="Any groups in this package.")
-	!ordered val Group[*]#parent groups;
-	
-	@genmodel(documentation="Any assertions in this package.")
-	!ordered val Assertion[*] assertions;
+	@genmodel(documentation="Any groups in this package.
+
+Groups form an ordered list because they can lexically depend on things
+defined in previous groups.")
+	val Group[*]#parent groups;
 }
 
 @genmodel(documentation="A group in a RoboCert package.
@@ -53,6 +53,10 @@ abstract class Group {
 	@genmodel(documentation="The instantiation in effect in this group.")
 	val Instantiation[1]#group instantiation;
 }
+
+//
+// INSTANTIATIONS
+//
 
 @genmodel(documentation="Specifies a (partial) instantiation of targets in a group.")
 class Instantiation {
@@ -78,8 +82,20 @@ class ConstAssignment {
 	derived readonly transient volatile op boolean[1] hasConstant(robochart.Variable constant);
 }
 
+//
+// ASSERTIONS
+//
+
+@genmodel(documentation="An assertion group.")
+class AssertionGroup extends Group, OptionallyNamedElement {
+	val Assertion[*]#group assertions;
+}
+
 @genmodel(documentation="An assertion.")
 class Assertion extends robochart.NamedElement {
+	@genmodel(documentation="The group to which this assertion belongs.")
+	ref AssertionGroup[1]#assertions group;
+
 	@genmodel(documentation="The root property of the assertion.")
 	val Property[1] property;
 }
@@ -121,9 +137,25 @@ class BindingExpr extends RAExpr {
 	// We could track a bidirectional reference here, but Xtext doesn't like it
 }
 
+//
+// MODALITIES
+//
+
+@genmodel(documentation="Temperature modality.")
+enum Temperature {
+	@genmodel(documentation="Cold temperature; no obligation on model to ensure progress.")
+	COLD;
+	@genmodel(documentation="Hot temperature; obligation on model to ensure progress.")
+	HOT;	
+}
+
 ///////////////////////////////////////////////////////////////////////////////
+// LOW-LEVEL LANGUAGES
+///////////////////////////////////////////////////////////////////////////////
+
+//
 // CSP
-///////////////////////////////////////////////////////////////////////////////
+//
 
 @genmodel(documentation="A group of raw CSP-M declarations.
 
@@ -143,21 +175,6 @@ the timing model depended upon by the tock-CSP encoding.")
 	
 	@genmodel(documentation="The fragments contained in this group.")
 	val CSPFragment[*]#group fragments;
-}
-
-@genmodel(documentation="Abstract class of anything that can be interpreted as a tick-tock context.
-
-This is predominantly a marker, and doesn't hold any state of its own.")
-abstract class CSPContextSource {
-}
-
-@genmodel(documentation="Abstract class of anything that can be interpreted as a CSP process.
-
-All CSP process sources have an underlying tick-tock context source, even if
-it is just the empty set.
-
-This is predominantly a marker, and doesn't hold any state of its own.")
-abstract class CSPProcessSource extends CSPContextSource {
 }
 
 //
@@ -200,7 +217,7 @@ class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
 }
 
 //
-// CSP refinement
+// CSP properties
 //
 
 @genmodel(documentation="A property that requires a low-level CSP refinement relation.")
@@ -237,8 +254,27 @@ enum CSPModel {
 }
 
 //
-// SEQUENCES
+// CSP sources
 //
+
+@genmodel(documentation="Abstract class of anything that can be interpreted as a tick-tock context.
+
+This is predominantly a marker, and doesn't hold any state of its own.")
+abstract class CSPContextSource {
+}
+
+@genmodel(documentation="Abstract class of anything that can be interpreted as a CSP process.
+
+All CSP process sources have an underlying tick-tock context source, even if
+it is just the empty set.
+
+This is predominantly a marker, and doesn't hold any state of its own.")
+abstract class CSPProcessSource extends CSPContextSource {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// SEQUENCES
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A collection of sequence diagrams between a given target and world.
@@ -308,6 +344,10 @@ class Subsequence {
 	derived volatile transient readonly ref Sequence[0..1] sequence;
 }
 
+//
+// STEPS
+//
+
 /**
  * A single step in a subsequence.
  */
@@ -335,6 +375,293 @@ class ActionStep extends SequenceStep {
 	@genmodel(documentation="The temperature of this action.")
 	attr Temperature[1] temperature;
 }
+
+//
+// Block steps
+//
+
+@genmodel(documentation="Step that contains exactly one body.
+
+Often, but not always, these will be (what UML would call) combined
+fragments.")
+abstract class BlockStep extends SequenceStep {
+	@genmodel(documentation="The body of the block.")
+	val Subsequence[1] body;
+}
+
+@genmodel(documentation="Step imposing a termination deadline on a block.")
+class DeadlineStep extends BlockStep {
+	@genmodel(documentation="Deadline, in time units after the start of the block.")
+	val RAExpr[1] units;
+}
+
+/**
+ * A step containing one or more sequence elements in loop.
+ *
+ * A loop action may have a name, which is useful when specifying break actions.
+ */
+class LoopStep extends BlockStep, OptionallyNamedElement {
+	/**
+	 * The loop bound.
+	 */
+	val LoopBound[1] bound;
+
+	// TODO: conditionals
+	// TODO: break
+}
+
+//
+// Loop bounds
+//
+
+/**
+ * A bound on the number of iterations the loop can make.
+ */
+abstract class LoopBound {
+}
+
+/**
+ * A loop bound that makes the loop execute infinitely until otherwise
+ * broken.
+ */
+class InfiniteLoopBound extends LoopBound {
+}
+
+/**
+ * A loop bound that executes a specific number of times.
+ *
+ * Corresponds to UML2 loop(times).
+ */
+class DefiniteLoopBound extends LoopBound {
+	/**
+	 * The number of times the loop must execute, unless prematurely
+	 * broken.
+	 * Evaluated once only.
+	 */
+ 	val RAExpr[1] times;
+}
+
+/**
+ * A loop bound that executes a nondeterministic number of times that
+ * is at least a lower bound.
+ *
+ * Corresponds to UML2 loop(lowerTimes, *).
+ */
+class LowerLoopBound extends LoopBound {
+	/**
+	 * The number of times the loop must execute at least, unless
+	 * prematurely broken.
+	 * Evaluated once only.
+	 */
+ 	val RAExpr[1] lowerTimes;
+}
+
+/**
+ * A loop bound that executes a nondeterministic number of times between
+ * two bounds.
+ *
+ * Corresponds to UML2 loop(lowerTimes, upperTimes).
+ */
+class RangeLoopBound extends LoopBound {
+	/**
+	 * The lower number of times the loop must execute, unless
+	 * prematurely broken.
+	 * Evaluated once only.	 
+	 */
+	val RAExpr[1] lowerTimes;
+	/**
+	 * The upper number of times the loop must execute.
+	 * Evaluated once only.
+	 */
+	val RAExpr[1] upperTimes;
+}
+
+//
+// Branch steps
+//
+
+@genmodel(documentation="Abstract step containing two or more branches.")
+abstract class BranchStep extends SequenceStep {
+	@genmodel(documentation="The branches available in this step.")
+	val Subsequence[2..*] branches;
+}
+
+@genmodel(documentation="An alternative choice step.")
+class AlternativeStep extends BranchStep {
+	@genmodel(documentation="The temperature of this alternative.")
+	attr Temperature[1] temperature;
+}
+
+@genmodel(documentation="An interleaving composition step.")
+class InterleaveStep extends BranchStep {
+}
+
+//
+// ACTIONS
+//
+
+/**
+ * An action in a sequence diagram.
+ */
+abstract class SequenceAction {
+	/**
+	 * The step containing this action.
+	 */
+	ref ActionStep[1]#action step;
+}
+
+/**
+ * A communicating action in a sequence diagram.
+ */
+class ArrowAction extends SequenceAction {
+	/**
+	 * The body of the arrow.
+	 */
+	val MessageSpec[1] body;
+}
+
+/**
+ * A special action marking the end of a diagram.
+ *
+ * This exists mainly to allow a sequence gap at the end of the diagram.
+ */
+class FinalAction extends SequenceAction {
+}
+
+/**
+ * An action representing a wait for some amount of time units.
+ */
+class WaitAction extends SequenceAction {
+	/**
+	 * The number of units to wait.
+	 */
+	val RAExpr[1] units;
+	
+	// TODO(@MattWindsor91): nondeterministic waits
+}
+
+//
+// MESSAGES
+//
+
+/**
+ * A specification of a message.
+ */
+class MessageSpec {
+	/**
+	 * The topic of the message.
+	 */
+	val MessageTopic[1]#spec topic;
+	
+	/**
+	 * The direction of the message.
+	 */
+	attr MessageDirection[1] direction = "OUTBOUND";
+	
+	/**
+	 * The argument list for the message.
+	 */
+	val Argument[*] arguments;
+	
+	//
+	// Derived references
+	//
+	// Most of these come from walking backwards up a MessageSpec to its
+	// enclosing SequenceGroup, and won't work if a MessageSpec isn't
+	// contained in one.
+	//
+	
+	/**
+	 * The target of the message.
+	 *
+	 * If the message is outbound, this will be the 'from' of the message;
+	 * else, the 'to'.
+	 */
+	derived transient readonly volatile ref Target[1] target;
+	
+	/**
+	 * The source of the message.
+	 */
+	derived transient readonly volatile ref Actor[1] from;
+	/**
+	 * The destination of the message.
+	 */
+	derived transient readonly volatile ref Actor[1] to;
+}
+
+/**
+ * The direction of a message.
+ */
+enum MessageDirection {
+	/**
+	 * Heading in from world to target.
+	 */
+	INBOUND;
+	/**
+	 * Heading out from target to world.
+	 */
+	OUTBOUND;
+}
+
+//
+// Message topics
+//
+
+/**
+ * A message topic.
+ */
+abstract class MessageTopic {
+	/**
+	 * The parent message specification.
+	 */
+	ref MessageSpec[1]#topic spec;
+}
+
+/**
+ * An event message topic.
+ */
+class EventTopic extends MessageTopic {
+	/**
+	 * The name of the event.
+	 */
+	ref robochart.Event[1] event;
+}
+
+/**
+ * An operation message topic.
+ */
+class OperationTopic extends MessageTopic {
+	/**
+	 * The name of the operation.
+	 */
+	ref robochart.OperationSig[1] operation;
+// TODO: check whether this should be Operation instead
+// TODO: parameters
+}
+
+//
+// Message arguments
+//
+
+@genmodel(documentation="Argument pattern.")
+abstract class Argument {
+}
+
+@genmodel(documentation="Argument pattern specifying an expression.")
+class ExpressionArgument extends Argument {
+	@genmodel(documentation="The expression in question.")
+	val RAExpr[1] expr;
+}
+
+@genmodel(documentation="Argument pattern accepting any value.
+
+If this argument is given a name, it introduces a binding for the value.")
+class WildcardArgument extends Argument, OptionallyNamedElement {
+}
+
+//
+// Message sets
+//
 
 /**
  * A defined and named message set.
@@ -472,6 +799,10 @@ class World extends Actor {
 	ref SequenceGroup[1]#world group;
 }
 
+//
+// Targets
+//
+
 @genmodel(documentation="A target of some specification.
 
 Targets are CSP process sources, through appeal to the existing RoboStar
@@ -498,278 +829,7 @@ class RCModuleTarget extends Target {
 }
 
 //
-// CONTROL FLOW
-//
-
-@genmodel(documentation="Step that contains exactly one body.
-
-Often, but not always, these will be (what UML would call) combined
-fragments.")
-abstract class BlockStep extends SequenceStep {
-	@genmodel(documentation="The body of the block.")
-	val Subsequence[1] body;
-}
-
-@genmodel(documentation="Step imposing a termination deadline on a block.")
-class DeadlineStep extends BlockStep {
-	@genmodel(documentation="Deadline, in time units after the start of the block.")
-	val RAExpr[1] units;
-}
-
-/**
- * A step containing one or more sequence elements in loop.
- *
- * A loop action may have a name, which is useful when specifying break actions.
- */
-class LoopStep extends BlockStep, OptionallyNamedElement {
-	/**
-	 * The loop bound.
-	 */
-	val LoopBound[1] bound;
-
-	// TODO: conditionals
-	// TODO: break
-}
-
-/**
- * A bound on the number of iterations the loop can make.
- */
-abstract class LoopBound {
-}
-
-/**
- * A loop bound that makes the loop execute infinitely until otherwise
- * broken.
- */
-class InfiniteLoopBound extends LoopBound {
-}
-
-/**
- * A loop bound that executes a specific number of times.
- *
- * Corresponds to UML2 loop(times).
- */
-class DefiniteLoopBound extends LoopBound {
-	/**
-	 * The number of times the loop must execute, unless prematurely
-	 * broken.
-	 * Evaluated once only.
-	 */
- 	val RAExpr[1] times;
-}
-
-/**
- * A loop bound that executes a nondeterministic number of times that
- * is at least a lower bound.
- *
- * Corresponds to UML2 loop(lowerTimes, *).
- */
-class LowerLoopBound extends LoopBound {
-	/**
-	 * The number of times the loop must execute at least, unless
-	 * prematurely broken.
-	 * Evaluated once only.
-	 */
- 	val RAExpr[1] lowerTimes;
-}
-
-/**
- * A loop bound that executes a nondeterministic number of times between
- * two bounds.
- *
- * Corresponds to UML2 loop(lowerTimes, upperTimes).
- */
-class RangeLoopBound extends LoopBound {
-	/**
-	 * The lower number of times the loop must execute, unless
-	 * prematurely broken.
-	 * Evaluated once only.	 
-	 */
-	val RAExpr[1] lowerTimes;
-	/**
-	 * The upper number of times the loop must execute.
-	 * Evaluated once only.
-	 */
-	val RAExpr[1] upperTimes;
-}
-
-@genmodel(documentation="Abstract step containing two or more branches.")
-abstract class BranchStep extends SequenceStep {
-	@genmodel(documentation="The branches available in this step.")
-	val Subsequence[2..*] branches;
-}
-
-@genmodel(documentation="An alternative choice step.")
-class AlternativeStep extends BranchStep {
-	@genmodel(documentation="The temperature of this alternative.")
-	attr Temperature[1] temperature;
-}
-
-@genmodel(documentation="An interleaving composition step.")
-class InterleaveStep extends BranchStep {
-}
-
-//
-// ACTIONS
-//
-
-/**
- * An action in a sequence diagram.
- */
-abstract class SequenceAction {
-	/**
-	 * The step containing this action.
-	 */
-	ref ActionStep[1]#action step;
-}
-
-/**
- * A communicating action in a sequence diagram.
- */
-class ArrowAction extends SequenceAction {
-	/**
-	 * The body of the arrow.
-	 */
-	val MessageSpec[1] body;
-}
-
-/**
- * A special action marking the end of a diagram.
- *
- * This exists mainly to allow a sequence gap at the end of the diagram.
- */
-class FinalAction extends SequenceAction {
-}
-
-/**
- * An action representing a wait for some amount of time units.
- */
-class WaitAction extends SequenceAction {
-	/**
-	 * The number of units to wait.
-	 */
-	val RAExpr[1] units;
-	
-	// TODO(@MattWindsor91): nondeterministic waits
-}
-
-//
-// MESSAGES
-//
-
-/**
- * A specification of a message.
- */
-class MessageSpec {
-	/**
-	 * The topic of the message.
-	 */
-	val MessageTopic[1]#spec topic;
-	
-	/**
-	 * The direction of the message.
-	 */
-	attr MessageDirection[1] direction = "OUTBOUND";
-	
-	/**
-	 * The argument list for the message.
-	 */
-	val Argument[*] arguments;
-	
-	//
-	// Derived references
-	//
-	// Most of these come from walking backwards up a MessageSpec to its
-	// enclosing SequenceGroup, and won't work if a MessageSpec isn't
-	// contained in one.
-	//
-	
-	/**
-	 * The target of the message.
-	 *
-	 * If the message is outbound, this will be the 'from' of the message;
-	 * else, the 'to'.
-	 */
-	derived transient readonly volatile ref Target[1] target;
-	
-	/**
-	 * The source of the message.
-	 */
-	derived transient readonly volatile ref Actor[1] from;
-	/**
-	 * The destination of the message.
-	 */
-	derived transient readonly volatile ref Actor[1] to;
-}
-
-/**
- * A message topic.
- */
-abstract class MessageTopic {
-	/**
-	 * The parent message specification.
-	 */
-	ref MessageSpec[1]#topic spec;
-}
-
-/**
- * An event message topic.
- */
-class EventTopic extends MessageTopic {
-	/**
-	 * The name of the event.
-	 */
-	ref robochart.Event[1] event;
-}
-
-/**
- * An operation message topic.
- */
-class OperationTopic extends MessageTopic {
-	/**
-	 * The name of the operation.
-	 */
-	ref robochart.OperationSig[1] operation;
-// TODO: check whether this should be Operation instead
-// TODO: parameters
-}
-
-/**
- * The direction of a message.
- */
-enum MessageDirection {
-	/**
-	 * Heading in from world to target.
-	 */
-	INBOUND;
-	/**
-	 * Heading out from target to world.
-	 */
-	OUTBOUND;
-}
-
-//
-// ARGUMENTS
-//
-
-@genmodel(documentation="Argument pattern.")
-abstract class Argument {
-}
-
-@genmodel(documentation="Argument pattern specifying an expression.")
-class ExpressionArgument extends Argument {
-	@genmodel(documentation="The expression in question.")
-	val RAExpr[1] expr;
-}
-
-@genmodel(documentation="Argument pattern accepting any value.
-
-If this argument is given a name, it introduces a binding for the value.")
-class WildcardArgument extends Argument, OptionallyNamedElement {
-}
-
-//
-// PROPERTIES
+// SEQUENCE PROPERTIES
 //
 
 @genmodel(documentation="A property of a sequence.")
@@ -791,14 +851,4 @@ enum SequencePropertyType {
 
 	@genmodel(documentation="All behaviours of the sequence are observable on the target.")
 	IS_OBSERVED;
-}
-
-// Unsorted
-
-@genmodel(documentation="Temperature modality.")
-enum Temperature {
-	@genmodel(documentation="Cold temperature; no obligation on model to ensure progress.")
-	COLD;
-	@genmodel(documentation="Hot temperature; obligation on model to ensure progress.")
-	HOT;	
 }

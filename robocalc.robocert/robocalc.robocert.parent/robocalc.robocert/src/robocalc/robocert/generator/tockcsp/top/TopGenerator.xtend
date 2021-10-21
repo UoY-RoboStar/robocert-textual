@@ -3,7 +3,6 @@ package robocalc.robocert.generator.tockcsp.top
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.resource.Resource
 import robocalc.robocert.generator.tockcsp.ll.CSPGroupGenerator
-import robocalc.robocert.model.robocert.Assertion
 import robocalc.robocert.model.robocert.CSPGroup
 import robocalc.robocert.model.robocert.SequenceGroup
 import java.util.Date
@@ -11,15 +10,16 @@ import java.text.SimpleDateFormat
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import robocalc.robocert.model.robocert.Group
 import robocalc.robocert.generator.tockcsp.seq.SeqGroupGenerator
+import robocalc.robocert.model.robocert.AssertionGroup
 
 /**
  * Top-level generator for tock-CSP.
  */
 class TopGenerator {
-	@Inject extension AssertionGenerator
-	@Inject extension CSPGroupGenerator
+	@Inject AssertionGroupGenerator ag
+	@Inject CSPGroupGenerator cg
+	@Inject SeqGroupGenerator sg
 	@Inject extension ImportGenerator
-	@Inject extension SeqGroupGenerator
 	@Inject extension UnsupportedSubclassHandler
 	
 	/**
@@ -34,17 +34,7 @@ class TopGenerator {
 
 		«resource.generateImports»
 
-		--
-		-- Specifications
-		--
-		
 		«resource.generateGroups»
-		
-		--
-		-- Assertions
-		--
-		
-		«resource.generateAssertions»
 	'''
 	
 	/**
@@ -73,7 +63,7 @@ class TopGenerator {
 	 */
 	private def generatePreambleCSPGroups(Resource resource) '''
 		«FOR it : resource.allContents.filter(CSPGroup).filter[isPreamble].toIterable»
-			«generate»
+			«cg.generate(it)»
 		«ENDFOR»
 	'''
 
@@ -89,28 +79,18 @@ class TopGenerator {
 	'''
 	
 	def private dispatch generateGroup(CSPGroup it) '''
-		«IF !isPreamble»«generate»«ENDIF»
+		«IF !isPreamble»«cg.generate(it)»«ENDIF»
 	'''
 	
 	def private dispatch generateGroup(SequenceGroup it) {
-		generate
+		sg.generate(it)
+	}
+
+	def private dispatch generateGroup(AssertionGroup it) {
+		ag.generate(it)
 	}
 	
 	def private dispatch generateGroup(Group it) {
 		unsupported("group", "")
 	}
-
-	//
-	// Assertions
-	//
-	/**
-	 * @return generated CSP for all assertions.
-	 * 
-	 * @param resource  the top-level property model.
-	 */
-	private def generateAssertions(Resource resource) '''
-		«FOR asst : resource.allContents.filter(Assertion).toIterable SEPARATOR "\n"»
-			«asst.generate»
-		«ENDFOR»
-	'''
 }

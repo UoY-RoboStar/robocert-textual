@@ -1,51 +1,183 @@
+/**
+ * The RoboCert grammar.
+ *
+ * Where possible, we try to keep this grammar's layout in line with that of
+ * the Emfatic source of the RoboCert metamodel.
+ */
 grammar robocalc.robocert.RoboCert with circus.robocalc.robochart.textual.RoboChart
 
-import "http://robocert.robocalc/" 
+import "http://robocert.robocalc/"
 import "http://www.robocalc.circus/RoboChart"
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 ///////////////////////////////////////////////////////////////////////////////
-// Core language
+// CORE LANGUAGE
 ///////////////////////////////////////////////////////////////////////////////
-
 /**
  * A top-level assertions package.
  */
 RAPackage:
-	( groups += (CSPGroup | SequenceGroup)
-	| assertions += Assertion
-	)*;
+	(groups+=(CSPGroup | SequenceGroup | AssertionGroup))*;
+
+//
+// INSTANTIATIONS
+//
+/**
+ * A target override in a sequence diagram.
+ */
+Instantiation:
+	{Instantiation} ('with' '{' (assignments+=ConstAssignment) (',' assignments+=ConstAssignment)* '}')?;
 
 /**
- * A RoboCert assertion.
+ * A constant assignment.
+ */
+ConstAssignment:
+	ConstName ('and' ConstName)* AssignWords value=RAExpr;
+
+/**
+ * Adds a constant to the constants list.
+ */
+fragment ConstName *:
+	constants+=[Variable|QualifiedName];
+
+/**
+ * Various synonyms for assignment.
+ */
+fragment AssignWords *:
+	'set' 'to' | 'assigned';
+
+//
+// ASSERTIONS
+//
+/**
+ * An assertion group.
+ * 
+ * As syntactic sugar, unnamed assertion groups with only one assertion may be
+ * written as if they were just lone Assertions.
+ */
+AssertionGroup:
+	'assertion' (SingletonAssertionGroup | FullAssertionGroup);
+
+/**
+ * Produces the body of a singleton assertion group.
+ *
+ * The instantiation of such a group appears at the end of the assertion.
+ */
+SingletonAssertionGroup returns AssertionGroup:
+	assertions+=Assertion instantiation=Instantiation;
+
+/**
+ * Produces the body of a non-singleton assertion group.
+ */
+FullAssertionGroup returns AssertionGroup:
+	{AssertionGroup} 'group' (name=ID)? instantiation=Instantiation '{' ('assertion' assertions+=Assertion)* '}';
+
+/**
+ * An assertion, less the leading 'assertion' keyword (because this might be
+ * the end of a singleton AssertionGroup).
  */
 Assertion:
-	'assertion' name=ID ':'
-	property=
-		( CSPRefinementProperty
-		| SequenceProperty
-		)
-;
+	name=ID ':'
+	property=(CSPRefinementProperty
+	| SequenceProperty);
 
+//
+// EXPRESSIONS
+//
+/**
+ * An expression.
+ * 
+ * Ideally this shouldn't stray too far from the RoboChart language (and maybe
+ * one day it'll merge back into it).
+ */
+RAExpr:
+	{RAIntLit} value=INT |
+	{RAConstExpr} constant=[Variable|QualifiedName] |
+	'@' {BindingExpr} source=[WildcardArgument];
+
+/**
+ * A time unit expression.
+ */
+TimeUnits returns RAExpr:
+	RAExpr 'time'? ('unit' | 'units');
+
+//
+// MODALITIES
+//
+/**
+ * Captures an optional temperature with no other related side-material.
+ */
+fragment OptTemperature *:
+	('(' temperature=Temperature ')')?;
+
+/**
+ * A temperature specification.
+ */
+enum Temperature:
+	COLD='cold' |
+	HOT='hot';
+
+///////////////////////////////////////////////////////////////////////////////
+// LOW-LEVEL LANGUAGES
+///////////////////////////////////////////////////////////////////////////////
+//
+// CSP
+//
+/**
+ * A CSP group.
+ */
+CSPGroup:
+	(isUntimed?='untimed'? & isPreamble?='preamble'?)
+	'csp' instantiation=Instantiation
+	(fragments+=CSPFragment | // Singleton syntax
+	'group' '{' fragments+=CSPFragment* '}' // Group syntax
+	);
+
+//
+// CSP fragments
+//
+/**
+ * A CSP fragment.
+ * 
+ * CSP fragments can be event-set-bound, process-bound, or inline.
+ */
+CSPFragment:
+	('event' 'set' {EventSetCSPFragment} name=ID
+	| 'process' {ProcessCSPFragment} name=ID ('(' 'events' 'in' events=[CSPContextSource|QualifiedName] ')')?
+	| 'inline' {InlineCSPFragment} name=ID?)
+	contents=(CSP_CODE | SHORT_CODE);
+
+/**
+ * The raw CSP code.
+ */
+terminal CSP_CODE:
+	'csp-begin'->'csp-end';
+
+/**
+ * Abbreviated form of csp-begin/csp-end.
+ */
+terminal SHORT_CODE:
+	'<$'->'$>';
+
+//
+// CSP properties
+//
 /**
  * A RoboCert CSP refinement property.
  */
 CSPRefinementProperty:
 	lhs=[CSPProcessSource|QualifiedName]
-	( 'does' isNegated?='not' type=DoesNotCSPRefinementOperator
-    | type=DoesCSPRefinementOperator
-    )
+	('does' isNegated?='not' type=DoesNotCSPRefinementOperator
+	| type=DoesCSPRefinementOperator)
 	rhs=[CSPProcessSource|QualifiedName]
-    InCSPModelSpec?
-;
+	InCSPModelSpec?;
 
 /**
  * Sequence property types that agree with 'does not'.
  */
 enum DoesNotCSPRefinementOperator returns CSPRefinementOperator:
 	REFINES='refine'
-	| EQUALS='equal'
-;
+	| EQUALS='equal';
 
 /**
  * Sequence property that agree without a prefix (eg, the opposite of
@@ -53,41 +185,7 @@ enum DoesNotCSPRefinementOperator returns CSPRefinementOperator:
  */
 enum DoesCSPRefinementOperator returns CSPRefinementOperator:
 	REFINES='refines'
-	| EQUALS='equals'
-;
-
-	
-/**
- * A CSP group.
- */
-CSPGroup:
-	{CSPGroup} (isUntimed?='untimed'? & isPreamble?='preamble'?) 'csp' instantiation=Instantiation
-	( fragments+=CSPFragment | // Singleton syntax
-	  'group' '{' fragments+=CSPFragment* '}' // Group syntax
-	)
-;
-
-/**
- * A CSP fragment.
- * 
- * CSP fragments can be event-set-bound, process-bound, or inline.
- */
-CSPFragment:
-	( 'event' 'set' {EventSetCSPFragment} name=ID
-	| 'process' {ProcessCSPFragment} name=ID ('(' 'events' 'in' events=[CSPContextSource|QualifiedName] ')')?
-	| 'inline' {InlineCSPFragment} name=ID?
-	)
-	contents=(CSP_CODE|SHORT_CODE)
-;
-
-/**
- * The raw CSP code.
- */
-terminal CSP_CODE: 'csp-begin' -> 'csp-end';
-/**
- * Abbreviated form of csp-begin/csp-end.
- */
-terminal SHORT_CODE: '<$' -> '$>';
+	| EQUALS='equals';
 
 /**
  * Explicitly specifying the CSP model of a property.
@@ -96,35 +194,18 @@ terminal SHORT_CODE: '<$' -> '$>';
  * these models eventually.
  */
 fragment InCSPModelSpec *:
-	'in' 'the' model=CSPModel 'model'
-;
+	'in' 'the' model=CSPModel 'model';
 
 /**
  * Names of CSP models.
  */
 enum CSPModel:
 	TRACES='traces' |
-	TICK_TOCK='tick-tock'
-;
+	TICK_TOCK='tick-tock';
 
 ///////////////////////////////////////////////////////////////////////////////
-// Expression language
-//
-// Ideally this shouldn't stray too far from the RoboChart language (and maybe
-// one day it'll merge back into it).
+// SEQUENCES
 ///////////////////////////////////////////////////////////////////////////////
-
-RAExpr:
-	{RAIntLit} value=INT |
-	{RAConstExpr} constant=[Variable|QualifiedName] |
-	'@' {BindingExpr} source=[WildcardArgument]
-;
-
-
-///////////////////////////////////////////////////////////////////////////////
-// Sequence diagrams
-///////////////////////////////////////////////////////////////////////////////
-
 /**
  * A sequence diagram group.
  * 
@@ -135,107 +216,50 @@ SequenceGroup:
 	'sequence' 'group' name=ID
 	'(' target=Target '->' world=World instantiation=Instantiation ')'
 	'{'
-	(sequences+=Sequence | messageSets += NamedMessageSet)*
-	'}'
-;
+	(sequences+=Sequence | messageSets+=NamedMessageSet)*
+	'}';
 
 /**
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID body=Subsequence
-;
+	'sequence' name=ID body=Subsequence;
 
 /**
  * A subsequence.
  */
 Subsequence:
-	'{' (steps+=SequenceStep) ('then' steps+=SequenceStep)* '}'
-;
+	'{' (steps+=SequenceStep) ('then' steps+=SequenceStep)* '}';
 
-/**
- * A target override in a sequence diagram.
- */
-Instantiation:
-	{Instantiation} ('with' '{' (assignments += ConstAssignment) (',' assignments += ConstAssignment)* '}')?
-;
-
-/**
- * Various synonyms for assignment.
- */
-fragment AssignWords *:
-	'set' 'to' | 'assigned'
-;
-
-/**
- * A constant assignment.
- */
-ConstAssignment:
-	ConstName ('and' ConstName)* AssignWords value=RAExpr
-;
-
-fragment ConstName *:
-	constants+=[Variable|QualifiedName]
-;
-
-/**
- * A target of a sequence diagram.
- */
-Target:
-	 ('module' {RCModuleTarget} (name=ID ':')? module=[RCModule|QualifiedName])
-;
-
-/**
- * The world actor of a sequence diagram.
- */
-World:
-	'world' {World}
-;
-
+//
+// STEPS
+//
 /**
  * A step in a sequence diagram.
  */
 SequenceStep:
-	'within' {DeadlineStep} units=TimeUnits body=Subsequence |
-	LoopStep |
+	BlockStep |
 	BranchStep |
-	{ActionStep} gap=Gap action=SequenceAction OptTemperature
-;
+	{ActionStep} gap=Gap action=SequenceAction OptTemperature;
 
+//
+// Block steps
+//
 /**
- * An action in a sequence diagram.
+ * A block step.
  */
-SequenceAction:
-	{ArrowAction} body=MessageSpec |
-	'after' {WaitAction} units=TimeUnits |
-	'end' {FinalAction}
-;
+BlockStep returns SequenceStep:
+	('within' {DeadlineStep} units=TimeUnits |
+	'loop' {LoopStep} bound=MaybeLoopBound ('as' name=ID)?) body=Subsequence;
 
-/**
- * A time unit expression.
- */
-TimeUnits returns RAExpr:
-	RAExpr 'time'? ('unit' | 'units')
-;
-
-/**
- * A loop.
- * 
- * Without a specification, loops will iterate forever.
- */
-LoopStep:
-	'loop' {LoopStep}
-	bound=MaybeLoopBound
-	('as' name=ID)?
-	body=Subsequence
-;
-
+//
+// Loop bounds
+//
 /**
  * A loop bound, possibly.  Defaults to InfiniteLoopBound.
  */
 MaybeLoopBound returns LoopBound:
-	{InfiniteLoopBound} | '(' LoopBound ')'
-;
+	{InfiniteLoopBound} | '(' LoopBound ')';
 
 /**
  * A loop bound.
@@ -244,43 +268,75 @@ LoopBound:
 	'forever' {InfiniteLoopBound} |
 	'exactly' {DefiniteLoopBound} times=RAExpr 'times' |
 	'at' 'least' {LowerLoopBound} lowerTimes=RAExpr 'times' |
-	'between' {RangeLoopBound} lowerTimes=RAExpr 'and' upperTimes=RAExpr 'times'
-;
+	'between' {RangeLoopBound} lowerTimes=RAExpr 'and' upperTimes=RAExpr 'times';
 
+//
+// Branch steps
+//
 /**
  * A branching construct.
  */
 BranchStep:
-	(
-		'parallel' {InterleaveStep} |
-		'choice' {AlternativeStep} OptTemperature
-	)
+	('parallel' {InterleaveStep} |
+	'choice' {AlternativeStep} OptTemperature)
 	'between'
-		branches += Subsequence
-		('and' branches += Subsequence)+
-;
+	branches+=Subsequence
+	('and' branches+=Subsequence)+;
+
+//
+// ACTIONS
+//
+/**
+ * An action in a sequence diagram.
+ */
+SequenceAction:
+	{ArrowAction} body=MessageSpec |
+	'after' {WaitAction} units=TimeUnits |
+	'end' {FinalAction};
+
+//
+// MESSAGES
+//
+/**
+ * A message specification.
+ */
+MessageSpec:
+	direction=MessageDirection topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')?;
 
 /**
- * Captures an optional temperature with no other related side-material.
+ * The direction of a message.
  */
-fragment OptTemperature *:
-	('(' temperature=Temperature ')')?
-;
+enum MessageDirection:
+	INBOUND='<-' |
+	OUTBOUND='->';
 
+//
+// Message topics
+//
 /**
- * A temperature specification.
+ * A message topic.
  */
-enum Temperature:
-	COLD='cold' |
-	HOT='hot'
-;
+MessageTopic:
+	'event' {EventTopic} event=[Event|QualifiedName] |
+	('op' | 'operation') {OperationTopic} operation=[OperationSig|QualifiedName];
+
+//
+// Message arguments
+//
+//
+// Message sets
+//
+/**
+ * A named message set.
+ */
+NamedMessageSet:
+	'message' 'set' name=ID ':' set=MessageSet;
 
 /**
  * A gap specification.
  */
 Gap returns MessageSet:
-	('any' | 'anything') AllowSet 'until' | EmptySet
-;
+	('any' | 'anything') AllowSet 'until' | EmptySet;
 
 /**
  * The topmost level of a gap set specification, one of:
@@ -292,46 +348,40 @@ Gap returns MessageSet:
  */
 AllowSet returns MessageSet:
 	'in' MessageSet |
-	{UniverseMessageSet} ({BinaryMessageSet.lhs=current} operator=DiffOperator rhs=UnionOrInterSet)?
-;
+	{UniverseMessageSet} ({BinaryMessageSet.lhs=current} operator=DiffOperator rhs=UnionOrInterSet)?;
 
 /**
  * The main top-level rule for message sets, after accounting for the
  * possible omission of 'in X' in an 'anything except Y' stanza.
  */
 MessageSet:
-	UnionOrInterSet ({BinaryMessageSet.lhs = current} (operator=DiffOperator) rhs=UnionOrInterSet)*
-;
+	UnionOrInterSet ({BinaryMessageSet.lhs=current} (operator=DiffOperator) rhs=UnionOrInterSet)*;
 
 /**
  * Factored-out level for union or intersection sets.
  */
 UnionOrInterSet returns MessageSet:
-	PrimitiveSet ({BinaryMessageSet.lhs = current} (operator=UnionOrInterOperator) rhs=PrimitiveSet)*
-;
+	PrimitiveSet ({BinaryMessageSet.lhs=current} (operator=UnionOrInterOperator) rhs=PrimitiveSet)*;
 
 /**
  * Union or intersection operator literals.
  */
 enum UnionOrInterOperator returns BinarySetOperator:
 	UNION='or' |
-	INTERSECTION='and'
-;
+	INTERSECTION='and';
 
 /**
  * Difference operator literal.
  */
 enum DiffOperator returns BinarySetOperator:
-	DIFFERENCE='except'
-;
+	DIFFERENCE='except';
 
 /**
  * Pseudo-rule that pulls a gap message set to empty if we don't see an
  * explicit rule.
  */
 EmptySet returns ExtensionalMessageSet:
-	{ExtensionalMessageSet}
-;
+	{ExtensionalMessageSet};
 
 /**
  * A primitive message set.
@@ -340,64 +390,51 @@ PrimitiveSet returns MessageSet:
 	'(' MessageSet ')' |
 	'universe' {UniverseMessageSet} |
 	ExtensionalMessageSet |
-	'message'? 'set' {RefMessageSet} set=[NamedMessageSet]
-;
+	'message'? 'set' {RefMessageSet} set=[NamedMessageSet];
 
 /**
  * An extensional message set (including singleton message sets).
  */
 ExtensionalMessageSet:
 	'{|' {ExtensionalMessageSet} messages+=MessageSpec (',' messages+=MessageSpec)* '|}' |
-	messages+=MessageSpec
-;
+	messages+=MessageSpec;
 
-/**
- * A named message set.
- */
-NamedMessageSet:
-	'message' 'set' name=ID ':' set=MessageSet
-;
-
-/**
- * A message specification.
- */
-MessageSpec:
-	 direction=MessageDirection topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')?
-;
-
-/**
- * The direction of a message.
- */
-enum MessageDirection:
-	INBOUND='<-' |
-	OUTBOUND='->'
-;
-
+//
+// Arguments
+//
 /**
  * An argument pattern.
  */
 Argument:
 	{ExpressionArgument} expr=RAExpr |
-	{WildcardArgument} ('any' | 'anything') ('as' name=ID)?
-;
+	{WildcardArgument} ('any' | 'anything') ('as' name=ID)?;
 
+//
+// ACTORS
+//
 /**
- * A message topic.
+ * The world actor of a sequence diagram.
  */
-MessageTopic:
-	'event' {EventTopic} event=[Event|QualifiedName] |
-	('op' | 'operation') {OperationTopic} operation=[OperationSig|QualifiedName]
-;
+World:
+	'world' {World};
 
 //
-// Sequence properties
+// Targets
 //
+/**
+ * A target of a sequence diagram.
+ */
+Target:
+	('module' {RCModuleTarget} (name=ID ':')? module=[RCModule|QualifiedName]);
 
+//
+// SEQUENCE PROPERTIES
+//
 /**
  * A sequence property.
- *
+ * 
  * These are:
- *
+ * 
  * - SEQUENCE is observed (in CSP: sequence refines target)
  * - SEQUENCE is not observed (in CSP: sequence does not refine target)
  * - SEQUENCE holds (in CSP: target refines sequence)
@@ -405,31 +442,26 @@ MessageTopic:
  */
 SequenceProperty:
 	sequence=[Sequence|QualifiedName]
-		( 'is' isNegated?='not' type=IsSequencePropertyType
-        | 'does' isNegated?='not' type=DoesNotSequencePropertyType
-        | type=DoesSequencePropertyType
-        )
-    InCSPModelSpec?
-;
+	('is' isNegated?='not' type=IsSequencePropertyType
+	| 'does' isNegated?='not' type=DoesNotSequencePropertyType
+	| type=DoesSequencePropertyType)
+	InCSPModelSpec?;
 
 /**
  * Sequence property types that agree with 'is' and 'is not'.
  */
 enum IsSequencePropertyType returns SequencePropertyType:
-	IS_OBSERVED='observed'
-;
+	IS_OBSERVED='observed';
 
 /**
  * Sequence property types that agree with 'does not'.
  */
 enum DoesNotSequencePropertyType returns SequencePropertyType:
-	HOLDS='hold'
-;
+	HOLDS='hold';
 
 /**
  * Sequence property that agree without a prefix (eg, the opposite of
  * 'does not' sequence property types).
  */
 enum DoesSequencePropertyType returns SequencePropertyType:
-	HOLDS='holds'
-;
+	HOLDS='holds';
