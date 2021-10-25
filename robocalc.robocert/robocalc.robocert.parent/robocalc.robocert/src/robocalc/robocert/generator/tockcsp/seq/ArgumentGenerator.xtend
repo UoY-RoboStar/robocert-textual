@@ -5,11 +5,13 @@ import robocalc.robocert.model.robocert.ExpressionArgument
 import robocalc.robocert.model.robocert.Argument
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import robocalc.robocert.model.robocert.WildcardArgument
+import robocalc.robocert.generator.tockcsp.top.BindingGenerator
 
 /**
  * Generates fragments of CSP prefixes and event sets relating to arguments.
  */
 class ArgumentGenerator {
+	@Inject extension BindingGenerator
 	@Inject extension ExpressionGenerator
 	@Inject extension UnsupportedSubclassHandler
 	
@@ -39,10 +41,7 @@ class ArgumentGenerator {
 	 * 
 	 * @return  generated CSP-M for the binding argument.
 	 */	
-	def dispatch generateForPrefix(WildcardArgument it)
-		'''?«IF name === null»_«ELSE»«comprehensionVar(name, -1)»«ENDIF»'''
-	
-	// the -1 above is arbitrary; that code should not be reached.
+	def dispatch generateForPrefix(WildcardArgument it) '''?«generateInputName»'''
 	
 	/**
 	 * Generates an unsupported argument in prefix position.
@@ -82,7 +81,7 @@ class ArgumentGenerator {
 	 * @return  generated CSP-M for the wildcard argument.
 	 */	
 	def dispatch generateForSet(WildcardArgument it, int index)
-		'''.«comprehensionVar(name, index)»'''
+		'''.«generateArgumentName(index)»'''
 	
 	/**
 	 * Generates an unsupported argument in prefix position.
@@ -98,21 +97,4 @@ class ArgumentGenerator {
 
 	private def generateExpressionArgument(ExpressionArgument it)
 		'''.«expr.generate»'''
-	
-	/**
-	 * Generates the set comprehension variable for some bound or wildcard
-	 * variable.
-	 * 
-	 * If the name is non-null, it will be used for the variable; otherwise,
-	 * we use the index.
-	 *
-	 * This is chosen to be short, but unlikely to be used anywhere else.
-	 *
-	 * @param name   the optional name of the variable.
-	 * @param index  the index of the variable.
-	 * 
-	 * @return  the name that will be assigned to the set comprehension
-	 *          variable for that index.
-	 */
-	def comprehensionVar(String name, int index) '''Bnd__«name ?: index.toString»'''
 }

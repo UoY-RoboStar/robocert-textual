@@ -16,10 +16,10 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A RoboCert package."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" ordered="false"
-        upperBound="-1" eType="#//Group" containment="true" eOpposite="#//Group/parent">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"
+        eType="#//Group" containment="true" eOpposite="#//Group/parent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Any groups in this package."/>
+        <details key="documentation" value="Any groups in this package.&#xD;&#xA;&#xD;&#xA;Groups form an ordered list because they can lexically depend on things&#xD;&#xA;defined in previous groups."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -158,6 +158,21 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Temperature">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Temperature modality."/>
+    </eAnnotations>
+    <eLiterals name="COLD">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Cold temperature; no obligation on model to ensure progress."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="HOT" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Hot temperature; obligation on model to ensure progress."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//Group">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group of raw CSP-M declarations.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
@@ -180,16 +195,6 @@
         <details key="documentation" value="The fragments contained in this group."/>
       </eAnnotations>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPContextSource" abstract="true">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Abstract class of anything that can be interpreted as a tick-tock context.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPProcessSource" abstract="true" eSuperTypes="#//CSPContextSource">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Abstract class of anything that can be interpreted as a CSP process.&#xD;&#xA;&#xD;&#xA;All CSP process sources have an underlying tick-tock context source, even if&#xD;&#xA;it is just the empty set.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
-    </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -282,6 +287,16 @@
         <details key="documentation" value="Traces refinement model (with prioritisation)."/>
       </eAnnotations>
     </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPContextSource" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Abstract class of anything that can be interpreted as a tick-tock context.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPProcessSource" abstract="true" eSuperTypes="#//CSPContextSource">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Abstract class of anything that can be interpreted as a CSP process.&#xD;&#xA;&#xD;&#xA;All CSP process sources have an underlying tick-tock context source, even if&#xD;&#xA;it is just the empty set.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
+    </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceGroup" eSuperTypes="#//Group ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
@@ -434,6 +449,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="to" lowerBound="1" eType="#//Actor"
         changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="MessageDirection">
+    <eLiterals name="INBOUND"/>
+    <eLiterals name="OUTBOUND" value="1"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageTopic" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="spec" lowerBound="1" eType="#//MessageSpec"
         eOpposite="#//MessageSpec/topic"/>
@@ -444,10 +463,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="OperationTopic" eSuperTypes="#//MessageTopic">
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="MessageDirection">
-    <eLiterals name="INBOUND"/>
-    <eLiterals name="OUTBOUND" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Argument" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -571,21 +586,6 @@
     <eLiterals name="IS_OBSERVED" value="1">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="All behaviours of the sequence are observable on the target."/>
-      </eAnnotations>
-    </eLiterals>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="Temperature">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Temperature modality."/>
-    </eAnnotations>
-    <eLiterals name="COLD">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Cold temperature; no obligation on model to ensure progress."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="HOT" value="1">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Hot temperature; obligation on model to ensure progress."/>
       </eAnnotations>
     </eLiterals>
   </eClassifiers>

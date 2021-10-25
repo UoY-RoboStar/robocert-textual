@@ -6,6 +6,8 @@ import robocalc.robocert.model.robocert.RAIntLit
 import robocalc.robocert.model.robocert.RAConstExpr
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import robocalc.robocert.model.robocert.RAExpr
+import robocalc.robocert.model.robocert.BindingExpr
+import robocalc.robocert.generator.tockcsp.top.BindingGenerator
 
 /**
  * The RoboCert expression generator.
@@ -18,6 +20,7 @@ import robocalc.robocert.model.robocert.RAExpr
  * It used to in the past, but this proved too complex.
  */
 class ExpressionGenerator {
+	@Inject extension BindingGenerator
 	@Inject extension VariableExtensions
 	@Inject extension UnsupportedSubclassHandler
 
@@ -27,10 +30,12 @@ class ExpressionGenerator {
 	 * @param it  the expression to generate.
 	 * @return  CSP-M for the expression.
 	 */
-	def dispatch generate(RAIntLit it) '''«value»'''
+	def dispatch generate(RAIntLit it) {
+		value
+	}
 	
 	/**
-	 * Generates an expression for RoboChart constant.
+	 * Generates an expression for a RoboChart constant.
 	 * 
 	 * @param it  the expression to generate.
 	 * @return  CSP-M for the expression.
@@ -39,6 +44,16 @@ class ExpressionGenerator {
 		// TODO(@MattWindsor91): we may eventually need to pass some context
 		// here.
 		constant.constantId
+	}
+	
+	/**
+	 * Generates an expression for a binding.
+	 * 
+	 * This expression is dependent on the binding having been previously
+	 * inserted into the scope of the expression from a memory channel.
+	 */
+	def dispatch generate(BindingExpr it) {
+		source.generateExpressionName ?: unsupported("expression referencing an unnamed wildcard", "0")
 	}
 
 	/**

@@ -8,13 +8,14 @@ import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import circus.robocalc.robochart.generator.csp.untimed.TypeGenerator
 import circus.robocalc.robochart.Type
 import robocalc.robocert.model.robocert.WildcardArgument
+import robocalc.robocert.generator.tockcsp.top.BindingGenerator
 
 /**
  * Generates CSP for message topics.
  */
 class TopicGenerator {
 	@Inject extension TypeGenerator
-	@Inject extension ArgumentGenerator
+	@Inject extension BindingGenerator
 	@Inject extension UnsupportedSubclassHandler
 	
 	/**
@@ -61,11 +62,22 @@ class TopicGenerator {
 		it instanceof EventTopic
 	}
 	
-	
+	/**
+	 * Generates the set comprehension ranges for a set of arguments, using
+	 * the given topic to resolve types.
+	 * 
+	 * @param it  the topic for which we are generating ranges.
+	 * 
+	 * @param args  an iterable of pairs of index in the message argument list,
+	 *              and wildcard argument to expand into a comprehension.
+	 * 
+	 * @return  CSP-M for the set comprehension, less any set delimiters.
+	 */
 	def generateRanges(MessageTopic it, Iterable<Pair<Integer, WildcardArgument>> args)
-	    '''«FOR p : args SEPARATOR ', '»
-			«comprehensionVar(p.value?.name, p.key)» <- «paramTypeAt(p.key)?.compileType ?: "{- missing type -} int"»
-		«ENDFOR»'''
+	    '''«FOR p : args SEPARATOR ', '»«generateRange(p.value, p.key)»«ENDFOR»'''
+	
+	private def generateRange(MessageTopic it, WildcardArgument binding, int index)
+		'''«binding.generateArgumentName(index)» <- «paramTypeAt(index)?.compileType ?: "{- missing type -} int"»'''
 	
 	private def dispatch Type paramTypeAt(EventTopic it, int index) {
 		index == 0 ? event.type : null

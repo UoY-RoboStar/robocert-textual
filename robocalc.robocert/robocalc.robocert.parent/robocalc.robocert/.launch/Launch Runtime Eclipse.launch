@@ -15,11 +15,8 @@
     <booleanAttribute key="default" value="false"/>
     <setAttribute key="deselected_workspace_bundles">
         <setEntry value="circus.robocalc.robochart"/>
-        <setEntry value="circus.robocalc.robochart.assertions"/>
-        <setEntry value="circus.robocalc.robochart.assertions.ide"/>
-        <setEntry value="circus.robocalc.robochart.assertions.tests"/>
-        <setEntry value="circus.robocalc.robochart.assertions.ui"/>
-        <setEntry value="circus.robocalc.robochart.assertions.ui.tests"/>
+        <setEntry value="circus.robocalc.robochart.edit"/>
+        <setEntry value="circus.robocalc.robochart.editor"/>
     </setAttribute>
     <stringAttribute key="featureDefaultLocation" value="workspace"/>
     <stringAttribute key="featurePluginResolution" value="workspace"/>
@@ -32,7 +29,7 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-16"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl}"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms256m -Xmx2048m"/>
@@ -44,9 +41,6 @@
         <setEntry value="circus.robocalc.robochart.generator.csp.feature:default"/>
     </setAttribute>
     <setAttribute key="selected_target_bundles">
-        <setEntry value="ch.qos.logback.classic@default:default"/>
-        <setEntry value="ch.qos.logback.core@default:default"/>
-        <setEntry value="ch.qos.logback.slf4j@default:false"/>
         <setEntry value="circus.robocalc.robochart.assertions.ide@default:default"/>
         <setEntry value="circus.robocalc.robochart.assertions.ui@default:default"/>
         <setEntry value="circus.robocalc.robochart.assertions@default:default"/>
@@ -66,16 +60,14 @@
         <setEntry value="circus.robocalc.svgfixer.imagehash@default:default"/>
         <setEntry value="circus.robocalc.svgfixer.library@default:default"/>
         <setEntry value="com.google.gson@default:default"/>
-        <setEntry value="com.google.guava*30.1.0.v20210127-2300@default:default"/>
+        <setEntry value="com.google.guava@default:default"/>
         <setEntry value="com.google.inject@default:default"/>
         <setEntry value="com.ibm.icu@default:default"/>
         <setEntry value="com.jcraft.jsch@default:default"/>
         <setEntry value="com.sun.jna.platform@default:default"/>
         <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="io.github.classgraph@default:default"/>
-        <setEntry value="jakarta.activation@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
-        <setEntry value="javax.activation*2.0.0.v20201118-1818@default:default"/>
         <setEntry value="javax.annotation@default:default"/>
         <setEntry value="javax.inject@default:default"/>
         <setEntry value="javax.xml@default:default"/>
@@ -110,7 +102,7 @@
         <setEntry value="org.apache.lucene.analyzers-common@default:default"/>
         <setEntry value="org.apache.lucene.analyzers-smartcn@default:default"/>
         <setEntry value="org.apache.lucene.core@default:default"/>
-        <setEntry value="org.apache.xerces*2.9.0.v201101211617@default:default"/>
+        <setEntry value="org.apache.xerces@default:default"/>
         <setEntry value="org.apache.xml.resolver@default:default"/>
         <setEntry value="org.apache.xml.serializer@default:default"/>
         <setEntry value="org.apache.xmlgraphics@default:default"/>
@@ -134,11 +126,9 @@
         <setEntry value="org.eclipse.core.expressions@default:default"/>
         <setEntry value="org.eclipse.core.externaltools@default:default"/>
         <setEntry value="org.eclipse.core.filebuffers@default:default"/>
-        <setEntry value="org.eclipse.core.filesystem.linux.x86_64@default:false"/>
+        <setEntry value="org.eclipse.core.filesystem.macosx@default:false"/>
         <setEntry value="org.eclipse.core.filesystem@default:default"/>
         <setEntry value="org.eclipse.core.jobs@default:default"/>
-        <setEntry value="org.eclipse.core.net.linux.x86_64@default:false"/>
-        <setEntry value="org.eclipse.core.net.linux@default:false"/>
         <setEntry value="org.eclipse.core.net@default:default"/>
         <setEntry value="org.eclipse.core.resources@default:default"/>
         <setEntry value="org.eclipse.core.runtime@default:true"/>
@@ -163,9 +153,9 @@
         <setEntry value="org.eclipse.e4.ui.ide@default:default"/>
         <setEntry value="org.eclipse.e4.ui.model.workbench@default:default"/>
         <setEntry value="org.eclipse.e4.ui.services@default:default"/>
-        <setEntry value="org.eclipse.e4.ui.swt.gtk@default:false"/>
         <setEntry value="org.eclipse.e4.ui.widgets@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.addons.swt@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.cocoa@default:false"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.swt@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench3@default:default"/>
@@ -228,8 +218,7 @@
         <setEntry value="org.eclipse.equinox.p2.updatesite@default:default"/>
         <setEntry value="org.eclipse.equinox.preferences@default:default"/>
         <setEntry value="org.eclipse.equinox.registry@default:default"/>
-        <setEntry value="org.eclipse.equinox.security.linux.x86_64@default:false"/>
-        <setEntry value="org.eclipse.equinox.security.linux@default:false"/>
+        <setEntry value="org.eclipse.equinox.security.macosx@default:false"/>
         <setEntry value="org.eclipse.equinox.security.ui@default:default"/>
         <setEntry value="org.eclipse.equinox.security@default:default"/>
         <setEntry value="org.eclipse.equinox.simpleconfigurator.manipulator@default:default"/>
@@ -299,19 +288,8 @@
         <setEntry value="org.eclipse.jface.notifications@default:default"/>
         <setEntry value="org.eclipse.jface.text@default:default"/>
         <setEntry value="org.eclipse.jface@default:default"/>
-        <setEntry value="org.eclipse.lsp4j.jsonrpc@default:default"/>
-        <setEntry value="org.eclipse.lsp4j@default:default"/>
         <setEntry value="org.eclipse.ltk.core.refactoring@default:default"/>
         <setEntry value="org.eclipse.ltk.ui.refactoring@default:default"/>
-        <setEntry value="org.eclipse.m2e.archetype.common@default:default"/>
-        <setEntry value="org.eclipse.m2e.core.ui@default:default"/>
-        <setEntry value="org.eclipse.m2e.core@default:default"/>
-        <setEntry value="org.eclipse.m2e.logback.appender@default:false"/>
-        <setEntry value="org.eclipse.m2e.maven.indexer@default:default"/>
-        <setEntry value="org.eclipse.m2e.maven.runtime.slf4j.simple@default:default"/>
-        <setEntry value="org.eclipse.m2e.maven.runtime@default:default"/>
-        <setEntry value="org.eclipse.m2e.model.edit@default:default"/>
-        <setEntry value="org.eclipse.m2e.workspace.cli@default:default"/>
         <setEntry value="org.eclipse.osgi.compatibility.state@default:false"/>
         <setEntry value="org.eclipse.osgi.services@default:default"/>
         <setEntry value="org.eclipse.osgi.util@default:default"/>
@@ -353,12 +331,13 @@
         <setEntry value="org.eclipse.sirius.ui.properties@default:default"/>
         <setEntry value="org.eclipse.sirius.ui@default:default"/>
         <setEntry value="org.eclipse.sirius@default:default"/>
-        <setEntry value="org.eclipse.swt.gtk.linux.x86_64@default:false"/>
+        <setEntry value="org.eclipse.swt.cocoa.macosx.aarch64@default:false"/>
         <setEntry value="org.eclipse.swt@default:default"/>
         <setEntry value="org.eclipse.team.core@default:default"/>
         <setEntry value="org.eclipse.team.ui@default:default"/>
         <setEntry value="org.eclipse.text@default:default"/>
         <setEntry value="org.eclipse.ui.cheatsheets@default:default"/>
+        <setEntry value="org.eclipse.ui.cocoa@default:false"/>
         <setEntry value="org.eclipse.ui.console@default:default"/>
         <setEntry value="org.eclipse.ui.editors@default:default"/>
         <setEntry value="org.eclipse.ui.externaltools@default:default"/>
@@ -378,15 +357,6 @@
         <setEntry value="org.eclipse.ui.workbench@default:default"/>
         <setEntry value="org.eclipse.ui@default:default"/>
         <setEntry value="org.eclipse.urischeme@default:default"/>
-        <setEntry value="org.eclipse.wst.common.core@default:default"/>
-        <setEntry value="org.eclipse.wst.common.emf@default:default"/>
-        <setEntry value="org.eclipse.wst.common.environment@default:default"/>
-        <setEntry value="org.eclipse.wst.common.frameworks@default:default"/>
-        <setEntry value="org.eclipse.wst.common.project.facet.core@default:default"/>
-        <setEntry value="org.eclipse.wst.common.uriresolver@default:default"/>
-        <setEntry value="org.eclipse.wst.sse.core@default:default"/>
-        <setEntry value="org.eclipse.wst.validation@default:default"/>
-        <setEntry value="org.eclipse.wst.xml.core@default:default"/>
         <setEntry value="org.eclipse.xpand@default:default"/>
         <setEntry value="org.eclipse.xtend.lib.macro@default:default"/>
         <setEntry value="org.eclipse.xtend.lib@default:default"/>
@@ -439,6 +409,7 @@
         <setEntry value="org.w3c.dom.svg@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="robocalc.robocert.graphical@default:default"/>
         <setEntry value="robocalc.robocert.ide@default:default"/>
         <setEntry value="robocalc.robocert.model@default:default"/>
         <setEntry value="robocalc.robocert.tests@default:default"/>

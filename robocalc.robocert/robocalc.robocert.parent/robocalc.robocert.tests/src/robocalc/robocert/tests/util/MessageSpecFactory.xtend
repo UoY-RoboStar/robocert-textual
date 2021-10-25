@@ -13,6 +13,7 @@ import circus.robocalc.robochart.Event
 import com.google.inject.Inject
 import static extension org.junit.jupiter.api.Assertions.*
 import robocalc.robocert.model.robocert.MessageSet
+import robocalc.robocert.model.robocert.WildcardArgument
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -112,8 +113,8 @@ class MessageSpecFactory {
 	 * 
 	 * @return  a wildcard argument.
 	 */
-	def Argument wildcardArg() {
-		rcert.createBindingArgument
+	def WildcardArgument wildcardArg() {
+		rcert.createWildcardArgument
 	}
 
 	/**
@@ -123,8 +124,8 @@ class MessageSpecFactory {
 	 * 
 	 * @return  a bound argument.
 	 */
-	def Argument boundArg(String n) {
-		rcert.createBindingArgument => [name = n]
+	def WildcardArgument boundArg(String n) {
+		rcert.createWildcardArgument => [name = n]
 	}
 
 	def MessageTopic topic(Event e) {
