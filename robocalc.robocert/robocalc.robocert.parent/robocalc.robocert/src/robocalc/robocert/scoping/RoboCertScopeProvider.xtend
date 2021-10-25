@@ -5,13 +5,13 @@ package robocalc.robocert.scoping
 
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import static robocalc.robocert.model.robocert.RobocertPackage.Literals.*
+import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.*
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.ConstAssignment
 import robocalc.robocert.model.robocert.OperationTopic
 import robocalc.robocert.model.robocert.EventTopic
 import robocalc.robocert.generator.utils.EObjectExtensions
-import robocalc.robocert.model.robocert.RAConstExpr
+import robocalc.robocert.model.robocert.ConstExpr
 
 /**
  * This class contains custom scoping description.
@@ -82,8 +82,8 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 		}
 	}
 	
-	private def dispatch getScopeInner(RAConstExpr context, EReference reference) {
-		if (reference == RA_CONST_EXPR__CONSTANT) {
+	private def dispatch getScopeInner(ConstExpr context, EReference reference) {
+		if (reference == CONST_EXPR__CONSTANT) {
 			context.constExprScope
 		}
 	}
@@ -99,7 +99,7 @@ class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	private def dispatch getScopeInner(EObject context, EReference reference) {
 	}
 	
-	private def constExprScope(RAConstExpr it) {
+	private def constExprScope(ConstExpr it) {
 		// TODO(@MattWindsor91): move this.
 		targetOfParentGroup?.targetScope
 	}

@@ -1,6 +1,6 @@
 package robocalc.robocert.generator.tockcsp.seq
 
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import robocalc.robocert.model.robocert.CSPRefinementOperator
 import robocalc.robocert.model.robocert.SequenceProperty
 import com.google.inject.Inject
@@ -10,7 +10,7 @@ import robocalc.robocert.model.robocert.CSPRefinementProperty
  * Lowers sequence properties into CSP refinement ones.
  */
 class SeqPropertyLowerer {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 		
 	/**
 	 * Lowers a sequence property into a CSP refinement one.

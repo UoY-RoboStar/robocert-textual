@@ -1,6 +1,6 @@
 package robocalc.robocert.generator.utils
 
-import robocalc.robocert.model.robocert.RAPackage
+import robocalc.robocert.model.robocert.CertPackage
 import java.util.Iterator
 import circus.robocalc.robochart.NamedElement
 import robocalc.robocert.model.robocert.RCModuleTarget
@@ -12,7 +12,7 @@ import java.util.Collections
 /**
  * Extensions for dealing with assertion packages.
  */
-class RAPackageExtensions {
+class CertPackageExtensions {
 	/**
 	 * Gets a list of RoboChart named elements referenced by this assertions
 	 * package.
@@ -21,12 +21,12 @@ class RAPackageExtensions {
 	 *
 	 * @returns an iterator of named elements.
 	 */
-	def Iterator<NamedElement> getReferencedElements(RAPackage it) {
+	def Iterator<NamedElement> getReferencedElements(CertPackage it) {
 		getSequenceGroups.flatMap[referencedElements]
 		// TODO(@MattWindsor91): do we need anything else?
 	}
 	
-	private def Iterator<SequenceGroup> getSequenceGroups(RAPackage it) {
+	private def Iterator<SequenceGroup> getSequenceGroups(CertPackage it) {
 		groups.iterator.filter(SequenceGroup)
 	}
 

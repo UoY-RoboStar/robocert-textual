@@ -1,6 +1,6 @@
 package robocalc.robocert.model.robocert.util
 
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.BinarySetOperator
@@ -10,7 +10,7 @@ import robocalc.robocert.model.robocert.MessageSpec
  * Contains utility methods for constructing sets.
  */
 class SetFactory {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 	
 	/**
 	 * @param elements  the contents to put into the set.

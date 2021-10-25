@@ -5,7 +5,7 @@ package robocalc.robocert
 
 import org.eclipse.emf.ecore.EPackage
 import com.google.inject.Injector
-import robocalc.robocert.model.robocert.RobocertPackage
+import robocalc.robocert.model.robocert.RoboCertPackage
 
 /** 
  * Initialization support for running Xtext languages without Equinox extension registry.
@@ -16,8 +16,8 @@ class RoboCertStandaloneSetup extends RoboCertStandaloneSetupGenerated {
 	}
 
 	override void register(Injector injector) {
-		if (!EPackage.Registry.INSTANCE.containsKey(RobocertPackage.eNS_URI)) {
-			EPackage.Registry.INSTANCE.put(RobocertPackage.eNS_URI, RobocertPackage.eINSTANCE)
+		if (!EPackage.Registry.INSTANCE.containsKey(RoboCertPackage.eNS_URI)) {
+			EPackage.Registry.INSTANCE.put(RoboCertPackage.eNS_URI, RoboCertPackage.eINSTANCE)
 		}
 		super.register(injector)
 	}

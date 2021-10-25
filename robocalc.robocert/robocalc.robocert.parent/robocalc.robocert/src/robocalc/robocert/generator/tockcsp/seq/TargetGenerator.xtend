@@ -7,7 +7,7 @@ import robocalc.robocert.generator.utils.TargetExtensions
 import robocalc.robocert.model.robocert.Target
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 import robocalc.robocert.model.robocert.Instantiation
-import robocalc.robocert.model.robocert.RAExpr
+import robocalc.robocert.model.robocert.CertExpr
 
 /**
  * Generates CSP referring to a target.
@@ -76,5 +76,5 @@ class TargetGenerator {
 		it?.getConstant(const)?.generateNamedExpression(const) ?: const.constantId
 	}
 
-	private def generateNamedExpression(RAExpr it, Variable const) '''{- «const.constantId» -} «generate»'''
+	private def generateNamedExpression(CertExpr it, Variable const) '''{- «const.constantId» -} «generate»'''
 }

@@ -2,7 +2,7 @@ package robocalc.robocert.tests.model
 
 
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import static extension org.junit.Assert.*
 import org.junit.jupiter.api.Test
 import org.eclipse.xtext.testing.extensions.InjectionExtension
@@ -18,7 +18,7 @@ import circus.robocalc.robochart.RoboChartFactory
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
 class RCModuleTargetImplCustomTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 	@Inject RoboChartFactory cf
 	
 	/**

@@ -10,7 +10,7 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 import robocalc.robocert.model.robocert.ConstAssignment
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import robocalc.robocert.tests.RoboCertInjectorProvider
 
 import static extension org.junit.jupiter.api.Assertions.*
@@ -22,7 +22,7 @@ import static extension org.junit.jupiter.api.Assertions.*
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
 class ConstAssignmentImplCustomTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 	@Inject RoboChartFactory cf
 
 	@Test
@@ -73,7 +73,7 @@ class ConstAssignmentImplCustomTest {
 	private def ConstAssignment assignment(Variable x) {
 		rf.createConstAssignment=>[
 			constants.add(x)
-			value = rf.createRAIntLit=>[value = 4]
+			value = rf.createIntExpr=>[value = 4]
 		]
 	}
 }

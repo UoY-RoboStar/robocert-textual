@@ -27,4 +27,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: robocalc.robocert.ui.quickfix,
  robocalc.robocert.ui.internal,
  robocalc.robocert.ui.contentassist
-Bundle-Activator: robocalc.robocert.ui.internal.RobocertActivator
+Bundle-Activator: robocalc.robocert.ui.internal.RoboCertActivator

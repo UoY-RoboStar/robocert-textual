@@ -4,7 +4,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.InjectWith
 import robocalc.robocert.tests.RoboCertInjectorProvider
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import com.google.inject.Inject
 import org.junit.jupiter.api.Test
 import static extension org.junit.Assert.*
@@ -16,7 +16,7 @@ import static extension org.junit.Assert.*
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
 class SubsequenceImplCustomTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 	
 	/**
 	 * Tests that we return null if there is no parent sequence.

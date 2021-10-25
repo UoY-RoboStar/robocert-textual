@@ -1,7 +1,7 @@
 package robocalc.robocert.tests.model
 
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import static extension org.junit.Assert.assertFalse
 import static extension org.junit.Assert.assertTrue
 import org.junit.jupiter.api.Test
@@ -18,7 +18,7 @@ import robocalc.robocert.model.robocert.util.SetFactory
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
 class BinaryMessageSetImplCustomTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 	@Inject extension SetFactory sf
 
 	/**

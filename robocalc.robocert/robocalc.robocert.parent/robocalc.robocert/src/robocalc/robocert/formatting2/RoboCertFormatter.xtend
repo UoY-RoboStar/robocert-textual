@@ -6,7 +6,7 @@ package robocalc.robocert.formatting2
 import circus.robocalc.robochart.textual.formatting2.RoboChartFormatter
 import com.google.inject.Inject
 import org.eclipse.xtext.formatting2.IFormattableDocument
-import robocalc.robocert.model.robocert.RAPackage
+import robocalc.robocert.model.robocert.CertPackage
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.services.RoboCertGrammarAccess
 
@@ -14,9 +14,9 @@ class RoboCertFormatter extends RoboChartFormatter {
 	
 	@Inject extension RoboCertGrammarAccess
 
-	def dispatch void format(RAPackage rAPackage, extension IFormattableDocument document) {
+	def dispatch void format(CertPackage certPackage, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		for (group : rAPackage.groups) {
+		for (group : certPackage.groups) {
 			group.format
 		}
 	}

@@ -4,7 +4,7 @@ package robocalc.robocert.model.robocert.impl
  * Custom factory that injects 'custom' versions of various RoboCert EClasses,
  * including implementations of derived elements.
  */
-class RobocertFactoryImplCustom extends RobocertFactoryImpl {
+class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	// Actors need custom impls to inject their anySequence definition.
 
 	/**

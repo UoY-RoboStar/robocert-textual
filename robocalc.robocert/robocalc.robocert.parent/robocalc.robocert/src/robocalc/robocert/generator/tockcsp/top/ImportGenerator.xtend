@@ -9,11 +9,11 @@ import java.util.LinkedList
 import java.util.Set
 import org.eclipse.emf.ecore.resource.Resource
 import robocalc.robocert.generator.utils.RCPackageExtensions
-import robocalc.robocert.model.robocert.RAPackage
+import robocalc.robocert.model.robocert.CertPackage
 import com.google.common.collect.Iterators
 import java.util.Iterator
 import robocalc.robocert.generator.utils.FilenameExtensions
-import robocalc.robocert.generator.utils.RAPackageExtensions
+import robocalc.robocert.generator.utils.CertPackageExtensions
 
 /**
  * A generator that expands out imports for a top-level resource.
@@ -23,7 +23,7 @@ class ImportGenerator {
 	// at the moment, and, as such, a) import it; and b) import every package
 	// rather than just the anonymous ones.  This should be fixed in line with
 	// upstream, eventually, I think?
-	@Inject extension RAPackageExtensions
+	@Inject extension CertPackageExtensions
 	@Inject extension RCPackageExtensions
 	@Inject extension FilenameExtensions
 
@@ -92,7 +92,7 @@ class ImportGenerator {
 		]
 	}
 
-	private def dispatch getPackageImportsInner(RAPackage it) {
+	private def dispatch getPackageImportsInner(CertPackage it) {
 		referencedElements.flatMap[elementImports]
 	}
 

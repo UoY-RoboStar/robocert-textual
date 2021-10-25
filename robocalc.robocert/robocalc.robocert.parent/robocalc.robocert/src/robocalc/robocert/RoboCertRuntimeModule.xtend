@@ -9,8 +9,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter
 import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom
 import circus.robocalc.robochart.RoboChartFactory
-import robocalc.robocert.model.robocert.RobocertFactory
-import robocalc.robocert.model.robocert.impl.RobocertFactoryImplCustom
+import robocalc.robocert.model.robocert.RoboCertFactory
 import robocalc.robocert.generator.intf.seq.ActionGenerator
 import robocalc.robocert.generator.tockcsp.seq.ActionGeneratorImpl
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
@@ -20,6 +19,7 @@ import org.eclipse.xtext.conversion.IValueConverterService
 import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl
 import robocalc.robocert.generator.intf.seq.SequenceLocator
 import robocalc.robocert.generator.tockcsp.seq.SequenceLocatorImpl
+import robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -60,9 +60,9 @@ class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	/**
 	 * Binds the RoboCert custom factory.
 	 */
-	def Class<? extends RobocertFactory> bindRobocertFactory() {
+	def Class<? extends RoboCertFactory> bindRoboCertFactory() {
 		// TODO(@MattWindsor91): is this the right way to do this?
-		RobocertFactoryImplCustom
+		RoboCertFactoryImplCustom
 	}
 
 	/**

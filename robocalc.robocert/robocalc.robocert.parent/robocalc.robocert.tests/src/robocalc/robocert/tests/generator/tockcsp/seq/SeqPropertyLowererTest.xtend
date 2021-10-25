@@ -5,7 +5,7 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import org.junit.jupiter.api.Test
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import com.google.inject.Inject
 import circus.robocalc.robochart.RoboChartFactory
 import robocalc.robocert.model.robocert.CSPModel
@@ -22,7 +22,7 @@ import robocalc.robocert.model.robocert.CSPRefinementOperator
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertCustomInjectorProvider) 
 class SeqPropertyLowererTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 	@Inject RoboChartFactory rcf
 	@Inject extension SeqPropertyLowerer
 	

@@ -10,4 +10,4 @@ follows:
   `RoboCert.genmodel`.
 - `src/` contains Xtend source for custom overrides to the source in `src-gen/`.
   These usually appear when there are derived members in the model.
-  If adding new overrides, remember to register them in `RobocertFactoryImplCustom`.
+  If adding new overrides, remember to register them in `RoboCertFactoryImplCustom`.

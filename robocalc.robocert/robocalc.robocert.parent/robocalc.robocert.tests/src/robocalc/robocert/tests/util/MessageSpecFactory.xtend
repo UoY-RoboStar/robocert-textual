@@ -6,7 +6,7 @@ import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.MessageTopic
 import robocalc.robocert.model.robocert.RCModuleTarget
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import robocalc.robocert.model.robocert.World
 import circus.robocalc.robochart.RoboChartFactory
 import circus.robocalc.robochart.Event
@@ -20,7 +20,7 @@ import robocalc.robocert.model.robocert.WildcardArgument
  */
 class MessageSpecFactory {
 	@Inject RoboChartFactory rc;
-	@Inject RobocertFactory rcert;
+	@Inject RoboCertFactory rcert;
 
 	/**
 	 * Creates an arrow message spec with the given topic, direction, and
@@ -102,7 +102,7 @@ class MessageSpecFactory {
 
 	def Argument intArg(int v) {
 		rcert.createExpressionArgument => [
-			expr = rcert.createRAIntLit => [
+			expr = rcert.createIntExpr => [
 				value = v
 			]
 		]

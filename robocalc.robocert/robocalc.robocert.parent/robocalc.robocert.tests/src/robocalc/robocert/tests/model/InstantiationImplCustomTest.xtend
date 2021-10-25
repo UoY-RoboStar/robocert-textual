@@ -7,12 +7,12 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import robocalc.robocert.tests.RoboCertInjectorProvider
 
 import static extension org.junit.jupiter.api.Assertions.*
-import robocalc.robocert.model.robocert.RAIntLit
-import robocalc.robocert.model.robocert.RAExpr
+import robocalc.robocert.model.robocert.IntExpr
+import robocalc.robocert.model.robocert.CertExpr
 
 /**
  * Tests any custom functionality on Instantiations, and also tests
@@ -21,7 +21,7 @@ import robocalc.robocert.model.robocert.RAExpr
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider)
 class InstantiationImplCustomTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 	@Inject RoboChartFactory cf
 
 	@Test
@@ -40,13 +40,13 @@ class InstantiationImplCustomTest {
 				rf.createConstAssignment=>[
 					constants.add(x1)
 					constants.add(y2)
-					value = rf.createRAIntLit=>[value = 42]
+					value = rf.createIntExpr=>[value = 42]
 				]
 			)
 			assignments.add(
 				rf.createConstAssignment=>[
 					constants.add(x2)
-					value = rf.createRAIntLit=>[value = 24]
+					value = rf.createIntExpr=>[value = 24]
 				]
 			)
 		]
@@ -57,8 +57,8 @@ class InstantiationImplCustomTest {
 		inst.getConstant(y2).assertIntWithValue(42)
 	}
 	
-	private def void assertIntWithValue(RAExpr it, int expected) {
+	private def void assertIntWithValue(CertExpr it, int expected) {
 		assertNotNull
-		expected.assertEquals((it as RAIntLit).value)
+		expected.assertEquals((it as IntExpr).value)
 	}
 }

@@ -1,3 +1,12 @@
+/**
+ * Emfatic projection of the RoboCert metamodel.
+ *
+ * To use this metamodel, translate it into Ecore using the Emfatic toolchain,
+ * then use the MWE2 to generate the support code.
+ *
+ * Authors:
+ * - Matt Windsor (@MattWindsor91): initial model
+ */
 @namespace(uri="http://robocert.robocalc/", prefix="robocert")
 @genmodel
 	( basePackage="robocalc.robocert.model"
@@ -11,21 +20,28 @@ package robocert;
 
 import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
 
+/* How to read this model:
+ *
+ * - With the exception of utility classes, the metamodel is structured based
+ *   on how things are (or should be) structured in the RoboCert reference
+ *   manual, as well as in the Sirius diagrams..
+ * - The Sirius diagrams in `representations.aird` are probably a more
+ *   approachable introduction to what is going on here.
+ */
+
+// TODO(@MattWindsor91): port all documentation from doc comments to genmodel
+
 ///////////////////////////////////////////////////////////////////////////////
 // UTILITIES
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * An element that might be named, but might not be.
- *
- * This is usually useful for elements where the name adds some syntactic
- * complexity but enables cross-reference, and so we want to offer a possible
- * unnamed variant.
- */
+@genmodel(documentation="An element that might be named, but might not be.
+
+This is usually useful for elements where the name adds some syntactic
+complexity but enables cross-reference, and so we want to offer a possible
+unnamed variant.")
 abstract class OptionallyNamedElement {
-	/**
-	 * The name (can be null).
-	 */
+	@genmodel(documentation="The name (can be null).")
 	attr String[0..1] name;
 }
 
@@ -34,7 +50,7 @@ abstract class OptionallyNamedElement {
 ///////////////////////////////////////////////////////////////////////////////
 
 @genmodel(documentation="A RoboCert package.")
-class RAPackage extends robochart.BasicPackage {
+class CertPackage extends robochart.BasicPackage {
 	@genmodel(documentation="Any groups in this package.
 
 Groups form an ordered list because they can lexically depend on things
@@ -48,7 +64,7 @@ Groups contain specifications in a particular RoboCert notation, instantiating
 various constants.")
 abstract class Group {
 	@genmodel(documentation="The parent package.")
-	ref RAPackage[1]#groups parent;
+	ref CertPackage[1]#groups parent;
 	
 	@genmodel(documentation="The instantiation in effect in this group.")
 	val Instantiation[1]#group instantiation;
@@ -67,7 +83,7 @@ class Instantiation {
 	val ConstAssignment[*] assignments;
 
 	@genmodel(documentation="Gets any available instantiation for the constant in this instantiation.")	
-	derived readonly transient volatile op RAExpr[0..1] getConstant(robochart.Variable constant); 
+	derived readonly transient volatile op CertExpr[0..1] getConstant(robochart.Variable constant); 
 }
 
 @genmodel(documentation="Assigns a value to one or more constants.")
@@ -76,7 +92,7 @@ class ConstAssignment {
 	ref robochart.Variable[+] constants;
 	
 	@genmodel(documentation="The expression containing the new value of the constant(s).")
-	val RAExpr[1] value;
+	val CertExpr[1] value;
 	
 	@genmodel(documentation="Checks whether this assignment maps the given constant.")
 	derived readonly transient volatile op boolean[1] hasConstant(robochart.Variable constant);
@@ -114,27 +130,27 @@ abstract class Property {
 //
 
 @genmodel(documentation="A RoboCert expression.")
-abstract class RAExpr {
+abstract class CertExpr {
 }
 
 @genmodel(documentation="A reference to a constant in the model.")
-class RAConstExpr extends RAExpr {
+class ConstExpr extends CertExpr {
 	@genmodel(documentation="The constant being referenced.")
 	ref robochart.Variable[1] constant;
 }
 
 @genmodel(documentation="A RoboCert integer literal.")
-class RAIntLit extends RAExpr {
+class IntExpr extends CertExpr {
 	@genmodel(documentation="The value of the expression.")
 	attr int[1] value;
 }
 
 @genmodel(documentation="A reference to a previously-bound RoboCert variable.")
-class BindingExpr extends RAExpr {
+class BindingExpr extends CertExpr {
 	@genmodel(documentation="The source of the variable being bound.") 
 	ref WildcardArgument[1] source;
 
-	// We could track a bidirectional reference here, but Xtext doesn't like it
+	// We could track a bidirectional reference here, but Xtext doesn't like it.
 }
 
 //
@@ -392,7 +408,7 @@ abstract class BlockStep extends SequenceStep {
 @genmodel(documentation="Step imposing a termination deadline on a block.")
 class DeadlineStep extends BlockStep {
 	@genmodel(documentation="Deadline, in time units after the start of the block.")
-	val RAExpr[1] units;
+	val CertExpr[1] units;
 }
 
 /**
@@ -438,7 +454,7 @@ class DefiniteLoopBound extends LoopBound {
 	 * broken.
 	 * Evaluated once only.
 	 */
- 	val RAExpr[1] times;
+ 	val CertExpr[1] times;
 }
 
 /**
@@ -453,7 +469,7 @@ class LowerLoopBound extends LoopBound {
 	 * prematurely broken.
 	 * Evaluated once only.
 	 */
- 	val RAExpr[1] lowerTimes;
+ 	val CertExpr[1] lowerTimes;
 }
 
 /**
@@ -468,12 +484,12 @@ class RangeLoopBound extends LoopBound {
 	 * prematurely broken.
 	 * Evaluated once only.	 
 	 */
-	val RAExpr[1] lowerTimes;
+	val CertExpr[1] lowerTimes;
 	/**
 	 * The upper number of times the loop must execute.
 	 * Evaluated once only.
 	 */
-	val RAExpr[1] upperTimes;
+	val CertExpr[1] upperTimes;
 }
 
 //
@@ -535,7 +551,7 @@ class WaitAction extends SequenceAction {
 	/**
 	 * The number of units to wait.
 	 */
-	val RAExpr[1] units;
+	val CertExpr[1] units;
 	
 	// TODO(@MattWindsor91): nondeterministic waits
 }
@@ -650,7 +666,7 @@ abstract class Argument {
 @genmodel(documentation="Argument pattern specifying an expression.")
 class ExpressionArgument extends Argument {
 	@genmodel(documentation="The expression in question.")
-	val RAExpr[1] expr;
+	val CertExpr[1] expr;
 }
 
 @genmodel(documentation="Argument pattern accepting any value.

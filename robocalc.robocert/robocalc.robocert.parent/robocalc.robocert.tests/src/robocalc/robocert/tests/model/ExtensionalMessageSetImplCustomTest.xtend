@@ -1,7 +1,7 @@
 package robocalc.robocert.tests.model
 
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import static extension org.junit.Assert.assertFalse
 import static extension org.junit.Assert.assertTrue
 import org.junit.jupiter.api.Test
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
 class ExtensionalMessageSetImplCustomTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 
 	/**
 	 * Tests to make sure isActive is false on empty extensional gap message

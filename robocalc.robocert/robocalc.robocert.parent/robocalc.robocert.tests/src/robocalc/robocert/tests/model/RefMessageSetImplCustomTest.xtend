@@ -6,7 +6,7 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
 import robocalc.robocert.model.robocert.RefMessageSet
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import robocalc.robocert.tests.RoboCertInjectorProvider
 
 import static extension org.junit.Assert.assertFalse
@@ -21,7 +21,7 @@ import robocalc.robocert.model.robocert.util.SetFactory
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
 class RefMessageSetImplCustomTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 	@Inject extension SetFactory
 
 	/**

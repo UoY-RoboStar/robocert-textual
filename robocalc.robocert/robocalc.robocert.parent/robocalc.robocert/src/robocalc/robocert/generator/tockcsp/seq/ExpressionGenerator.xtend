@@ -2,10 +2,10 @@ package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import robocalc.robocert.generator.utils.VariableExtensions
-import robocalc.robocert.model.robocert.RAIntLit
-import robocalc.robocert.model.robocert.RAConstExpr
+import robocalc.robocert.model.robocert.IntExpr
+import robocalc.robocert.model.robocert.ConstExpr
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
-import robocalc.robocert.model.robocert.RAExpr
+import robocalc.robocert.model.robocert.CertExpr
 import robocalc.robocert.model.robocert.BindingExpr
 import robocalc.robocert.generator.tockcsp.top.BindingGenerator
 
@@ -30,7 +30,7 @@ class ExpressionGenerator {
 	 * @param it  the expression to generate.
 	 * @return  CSP-M for the expression.
 	 */
-	def dispatch generate(RAIntLit it) {
+	def dispatch generate(IntExpr it) {
 		value
 	}
 	
@@ -40,7 +40,7 @@ class ExpressionGenerator {
 	 * @param it  the expression to generate.
 	 * @return  CSP-M for the expression.
 	 */
-	def dispatch generate(RAConstExpr it) {
+	def dispatch generate(ConstExpr it) {
 		// TODO(@MattWindsor91): we may eventually need to pass some context
 		// here.
 		constant.constantId
@@ -62,7 +62,7 @@ class ExpressionGenerator {
 	 * @param it  the expression to generate.
 	 * @return  CSP-M for the expression.
 	 */	
-	def dispatch generate(RAExpr it) {
+	def dispatch generate(CertExpr it) {
 		unsupported("expression", "0")
 	}
 }

@@ -14,9 +14,9 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 // CORE LANGUAGE
 ///////////////////////////////////////////////////////////////////////////////
 /**
- * A top-level assertions package.
+ * A top-level RoboCert package.
  */
-RAPackage:
+CertPackage:
 	(groups+=(CSPGroup | SequenceGroup | AssertionGroup))*;
 
 //
@@ -32,7 +32,7 @@ Instantiation:
  * A constant assignment.
  */
 ConstAssignment:
-	ConstName ('and' ConstName)* AssignWords value=RAExpr;
+	ConstName ('and' ConstName)* AssignWords value=CertExpr;
 
 /**
  * Adds a constant to the constants list.
@@ -90,16 +90,16 @@ Assertion:
  * Ideally this shouldn't stray too far from the RoboChart language (and maybe
  * one day it'll merge back into it).
  */
-RAExpr:
-	{RAIntLit} value=INT |
-	{RAConstExpr} constant=[Variable|QualifiedName] |
+CertExpr:
+	{IntExpr} value=INT |
+	{ConstExpr} constant=[Variable|QualifiedName] |
 	'@' {BindingExpr} source=[WildcardArgument];
 
 /**
  * A time unit expression.
  */
-TimeUnits returns RAExpr:
-	RAExpr 'time'? ('unit' | 'units');
+TimeUnits returns CertExpr:
+	CertExpr 'time'? ('unit' | 'units');
 
 //
 // MODALITIES
@@ -266,9 +266,9 @@ MaybeLoopBound returns LoopBound:
  */
 LoopBound:
 	'forever' {InfiniteLoopBound} |
-	'exactly' {DefiniteLoopBound} times=RAExpr 'times' |
-	'at' 'least' {LowerLoopBound} lowerTimes=RAExpr 'times' |
-	'between' {RangeLoopBound} lowerTimes=RAExpr 'and' upperTimes=RAExpr 'times';
+	'exactly' {DefiniteLoopBound} times=CertExpr 'times' |
+	'at' 'least' {LowerLoopBound} lowerTimes=CertExpr 'times' |
+	'between' {RangeLoopBound} lowerTimes=CertExpr 'and' upperTimes=CertExpr 'times';
 
 //
 // Branch steps
@@ -406,7 +406,7 @@ ExtensionalMessageSet:
  * An argument pattern.
  */
 Argument:
-	{ExpressionArgument} expr=RAExpr |
+	{ExpressionArgument} expr=CertExpr |
 	{WildcardArgument} ('any' | 'anything') ('as' name=ID)?;
 
 //

@@ -10,9 +10,16 @@
     <details key="testsDirectory" value="/robocalc.robocert.model.tests/src-gen"/>
   </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="OptionallyNamedElement" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An element that might be named, but might not be.&#xD;&#xA;&#xD;&#xA;This is usually useful for elements where the name adds some syntactic&#xD;&#xA;complexity but enables cross-reference, and so we want to offer a possible&#xD;&#xA;unnamed variant."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name (can be null)."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RAPackage" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//BasicPackage">
+  <eClassifiers xsi:type="ecore:EClass" name="CertPackage" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//BasicPackage">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A RoboCert package."/>
     </eAnnotations>
@@ -28,7 +35,7 @@
       <details key="documentation" value="A group in a RoboCert package.&#xD;&#xA;&#xD;&#xA;Groups contain specifications in a particular RoboCert notation, instantiating&#xD;&#xA;various constants."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//RAPackage" eOpposite="#//RAPackage/groups">
+        eType="#//CertPackage" eOpposite="#//CertPackage/groups">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The parent package."/>
       </eAnnotations>
@@ -44,7 +51,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Specifies a (partial) instantiation of targets in a group."/>
     </eAnnotations>
-    <eOperations name="getConstant" eType="#//RAExpr">
+    <eOperations name="getConstant" eType="#//CertExpr">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Gets any available instantiation for the constant in this instantiation."/>
       </eAnnotations>
@@ -79,7 +86,7 @@
         <details key="documentation" value="The constant(s) being assigned."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//RAExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//CertExpr"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The expression containing the new value of the constant(s)."/>
@@ -121,12 +128,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RAExpr" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="CertExpr" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A RoboCert expression."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RAConstExpr" eSuperTypes="#//RAExpr">
+  <eClassifiers xsi:type="ecore:EClass" name="ConstExpr" eSuperTypes="#//CertExpr">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A reference to a constant in the model."/>
     </eAnnotations>
@@ -137,7 +144,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RAIntLit" eSuperTypes="#//RAExpr">
+  <eClassifiers xsi:type="ecore:EClass" name="IntExpr" eSuperTypes="#//CertExpr">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A RoboCert integer literal."/>
     </eAnnotations>
@@ -147,7 +154,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BindingExpr" eSuperTypes="#//RAExpr">
+  <eClassifiers xsi:type="ecore:EClass" name="BindingExpr" eSuperTypes="#//CertExpr">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A reference to a previously-bound RoboCert variable."/>
     </eAnnotations>
@@ -368,7 +375,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Step imposing a termination deadline on a block."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//RAExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//CertExpr"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Deadline, in time units after the start of the block."/>
@@ -382,18 +389,18 @@
   <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="InfiniteLoopBound" eSuperTypes="#//LoopBound"/>
   <eClassifiers xsi:type="ecore:EClass" name="DefiniteLoopBound" eSuperTypes="#//LoopBound">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="#//RAExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="#//CertExpr"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LowerLoopBound" eSuperTypes="#//LoopBound">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="#//RAExpr" containment="true"/>
+        eType="#//CertExpr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RangeLoopBound" eSuperTypes="#//LoopBound">
     <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="#//RAExpr" containment="true"/>
+        eType="#//CertExpr" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="upperTimes" lowerBound="1"
-        eType="#//RAExpr" containment="true"/>
+        eType="#//CertExpr" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BranchStep" abstract="true" eSuperTypes="#//SequenceStep">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -432,7 +439,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction"/>
   <eClassifiers xsi:type="ecore:EClass" name="WaitAction" eSuperTypes="#//SequenceAction">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//RAExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//CertExpr"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageSpec">
@@ -473,7 +480,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Argument pattern specifying an expression."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//RAExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//CertExpr"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The expression in question."/>

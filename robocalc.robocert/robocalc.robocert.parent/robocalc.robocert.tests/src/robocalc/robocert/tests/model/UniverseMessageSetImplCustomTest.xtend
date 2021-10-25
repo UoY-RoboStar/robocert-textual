@@ -1,7 +1,7 @@
 package robocalc.robocert.tests.model
 
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.RobocertFactory
+import robocalc.robocert.model.robocert.RoboCertFactory
 import static extension org.junit.Assert.assertTrue
 import org.junit.jupiter.api.Test
 import org.eclipse.xtext.testing.extensions.InjectionExtension
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
 class UniverseMessageSetImplCustomTest {
-	@Inject RobocertFactory rf
+	@Inject RoboCertFactory rf
 
 	/**
 	 * Tests to make sure 'active' is always true on universe gap message
