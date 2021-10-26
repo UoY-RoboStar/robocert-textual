@@ -1,6 +1,6 @@
 package robocalc.robocert.generator.tockcsp.top
 
-import robocalc.robocert.model.robocert.WildcardArgument
+import robocalc.robocert.model.robocert.Binding
 
 /**
  * Generates CSP-M for handling various aspects of event value bindings.
@@ -15,25 +15,25 @@ class BindingGenerator {
 	 * 
 	 * @return  the generated CSP-M name for the binding in the expression.
 	 */
-	def generateExpressionName(WildcardArgument it) {
-		if (name === null) {
+	def generateExpressionName(Binding it) {
+		if (it === null || name === null) {
 			throw new NullPointerException("Tried to use a nameless binding as an expression")
-		}
-		name.mangle
+		}	
+		name.mangle 
 	}
-	
+
 	/**
 	 * Generates CSP-M for the name of a binding in input position.
 	 * 
-	 * If the binding has a name, it will be used for the variable; otherwise,
+	 * If the binding exists, its name will be used for the variable; if not,
 	 * we use '_' (the CSP-M wildcard bind).
 	 *
-	 * @param it     the binding for which we are generating.
+	 * @param it  the binding for which we are generating (may be null).
 	 * 
 	 * @return  the generated CSP-M name for the binding.
 	 */
-	def generateInputName(WildcardArgument it) {
-		name?.mangle ?: "_"
+	def generateInputName(Binding it) {
+		it?.name?.mangle ?: "_"
 	}
 	
 	/**
@@ -47,8 +47,8 @@ class BindingGenerator {
 	 * 
 	 * @return  the generated CSP-M name for the binding in the argument.
 	 */
-	def generateArgumentName(WildcardArgument it, int index) {
-		(name ?: index.toString).mangle
+	def generateArgumentName(Binding it, int index) {
+		(it?.name ?: index.toString).mangle
 	}
 	
 	/**

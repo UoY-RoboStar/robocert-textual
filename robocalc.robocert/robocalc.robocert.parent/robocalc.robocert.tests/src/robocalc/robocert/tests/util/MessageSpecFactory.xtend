@@ -125,7 +125,7 @@ class MessageSpecFactory {
 	 * @return  a bound argument.
 	 */
 	def WildcardArgument boundArg(String n) {
-		rcert.createWildcardArgument => [name = n]
+		rcert.createWildcardArgument => [binding = rcert.createBinding => [name = n]]
 	}
 
 	def MessageTopic topic(Event e) {

@@ -150,9 +150,13 @@ class IntExpr extends CertExpr {
 @genmodel(documentation="A reference to a previously-bound RoboCert variable.")
 class BindingExpr extends CertExpr {
 	@genmodel(documentation="The source of the variable being bound.") 
-	ref WildcardArgument[1] source;
+	ref Binding[1] source;
 
 	// We could track a bidirectional reference here, but Xtext doesn't like it.
+}
+
+@genmodel(documentation="A binding point.")
+class Binding extends robochart.NamedElement {
 }
 
 //
@@ -544,10 +548,10 @@ class ExpressionArgument extends Argument {
 	val CertExpr[1] expr;
 }
 
-@genmodel(documentation="Argument pattern accepting any value.
-
-If this argument is given a name, it introduces a binding for the value.")
-class WildcardArgument extends Argument, OptionallyNamedElement {
+@genmodel(documentation="Argument pattern accepting any value.")
+class WildcardArgument extends Argument {
+	@genmodel(documentation="An optional binding point to receive the value.")
+	val Binding[0..1] binding;
 }
 
 //

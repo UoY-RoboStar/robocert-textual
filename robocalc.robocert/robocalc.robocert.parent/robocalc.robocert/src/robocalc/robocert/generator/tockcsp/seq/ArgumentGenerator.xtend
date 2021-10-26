@@ -41,7 +41,7 @@ class ArgumentGenerator {
 	 * 
 	 * @return  generated CSP-M for the binding argument.
 	 */	
-	def dispatch generateForPrefix(WildcardArgument it) '''?«generateInputName»'''
+	def dispatch generateForPrefix(WildcardArgument it) '''?«binding.generateInputName»'''
 	
 	/**
 	 * Generates an unsupported argument in prefix position.
@@ -81,7 +81,7 @@ class ArgumentGenerator {
 	 * @return  generated CSP-M for the wildcard argument.
 	 */	
 	def dispatch generateForSet(WildcardArgument it, int index)
-		'''.«generateArgumentName(index)»'''
+		'''.«binding.generateArgumentName(index)»'''
 	
 	/**
 	 * Generates an unsupported argument in prefix position.

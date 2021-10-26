@@ -76,8 +76,8 @@ class TopicGenerator {
 	def generateRanges(MessageTopic it, Iterable<Pair<Integer, WildcardArgument>> args)
 	    '''«FOR p : args SEPARATOR ', '»«generateRange(p.value, p.key)»«ENDFOR»'''
 	
-	private def generateRange(MessageTopic it, WildcardArgument binding, int index)
-		'''«binding.generateArgumentName(index)» <- «paramTypeAt(index)?.compileType ?: "{- missing type -} int"»'''
+	private def generateRange(MessageTopic it, WildcardArgument arg, int index)
+		'''«arg.binding.generateArgumentName(index)» <- «paramTypeAt(index)?.compileType ?: "{- missing type -} int"»'''
 	
 	private def dispatch Type paramTypeAt(EventTopic it, int index) {
 		index == 0 ? event.type : null

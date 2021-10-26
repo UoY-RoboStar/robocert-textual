@@ -6,7 +6,6 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import org.junit.jupiter.api.Test
 import com.google.inject.Inject
-import robocalc.robocert.tests.util.MessageSpecFactory
 import robocalc.robocert.tests.util.CspNormaliser
 import robocalc.robocert.model.robocert.RoboCertFactory
 import static org.junit.Assert.assertEquals
@@ -21,7 +20,6 @@ class BindingGeneratorTest {
 	@Inject RoboCertFactory rf
 	@Inject extension BindingGenerator
 	@Inject extension CspNormaliser
-	@Inject extension MessageSpecFactory
 	
 	//
 	// Input
@@ -72,10 +70,14 @@ class BindingGeneratorTest {
 	//
 
 	private def void assertBindingGeneratesArgument(String name, CharSequence expected) {
-		assertEquals(expected, name.boundArg.generateArgumentName(0).tidy)
+		assertEquals(expected, name.binding.generateArgumentName(0).tidy)
 	}
 	
 	private def void assertBindingGeneratesInput(String name, CharSequence expected) {
-		assertEquals(expected, name.boundArg.generateInputName.tidy)
+		assertEquals(expected, name.binding.generateInputName.tidy)
+	}
+	
+	private def binding(String n) {
+		rf.createBinding => [name = n]
 	}
 }

@@ -111,13 +111,20 @@ Property:
 CertExpr:
 	{IntExpr} value=INT |
 	{ConstExpr} constant=[Variable|QualifiedName] |
-	'@' {BindingExpr} source=[WildcardArgument];
+	'@' {BindingExpr} source=[Binding];
 
 /**
  * A time unit expression.
  */
 TimeUnits returns CertExpr:
 	CertExpr 'time'? ('unit' | 'units');
+
+/**
+ * A binding (source of a BindingExpr).
+ */
+Binding:
+	'as' name=ID
+;
 
 //
 // MODALITIES
@@ -432,7 +439,7 @@ ExtensionalMessageSet:
  */
 Argument:
 	{ExpressionArgument} expr=CertExpr |
-	{WildcardArgument} ('any' | 'anything') ('as' name=ID)?;
+	{WildcardArgument} ('any' | 'anything') (binding=Binding)?;
 
 //
 // ACTORS
