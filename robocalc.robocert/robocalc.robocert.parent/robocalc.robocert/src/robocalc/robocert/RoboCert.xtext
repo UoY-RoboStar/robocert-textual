@@ -275,7 +275,7 @@ SequenceStep:
  */
 BlockStep returns SequenceStep:
 	('within' {DeadlineStep} units=TimeUnits |
-	'loop' {LoopStep} bound=MaybeLoopBound ('as' name=ID)?) ':' body=Subsequence;
+	'loop' {LoopStep} bound=MaybeLoopBound) ('as' name=ID)? ':' body=Subsequence;
 
 //
 // Loop bounds

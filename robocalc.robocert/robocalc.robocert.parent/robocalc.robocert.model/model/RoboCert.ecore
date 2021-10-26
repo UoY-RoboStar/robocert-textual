@@ -235,9 +235,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BlockStep" abstract="true" eSuperTypes="#//SequenceStep">
+  <eClassifiers xsi:type="ecore:EClass" name="BlockStep" abstract="true" eSuperTypes="#//SequenceStep #//OptionallyNamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Step that contains exactly one body.&#xD;&#xA;&#xD;&#xA;Often, but not always, these will be (what UML would call) combined&#xD;&#xA;fragments."/>
+      <details key="documentation" value="Step that contains exactly one body.&#xD;&#xA;&#xD;&#xA;Often, but not always, these will be (what UML would call) combined&#xD;&#xA;fragments.&#xD;&#xA;&#xD;&#xA;Block steps can optionally have a name, which allows breaking."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
         containment="true">
@@ -257,9 +257,16 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//BlockStep #//OptionallyNamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//BlockStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A step containing one or more sequence elements in loop."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The loop bound."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="InfiniteLoopBound" eSuperTypes="#//LoopBound"/>

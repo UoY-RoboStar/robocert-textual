@@ -279,8 +279,10 @@ class ActionStep extends SequenceStep {
 @genmodel(documentation="Step that contains exactly one body.
 
 Often, but not always, these will be (what UML would call) combined
-fragments.")
-abstract class BlockStep extends SequenceStep {
+fragments.
+
+Block steps can optionally have a name, which allows breaking.")
+abstract class BlockStep extends SequenceStep, OptionallyNamedElement {
 	@genmodel(documentation="The body of the block.")
 	val Subsequence[1] body;
 }
@@ -291,19 +293,12 @@ class DeadlineStep extends BlockStep {
 	val CertExpr[1] units;
 }
 
-/**
- * A step containing one or more sequence elements in loop.
- *
- * A loop action may have a name, which is useful when specifying break actions.
- */
-class LoopStep extends BlockStep, OptionallyNamedElement {
-	/**
-	 * The loop bound.
-	 */
+@genmodel(documentation="A step containing one or more sequence elements in loop.")
+class LoopStep extends BlockStep {
+	@genmodel(documentation="The loop bound.")
 	val LoopBound[1] bound;
 
 	// TODO: conditionals
-	// TODO: break
 }
 
 //
