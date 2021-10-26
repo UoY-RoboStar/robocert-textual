@@ -180,131 +180,6 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//Group">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A group of raw CSP-M declarations.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUntimed" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="If true, the group should be generated outside of a timed section."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPreamble" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="If true, the group should be generated before any model-specific imports.&#xD;&#xA;&#x9;&#xD;&#xA;This is useful primarily for debugging purposes.&#xD;&#xA;&#xD;&#xA;The group may be generated after RoboCert prelude imports, as these contain&#xD;&#xA;the timing model depended upon by the tock-CSP encoding."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
-        eType="#//CSPFragment" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The fragments contained in this group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" abstract="true">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The raw contents of the CSP fragment."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NamedCSPFragment" eSuperTypes="#//CSPFragment ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that has a name.&#xD;&#xA;&#xD;&#xA;These are used to bind CSP-M to names that are referred-to elsewhere."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventSetCSPFragment" eSuperTypes="#//NamedCSPFragment #//CSPContextSource">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that is bound to an event set."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//NamedCSPFragment #//CSPProcessSource">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that is bound to a process."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="events" eType="#//CSPContextSource">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The source of the context used for tick-tock model shifting.&#xD;&#xA;&#xD;&#xA;We cannot, and do not, check to make sure that this accurately represents&#xD;&#xA;the process's actual event universe."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InlineCSPFragment" eSuperTypes="#//CSPFragment #//OptionallyNamedElement">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that is not bound to anything.&#xD;&#xA;&#xD;&#xA;Such fragments can be named, but don't need to be, and nothing in the semantics&#xD;&#xA;will depend on such a name existing."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPRefinementProperty" eSuperTypes="#//Property">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A property that requires a low-level CSP refinement relation."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" lowerBound="1" eType="#//CSPProcessSource">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Left-hand side of the refinement."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" eType="#//CSPProcessSource">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Left-hand side of the refinement."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//CSPRefinementOperator">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Type of assertion."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"
-        defaultValueLiteral="TICK_TOCK">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Model under which this assertion should be checked under CSP."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="CSPRefinementOperator">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A tock-CSP refinement operator."/>
-    </eAnnotations>
-    <eLiterals name="REFINES">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="LHS refines RHS."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="EQUALS" value="1">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="LHS refines RHS and RHS refines LHS."/>
-      </eAnnotations>
-    </eLiterals>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A tock-CSP refinement model."/>
-    </eAnnotations>
-    <eLiterals name="TICK_TOCK">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Tick-tock refinement model."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="TRACES" value="1">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Traces refinement model (with prioritisation)."/>
-      </eAnnotations>
-    </eLiterals>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPContextSource" abstract="true">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Abstract class of anything that can be interpreted as a tick-tock context.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPProcessSource" abstract="true" eSuperTypes="#//CSPContextSource">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Abstract class of anything that can be interpreted as a CSP process.&#xD;&#xA;&#xD;&#xA;All CSP process sources have an underlying tick-tock context source, even if&#xD;&#xA;it is just the empty set.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
-    </eAnnotations>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceGroup" eSuperTypes="#//Group ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target" containment="true" eOpposite="#//Target/group"/>
@@ -595,5 +470,124 @@
         <details key="documentation" value="All behaviours of the sequence are observable on the target."/>
       </eAnnotations>
     </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//Group">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A group of raw CSP-M declarations.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUntimed" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="If true, the group should be generated outside of a timed section."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
+        eType="#//CSPFragment" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The fragments contained in this group."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The raw contents of the CSP fragment."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedCSPFragment" eSuperTypes="#//CSPFragment ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M that has a name.&#xD;&#xA;&#xD;&#xA;These are used to bind CSP-M to names that are referred-to elsewhere."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EventSetCSPFragment" eSuperTypes="#//NamedCSPFragment #//CSPContextSource">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M that is bound to an event set."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//NamedCSPFragment #//CSPProcessSource">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M that is bound to a process."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="events" eType="#//CSPContextSource">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The source of the context used for tick-tock model shifting.&#xD;&#xA;&#xD;&#xA;We cannot, and do not, check to make sure that this accurately represents&#xD;&#xA;the process's actual event universe."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineCSPFragment" eSuperTypes="#//CSPFragment #//OptionallyNamedElement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A fragment of CSP-M that is not bound to anything.&#xD;&#xA;&#xD;&#xA;Such fragments can be named, but don't need to be, and nothing in the semantics&#xD;&#xA;will depend on such a name existing."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPRefinementProperty" eSuperTypes="#//Property">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A property that requires a low-level CSP refinement relation."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" lowerBound="1" eType="#//CSPProcessSource">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Left-hand side of the refinement."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" eType="#//CSPProcessSource">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Left-hand side of the refinement."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//CSPRefinementOperator">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Type of assertion."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"
+        defaultValueLiteral="TICK_TOCK">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Model under which this assertion should be checked under CSP."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="CSPRefinementOperator">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A tock-CSP refinement operator."/>
+    </eAnnotations>
+    <eLiterals name="REFINES">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="LHS refines RHS."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="EQUALS" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="LHS refines RHS and RHS refines LHS."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A tock-CSP refinement model."/>
+    </eAnnotations>
+    <eLiterals name="TICK_TOCK">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Tick-tock refinement model."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="TRACES" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Traces refinement model (with prioritisation)."/>
+      </eAnnotations>
+    </eLiterals>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPContextSource" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Abstract class of anything that can be interpreted as a tick-tock context.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPProcessSource" abstract="true" eSuperTypes="#//CSPContextSource">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Abstract class of anything that can be interpreted as a CSP process.&#xD;&#xA;&#xD;&#xA;All CSP process sources have an underlying tick-tock context source, even if&#xD;&#xA;it is just the empty set.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
+    </eAnnotations>
   </eClassifiers>
 </ecore:EPackage>

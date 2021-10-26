@@ -31,6 +31,7 @@ import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
 
 // TODO(@MattWindsor91): port all documentation from doc comments to genmodel
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // UTILITIES
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,6 +45,7 @@ abstract class OptionallyNamedElement {
 	@genmodel(documentation="The name (can be null).")
 	attr String[0..1] name;
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // CORE LANGUAGE
@@ -165,128 +167,6 @@ enum Temperature {
 	HOT;	
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// LOW-LEVEL LANGUAGES
-///////////////////////////////////////////////////////////////////////////////
-
-//
-// CSP
-//
-
-@genmodel(documentation="A group of raw CSP-M declarations.
-
-We generally interpret CSP-M as tock-CSP and implicitly generate it into a
-timed section, but this can be overridden.")
-class CSPGroup extends Group {
-	@genmodel(documentation="If true, the group should be generated outside of a timed section.")
-	attr boolean[1] isUntimed;
-	
-	@genmodel(documentation="If true, the group should be generated before any model-specific imports.
-	
-This is useful primarily for debugging purposes.
-
-The group may be generated after RoboCert prelude imports, as these contain
-the timing model depended upon by the tock-CSP encoding.")
-	attr boolean[1] isPreamble;
-	
-	@genmodel(documentation="The fragments contained in this group.")
-	val CSPFragment[*]#group fragments;
-}
-
-//
-// CSP fragments
-//
-
-@genmodel(documentation="A fragment of CSP-M.
-
-We generally interpret CSP-M as tock-CSP and implicitly generate it into a
-timed section, but this can be overridden.")
-abstract class CSPFragment {
-	@genmodel(documentation="The raw contents of the CSP fragment.")
-	attr String[1] contents;
-}
-
-@genmodel(documentation="A fragment of CSP-M that has a name.
-
-These are used to bind CSP-M to names that are referred-to elsewhere.")
-class NamedCSPFragment extends CSPFragment, robochart.NamedElement {
-}
-
-@genmodel(documentation="A fragment of CSP-M that is bound to an event set.")
-class EventSetCSPFragment extends NamedCSPFragment, CSPContextSource {
-}
-
-@genmodel(documentation="A fragment of CSP-M that is bound to a process.")
-class ProcessCSPFragment extends NamedCSPFragment, CSPProcessSource {
-	@genmodel(documentation="The source of the context used for tick-tock model shifting.
-
-We cannot, and do not, check to make sure that this accurately represents
-the process's actual event universe.")
-	ref CSPContextSource[0..1] events;
-}
-
-@genmodel(documentation="A fragment of CSP-M that is not bound to anything.
-
-Such fragments can be named, but don't need to be, and nothing in the semantics
-will depend on such a name existing.")
-class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
-}
-
-//
-// CSP properties
-//
-
-@genmodel(documentation="A property that requires a low-level CSP refinement relation.")
-class CSPRefinementProperty extends Property {
-	@genmodel(documentation="Left-hand side of the refinement.")
-	ref CSPProcessSource[1] lhs;
-
-	@genmodel(documentation="Left-hand side of the refinement.")
-	ref CSPProcessSource[1] rhs;
-
-	@genmodel(documentation="Type of assertion.")
-	attr CSPRefinementOperator[1] type;
-	
-	@genmodel(documentation="Model under which this assertion should be checked under CSP.")
-	attr CSPModel[1] model = "TICK_TOCK";	
-}
-
-@genmodel(documentation="A tock-CSP refinement operator.")
-enum CSPRefinementOperator {
-	@genmodel(documentation="LHS refines RHS.")
-	REFINES;
-
-	@genmodel(documentation="LHS refines RHS and RHS refines LHS.")
-	EQUALS;
-}
-
-@genmodel(documentation="A tock-CSP refinement model.")
-enum CSPModel {
-	@genmodel(documentation="Tick-tock refinement model.")
-	TICK_TOCK;
-	
-	@genmodel(documentation="Traces refinement model (with prioritisation).")
-	TRACES;
-}
-
-//
-// CSP sources
-//
-
-@genmodel(documentation="Abstract class of anything that can be interpreted as a tick-tock context.
-
-This is predominantly a marker, and doesn't hold any state of its own.")
-abstract class CSPContextSource {
-}
-
-@genmodel(documentation="Abstract class of anything that can be interpreted as a CSP process.
-
-All CSP process sources have an underlying tick-tock context source, even if
-it is just the empty set.
-
-This is predominantly a marker, and doesn't hold any state of its own.")
-abstract class CSPProcessSource extends CSPContextSource {
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // SEQUENCES
@@ -867,4 +747,120 @@ enum SequencePropertyType {
 
 	@genmodel(documentation="All behaviours of the sequence are observable on the target.")
 	IS_OBSERVED;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+// LOW-LEVEL LANGUAGES
+///////////////////////////////////////////////////////////////////////////////
+
+//
+// CSP
+//
+
+@genmodel(documentation="A group of raw CSP-M declarations.
+
+We generally interpret CSP-M as tock-CSP and implicitly generate it into a
+timed section, but this can be overridden.")
+class CSPGroup extends Group {
+	@genmodel(documentation="If true, the group should be generated outside of a timed section.")
+	attr boolean[1] isUntimed;
+	
+	@genmodel(documentation="The fragments contained in this group.")
+	val CSPFragment[*]#group fragments;
+}
+
+//
+// CSP fragments
+//
+
+@genmodel(documentation="A fragment of CSP-M.
+
+We generally interpret CSP-M as tock-CSP and implicitly generate it into a
+timed section, but this can be overridden.")
+abstract class CSPFragment {
+	@genmodel(documentation="The raw contents of the CSP fragment.")
+	attr String[1] contents;
+}
+
+@genmodel(documentation="A fragment of CSP-M that has a name.
+
+These are used to bind CSP-M to names that are referred-to elsewhere.")
+class NamedCSPFragment extends CSPFragment, robochart.NamedElement {
+}
+
+@genmodel(documentation="A fragment of CSP-M that is bound to an event set.")
+class EventSetCSPFragment extends NamedCSPFragment, CSPContextSource {
+}
+
+@genmodel(documentation="A fragment of CSP-M that is bound to a process.")
+class ProcessCSPFragment extends NamedCSPFragment, CSPProcessSource {
+	@genmodel(documentation="The source of the context used for tick-tock model shifting.
+
+We cannot, and do not, check to make sure that this accurately represents
+the process's actual event universe.")
+	ref CSPContextSource[0..1] events;
+}
+
+@genmodel(documentation="A fragment of CSP-M that is not bound to anything.
+
+Such fragments can be named, but don't need to be, and nothing in the semantics
+will depend on such a name existing.")
+class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
+}
+
+//
+// CSP properties
+//
+
+@genmodel(documentation="A property that requires a low-level CSP refinement relation.")
+class CSPRefinementProperty extends Property {
+	@genmodel(documentation="Left-hand side of the refinement.")
+	ref CSPProcessSource[1] lhs;
+
+	@genmodel(documentation="Left-hand side of the refinement.")
+	ref CSPProcessSource[1] rhs;
+
+	@genmodel(documentation="Type of assertion.")
+	attr CSPRefinementOperator[1] type;
+	
+	@genmodel(documentation="Model under which this assertion should be checked under CSP.")
+	attr CSPModel[1] model = "TICK_TOCK";	
+}
+
+@genmodel(documentation="A tock-CSP refinement operator.")
+enum CSPRefinementOperator {
+	@genmodel(documentation="LHS refines RHS.")
+	REFINES;
+
+	@genmodel(documentation="LHS refines RHS and RHS refines LHS.")
+	EQUALS;
+}
+
+@genmodel(documentation="A tock-CSP refinement model.")
+enum CSPModel {
+	@genmodel(documentation="Tick-tock refinement model.")
+	TICK_TOCK;
+	
+	@genmodel(documentation="Traces refinement model (with prioritisation).")
+	TRACES;
+}
+
+//
+// CSP sources
+//
+
+@genmodel(documentation="Abstract class of anything that can be interpreted as a tick-tock context.
+
+This is predominantly a marker, and doesn't hold any state of its own.")
+abstract class CSPContextSource {
+}
+
+@genmodel(documentation="Abstract class of anything that can be interpreted as a CSP process.
+
+All CSP process sources have an underlying tick-tock context source, even if
+it is just the empty set.
+
+This is predominantly a marker, and doesn't hold any state of its own.")
+abstract class CSPProcessSource extends CSPContextSource {
 }

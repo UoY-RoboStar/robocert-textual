@@ -127,11 +127,19 @@ enum Temperature:
  * A CSP group.
  */
 CSPGroup:
-	(isUntimed?='untimed'? & isPreamble?='preamble'?)
-	'csp' instantiation=Instantiation
-	(fragments+=CSPFragment | // Singleton syntax
-	'group' '{' fragments+=CSPFragment* '}' // Group syntax
+	'csp'
+	(fragments+=CSPFragment CSPGroupOptions | // Singleton syntax
+	'group' CSPGroupOptions '{' fragments+=CSPFragment* '}' // Group syntax
 	);
+
+/**
+ * Contains the options either at the end of a CSP group header, or at the
+ * end of a singleton CSP block.
+ */
+fragment CSPGroupOptions *:
+	('(' isUntimed?='untimed' ')')?
+	instantiation=Instantiation
+;
 
 //
 // CSP fragments
