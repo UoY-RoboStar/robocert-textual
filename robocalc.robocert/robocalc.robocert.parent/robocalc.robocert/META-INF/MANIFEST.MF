@@ -30,5 +30,6 @@ Export-Package: robocalc.robocert.services,
  robocalc.robocert.scoping,
  robocalc.robocert.parser.antlr.internal,
  robocalc.robocert.parser.antlr,
- robocalc.robocert.generator
+ robocalc.robocert.generator,
+ robocalc.robocert.parser.antlr.lexer
 Import-Package: org.apache.log4j

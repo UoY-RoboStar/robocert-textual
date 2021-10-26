@@ -15,4 +15,5 @@ Require-Bundle: robocalc.robocert,
  circus.robocalc.robochart.textual.ide;bundle-version="2.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: robocalc.robocert.ide.contentassist.antlr,
- robocalc.robocert.ide.contentassist.antlr.internal
+ robocalc.robocert.ide.contentassist.antlr.internal,
+ robocalc.robocert.ide.contentassist.antlr.lexer

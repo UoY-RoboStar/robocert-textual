@@ -26,7 +26,7 @@ CertPackage:
  * A target override in a sequence diagram.
  */
 Instantiation:
-	{Instantiation} ('with' '{' (assignments+=ConstAssignment) (',' assignments+=ConstAssignment)* '}')?;
+	{Instantiation} ('with' BEGIN (assignments+=ConstAssignment) (',' assignments+=ConstAssignment)* END)?;
 
 /**
  * A constant assignment.
@@ -46,6 +46,18 @@ fragment ConstName *:
 fragment AssignWords *:
 	'set' 'to' | 'assigned';
 
+/* RoboCert is whitespace-sensitive, with these terminals delimiting blocks
+ * where a change of indentation must happen.
+ * 
+ * See:
+ * https://www.eclipse.org/Xtext/documentation/307_special_languages.html#whitespace-aware-languages
+ */
+terminal BEGIN:
+	'synthetic:BEGIN';
+
+terminal END:
+	'synthetic:END';
+
 //
 // ASSERTIONS
 //
@@ -60,7 +72,7 @@ AssertionGroup:
 
 /**
  * Produces the body of a singleton assertion group.
- *
+ * 
  * The instantiation of such a group appears at the end of the assertion.
  */
 SingletonAssertionGroup returns AssertionGroup:
@@ -70,16 +82,22 @@ SingletonAssertionGroup returns AssertionGroup:
  * Produces the body of a non-singleton assertion group.
  */
 FullAssertionGroup returns AssertionGroup:
-	{AssertionGroup} 'group' (name=ID)? instantiation=Instantiation '{' ('assertion' assertions+=Assertion)* '}';
+	{AssertionGroup} 'group' (name=ID)? instantiation=Instantiation ':' BEGIN ('assertion' assertions+=Assertion)* END;
 
 /**
  * An assertion, less the leading 'assertion' keyword (because this might be
  * the end of a singleton AssertionGroup).
+ * 
+ * Assertions may break over whitespace, for readability.
  */
 Assertion:
-	name=ID ':'
-	property=(CSPRefinementProperty
-	| SequenceProperty);
+	name=ID ':' (property=Property | BEGIN property=Property END);
+
+/**
+ * Top-level disjunction of properties.
+ */
+Property:
+	CSPRefinementProperty | SequenceProperty;
 
 //
 // EXPRESSIONS
@@ -129,7 +147,7 @@ enum Temperature:
 CSPGroup:
 	'csp'
 	(fragments+=CSPFragment CSPGroupOptions | // Singleton syntax
-	'group' CSPGroupOptions '{' fragments+=CSPFragment* '}' // Group syntax
+	'group' CSPGroupOptions ':' BEGIN fragments+=CSPFragment* END // Group syntax
 	);
 
 /**
@@ -138,8 +156,7 @@ CSPGroup:
  */
 fragment CSPGroupOptions *:
 	('(' isUntimed?='untimed' ')')?
-	instantiation=Instantiation
-;
+	instantiation=Instantiation;
 
 //
 // CSP fragments
@@ -222,22 +239,22 @@ enum CSPModel:
  */
 SequenceGroup:
 	'sequence' 'group' name=ID
-	'(' target=Target '->' world=World instantiation=Instantiation ')'
-	'{'
+	'(' target=Target '->' world=World ')' instantiation=Instantiation ':'
+	BEGIN
 	(sequences+=Sequence | messageSets+=NamedMessageSet)*
-	'}';
+	END;
 
 /**
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID body=Subsequence;
+	'sequence' name=ID ':' body=Subsequence;
 
 /**
  * A subsequence.
  */
 Subsequence:
-	'{' (steps+=SequenceStep) ('then' steps+=SequenceStep)* '}';
+	BEGIN (steps+=SequenceStep) ('then' steps+=SequenceStep)* END;
 
 //
 // STEPS
@@ -258,7 +275,7 @@ SequenceStep:
  */
 BlockStep returns SequenceStep:
 	('within' {DeadlineStep} units=TimeUnits |
-	'loop' {LoopStep} bound=MaybeLoopBound ('as' name=ID)?) body=Subsequence;
+	'loop' {LoopStep} bound=MaybeLoopBound ('as' name=ID)?) ':' body=Subsequence;
 
 //
 // Loop bounds
@@ -287,9 +304,9 @@ LoopBound:
 BranchStep:
 	('parallel' {InterleaveStep} |
 	'choice' {AlternativeStep} OptTemperature)
-	'between'
+	'between' ':'
 	branches+=Subsequence
-	('and' branches+=Subsequence)+;
+	('and' ':' branches+=Subsequence)+;
 
 //
 // ACTIONS
