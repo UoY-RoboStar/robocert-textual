@@ -17,19 +17,19 @@ Require-Bundle: robocalc.robocert.model,
  circus.robocalc.robochart;bundle-version="2.0.0",
  org.eclipse.xtend.lib;bundle-version="2.14.0",
  circus.robocalc.robochart.generator.csp;bundle-version="2.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: robocalc.robocert.services,
- robocalc.robocert.serializer,
+Bundle-RequiredExecutionEnvironment: JavaSE-16
+Export-Package: robocalc.robocert,
  robocalc.robocert.formatting2,
- robocalc.robocert,
  robocalc.robocert.generator,
  robocalc.robocert.generator.tockcsp.ll,
  robocalc.robocert.generator.tockcsp.seq,
  robocalc.robocert.generator.tockcsp.top,
- robocalc.robocert.validation,
- robocalc.robocert.scoping,
- robocalc.robocert.parser.antlr.internal,
+ robocalc.robocert.generator.utils,
  robocalc.robocert.parser.antlr,
- robocalc.robocert.generator,
- robocalc.robocert.parser.antlr.lexer
+ robocalc.robocert.parser.antlr.internal,
+ robocalc.robocert.parser.antlr.lexer,
+ robocalc.robocert.scoping,
+ robocalc.robocert.serializer,
+ robocalc.robocert.services,
+ robocalc.robocert.validation
 Import-Package: org.apache.log4j
