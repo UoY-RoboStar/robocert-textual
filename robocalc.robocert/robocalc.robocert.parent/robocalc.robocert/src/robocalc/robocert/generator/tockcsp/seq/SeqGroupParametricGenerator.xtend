@@ -29,7 +29,7 @@ class SeqGroupParametricGenerator {
 	 */
 	def generateParametric(SequenceGroup it) '''
 		«timed(generateTargetDef)»
-			
+
 		«sequences.generateSequences»
 	'''
 	

@@ -7,7 +7,7 @@ import circus.robocalc.robochart.RoboChartFactory
 import com.google.inject.Inject
 import circus.robocalc.robochart.Parameter
 import java.util.Iterator
-import com.google.common.collect.Iterators
+import static extension com.google.common.collect.Iterators.*
 import circus.robocalc.robochart.Type
 import org.eclipse.xtext.EcoreUtil2
 
@@ -15,10 +15,36 @@ import org.eclipse.xtext.EcoreUtil2
  * Extensions for topics.
  */
 class TopicExtensions {
+	// TODO(@MattWindsor91): expose some of this through the metamodel.
+	
 	/**
 	 * Used for producing pseudo-parameters for events.
 	 */
 	@Inject RoboChartFactory rc
+
+	/**
+	 * Iterates over all of the parameter types in an event.
+	 * 
+	 * An event has at most one type, depending on if it is typed or not.
+	 * 
+	 * @param it  the event topic for which we are getting parameter types.
+	 * 
+	 * @return the parameter types of the event.
+	 */
+	def dispatch Iterator<Type> paramTypes(EventTopic it) {
+		event.type?.singletonIterator ?: Collections.emptyIterator
+	}
+
+	/**
+	 * Iterates over all of the parameters types in an operation.
+	 * 
+	 * @param it  the operation topic for which we are getting parameter type.
+	 * 
+	 * @return the parameter types of the operation.
+	 */
+	def dispatch Iterator<Type> paramTypes(OperationTopic it) {
+		operation.parameters.iterator.map[type]
+	}
 
 	/**
 	 * Iterates over all of the parameters in an event.
@@ -32,7 +58,7 @@ class TopicExtensions {
 	 * @return the parameters of the event.
 	 */
 	def dispatch Iterator<Parameter> params(EventTopic it) {
-		event.type?.eventTypeToParams ?: Collections.emptyIterator
+		event.type?.eventTypeToParam?.singletonIterator ?: Collections.emptyIterator
 	}
 
 	/**
@@ -44,18 +70,6 @@ class TopicExtensions {
 	 */
 	def dispatch Iterator<Parameter> params(OperationTopic it) {
 		operation.parameters.iterator
-	}
-
-	/**
-	 * Wraps an event type into a parameter list, so that the rest of the
-	 * generator can treat it as one.
-	 * 
-	 * @param it  the type to expand.
-	 * 
-	 * @return an iterator containing one item: the type as a parameter.
-	 */
-	private def eventTypeToParams(Type it) {
-		Iterators.singletonIterator(eventTypeToParam)
 	}
 
 	/**

@@ -6,6 +6,8 @@ import robocalc.robocert.model.robocert.Instantiation
 import com.google.inject.Inject
 import robocalc.robocert.generator.intf.seq.SeqGroupField
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
+import java.util.stream.Collectors
+import robocalc.robocert.generator.utils.MemoryFactory
 
 /**
  * Generator for sequence groups.
@@ -15,6 +17,8 @@ import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
  * @see SeqGroupParametricGenerator
  */
 class SeqGroupGenerator {
+	@Inject extension MemoryGenerator
+	@Inject extension MemoryFactory
 	@Inject extension CSPStructureGenerator
 	@Inject extension TargetGenerator
 	@Inject extension TargetExtensions
@@ -58,9 +62,25 @@ class SeqGroupGenerator {
 	 */
 	private def generatePublicDefs(SequenceGroup it) '''
 		«generateTickTockContext»
+		«sequences.stream.buildMemories.collect(Collectors.toList).generateMemories»
 	
 		«generateOpenDef»
 		«generateClosedDef»
+	'''
+
+
+	private def CharSequence generateMemories(Iterable<MemoryFactory.Memory> memories) '''
+		«IF memories.empty»
+			-- No memories defined in this group
+		«ELSE»
+			«module(SeqGroupField::MEMORY_MODULE.generate, memories.generateMemoriesInner)»
+		«ENDIF»
+	'''
+	
+	private def generateMemoriesInner(Iterable<MemoryFactory.Memory> memories) '''
+		«FOR m : memories SEPARATOR "\n"»
+			«m.generate»
+		«ENDFOR»
 	'''
 
 	/**

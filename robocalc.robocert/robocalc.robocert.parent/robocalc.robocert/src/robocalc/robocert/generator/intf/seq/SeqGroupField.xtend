@@ -8,6 +8,10 @@ package robocalc.robocert.generator.intf.seq
  */
 enum SeqGroupField {
 	/**
+	 * The module in the sequence group containing any memory definitions.
+	 */
+	MEMORY_MODULE,	
+	/**
 	 * The closed form of the parametric part of a sequence group definition.
 	 */
 	PARAMETRIC_CLOSED,
