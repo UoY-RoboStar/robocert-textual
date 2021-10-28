@@ -19,7 +19,7 @@ import robocalc.robocert.generator.utils.MemoryFactory
 class SeqGroupGenerator {
 	@Inject extension MemoryGenerator
 	@Inject extension MemoryFactory
-	@Inject extension CSPStructureGenerator
+	@Inject CSPStructureGenerator csp
 	@Inject extension TargetGenerator
 	@Inject extension TargetExtensions
 	@Inject extension MessageSetGenerator
@@ -36,8 +36,8 @@ class SeqGroupGenerator {
 	def CharSequence generate(SequenceGroup it) '''
 		-- SEQUENCE GROUP
 		-- from: «target»
-		-- to:   «world»
-		«moduleWithPrivate(name, generatePrivateDefs, generatePublicDefs)»
+		--   to: «world»
+		«csp.moduleWithPrivate(name, generatePrivateDefs, generatePublicDefs)»
 	'''
 	
 	private def generatePrivateDefs(SequenceGroup it) '''
@@ -62,6 +62,7 @@ class SeqGroupGenerator {
 	 */
 	private def generatePublicDefs(SequenceGroup it) '''
 		«generateTickTockContext»
+
 		«sequences.stream.buildMemories.collect(Collectors.toList).generateMemories»
 	
 		«generateOpenDef»
@@ -73,12 +74,12 @@ class SeqGroupGenerator {
 		«IF memories.empty»
 			-- No memories defined in this group
 		«ELSE»
-			«module(SeqGroupField::MEMORY_MODULE.generate, memories.generateMemoriesInner)»
+			«csp.module(SeqGroupField::MEMORY_MODULE.generate, memories.generateMemoriesInner)»
 		«ENDIF»
 	'''
 	
 	private def generateMemoriesInner(Iterable<MemoryFactory.Memory> memories) '''
-		«FOR m : memories SEPARATOR "\n"»
+		«FOR m : memories SEPARATOR '\n'»
 			«m.generate»
 		«ENDFOR»
 	'''
@@ -124,7 +125,7 @@ class SeqGroupGenerator {
 	 * @return generated CSP for the 'open' form of a sequence's target.
 	 */
 	def CharSequence generateOpenDef(SequenceGroup it) {
-		module(generateOpenSig(null), generateParametric)
+		csp.module(generateOpenSig(null), generateParametric)
 	}
 	
 	private def generateTickTockContext() '''instance «SeqGroupField::TICK_TOCK_CONTEXT.generate» = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
@@ -144,13 +145,13 @@ class SeqGroupGenerator {
 	 *         this group.
 	 */
 	private def generateOpenSig(SequenceGroup it, Instantiation outerInst
-	) '''«SeqGroupField::PARAMETRIC_OPEN.generate»«generateOpenSigParams(outerInst)»'''
+	) {
+		csp.function(SeqGroupField::PARAMETRIC_OPEN.generate, generateOpenSigParams(outerInst))
+	}
 	
-	private def generateOpenSigParams(SequenceGroup it, Instantiation outerInst) '''
-	«FOR c : uninstantiatedConstants BEFORE '(' SEPARATOR ',' AFTER ')'»
-		«outerInst.generateConstant(c)»
-	«ENDFOR»
-	'''
+	private def generateOpenSigParams(SequenceGroup it, Instantiation outerInst) {
+		uninstantiatedConstants.map[outerInst.generateConstant(it)]
+	}
 	
 	private def uninstantiatedConstants(SequenceGroup it) {
 		target?.uninstantiatedConstants(instantiation)?.toIterable
