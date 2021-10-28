@@ -10,7 +10,7 @@ import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
 import robocalc.robocert.generator.utils.MemoryFactory.Memory
 import robocalc.robocert.generator.utils.MemoryFactory.Memory.Slot
 import robocalc.robocert.model.robocert.Sequence
-import robocalc.robocert.generator.intf.seq.SeqGroupField
+import robocalc.robocert.generator.intf.seq.SeqGroupParametricField
 
 /**
  * Generates memory channels and processes for sequences.
@@ -28,7 +28,6 @@ import robocalc.robocert.generator.intf.seq.SeqGroupField
 class MemoryGenerator {
 	@Inject CTimedGeneratorUtils gu
 	@Inject CSPStructureGenerator csp
-	@Inject extension SeqGroupFieldGenerator
 	@Inject extension TypeGenerator
 	
 	/**
@@ -52,7 +51,7 @@ class MemoryGenerator {
 	 * @return  process, lifted into seq's memory context.
 	 */	
 	def lift(Sequence seq, CharSequence process) {
-		csp.function('''«SeqGroupField::MEMORY_MODULE.generate»::«seq.name»::«LIFT_PROCESS»''', process)
+		csp.function('''«SeqGroupParametricField::MEMORY_MODULE.toString»::«seq.name»::«LIFT_PROCESS»''', process)
 	}
 	
 	private def generatePublicBody(Memory it) '''

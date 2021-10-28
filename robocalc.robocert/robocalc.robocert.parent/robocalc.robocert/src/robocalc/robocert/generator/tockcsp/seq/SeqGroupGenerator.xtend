@@ -6,8 +6,6 @@ import robocalc.robocert.model.robocert.Instantiation
 import com.google.inject.Inject
 import robocalc.robocert.generator.intf.seq.SeqGroupField
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
-import java.util.stream.Collectors
-import robocalc.robocert.generator.utils.MemoryFactory
 
 /**
  * Generator for sequence groups.
@@ -19,12 +17,9 @@ import robocalc.robocert.generator.utils.MemoryFactory
 class SeqGroupGenerator {
 	@Inject CSPStructureGenerator csp
 
-	@Inject extension MemoryGenerator
-	@Inject extension MemoryFactory
 	@Inject extension TargetGenerator
 	@Inject extension TargetExtensions
 	@Inject extension MessageSetGenerator
-	@Inject extension SeqGroupFieldGenerator
 	@Inject extension SeqGroupParametricGenerator
 
 	/**
@@ -63,24 +58,8 @@ class SeqGroupGenerator {
 	private def generatePublicDefs(SequenceGroup it) '''
 		«generateTickTockContext»
 	
-		«sequences.stream.buildMemories.collect(Collectors.toList).generateMemories»
-	
 		«generateOpenDef»
 		«generateClosedDef»
-	'''
-
-	private def CharSequence generateMemories(Iterable<MemoryFactory.Memory> memories) '''
-		«IF memories.empty»
-			-- No memories defined in this group
-		«ELSE»
-			«csp.module(SeqGroupField::MEMORY_MODULE.generate, memories.generateMemoriesInner)»
-		«ENDIF»
-	'''
-
-	private def generateMemoriesInner(Iterable<MemoryFactory.Memory> memories) '''
-		«FOR m : memories SEPARATOR '\n'»
-			«m.generate»
-		«ENDFOR»
 	'''
 
 	/**
@@ -95,7 +74,7 @@ class SeqGroupGenerator {
 	 * @return CSP defining the 'closed' form of this group.
 	 */
 	def CharSequence generateClosedDef(SequenceGroup it) '''
-		instance «SeqGroupField::PARAMETRIC_CLOSED.generate» =
+		instance «SeqGroupField::PARAMETRIC_CLOSED.toString» =
 			«generateOpenSig(instantiation)»
 	'''
 
@@ -127,7 +106,7 @@ class SeqGroupGenerator {
 		csp.module(generateOpenSig(null), generateParametric)
 	}
 
-	private def generateTickTockContext() '''instance «SeqGroupField::TICK_TOCK_CONTEXT.generate» = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
+	private def generateTickTockContext() '''instance «SeqGroupField::TICK_TOCK_CONTEXT.toString» = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
 
 	/**
 	 * Generates the signature of an open sequence group definition or reference.
@@ -147,7 +126,7 @@ class SeqGroupGenerator {
 		SequenceGroup it,
 		Instantiation outerInst
 	) {
-		csp.function(SeqGroupField::PARAMETRIC_OPEN.generate, generateOpenSigParams(outerInst))
+		csp.function(SeqGroupField::PARAMETRIC_OPEN.toString, generateOpenSigParams(outerInst))
 	}
 
 	private def generateOpenSigParams(SequenceGroup it, Instantiation outerInst) {

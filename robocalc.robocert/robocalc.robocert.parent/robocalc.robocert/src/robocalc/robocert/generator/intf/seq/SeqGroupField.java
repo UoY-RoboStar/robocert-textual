@@ -1,4 +1,6 @@
-package robocalc.robocert.generator.intf.seq
+package robocalc.robocert.generator.intf.seq;
+
+import robocalc.robocert.generator.tockcsp.ll.TickTockContextGenerator;
 
 /**
  * Enumeration of fields in a sequence group.
@@ -6,11 +8,7 @@ package robocalc.robocert.generator.intf.seq
  * These fields currently correspond directly to tock-CSP subdefinitions, but
  * this may eventually change.
  */
-enum SeqGroupField {
-	/**
-	 * The module in the sequence group containing any memory definitions.
-	 */
-	MEMORY_MODULE,	
+public enum SeqGroupField {
 	/**
 	 * The closed form of the parametric part of a sequence group definition.
 	 */
@@ -28,5 +26,15 @@ enum SeqGroupField {
 	 * The module instance in the sequence group providing its context for
 	 * tick-tock module shifting.
 	 */
-	TICK_TOCK_CONTEXT
+	TICK_TOCK_CONTEXT;
+
+	@Override
+	public String toString() {
+		return switch (this) {
+			case MESSAGE_SET_MODULE -> "MsgSets";
+			case PARAMETRIC_CLOSED -> "Closed";
+			case PARAMETRIC_OPEN -> "Open";
+			case TICK_TOCK_CONTEXT -> TickTockContextGenerator.CONTEXT_MODULE;
+		};
+	}
 }
