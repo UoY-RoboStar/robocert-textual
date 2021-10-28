@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.generator.utils.MemoryFactory
+import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator
 
 /**
  * Generates sequences.
@@ -11,7 +12,7 @@ import robocalc.robocert.generator.utils.MemoryFactory
 class SequenceGenerator {
 	@Inject extension MemoryFactory
 	@Inject extension SubsequenceGenerator
-	@Inject MemoryGenerator mg
+	@Inject ModuleGenerator mg
 	
 	/**
 	 * Generates CSP-M for a sequence.

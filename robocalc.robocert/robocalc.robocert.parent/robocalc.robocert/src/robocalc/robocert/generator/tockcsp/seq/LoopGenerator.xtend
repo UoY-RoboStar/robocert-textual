@@ -8,6 +8,7 @@ import robocalc.robocert.model.robocert.RangeLoopBound
 import robocalc.robocert.model.robocert.LoopStep
 import robocalc.robocert.model.robocert.LoopBound
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
+import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator
 
 /**
  * Generates CSP for loops.
@@ -16,7 +17,7 @@ import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
  * libraries.
  */
 class LoopGenerator {
-	@Inject MemoryLoadGenerator ml
+	@Inject extension LoadStoreGenerator
 	@Inject extension ExpressionGenerator
 	@Inject extension SubsequenceGenerator
 	
@@ -28,7 +29,7 @@ class LoopGenerator {
 	 * @return the generated CSP.
 	 */
 	def generateLoop(LoopStep it) '''
-	«ml.generate(ml.getExprBindings(bound))»«bound.generateBound»(
+	«bound.generateExpressionLoads»«bound.generateBound»(
 		«body.generate»
 	)
 	'''

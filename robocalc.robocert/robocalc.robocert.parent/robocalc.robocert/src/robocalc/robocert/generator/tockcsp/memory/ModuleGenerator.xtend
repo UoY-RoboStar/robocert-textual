@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.tockcsp.seq
+package robocalc.robocert.generator.tockcsp.memory
 
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 import circus.robocalc.robochart.generator.csp.untimed.TypeGenerator
@@ -28,7 +28,7 @@ import org.eclipse.xtext.EcoreUtil2
  * There is no true concurrency in sequence diagrams, so this should be
  * sufficient.
  */
-class MemoryGenerator {
+class ModuleGenerator {
 	@Inject CTimedGeneratorUtils gu
 	@Inject CSPStructureGenerator csp
 	@Inject extension TypeGenerator

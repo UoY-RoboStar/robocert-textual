@@ -6,6 +6,7 @@ import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.model.robocert.FinalAction
 import robocalc.robocert.model.robocert.WaitAction
 import robocalc.robocert.generator.intf.seq.ActionGenerator
+import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator
 
 /**
  * Top-level CSP generator for sequence actions.
@@ -13,6 +14,7 @@ import robocalc.robocert.generator.intf.seq.ActionGenerator
 class ActionGeneratorImpl implements ActionGenerator {
 	@Inject extension ExpressionGenerator
 	@Inject extension MessageSpecGenerator
+	@Inject extension LoadStoreGenerator
 
 	/**
 	 * Generates CSP for an arrow action.
@@ -21,7 +23,7 @@ class ActionGeneratorImpl implements ActionGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def dispatch generate(ArrowAction it) '''«body.generatePrefix» -> SKIP'''
+	def dispatch generate(ArrowAction it) '''«body.generatePrefix» -> «generateBindingStores»SKIP'''
 
 	/**
 	 * Generates CSP for a final action.
