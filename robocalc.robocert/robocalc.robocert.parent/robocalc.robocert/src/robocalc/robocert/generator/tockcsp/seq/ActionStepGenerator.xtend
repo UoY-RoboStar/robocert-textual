@@ -15,10 +15,19 @@ import robocalc.robocert.generator.intf.seq.ActionGenerator
  * Generates CSP-M for action steps.
  */
 class ActionStepGenerator {
+	@Inject MemoryLoadGenerator ml;
+
 	@Inject extension ActionGenerator
 	@Inject extension MessageSetOptimiser
 	@Inject extension MessageSetGenerator
 	@Inject extension MessageSpecGenerator
+
+	// This generator handles the injection of loads for any possible
+	// expressions in the action, as it is safe to do so at this level (no
+	// Action recursively includes any more Steps or Actions).
+	//
+	// It does *not* handle the injection of stores; we do that in the
+	// generator for ArrowActions.
 
 	/**
 	 * Generates CSP-M for an action step.
@@ -27,7 +36,17 @@ class ActionStepGenerator {
 	 * 
 	 * @return the generated CSP-M.
 	 */
-	def generateActionStep(ActionStep it) '''«generateGap»(«EVENTUALLY_PROC»(«action.generate»))'''
+	def generateActionStep(ActionStep it)
+		'''«ml.generate(ml.getExprBindings(it))»«generateActionStepInner»'''
+
+	/**
+	 * Generates CSP-M for the inner (post-load) part of an action step.
+	 * 
+	 * @param it  the action step.
+	 * 
+	 * @return the generated CSP-M.
+	 */
+	private def generateActionStepInner(ActionStep it) '''«generateGap»(«EVENTUALLY_PROC»(«action.generate»))'''
 
 	/**
 	 * Generates CSP-M for an action step gap.

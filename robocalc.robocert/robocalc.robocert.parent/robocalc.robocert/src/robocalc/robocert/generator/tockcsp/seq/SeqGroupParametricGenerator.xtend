@@ -34,11 +34,12 @@ class SeqGroupParametricGenerator {
 	 */
 	def generateParametric(SequenceGroup it) '''
 		«generateTargetDef»
+		
 		«IF sequences.empty»
 			-- No sequences defined
 		«ELSE»
 			«sequences.stream.buildMemories.collect(Collectors.toList).generateMemories»
-		
+
 			«sequences.generateSequences»
 		«ENDIF»
 	'''

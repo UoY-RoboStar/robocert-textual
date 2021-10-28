@@ -57,7 +57,7 @@ class SeqGroupGenerator {
 	 */
 	private def generatePublicDefs(SequenceGroup it) '''
 		«generateTickTockContext»
-	
+
 		«generateOpenDef»
 		«generateClosedDef»
 	'''

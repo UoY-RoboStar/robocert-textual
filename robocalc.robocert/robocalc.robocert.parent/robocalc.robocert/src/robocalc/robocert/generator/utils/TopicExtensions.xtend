@@ -16,7 +16,6 @@ import org.eclipse.xtext.EcoreUtil2
  */
 class TopicExtensions {
 	// TODO(@MattWindsor91): expose some of this through the metamodel.
-	
 	/**
 	 * Used for producing pseudo-parameters for events.
 	 */
@@ -90,9 +89,9 @@ class TopicExtensions {
 			type = EcoreUtil2.copy(t)
 		]
 	}
-	
+
 	/**
 	 * The arbitrary name assigned to event-types-as-parameters.
 	 */
-	static final String EVENT_PARAM_NAME = "x" 
+	static final String EVENT_PARAM_NAME = "x"
 }

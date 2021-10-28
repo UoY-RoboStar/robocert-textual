@@ -11,17 +11,20 @@ import robocalc.robocert.generator.utils.MemoryFactory.Memory
 import robocalc.robocert.generator.utils.MemoryFactory.Memory.Slot
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.generator.intf.seq.SeqGroupParametricField
+import robocalc.robocert.model.robocert.Binding
+import robocalc.robocert.generator.utils.BindingNameExpander
+import org.eclipse.xtext.EcoreUtil2
 
 /**
- * Generates memory channels and processes for sequences.
- *
+ * Generates memory modules for sequences.
+ * 
  * The memory definition we use for RoboCert is fairly simplistic, but similar
  * to that used in other RoboStar languages.  For each sequence that needs a
  * memory, we generate a process that offers each binding in the sequence as an
  * in/out channel.  The process is a recursion that continuously offers the
  * current values of each binding through the out channel, while also offering
  * to accept new values (updating its recursion accordingly).
- *
+ * 
  * There is no true concurrency in sequence diagrams, so this should be
  * sufficient.
  */
@@ -29,7 +32,8 @@ class MemoryGenerator {
 	@Inject CTimedGeneratorUtils gu
 	@Inject CSPStructureGenerator csp
 	@Inject extension TypeGenerator
-	
+	@Inject extension BindingNameExpander
+
 	/**
 	 * Generates the module for a memory.
 	 * 
@@ -49,15 +53,34 @@ class MemoryGenerator {
 	 * @param process  its pre-generated process.
 	 * 
 	 * @return  process, lifted into seq's memory context.
-	 */	
+	 */
 	def lift(Sequence seq, CharSequence process) {
-		csp.function('''«SeqGroupParametricField::MEMORY_MODULE.toString»::«seq.name»::«LIFT_PROCESS»''', process)
+		csp.function('''«seq.generateMemoryModuleRef»::«LIFT_PROCESS»''', process)
 	}
-	
+
+	/**
+	 * Gets a reference to the memory channel of binding b.
+	 * 
+	 * This reference is relative to the parametric sequence group body, so
+	 * it assumes that we can traverse backwards through the binding to its
+	 * sequence.
+	 * 
+	 * @param b  the binding for which we want a memory channel.
+	 * 
+	 * @return  the partially-specified CSP-M memory channel. 
+	 */
+	def generateChannelRef(Binding b) '''«b.sequence.generateMemoryModuleRef»::«b.unambiguousName»'''
+
+	private def generateMemoryModuleRef(Sequence it) '''«SeqGroupParametricField::MEMORY_MODULE»::«name ?: 'unknown'»'''
+
+	private def getSequence(Binding b) {
+		EcoreUtil2.getContainerOfType(b, Sequence)
+	}
+
 	private def generatePublicBody(Memory it) '''
 		-- Get/set channels
 		«generateChannelDefinitions»
-
+		
 		«LIFT_PROCESS»(P) = (
 			P [| «SYNC_SET» |] «generateInitialRun»
 		) \ «SYNC_SET»
@@ -75,50 +98,50 @@ class MemoryGenerator {
 			channel «unambiguousName» {- «binding.name» -} : InOut.«type.compileType»
 		«ENDFOR»
 	'''
-	
+
 	private def generatePrivateBody(Memory it) '''
 		«generateSyncSet»
 		
 		«generateProcess»
 	'''
-	
+
 	private def generateSyncSet(Memory it) {
 		csp.definition(SYNC_SET, csp.enumeratedSet(mapOverSlots[unambiguousName]))
 	}
-	
+
 	private def generateProcess(Memory it) {
 		csp.definition(generateProcessHeader(it), generateProcessBody)
 	}
-	
+
 	private def CharSequence generateProcessHeader(Memory it) {
 		generateRun[generateHeaderName]
 	}
-	
+
 	private def generateInitialRun(Memory it) {
 		generateRun[gu.typeDefaultValue(type)]
 	}
-	
+
 	/**
 	 * Generates a header/invocation of the run process for a memory, using
 	 * the given function to transform its slots into arguments.
 	 * 
 	 * @param it         the memory for which we are generating.
 	 * @param transform  the function to apply to slots to produce arguments.
-	 *
+	 * 
 	 * @return a header or invocation of the memory's run process, in CSP-M.
 	 */
 	private def generateRun(Memory it, Function<Memory.Slot, CharSequence> transform) {
 		csp.function(RUN_PROCESS, mapOverSlots(transform))
 	}
-	
+
 	protected def List<CharSequence> mapOverSlots(Memory it, Function<Slot, CharSequence> transform) {
 		slots.stream.map(transform).collect(Collectors::toUnmodifiableList)
 	}
-	
+
 	private def generateHeaderName(Memory.Slot it) '''Bnd_«unambiguousName»'''
 
 	private def generateProcessBody(Memory it) '''
-		«FOR s: slots SEPARATOR ' [] '»
+		«FOR s : slots SEPARATOR ' [] '»
 			(
 				«s.generateSlotIn» -> «generateProcessHeader»
 			[]
@@ -126,14 +149,12 @@ class MemoryGenerator {
 			)
 		«ENDFOR»
 	'''
-	
-	private def generateSlotIn(Memory.Slot it)
-		'''«unambiguousName».in?«generateHeaderName»'''
-		
-	private def generateSlotOut(Memory.Slot it)
-		'''«unambiguousName».out.«generateHeaderName»'''
-	
+
+	private def generateSlotIn(Memory.Slot it) '''«unambiguousName».in?«generateHeaderName»'''
+
+	private def generateSlotOut(Memory.Slot it) '''«unambiguousName».out.«generateHeaderName»'''
+
 	static val LIFT_PROCESS = "lift"
-	static val RUN_PROCESS = "run"
+	static val RUN_PROCESS = "proc"
 	static val SYNC_SET = "sync"
 }
