@@ -72,7 +72,7 @@ class MemoryGenerator {
 	 */
 	private def generateChannelDefinitions(Memory it) '''
 		«FOR it : slots SEPARATOR '\n'»
-			channel «unambiguousName» {- «binding.name» -} : InOut -> «type.compileType»
+			channel «unambiguousName» {- «binding.name» -} : InOut.«type.compileType»
 		«ENDFOR»
 	'''
 	

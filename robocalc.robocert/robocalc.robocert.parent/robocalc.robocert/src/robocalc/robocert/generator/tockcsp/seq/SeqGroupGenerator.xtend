@@ -117,7 +117,8 @@ class SeqGroupGenerator {
 	 * signature generator.
 	 * 
 	 * @param it         the group for which we are generating an open form.
-	 * @param outerInst  any instantiation being applied at the  (may be null).
+	 * @param outerInst  any instantiation being applied at the outer level
+	 *                   (may be null).
 	 * 
 	 * @return CSP referring to, or giving the signature of, the 'open' form of
 	 *         this group.
