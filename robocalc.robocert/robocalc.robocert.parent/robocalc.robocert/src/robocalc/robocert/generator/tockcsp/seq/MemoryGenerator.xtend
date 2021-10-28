@@ -9,6 +9,8 @@ import java.util.stream.Collectors
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
 import robocalc.robocert.generator.utils.MemoryFactory.Memory
 import robocalc.robocert.generator.utils.MemoryFactory.Memory.Slot
+import robocalc.robocert.model.robocert.Sequence
+import robocalc.robocert.generator.intf.seq.SeqGroupField
 
 /**
  * Generates memory channels and processes for sequences.
@@ -26,6 +28,7 @@ import robocalc.robocert.generator.utils.MemoryFactory.Memory.Slot
 class MemoryGenerator {
 	@Inject CTimedGeneratorUtils gu
 	@Inject CSPStructureGenerator csp
+	@Inject extension SeqGroupFieldGenerator
 	@Inject extension TypeGenerator
 	
 	/**
@@ -39,12 +42,24 @@ class MemoryGenerator {
 	def generate(Memory it) {
 		csp.moduleWithPrivate(parent?.name ?: 'MISSING_NAME', generatePrivateBody, generatePublicBody)
 	}
+
+	/**
+	 * Lifts the CSP-M for a sequence process into a memory context.
+	 * 
+	 * @param seq      the sequence being lifted.
+	 * @param process  its pre-generated process.
+	 * 
+	 * @return  process, lifted into seq's memory context.
+	 */	
+	def lift(Sequence seq, CharSequence process) {
+		csp.function('''«SeqGroupField::MEMORY_MODULE.generate»::«seq.name»::«LIFT_PROCESS»''', process)
+	}
 	
 	private def generatePublicBody(Memory it) '''
 		-- Get/set channels
 		«generateChannelDefinitions»
 
-		lift(P) = (
+		«LIFT_PROCESS»(P) = (
 			P [| «SYNC_SET» |] «generateInitialRun»
 		) \ «SYNC_SET»
 	'''
@@ -118,7 +133,8 @@ class MemoryGenerator {
 		
 	private def generateSlotOut(Memory.Slot it)
 		'''«unambiguousName».out.«generateHeaderName»'''
-		
+	
+	static val LIFT_PROCESS = "lift"
 	static val RUN_PROCESS = "run"
 	static val SYNC_SET = "sync"
 }

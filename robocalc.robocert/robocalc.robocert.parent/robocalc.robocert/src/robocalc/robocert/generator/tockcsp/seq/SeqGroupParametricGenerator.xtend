@@ -2,7 +2,6 @@ package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import robocalc.robocert.generator.intf.seq.SeqGroupParametricField
-import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.SequenceGroup
@@ -14,9 +13,9 @@ import robocalc.robocert.model.robocert.SequenceGroup
  * target's parameterisation.
  */
 class SeqGroupParametricGenerator {
-	@Inject extension CSPStructureGenerator
+	@Inject CSPStructureGenerator csp
 	@Inject extension TargetGenerator
-	@Inject extension SubsequenceGenerator
+	@Inject extension SequenceGenerator
 	@Inject extension SeqGroupFieldGenerator
 	
 	/**
@@ -28,30 +27,29 @@ class SeqGroupParametricGenerator {
 	 * @return  CSP-M for the parametric module body.
 	 */
 	def generateParametric(SequenceGroup it) '''
-		«timed(generateTargetDef)»
-
+		«generateTargetDef»
+		«IF !sequences.empty»
+		
 		«sequences.generateSequences»
-	'''
-	
-	private def generateTargetDef(SequenceGroup it) '''«SeqGroupParametricField::TARGET.generate» = «target.generate(instantiation)»'''
-
-	private def CharSequence generateSequences(Iterable<Sequence> sequences) '''
-		«IF sequences.empty»
-			-- No sequences defined in this group
-		«ELSE»
-			«module(SeqGroupParametricField::SEQUENCE_MODULE.generate, timed(sequences.generateSequencesInner))»
 		«ENDIF»
 	'''
 	
+	private def generateTargetDef(SequenceGroup it) {
+		csp.timed(
+			csp.definition(
+				SeqGroupParametricField::TARGET.generate,
+				target.generate(instantiation)
+			)
+		)
+	}
+
+	private def CharSequence generateSequences(Iterable<Sequence> sequences) {
+		csp.module(SeqGroupParametricField::SEQUENCE_MODULE.generate, csp.timed(sequences.generateSequencesInner))
+	}
+	
 	private def generateSequencesInner(Iterable<Sequence> sequences) '''
 		«FOR sequence : sequences SEPARATOR "\n"»
-			«sequence.name» =
-				«sequence.generate»
+			«csp.definition(sequence.name, sequence.generate)»
 		«ENDFOR»
-	'''
-	
-	private def generate(Sequence it) '''
-		«body.generate»; -- end of defined steps
-		TCHAOS(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)
 	'''
 }

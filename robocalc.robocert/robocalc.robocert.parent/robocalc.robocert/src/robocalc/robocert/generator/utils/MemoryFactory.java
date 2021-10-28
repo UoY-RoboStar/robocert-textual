@@ -44,6 +44,20 @@ public class MemoryFactory {
 	}
 	
 	/**
+	 * Determines whether this {@link Sequence} will have a memory generated.
+	 *
+	 * Only sequences with bindings produce memories.
+	 *
+	 * @param s  the sequence in question.
+	 * @return  whether a call to buildMemories with the sequence will yield a
+	 *          {@link Memory} for it.
+	 */
+	public boolean hasMemory(Sequence s) {
+		// TODO(@MattWindsor91): is there a more efficient way of doing this?
+		return !getBindings(s).isEmpty();
+	}
+	
+	/**
 	 * Builds a stream of memories, given a stream of sequences.
 	 * 
 	 * Not every sequence will yield a memory; only those with bindings.
@@ -60,12 +74,15 @@ public class MemoryFactory {
 			throw new NullPointerException("expected a named, non-null sequence here");
 		}
 		
-		var bindings = EcoreUtil2.eAllOfType(s, Binding.class);
-		var slots = bindings.stream().map((x) -> buildSlot(x)).collect(Collectors.toUnmodifiableList());
+		var slots = getBindings(s).stream().map((x) -> buildSlot(x)).collect(Collectors.toUnmodifiableList());
 		return new Memory(s, slots);
 	}
 	
 	private Memory.Slot buildSlot(Binding b) {
 		return new Memory.Slot(b, bnx.getUnambiguousName(b), btf.getType(b));
+	}
+	
+	private List<Binding> getBindings(Sequence s) {
+		return EcoreUtil2.eAllOfType(s, Binding.class);
 	}
 }

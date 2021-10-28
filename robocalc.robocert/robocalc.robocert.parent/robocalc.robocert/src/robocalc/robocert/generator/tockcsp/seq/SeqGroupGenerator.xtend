@@ -17,15 +17,16 @@ import robocalc.robocert.generator.utils.MemoryFactory
  * @see SeqGroupParametricGenerator
  */
 class SeqGroupGenerator {
+	@Inject CSPStructureGenerator csp
+
 	@Inject extension MemoryGenerator
 	@Inject extension MemoryFactory
-	@Inject CSPStructureGenerator csp
 	@Inject extension TargetGenerator
 	@Inject extension TargetExtensions
 	@Inject extension MessageSetGenerator
 	@Inject extension SeqGroupFieldGenerator
 	@Inject extension SeqGroupParametricGenerator
-	
+
 	/**
 	 * Generates CSP for a sequence group.
 	 * 
@@ -39,19 +40,18 @@ class SeqGroupGenerator {
 		--   to: «world»
 		«csp.moduleWithPrivate(name, generatePrivateDefs, generatePublicDefs)»
 	'''
-	
+
 	private def generatePrivateDefs(SequenceGroup it) '''
 		«messageSets.generateNamedSets(target)»
 	'''
 
-	
 	/**
 	 * Generates the public definitions for a sequence group module.
 	 * 
 	 * These include the tick-tock context (which must be exposed for any
 	 * tick-tock properties over the group's sequences and target to go
 	 * through), and the constant-specific submodules.
-	 *
+	 * 
 	 * There are two such modules: an 'open' one, which holds all of the
 	 * parameters of the group open;
 	 * and a 'closed' one, which instantiates them all to defaults.
@@ -62,13 +62,12 @@ class SeqGroupGenerator {
 	 */
 	private def generatePublicDefs(SequenceGroup it) '''
 		«generateTickTockContext»
-
+	
 		«sequences.stream.buildMemories.collect(Collectors.toList).generateMemories»
 	
 		«generateOpenDef»
 		«generateClosedDef»
 	'''
-
 
 	private def CharSequence generateMemories(Iterable<MemoryFactory.Memory> memories) '''
 		«IF memories.empty»
@@ -77,7 +76,7 @@ class SeqGroupGenerator {
 			«csp.module(SeqGroupField::MEMORY_MODULE.generate, memories.generateMemoriesInner)»
 		«ENDIF»
 	'''
-	
+
 	private def generateMemoriesInner(Iterable<MemoryFactory.Memory> memories) '''
 		«FOR m : memories SEPARATOR '\n'»
 			«m.generate»
@@ -127,7 +126,7 @@ class SeqGroupGenerator {
 	def CharSequence generateOpenDef(SequenceGroup it) {
 		csp.module(generateOpenSig(null), generateParametric)
 	}
-	
+
 	private def generateTickTockContext() '''instance «SeqGroupField::TICK_TOCK_CONTEXT.generate» = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
 
 	/**
@@ -144,15 +143,17 @@ class SeqGroupGenerator {
 	 * @return CSP referring to, or giving the signature of, the 'open' form of
 	 *         this group.
 	 */
-	private def generateOpenSig(SequenceGroup it, Instantiation outerInst
+	private def generateOpenSig(
+		SequenceGroup it,
+		Instantiation outerInst
 	) {
 		csp.function(SeqGroupField::PARAMETRIC_OPEN.generate, generateOpenSigParams(outerInst))
 	}
-	
+
 	private def generateOpenSigParams(SequenceGroup it, Instantiation outerInst) {
 		uninstantiatedConstants.map[outerInst.generateConstant(it)]
 	}
-	
+
 	private def uninstantiatedConstants(SequenceGroup it) {
 		target?.uninstantiatedConstants(instantiation)?.toIterable
 	}
