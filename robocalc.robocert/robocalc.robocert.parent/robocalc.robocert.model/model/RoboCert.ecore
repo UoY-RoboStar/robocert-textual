@@ -133,14 +133,13 @@
       <details key="documentation" value="A RoboCert expression."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ConstExpr" eSuperTypes="#//CertExpr">
+  <eClassifiers xsi:type="ecore:EClass" name="BoolExpr" eSuperTypes="#//CertExpr">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A reference to a constant in the model."/>
+      <details key="documentation" value="A RoboCert Boolean literal."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constant" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The constant being referenced."/>
+        <details key="documentation" value="The value of the expression."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -151,6 +150,17 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The value of the expression."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstExpr" eSuperTypes="#//CertExpr">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A reference to a constant in the model."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constant" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The constant being referenced."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

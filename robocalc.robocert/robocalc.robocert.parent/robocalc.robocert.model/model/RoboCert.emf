@@ -135,16 +135,30 @@ abstract class Property {
 abstract class CertExpr {
 }
 
-@genmodel(documentation="A reference to a constant in the model.")
-class ConstExpr extends CertExpr {
-	@genmodel(documentation="The constant being referenced.")
-	ref robochart.Variable[1] constant;
+//
+// Literals
+//
+
+@genmodel(documentation="A RoboCert Boolean literal.")
+class BoolExpr extends CertExpr {
+	@genmodel(documentation="The value of the expression.")
+	attr boolean[1] value;
 }
 
 @genmodel(documentation="A RoboCert integer literal.")
 class IntExpr extends CertExpr {
 	@genmodel(documentation="The value of the expression.")
 	attr int[1] value;
+}
+
+//
+// Variables
+//
+
+@genmodel(documentation="A reference to a constant in the model.")
+class ConstExpr extends CertExpr {
+	@genmodel(documentation="The constant being referenced.")
+	ref robochart.Variable[1] constant;
 }
 
 @genmodel(documentation="A reference to a previously-bound RoboCert variable.")
