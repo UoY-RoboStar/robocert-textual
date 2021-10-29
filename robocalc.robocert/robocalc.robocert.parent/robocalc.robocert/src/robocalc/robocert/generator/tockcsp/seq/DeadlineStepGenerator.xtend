@@ -3,15 +3,13 @@ package robocalc.robocert.generator.tockcsp.seq
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.DeadlineStep
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
-import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
 
 /**
  * Generates CSP-M for deadlines.
  */
-class DeadlineGenerator {
+class DeadlineStepGenerator {
 	@Inject CSPStructureGenerator csp
-	@Inject extension LoadStoreGenerator
 	@Inject extension ExpressionGenerator
 	@Inject extension SubsequenceGenerator
 
@@ -25,11 +23,11 @@ class DeadlineGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generateDeadline(
-		DeadlineStep it) '''«units.generateExpressionLoads»«csp.function(DEADLINE_PROC, '''(«body.generate»)''', '''{- time units -} «units.generate»''')»'''
+	def generate(
+		DeadlineStep it) '''«csp.function(DEADLINE_PROC, '''(«body.generate»)''', '''{- time units -} «units.generate»''')»'''
 
 	/**
 	 * Name of the process that implements the tick-tock deadline operator.
 	 */
-	static final String DEADLINE_PROC = "EndBy" // in core_timed
+	static val DEADLINE_PROC = "EndBy" // in core_timed
 }

@@ -23,7 +23,7 @@ class BranchStepGenerator {
 	 * 
 	 * @return  the generated CSP-M process.
 	 */
-	def CharSequence generateBranch(BranchStep it) {
+	def CharSequence generate(BranchStep it) {
 		generateJoin(branches, operator)
 	}
 	

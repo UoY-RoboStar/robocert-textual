@@ -240,6 +240,17 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConditionStep" eSuperTypes="#//SequenceStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Aborts if an expression evaluates to false.&#xD;&#xA;&#xD;&#xA;This is similar to the concept of a condition in LSC, except that there is&#xD;&#xA;only one temperature; the idea of a 'cold' condition is left to a future&#xD;&#xA;break step.&#xD;&#xA;"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" lowerBound="1"
+        eType="#//CertExpr" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The condition to evaluate."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BlockStep" abstract="true" eSuperTypes="#//SequenceStep #//OptionallyNamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Step that contains exactly one body.&#xD;&#xA;&#xD;&#xA;Often, but not always, these will be (what UML would call) combined&#xD;&#xA;fragments.&#xD;&#xA;&#xD;&#xA;Block steps can optionally have a name, which allows breaking."/>

@@ -81,7 +81,7 @@ class LoadStoreGenerator {
 	 * 
 	 * @return  all bindings referenced in expressions within it.
 	 */
-	private def getExprBindings(EObject it) {
+	def getExprBindings(EObject it) {
 		EcoreUtil2.eAllOfType(it, BindingExpr).map[source]
 	}
 }

@@ -248,6 +248,8 @@ class Subsequence {
 // STEPS
 //
 
+// NOTE: When adding new steps, remember to extend the step generators.
+
 /**
  * A single step in a subsequence.
  */
@@ -257,6 +259,10 @@ abstract class SequenceStep {
 	 */
 	ref Subsequence[1]#steps parent;
 }
+
+//
+// Non-block steps
+//
 
 /**
  * A sequence step containing a primitive action.
@@ -274,6 +280,17 @@ class ActionStep extends SequenceStep {
 	
 	@genmodel(documentation="The temperature of this action.")
 	attr Temperature[1] temperature;
+}
+
+@genmodel(documentation="Aborts if an expression evaluates to false.
+
+This is similar to the concept of a condition in LSC, except that there is
+only one temperature; the idea of a 'cold' condition is left to a future
+break step.
+")
+class ConditionStep extends SequenceStep {
+	@genmodel(documentation="The condition to evaluate.")
+	val CertExpr[1] condition;
 }
 
 //

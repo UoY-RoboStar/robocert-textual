@@ -10,13 +10,11 @@ import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.SequenceAction
 import robocalc.robocert.generator.utils.MessageSetOptimiser
 import robocalc.robocert.generator.intf.seq.ActionGenerator
-import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator
 
 /**
  * Generates CSP-M for action steps.
  */
 class ActionStepGenerator {
-	@Inject extension LoadStoreGenerator
 	@Inject extension ActionGenerator
 	@Inject extension MessageSetOptimiser
 	@Inject extension MessageSetGenerator
@@ -37,16 +35,7 @@ class ActionStepGenerator {
 	 * @return the generated CSP-M.
 	 */
 	def generateActionStep(ActionStep it)
-		'''«generateExpressionLoads»«generateActionStepInner»'''
-
-	/**
-	 * Generates CSP-M for the inner (post-load) part of an action step.
-	 * 
-	 * @param it  the action step.
-	 * 
-	 * @return the generated CSP-M.
-	 */
-	private def generateActionStepInner(ActionStep it) '''«generateGap»(«EVENTUALLY_PROC»(«action.generate»))'''
+		'''«generateGap»(«EVENTUALLY_PROC»(«action.generate»))'''
 
 	/**
 	 * Generates CSP-M for an action step gap.

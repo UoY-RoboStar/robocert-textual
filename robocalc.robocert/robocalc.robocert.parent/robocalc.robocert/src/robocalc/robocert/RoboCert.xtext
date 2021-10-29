@@ -272,6 +272,7 @@ Subsequence:
 SequenceStep:
 	BlockStep |
 	BranchStep |
+	'require' {ConditionStep} 'that'? condition=CertExpr |
 	{ActionStep} gap=Gap action=SequenceAction OptTemperature;
 
 //
