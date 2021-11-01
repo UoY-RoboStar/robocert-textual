@@ -9,6 +9,7 @@ import robocalc.robocert.model.robocert.LoopStep
 import robocalc.robocert.model.robocert.LoopBound
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
+import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator
 
 /**
  * Generates CSP for loops.

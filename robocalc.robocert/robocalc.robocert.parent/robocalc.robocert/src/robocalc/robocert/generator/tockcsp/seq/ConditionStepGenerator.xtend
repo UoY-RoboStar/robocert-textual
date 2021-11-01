@@ -2,6 +2,7 @@ package robocalc.robocert.generator.tockcsp.seq
 
 import robocalc.robocert.model.robocert.ConditionStep
 import com.google.inject.Inject
+import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator
 
 /**
  * Generates CSP-M for ConditionSteps.

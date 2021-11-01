@@ -109,9 +109,18 @@ Property:
  * one day it'll merge back into it).
  */
 CertExpr:
+	{BoolExpr} (truth?='true' | 'false') |
 	{IntExpr} value=INT |
 	{ConstExpr} constant=[Variable|QualifiedName] |
 	'@' {BindingExpr} source=[Binding];
+
+/**
+ * Workaround to let the BoolExpr production work properly.
+ */
+@Override
+terminal BOOLEAN:
+	'yes'
+;
 
 /**
  * A time unit expression.
@@ -123,8 +132,7 @@ TimeUnits returns CertExpr:
  * A binding (source of a BindingExpr).
  */
 Binding:
-	'as' name=ID
-;
+	'as' name=ID;
 
 //
 // MODALITIES

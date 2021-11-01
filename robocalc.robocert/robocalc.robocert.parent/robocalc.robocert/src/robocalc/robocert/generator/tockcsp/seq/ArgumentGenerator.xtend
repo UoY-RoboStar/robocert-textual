@@ -6,6 +6,7 @@ import robocalc.robocert.model.robocert.Argument
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import robocalc.robocert.model.robocert.WildcardArgument
 import robocalc.robocert.generator.tockcsp.top.BindingGenerator
+import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator
 
 /**
  * Generates fragments of CSP prefixes and event sets relating to arguments.

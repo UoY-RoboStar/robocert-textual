@@ -141,8 +141,8 @@ abstract class CertExpr {
 
 @genmodel(documentation="A RoboCert Boolean literal.")
 class BoolExpr extends CertExpr {
-	@genmodel(documentation="The value of the expression.")
-	attr boolean[1] value;
+	@genmodel(documentation="The truth value of the expression.")
+	attr boolean[1] truth;
 }
 
 @genmodel(documentation="A RoboCert integer literal.")

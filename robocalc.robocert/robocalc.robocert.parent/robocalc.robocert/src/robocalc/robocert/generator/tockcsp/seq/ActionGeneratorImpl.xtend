@@ -7,6 +7,7 @@ import robocalc.robocert.model.robocert.FinalAction
 import robocalc.robocert.model.robocert.WaitAction
 import robocalc.robocert.generator.intf.seq.ActionGenerator
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator
+import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator
 
 /**
  * Top-level CSP generator for sequence actions.

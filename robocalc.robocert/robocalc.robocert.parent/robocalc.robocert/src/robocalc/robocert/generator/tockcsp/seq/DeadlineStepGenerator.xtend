@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.DeadlineStep
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
+import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator
 
 /**
  * Generates CSP-M for deadlines.
@@ -23,8 +24,9 @@ class DeadlineStepGenerator {
 	 * 
 	 * @return the generated CSP.
 	 */
-	def generate(
-		DeadlineStep it) '''«csp.function(DEADLINE_PROC, '''(«body.generate»)''', '''{- time units -} «units.generate»''')»'''
+	def generate(DeadlineStep it) {
+		csp.function(DEADLINE_PROC, '''(«body.generate»)''', '''{- time units -} «units.generate»''')
+	}
 
 	/**
 	 * Name of the process that implements the tick-tock deadline operator.
