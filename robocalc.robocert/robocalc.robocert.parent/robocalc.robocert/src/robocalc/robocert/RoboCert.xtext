@@ -305,7 +305,6 @@ Subsequence:
 SequenceStep:
 	BlockStep |
 	BranchStep |
-	'require' {ConditionStep} 'that'? condition=CertExpr |
 	{ActionStep} gap=Gap action=SequenceAction OptTemperature;
 
 //
@@ -345,9 +344,17 @@ LoopBound:
 BranchStep:
 	('parallel' {InterleaveStep} |
 	'choice' {AlternativeStep} OptTemperature)
-	'between' ':'
-	branches+=Subsequence
-	('and' ':' branches+=Subsequence)+;
+	'between' branches+=Branch
+	('and' branches+=Branch)+;
+
+Branch:
+	guard=Guard ':' body=Subsequence
+;
+
+Guard:
+	{EmptyGuard} |
+	 '[' {ExprGuard} expr=CertExpr ']'
+;
 
 //
 // ACTIONS

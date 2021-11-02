@@ -12,7 +12,6 @@ import robocalc.robocert.generator.intf.seq.StepGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.BranchStep;
-import robocalc.robocert.model.robocert.ConditionStep;
 
 /**
  * Generator for sequence steps.
@@ -24,7 +23,6 @@ import robocalc.robocert.model.robocert.ConditionStep;
 public class StepGeneratorImpl implements StepGenerator {
 	@Inject private ActionStepGenerator ag;
 	@Inject private BranchStepGenerator bg;
-	@Inject private ConditionStepGenerator cg;
 	@Inject private DeadlineStepGenerator dg;
 	@Inject private LoopStepGenerator lg;
 	@Inject private UnsupportedSubclassHandler uh;
@@ -43,8 +41,6 @@ public class StepGeneratorImpl implements StepGenerator {
 		// TODO(@MattWindsor91): make this part of the metamodel?
 		if (it instanceof ActionStep a)
 			return ls.getExprBindings(a);
-		if (it instanceof ConditionStep c)
-			return ls.getExprBindings(c);
 		if (it instanceof LoopStep l)
 			return ls.getExprBindings(l.getBound());
 		return List.of();
@@ -57,8 +53,6 @@ public class StepGeneratorImpl implements StepGenerator {
 			return ag.generateActionStep(a);
 		if (it instanceof BranchStep b)
 			return bg.generate(b);
-		if (it instanceof ConditionStep c)
-			return cg.generate(c);
 		if (it instanceof DeadlineStep d)
 			return dg.generate(d);
 		if (it instanceof LoopStep l)

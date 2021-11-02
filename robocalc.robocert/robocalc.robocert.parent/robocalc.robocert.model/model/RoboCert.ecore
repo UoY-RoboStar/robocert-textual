@@ -297,25 +297,25 @@
         eType="#//Subsequence" eOpposite="#//Subsequence/steps"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ActionStep" eSuperTypes="#//SequenceStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A sequence step containing a primitive action."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="gap" lowerBound="1" eType="#//MessageSet"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The specification of what can happen in the 'gap' before the action."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="1"
-        eType="#//SequenceAction" containment="true" eOpposite="#//SequenceAction/step"/>
+        eType="#//SequenceAction" containment="true" eOpposite="#//SequenceAction/step">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The action proper."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
         eType="#//Temperature">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The temperature of this action."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ConditionStep" eSuperTypes="#//SequenceStep">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Aborts if an expression evaluates to false.&#xD;&#xA;&#xD;&#xA;This is similar to the concept of a condition in LSC, except that there is&#xD;&#xA;only one temperature; the idea of a 'cold' condition is left to a future&#xD;&#xA;break step.&#xD;&#xA;"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" lowerBound="1"
-        eType="#//CertExpr" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The condition to evaluate."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -373,7 +373,7 @@
       <details key="documentation" value="Abstract step containing two or more branches."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="branches" lowerBound="2"
-        upperBound="-1" eType="#//Subsequence" containment="true">
+        upperBound="-1" eType="#//Branch" containment="true" eOpposite="#//Branch/parent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The branches available in this step."/>
       </eAnnotations>
@@ -394,6 +394,52 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An interleaving composition step."/>
     </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Branch">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A potentially-guarded subsequence used in a BranchStep."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="1" eType="#//Guard"
+        containment="true" eOpposite="#//Guard/parent">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The guard for this branch."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The body of this branch."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
+        eType="#//BranchStep" eOpposite="#//BranchStep/branches">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent step containing this branch (along with others)."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Guard" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A condition placed on a Branch."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
+        eType="#//Branch" eOpposite="#//Branch/guard">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent branch of this guard."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EmptyGuard" eSuperTypes="#//Guard">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A guard that is always true."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExprGuard" eSuperTypes="#//Guard">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A guard that is dependent on the truth value of an expression."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//CertExpr"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//ActionStep"

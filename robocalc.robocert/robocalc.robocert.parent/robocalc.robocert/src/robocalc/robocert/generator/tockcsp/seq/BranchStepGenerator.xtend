@@ -1,19 +1,18 @@
 package robocalc.robocert.generator.tockcsp.seq
 
 import robocalc.robocert.model.robocert.BranchStep
-import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import com.google.inject.Inject
-import robocalc.robocert.model.robocert.Subsequence
 import robocalc.robocert.model.robocert.AlternativeStep
 import robocalc.robocert.model.robocert.Temperature
 import robocalc.robocert.model.robocert.InterleaveStep
+import robocalc.robocert.model.robocert.Branch
 
 /**
  * Generator for BranchSteps.
  */
 class BranchStepGenerator {
-	@Inject extension SubsequenceGenerator
+	@Inject extension BranchGenerator
 	@Inject extension UnsupportedSubclassHandler
 	
 	/**
@@ -27,7 +26,7 @@ class BranchStepGenerator {
 		generateJoin(branches, operator)
 	}
 	
-	private def generateJoin(Iterable<Subsequence> branches, CharSequence op) '''
+	private def generateJoin(Iterable<Branch> branches, CharSequence op) '''
 		«FOR branch : branches SEPARATOR op»
 			(
 				«branch.generate»

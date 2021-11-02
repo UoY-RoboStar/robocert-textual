@@ -314,33 +314,16 @@ abstract class SequenceStep {
 // Non-block steps
 //
 
-/**
- * A sequence step containing a primitive action.
- */
+@genmodel(documentation="A sequence step containing a primitive action.")
 class ActionStep extends SequenceStep {
-	/**
-	 * The specification of what can happen in the 'gap' before the action.
-	 */
+	@genmodel(documentation="The specification of what can happen in the 'gap' before the action.")
 	val MessageSet[1] gap;
 
-	/**
-	 * The action proper.
-	 */
+	@genmodel(documentation="The action proper.")
 	val SequenceAction[1]#step action;
 	
 	@genmodel(documentation="The temperature of this action.")
 	attr Temperature[1] temperature;
-}
-
-@genmodel(documentation="Aborts if an expression evaluates to false.
-
-This is similar to the concept of a condition in LSC, except that there is
-only one temperature; the idea of a 'cold' condition is left to a future
-break step.
-")
-class ConditionStep extends SequenceStep {
-	@genmodel(documentation="The condition to evaluate.")
-	val CertExpr[1] condition;
 }
 
 //
@@ -445,7 +428,7 @@ class RangeLoopBound extends LoopBound {
 @genmodel(documentation="Abstract step containing two or more branches.")
 abstract class BranchStep extends SequenceStep {
 	@genmodel(documentation="The branches available in this step.")
-	val Subsequence[2..*] branches;
+	val Branch[2..*]#parent branches;
 }
 
 @genmodel(documentation="An alternative choice step.")
@@ -456,6 +439,36 @@ class AlternativeStep extends BranchStep {
 
 @genmodel(documentation="An interleaving composition step.")
 class InterleaveStep extends BranchStep {
+}
+
+@genmodel(documentation="A potentially-guarded subsequence used in a BranchStep.")
+class Branch {
+	@genmodel(documentation="The guard for this branch.")
+	val Guard[1]#parent guard;
+	
+	@genmodel(documentation="The body of this branch.")
+	val Subsequence[1] body;
+	
+	// This mainly exists to allow us to (eventually) set up ElseGuards,
+	// which require us to traverse up to the Branch, enumerate all the
+	// expressions, and negate them.
+	@genmodel(documentation="The parent step containing this branch (along with others).")
+	ref BranchStep[1]#branches parent;
+}
+
+@genmodel(documentation="A condition placed on a Branch.")
+abstract class Guard {
+	@genmodel(documentation="The parent branch of this guard.")
+	ref Branch[1]#guard parent;
+}
+
+@genmodel(documentation="A guard that is always true.")
+class EmptyGuard extends Guard {
+}
+
+@genmodel(documentation="A guard that is dependent on the truth value of an expression.")
+class ExprGuard extends Guard {
+	val CertExpr[1] expr;
 }
 
 //
