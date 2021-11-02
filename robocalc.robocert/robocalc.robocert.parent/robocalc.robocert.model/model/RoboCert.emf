@@ -152,6 +152,42 @@ class IntExpr extends CertExpr {
 }
 
 //
+// Binary operations
+//
+
+@genmodel(documentation="A relational binary expression.")
+class RelationExpr extends CertExpr {
+	// NOTE(@MattWindsor91): I've tried making this and other classes have
+	// a generic binary superclass, but ran into problems with Xtext being
+	// unable to deal with the resulting type erasure.
+	
+	@genmodel(documentation="The left-hand side.")
+	val CertExpr[1] lhs;
+	
+	@genmodel(documentation="The right-hand side.")
+	val CertExpr[1] rhs;
+	
+	@genmodel(documentation="The operator.")
+	attr RelationOperator[1] operator;
+}
+
+@genmodel(documentation="A relational operator.")
+enum RelationOperator {
+	@genmodel(documentation="Greater than.")
+	GT;
+	@genmodel(documentation="Greater than or equal.")
+	GE;
+	@genmodel(documentation="Equal.")
+	EQ;
+	@genmodel(documentation="Not equal.")
+	NE;
+	@genmodel(documentation="Greater than or equal.")
+	LE;
+	@genmodel(documentation="Less than.")
+	LT;
+}
+
+//
 // Variables
 //
 
@@ -661,23 +697,20 @@ class ExtensionalMessageSet extends MessageSet {
 class UniverseMessageSet extends MessageSet {
 }
 
-/**
- * A message set that is the result of applying a binary operator to two other
- * message sets.
- */
+@genmodel(documentation="A binary set operation over two message sets.")
 class BinaryMessageSet extends MessageSet {
-	/**
-	 * The left-hand side.
-	 */
+	// NOTE(@MattWindsor91): I've tried making this and other classes have
+	// a generic binary superclass, but ran into problems with Xtext being
+	// unable to deal with the resulting type erasure.
+	
+	@genmodel(documentation="The left-hand side.")
 	val MessageSet[1] lhs;
-	/**
-	 * The set operator.
-	 */
-	attr BinarySetOperator[1] operator;
-	/**
-	 * The right-hand side.
-	 */
+	
+	@genmodel(documentation="The right-hand side.")
 	val MessageSet[1] rhs;
+	
+	@genmodel(documentation="The operator.")
+	attr BinarySetOperator[1] operator;
 }
 
 /**

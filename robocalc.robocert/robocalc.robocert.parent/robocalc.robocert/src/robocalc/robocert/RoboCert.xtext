@@ -102,6 +102,8 @@ Property:
 //
 // EXPRESSIONS
 //
+// The expression grammar is left-factored.
+//
 /**
  * An expression.
  * 
@@ -109,10 +111,33 @@ Property:
  * one day it'll merge back into it).
  */
 CertExpr:
-	{BoolExpr} (truth?='true' | 'false') |
-	{IntExpr} value=INT |
+	PrimaryExpr ({RelationExpr.lhs=current} operator=RelationOperator rhs=PrimaryExpr)*;
+
+/**
+ * A relation operator.
+ * 
+ * Unlike most things in RoboCert, we let these be C-style operators since we
+ * assume practitioners will likely be able to understand them...?
+ */
+enum RelationOperator:
+	LT='<' |
+	LE='<=' |
+	EQ='==' |
+	NE='!=' |
+	GE='>=' |
+	GT='>'
+;
+
+PrimaryExpr returns CertExpr:
+	CertLiteral |
 	{ConstExpr} constant=[Variable|QualifiedName] |
-	'@' {BindingExpr} source=[Binding];
+	'@' {BindingExpr} source=[Binding] |
+	'(' CertExpr ')';
+	
+CertLiteral returns CertExpr:
+	{BoolExpr} (truth?='true' | 'false') |
+	{IntExpr} value=INT
+;
 
 /**
  * Workaround to let the BoolExpr production work properly.
