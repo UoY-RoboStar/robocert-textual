@@ -111,7 +111,7 @@ Property:
  * one day it'll merge back into it).
  */
 CertExpr:
-	PrimaryExpr ({RelationExpr.lhs=current} operator=RelationOperator rhs=PrimaryExpr)*;
+	MinusExpr ({RelationExpr.lhs=current} operator=RelationOperator rhs=MinusExpr)*;
 
 /**
  * A relation operator.
@@ -126,6 +126,11 @@ enum RelationOperator:
 	NE='!=' |
 	GE='>=' |
 	GT='>'
+;
+
+MinusExpr returns CertExpr:
+	{MinusExpr} '-' expr=MinusExpr |
+	PrimaryExpr
 ;
 
 PrimaryExpr returns CertExpr:

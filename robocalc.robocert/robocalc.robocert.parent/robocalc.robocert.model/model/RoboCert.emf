@@ -130,6 +130,11 @@ abstract class Property {
 //
 // EXPRESSIONS
 //
+// Generally, operator expressions are grouped into equivalence classes based
+// on similar semantic function and wellformedness conditions; for instance,
+// the relational operators are all in the same class.  This differs from
+// RoboChart, so it might change later.
+//
 
 @genmodel(documentation="A RoboCert expression.")
 abstract class CertExpr {
@@ -152,11 +157,29 @@ class IntExpr extends CertExpr {
 }
 
 //
+// Unary operations
+//
+
+@genmodel(documentation="An expression that inverts the sign of another (arithmetic) expression.")
+class MinusExpr extends CertExpr {
+	// NOTE(@MattWindsor91): if there is ever a compelling reason to add more
+	// arithmetic unary operators, this should generalise to fit all of them.
+
+	@genmodel(documentation="The expression to modify.")
+	val CertExpr[1] expr; 
+}
+
+
+//
 // Binary operations
 //
 
 @genmodel(documentation="A relational binary expression.")
 class RelationExpr extends CertExpr {
+	// TODO(@MattWindsor91): consider splitting </<=/>=/> and ==/!=, as
+	// they have different wellformedness conditions (eg, the former requires
+	// arithmetic types).
+
 	// NOTE(@MattWindsor91): I've tried making this and other classes have
 	// a generic binary superclass, but ran into problems with Xtext being
 	// unable to deal with the resulting type erasure.

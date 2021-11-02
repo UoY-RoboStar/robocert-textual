@@ -45,8 +45,6 @@ public class CertExprParsingTest {
 	@Test
 	void testParseInteger() {
 		assertParse(ef.integer(0), "0");
-		// TODO(@MattWindsor91): allow negative number parsing
-		//assertParse(ef.integer(-1), "-1");
 		assertParse(ef.integer(42), "42");		
 	}
 
@@ -60,6 +58,13 @@ public class CertExprParsingTest {
 		// TODO(@MattWindsor91): composite relations
 	}
 
+	/**
+	 * Tests whether parsing negated expressions works.
+	 */
+	@Test
+	void testParseMinus() {
+		assertParse(ef.minus(ef.integer(1)), "-1");
+	}
 	
 	private void assertParse(CertExpr expected, String input) {		
 		var result = assertDoesNotThrow(() -> parseHelper.parse(lift(input)));

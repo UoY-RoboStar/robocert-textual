@@ -3,6 +3,9 @@ package robocalc.robocert.generator.tockcsp.top;
 import com.google.inject.Inject;
 import robocalc.robocert.generator.utils.VariableExtensions;
 import robocalc.robocert.model.robocert.IntExpr;
+import robocalc.robocert.model.robocert.MinusExpr;
+import robocalc.robocert.model.robocert.RelationExpr;
+import robocalc.robocert.model.robocert.RelationOperator;
 import robocalc.robocert.model.robocert.ConstExpr;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CertExpr;
@@ -33,14 +36,37 @@ public class ExpressionGenerator {
 	 * @return  CSP-M for the expression.
 	 */
 	public CharSequence generate(CertExpr it) {
-		if (it instanceof BoolExpr b)
-			return Boolean.toString(b.isTruth());
-		if (it instanceof IntExpr i)
-			return Integer.toString(i.getValue());
-		if (it instanceof ConstExpr k)
-			return vx.constantId(k.getConstant());
+		// TODO(@MattWindsor91): replace this with a type switch when it stops
+		// being a preview feature.  I tried using it as a preview feature, but
+		// couldn't get the UI to load under preview mode.
 		if (it instanceof BindingExpr n && n.getSource() != null)
 			return bg.generateExpressionName(n.getSource());
+		if (it instanceof BoolExpr b)
+			return Boolean.toString(b.isTruth());
+		if (it instanceof ConstExpr k)
+			return vx.constantId(k.getConstant());
+		if (it instanceof IntExpr i)
+			return Integer.toString(i.getValue());
+		if (it instanceof RelationExpr r)
+			return generateRelation(r);
+		if (it instanceof MinusExpr m)
+			return "-(" + generate(m) + ")";
 		return ush.unsupported(it, "expression", "0");
+	}
+	
+	private CharSequence generateRelation(RelationExpr it) {
+		return String.join(" ", generate(it.getLhs()), generateRelationOp(it.getOperator()), generate(it.getRhs()));
+	}
+	
+	private CharSequence generateRelationOp(RelationOperator it) {
+		// At time of writing, these are the same in CSP-M and RoboCert.
+		return switch(it) {
+		case LT -> "<";
+		case LE -> "<=";
+		case EQ -> "==";
+		case NE -> "!=";
+		case GE -> ">=";
+		case GT -> ">";
+		};
 	}
 }

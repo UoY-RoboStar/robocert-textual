@@ -9,6 +9,7 @@ import robocalc.robocert.model.robocert.BoolExpr;
 import robocalc.robocert.model.robocert.CertExpr;
 import robocalc.robocert.model.robocert.ConstExpr;
 import robocalc.robocert.model.robocert.IntExpr;
+import robocalc.robocert.model.robocert.MinusExpr;
 import robocalc.robocert.model.robocert.RelationExpr;
 import robocalc.robocert.model.robocert.RelationOperator;
 import robocalc.robocert.model.robocert.RoboCertFactory;
@@ -101,6 +102,19 @@ public class ExpressionFactory {
 		result.setOperator(op);
 		result.setLhs(lhs);
 		result.setRhs(rhs);
+		return result;
+	}
+	
+	/**
+	 * Creates a {@link MinusExpr} with the given operand.
+	 * 
+	 * @param e the operand.
+	 * 
+	 * @return the minus expression.
+	 */
+	public MinusExpr minus(CertExpr e) {
+		var result = rc.createMinusExpr();
+		result.setExpr(e);
 		return result;
 	}
 }
