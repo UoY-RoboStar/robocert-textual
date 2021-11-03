@@ -1,11 +1,14 @@
 package robocalc.robocert.generator.tockcsp.seq;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 import robocalc.robocert.model.robocert.SequenceStep;
 import robocalc.robocert.model.robocert.ActionStep;
 import robocalc.robocert.model.robocert.Binding;
+import robocalc.robocert.model.robocert.Branch;
 import robocalc.robocert.model.robocert.LoopStep;
 import robocalc.robocert.model.robocert.DeadlineStep;
 import robocalc.robocert.generator.intf.seq.StepGenerator;
@@ -41,9 +44,19 @@ public class StepGeneratorImpl implements StepGenerator {
 		// TODO(@MattWindsor91): make this part of the metamodel?
 		if (it instanceof ActionStep a)
 			return ls.getExprBindings(a);
+		if (it instanceof BranchStep b)
+			return branchBindings(b);
 		if (it instanceof LoopStep l)
 			return ls.getExprBindings(l.getBound());
 		return List.of();
+	}
+	
+	private List<Binding> branchBindings(BranchStep it) {
+		return it.getBranches().stream().flatMap((x) -> branchBindings(x)).collect(Collectors.toList());
+	}
+
+	private Stream<Binding> branchBindings(Branch x) {
+		return ls.getExprBindings(x.getGuard()).stream();
 	}
 	
 	private CharSequence generateAfterLoads(SequenceStep it) {

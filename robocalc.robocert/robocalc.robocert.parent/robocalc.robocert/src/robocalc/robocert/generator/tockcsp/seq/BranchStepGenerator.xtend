@@ -6,7 +6,6 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.AlternativeStep
 import robocalc.robocert.model.robocert.Temperature
 import robocalc.robocert.model.robocert.InterleaveStep
-import robocalc.robocert.model.robocert.Branch
 
 /**
  * Generator for BranchSteps.
@@ -22,56 +21,57 @@ class BranchStepGenerator {
 	 * 
 	 * @return  the generated CSP-M process.
 	 */
-	def CharSequence generate(BranchStep it) {
-		generateJoin(branches, operator)
+	def CharSequence generate(BranchStep it) '''
+	{- «comment» -} (
+		«FOR branch : branches SEPARATOR operator»(
+			«branch.generate»
+		)«ENDFOR»
+	)'''
+	
+	/**
+	 * Gets a debug comment corresponding to the branch step.
+	 * 
+	 * @param it the step to generate.
+	 * 
+	 * @return the comment.
+	 */
+	private def comment(BranchStep it) {
+		switch it {
+			InterleaveStep: "interleave"
+			AlternativeStep: '''alternative («temperature»)'''
+			default: unsupported("branch step", "?")
+		}
 	}
 	
-	private def generateJoin(Iterable<Branch> branches, CharSequence op) '''
-		«FOR branch : branches SEPARATOR op»
-			(
-				«branch.generate»
-			)
-		«ENDFOR»
-	'''
+	/**
+	 * Gets the CSP-M operator corresponding to the branch step.
+	 * 
+	 * @param it the step to generate.
+	 * 
+	 * @return the corresponding CSP-M.
+	 */
+	private def operator(BranchStep it) {
+		switch it {
+			InterleaveStep: INTERLEAVE
+			AlternativeStep: altOperator(temperature)
+			default: unsupported("branch step", INT_CHOICE)
+		}
+	}
 	
 	/**
 	 * Expands to the CSP operator for joining together branches on an
 	 * alternative branch step.
 	 * 
-	 * @param it  the AlternativeStep to generate.
+	 * @param it  the temperature of the alternative step to generate.
 	 * 
 	 * @return  CSP-M external choice if the step is hot; internal otherwise.
 	 */
-	private def dispatch operator(AlternativeStep it) {
-		switch temperature {
+	private def altOperator(Temperature it) {
+		switch it {
 			case Temperature::COLD: INT_CHOICE
 			case Temperature::HOT: EXT_CHOICE
-			default: unsupported("temperature", INT_CHOICE)
+			default: "?"
 		}
-	}
-	
-	/**
-	 * Fallback CSP operator for joining together branches on an
-	 * interleave.
-	 * 
-	 * @param it  the InterleaveStep to generate.
-	 * 
-	 * @return  an interleave operator.
-	 */
-	private def dispatch operator(InterleaveStep it) {
-		INTERLEAVE
-	}
-	
-	/**
-	 * Fallback CSP operator for joining together branches on an
-	 * unsupported branch step.
-	 * 
-	 * @param it  the BranchStep to generate.
-	 * 
-	 * @return  a fallback operator.
-	 */
-	private def dispatch operator(BranchStep it) {
-		unsupported("branch step", INT_CHOICE)
 	}
 
 	/**
