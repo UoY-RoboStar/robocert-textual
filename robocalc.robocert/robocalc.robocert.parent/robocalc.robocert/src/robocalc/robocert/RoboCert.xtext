@@ -111,6 +111,35 @@ Property:
  * one day it'll merge back into it).
  */
 CertExpr:
+	LogicalAndExpr;
+
+// AND and OR are separated out because a) they are in C, and b) this forces a
+// predictable precedence over them.
+LogicalAndExpr returns CertExpr:
+	LogicalOrExpr ({LogicalExpr.lhs=current} operator=LogicalAndOperator rhs=LogicalOrExpr)*;
+
+LogicalOrExpr returns CertExpr:
+	RelationExpr ({LogicalExpr.lhs=current} operator=LogicalOrOperator rhs=RelationExpr)*;
+
+// Justification for these symbols:
+//
+// These are the operators used in RoboChart, and also dodge a conflict in the
+// grammar where using eg 'and' conflicts with the use of 'and' elsewhere to
+// structure higher-level parts of the grammar.
+
+/**
+ * Accepted symbols for logical AND.
+ */
+enum LogicalAndOperator returns LogicalOperator:
+	AND='/\\';
+
+/**
+ * Accepted symbols for logical OR.
+ */
+enum LogicalOrOperator returns LogicalOperator:
+	OR='\\/';
+
+RelationExpr returns CertExpr:
 	MinusExpr ({RelationExpr.lhs=current} operator=RelationOperator rhs=MinusExpr)*;
 
 /**
@@ -125,32 +154,28 @@ enum RelationOperator:
 	EQ='==' |
 	NE='!=' |
 	GE='>=' |
-	GT='>'
-;
+	GT='>';
 
 MinusExpr returns CertExpr:
 	{MinusExpr} '-' expr=MinusExpr |
-	PrimaryExpr
-;
+	PrimaryExpr;
 
 PrimaryExpr returns CertExpr:
 	CertLiteral |
 	{ConstExpr} constant=[Variable|QualifiedName] |
 	'@' {BindingExpr} source=[Binding] |
 	'(' CertExpr ')';
-	
+
 CertLiteral returns CertExpr:
 	{BoolExpr} (truth?='true' | 'false') |
-	{IntExpr} value=INT
-;
+	{IntExpr} value=INT;
 
 /**
  * Workaround to let the BoolExpr production work properly.
  */
 @Override
 terminal BOOLEAN:
-	'yes'
-;
+	'yes';
 
 /**
  * A time unit expression.
@@ -351,18 +376,15 @@ LoopBound:
  */
 BranchStep:
 	('parallel' {InterleaveStep} |
-	'choice' {AlternativeStep} OptTemperature)
-	'between' branches+=Branch
-	('and' branches+=Branch)+;
+	'choice' {AlternativeStep} OptTemperature) ':' BEGIN branches+= Branch (branches+=Branch)+ END;
 
 Branch:
-	guard=Guard ':' body=Subsequence
-;
+	guard=Guard ':' body=Subsequence;
 
 Guard:
-	{EmptyGuard} |
-	 '[' ('else' {ElseGuard} | {ExprGuard} expr=CertExpr) ']'
-;
+	'always' {EmptyGuard} |
+	'otherwise' {ElseGuard} |
+	'when' {ExprGuard} expr=CertExpr;
 
 //
 // ACTIONS

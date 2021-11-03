@@ -9,6 +9,8 @@ import robocalc.robocert.model.robocert.BoolExpr;
 import robocalc.robocert.model.robocert.CertExpr;
 import robocalc.robocert.model.robocert.ConstExpr;
 import robocalc.robocert.model.robocert.IntExpr;
+import robocalc.robocert.model.robocert.LogicalExpr;
+import robocalc.robocert.model.robocert.LogicalOperator;
 import robocalc.robocert.model.robocert.MinusExpr;
 import robocalc.robocert.model.robocert.RelationExpr;
 import robocalc.robocert.model.robocert.RelationOperator;
@@ -88,6 +90,23 @@ public class ExpressionFactory {
 		return result;
 	}
 
+	/**
+	 * Creates a {@link LogicalExpr} with the given operator and operands.
+	 * 
+	 * @param op  the operator.
+	 * @param lhs the left operand.
+	 * @param rhs the right operand.
+	 * 
+	 * @return the given relational expression.
+	 */
+	public LogicalExpr logic(LogicalOperator op, CertExpr lhs, CertExpr rhs) {
+		var result = rc.createLogicalExpr();
+		result.setOperator(op);
+		result.setLhs(lhs);
+		result.setRhs(rhs);
+		return result;
+	}
+	
 	/**
 	 * Creates a {@link RelationExpr} with the given operator and operands.
 	 * 

@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator;
 import robocalc.robocert.model.robocert.CertExpr;
+import robocalc.robocert.model.robocert.LogicalOperator;
 import robocalc.robocert.model.robocert.RelationOperator;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
 import robocalc.robocert.tests.util.CspNormaliser;
@@ -58,13 +59,22 @@ class ExpressionGeneratorTest {
 	}
 	
 	/**
+	 * Tests that generating logical expressions works properly.
+	 */
+	@Test
+	void testGenerateLogicalExprs() {
+		assertGenerates("(true) and (false)", ef.logic(LogicalOperator.AND, ef.bool(true), ef.bool(false)));
+		assertGenerates("(Bnd__x) or (const_y)", ef.logic(LogicalOperator.OR, ef.binding("x"), ef.constant("y")));
+	}
+
+	/**
 	 * Tests that generating relational expressions works properly.
 	 */
 	@Test
 	void testGenerateRelationExprs() {
 		assertGenerates("(42) <= (56)", ef.rel(RelationOperator.LE, ef.integer(42), ef.integer(56)));
 	}
-
+	
 	/**
 	 * Asserts that the given input generates CSP-M that tidies to the expected
 	 * output.

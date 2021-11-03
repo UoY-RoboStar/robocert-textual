@@ -173,21 +173,38 @@ class MinusExpr extends CertExpr {
 // Binary operations
 //
 
-@genmodel(documentation="A relational binary expression.")
-class RelationExpr extends CertExpr {
-	// TODO(@MattWindsor91): consider splitting </<=/>=/> and ==/!=, as
-	// they have different wellformedness conditions (eg, the former requires
-	// arithmetic types).
-
+@genmodel(documentation="A binary expression.")
+abstract class BinaryExpr extends CertExpr {
 	// NOTE(@MattWindsor91): I've tried making this and other classes have
 	// a generic binary superclass, but ran into problems with Xtext being
 	// unable to deal with the resulting type erasure.
-	
+
 	@genmodel(documentation="The left-hand side.")
 	val CertExpr[1] lhs;
 	
 	@genmodel(documentation="The right-hand side.")
-	val CertExpr[1] rhs;
+	val CertExpr[1] rhs;	
+}
+
+@genmodel(documentation="A logical binary expression.")
+class LogicalExpr extends BinaryExpr {	
+	@genmodel(documentation="The operator.")
+	attr LogicalOperator[1] operator;
+}
+
+@genmodel(documentation="A logical operator.")
+enum LogicalOperator {
+	@genmodel(documentation="Logical conjunction.")
+	AND;
+	@genmodel(documentation="Logical disjunction.")
+	OR;
+}
+
+@genmodel(documentation="A relational binary expression.")
+class RelationExpr extends BinaryExpr {
+	// TODO(@MattWindsor91): consider splitting </<=/>=/> and ==/!=, as
+	// they have different wellformedness conditions (eg, the former requires
+	// arithmetic types).
 	
 	@genmodel(documentation="The operator.")
 	attr RelationOperator[1] operator;

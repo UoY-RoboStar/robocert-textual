@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.google.inject.Inject;
 
 import robocalc.robocert.model.robocert.CertExpr;
+import robocalc.robocert.model.robocert.LogicalOperator;
 import robocalc.robocert.model.robocert.RelationOperator;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
 
@@ -46,7 +47,23 @@ public class CertExprParsingTest {
 	}
 
 	/**
-	 * Tests whether parsing integer literals works.
+	 * Tests whether parsing logical expressions works.
+	 */
+	@Test
+	void testParseLogical() {
+		assertParse(ef.logic(LogicalOperator.AND, ef.bool(true), ef.bool(false)), "true /\\ false");
+		// TODO(@MattWindsor91): work out how to get xtext to be able to resolve
+		// some constant and binding names. We can't test against them until it
+		// can.
+
+		// assertParse(ef.rel(RelationOperator.LE, ef.binding("x"), ef.constant("K")),
+		// "@x <= K");
+
+		// TODO(@MattWindsor91): composite logical expressions
+	}
+	
+	/**
+	 * Tests whether parsing relational expressions works.
 	 */
 	@Test
 	void testParseRelation() {
