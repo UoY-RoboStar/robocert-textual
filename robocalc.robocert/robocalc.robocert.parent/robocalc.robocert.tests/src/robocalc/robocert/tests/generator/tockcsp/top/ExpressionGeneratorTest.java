@@ -40,8 +40,20 @@ class ExpressionGeneratorTest {
 	@Test
 	void testGenerateIntExprs() {
 		assertGenerates("0", ef.integer(0));
-		assertGenerates("-1", ef.integer(-1));
 		assertGenerates("42", ef.integer(42));
+		// This last case is unlikely to happen in practice, because the parser
+		// would consider -1 to be -(1).
+		assertGenerates("-1", ef.integer(-1));
+	}
+	
+	/**
+	 * Tests that generating minus expressions works properly.
+	 */
+	@Test
+	void testGenerateMinusExprs() {
+		assertGenerates("-(1)", ef.minus(ef.integer(1)));
+		assertGenerates("-(-(42))", ef.minus(ef.minus(ef.integer(42))));
+		assertGenerates("-(const_x)", ef.minus(ef.constant("x")));
 	}
 
 	/**

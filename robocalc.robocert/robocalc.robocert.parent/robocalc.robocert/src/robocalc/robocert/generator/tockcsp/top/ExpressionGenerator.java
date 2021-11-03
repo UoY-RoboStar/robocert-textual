@@ -50,7 +50,7 @@ public class ExpressionGenerator {
 		if (it instanceof RelationExpr r)
 			return generateRelation(r);
 		if (it instanceof MinusExpr m)
-			return "-(" + generate(m) + ")";
+			return "-(" + generate(m.getExpr()) + ")";
 		return ush.unsupported(it, "expression", "0");
 	}
 	
