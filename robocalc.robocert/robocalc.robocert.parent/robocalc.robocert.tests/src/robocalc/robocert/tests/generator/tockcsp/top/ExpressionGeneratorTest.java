@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator;
 import robocalc.robocert.model.robocert.CertExpr;
+import robocalc.robocert.model.robocert.RelationOperator;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
 import robocalc.robocert.tests.util.CspNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
@@ -54,6 +55,14 @@ class ExpressionGeneratorTest {
 		assertGenerates("-(1)", ef.minus(ef.integer(1)));
 		assertGenerates("-(-(42))", ef.minus(ef.minus(ef.integer(42))));
 		assertGenerates("-(const_x)", ef.minus(ef.constant("x")));
+	}
+	
+	/**
+	 * Tests that generating relational expressions works properly.
+	 */
+	@Test
+	void testGenerateRelationExprs() {
+		assertGenerates("(42) <= (56)", ef.rel(RelationOperator.LE, ef.integer(42), ef.integer(56)));
 	}
 
 	/**

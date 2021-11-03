@@ -55,7 +55,10 @@ public class ExpressionGenerator {
 	}
 	
 	private CharSequence generateRelation(RelationExpr it) {
-		return String.join(" ", generate(it.getLhs()), generateRelationOp(it.getOperator()), generate(it.getRhs()));
+		// TODO(@MattWindsor91): this can likely be optimised for precedence,
+		// but that might be a waste of effort that could instead be used
+		// merging this and RoboChart's expression language?
+		return "(%s) %s (%s)".formatted(generate(it.getLhs()), generateRelationOp(it.getOperator()), generate(it.getRhs()));
 	}
 	
 	private CharSequence generateRelationOp(RelationOperator it) {
