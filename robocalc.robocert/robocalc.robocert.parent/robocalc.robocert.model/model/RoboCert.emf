@@ -169,7 +169,6 @@ class MinusExpr extends CertExpr {
 	val CertExpr[1] expr; 
 }
 
-
 //
 // Binary operations
 //
@@ -492,6 +491,13 @@ class EmptyGuard extends Guard {
 @genmodel(documentation="A guard that is dependent on the truth value of an expression.")
 class ExprGuard extends Guard {
 	val CertExpr[1] expr;
+}
+
+@genmodel(documentation="A guard that is true if all other guards in the BranchStep are false.
+
+It is ill-formed to have multiple ElseGuards in a step, or to have both an
+ElseGuard and an EmptyGuard in a step.")
+class ElseGuard extends Guard {
 }
 
 //
