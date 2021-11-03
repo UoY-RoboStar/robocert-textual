@@ -21,6 +21,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-16
 Export-Package: robocalc.robocert,
  robocalc.robocert.formatting2,
  robocalc.robocert.generator,
+ robocalc.robocert.generator.intf.seq,
  robocalc.robocert.generator.tockcsp.ll,
  robocalc.robocert.generator.tockcsp.seq,
  robocalc.robocert.generator.tockcsp.top,

@@ -19,8 +19,12 @@ class SubsequenceGeneratorImpl implements SubsequenceGenerator {
 	 * @return generated CSP for one sequence step.
 	 */
 	override CharSequence generate(Subsequence it) '''
-		«FOR step : steps SEPARATOR ';'»
-			«step.generate»
-		«ENDFOR»
+		«IF steps.isEmpty»
+			SKIP
+		«ELSE»
+			«FOR step : steps SEPARATOR ';'»
+				«step.generate»
+			«ENDFOR»
+		«ENDIF»
 	'''
 }

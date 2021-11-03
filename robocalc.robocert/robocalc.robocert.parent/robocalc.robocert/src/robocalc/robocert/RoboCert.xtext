@@ -297,9 +297,12 @@ Sequence:
 
 /**
  * A subsequence.
+ * 
+ * Subsequences can either be empty ('nothing'), or a nonzero sequence of
+ * steps ('x then y then...').
  */
 Subsequence:
-	BEGIN (steps+=SequenceStep) ('then' steps+=SequenceStep)* END;
+	BEGIN ('nothing' {Subsequence} | (steps+=SequenceStep) ('then' steps+=SequenceStep)*) END;
 
 //
 // STEPS
