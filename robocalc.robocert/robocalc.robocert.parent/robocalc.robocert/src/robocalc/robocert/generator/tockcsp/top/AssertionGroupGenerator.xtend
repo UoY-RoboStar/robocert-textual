@@ -22,11 +22,11 @@ class AssertionGroupGenerator {
 	 * @return generated CSP for the assertion group.
 	 */
 	def CharSequence generate(AssertionGroup it) '''
-	-- BEGIN SEQUENCE GROUP «name ?: "(untitled)"»
+	-- BEGIN ASSERTION GROUP «name ?: "(untitled)"»
 		«FOR a : assertions»
 			«a.generateAssertion»
 		«ENDFOR»
-	-- END SEQUENCE GROUP
+	-- END ASSERTION GROUP
 	'''
 
 	/**
