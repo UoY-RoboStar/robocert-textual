@@ -18,6 +18,13 @@
    generator, and expects the RoboChart 'core_timed_defs' to be open. -}
 
 {-
+ - Memory
+ -}
+
+-- Memory operations.
+datatype MemOp = get | set
+
+{-
  - Actions
  -}
 

@@ -71,7 +71,7 @@ class ModuleGenerator {
 	 */
 	def generateChannelRef(Binding b) '''«b.sequence.generateMemoryModuleRef»::«b.unambiguousName»'''
 
-	private def generateMemoryModuleRef(Sequence it) '''«SeqGroupParametricField::MEMORY_MODULE»::«name ?: 'unknown'»'''
+	private def generateMemoryModuleRef(Sequence it) '''«SeqGroupParametricField::MEMORY_MODULE»::«it?.name ?: 'unknown'»'''
 
 	private def getSequence(Binding b) {
 		EcoreUtil2.getContainerOfType(b, Sequence)
@@ -95,7 +95,7 @@ class ModuleGenerator {
 	 */
 	private def generateChannelDefinitions(Memory it) '''
 		«FOR it : slots SEPARATOR '\n'»
-			channel «unambiguousName» {- «binding.name» -} : InOut.«type.compileType»
+			channel «unambiguousName» {- «binding.name» -} : «MEM_OP_TYPE».«type.compileType»
 		«ENDFOR»
 	'''
 
@@ -150,10 +150,15 @@ class ModuleGenerator {
 		«ENDFOR»
 	'''
 
-	private def generateSlotIn(Memory.Slot it) '''«unambiguousName».in?«generateHeaderName»'''
+	// Note that these are the reverse direction from how they appear to
+	// processes using the memory.  This may seem obvious, but I got it
+	// wrong at first (GitHub issue #80 on robocert-sequences...)
 
-	private def generateSlotOut(Memory.Slot it) '''«unambiguousName».out.«generateHeaderName»'''
+	private def generateSlotIn(Memory.Slot it) '''«unambiguousName».set?«generateHeaderName»'''
 
+	private def generateSlotOut(Memory.Slot it) '''«unambiguousName».get!«generateHeaderName»'''
+
+	static val MEM_OP_TYPE = "MemOp" // in robocert_defs
 	static val LIFT_PROCESS = "lift"
 	static val RUN_PROCESS = "proc"
 	static val SYNC_SET = "sync"
