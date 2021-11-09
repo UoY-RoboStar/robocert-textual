@@ -404,14 +404,14 @@ SequenceAction:
  * A message specification.
  */
 MessageSpec:
-	direction=MessageDirection topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')?;
+	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? direction=MessageDirection;
 
 /**
- * The direction of a message.
+ * The direction of a message with implicit actors.
  */
 enum MessageDirection:
-	INBOUND='<-' |
-	OUTBOUND='->';
+	INBOUND='in' |
+	OUTBOUND='out';
 
 //
 // Message topics
@@ -423,9 +423,6 @@ MessageTopic:
 	'event' {EventTopic} event=[Event|QualifiedName] |
 	('op' | 'operation') {OperationTopic} operation=[OperationSig|QualifiedName];
 
-//
-// Message arguments
-//
 //
 // Message sets
 //
