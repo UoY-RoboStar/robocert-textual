@@ -14,11 +14,17 @@ import com.google.inject.Inject
 import static extension org.junit.jupiter.api.Assertions.*
 import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.WildcardArgument
+import robocalc.robocert.model.robocert.util.MessageFactory
+import circus.robocalc.robochart.OperationSig
 
 /**
  * Provides ways of creating dummy message specifications.
  */
 class MessageSpecFactory {
+	// TODO(@MattWindsor91): reduce overlap with model MessageFactory;
+	// the idea is that that will receive non-dummy factory operations.
+	
+	@Inject MessageFactory mf;
 	@Inject RoboChartFactory rc;
 	@Inject RoboCertFactory rcert;
 
@@ -33,25 +39,7 @@ class MessageSpecFactory {
 	 * @return a constructed arrow message spec.
 	 */
 	def MessageSpec arrowSpec(MessageTopic t, MessageDirection dir, Argument... args) {
-		spec(t, dir, args) => [s|arrowParent.body = s]
-	}
-
-	/**
-	 * Creates a message spec with the given topic, direction, and
-	 * arguments.
-	 * 
-	 * @param t     the desired topic.
-	 * @param dir   the desired direction.
-	 * @param args  the desired arguments.
-	 * 
-	 * @return a constructed message spec.
-	 */
-	def spec(MessageTopic t, MessageDirection dir, Argument... args) {
-		rcert.createMessageSpec => [
-			topic = t
-			direction = dir
-			arguments.addAll(args)
-		]
+		mf.spec(t, mf.directional(dir), args) => [s|arrowParent.body = s]
 	}
 
 	def private arrowParent() {
@@ -74,7 +62,7 @@ class MessageSpecFactory {
 	 * @return a constructed gap message spec.
 	 */
 	def MessageSpec gapSpec(MessageTopic t, MessageDirection dir, Argument... args) {
-		spec(t, dir, args) => [s|gapParent.messages.add(s)]
+		mf.spec(t, mf.directional(dir), args) => [s|gapParent.messages.add(s)]
 	}
 
 	/**
@@ -128,14 +116,19 @@ class MessageSpecFactory {
 		rcert.createWildcardArgument => [binding = rcert.createBinding => [name = n]]
 	}
 
-	def MessageTopic topic(Event e) {
-		rcert.createEventTopic => [event = e]
-	}
-
 	def Event intEvent() {
 		rc.createEvent => [
 			name = "event"
 			type = intTypeRef
+		]
+	}
+	
+	/**
+	 * @return an operation with no arguments.
+	 */
+	def OperationSig nullOp() {
+		rc.createOperationSig => [
+			name = "op"
 		]
 	}
 
@@ -163,21 +156,23 @@ class MessageSpecFactory {
 	private def group() {
 		rcert.createSequenceGroup => [ x |
 			x.target = target
-			x.world = world
+			x.world = rcert.createWorld
 		]
 	}
 
-	private def target() {
+	/**
+	 * @return a mock target.
+	 */
+	def target() {
 		rcert.createRCModuleTarget => [
 			module = rcModule
 		]
 	}
 
-	private def world() {
-		rcert.createWorld
-	}
-
-	private def rcModule() {
+	/**
+	 * @return a mock RoboChart module.
+	 */
+	def rcModule() {
 		rc.createRCModule => [name = "test"]
 	}
 

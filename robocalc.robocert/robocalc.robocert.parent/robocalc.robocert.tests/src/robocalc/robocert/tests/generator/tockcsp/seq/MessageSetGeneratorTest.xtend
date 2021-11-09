@@ -14,6 +14,7 @@ import robocalc.robocert.tests.util.MessageSpecFactory
 import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.util.SetFactory
+import robocalc.robocert.model.robocert.util.MessageFactory
 
 /**
  * Tests the message set CSP generator.
@@ -23,6 +24,7 @@ import robocalc.robocert.model.robocert.util.SetFactory
 class MessageSetGeneratorTest {
 	@Inject extension MessageSetGenerator
 	@Inject extension CspNormaliser
+	@Inject extension MessageFactory
 	@Inject extension MessageSpecFactory
 	@Inject SetFactory sf
 	
@@ -39,7 +41,7 @@ class MessageSetGeneratorTest {
 	 */
 	@Test
 	def void generateSimpleSingletonExtensional() {
-		val spec = intEvent.topic.spec(MessageDirection::OUTBOUND, intArg(42))
+		val spec = intEvent.eventTopic.spec(MessageDirection::OUTBOUND.directional, intArg(42))
 		sf.singleton(spec).assertGenerates("{| test::event.out.42 |}")
 	}
 	

@@ -404,7 +404,16 @@ SequenceAction:
  * A message specification.
  */
 MessageSpec:
-	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? direction=MessageDirection;
+	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? actorPair=ActorPair;
+
+/**
+ * An actor pair.
+ */
+ActorPair:
+	{ImplicitActorPair} |
+	{DirectionalActorPair} direction=MessageDirection |
+	'from' {ExplicitActorPair} from=[Actor|ID] 'to' to=[Actor|ID]
+;
 
 /**
  * The direction of a message with implicit actors.

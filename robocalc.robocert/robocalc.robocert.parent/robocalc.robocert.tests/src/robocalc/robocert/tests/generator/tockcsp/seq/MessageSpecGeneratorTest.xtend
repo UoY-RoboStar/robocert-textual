@@ -12,6 +12,7 @@ import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.tests.util.MessageSpecFactory
 import robocalc.robocert.tests.util.CspNormaliser
 import robocalc.robocert.model.robocert.MessageSpec
+import robocalc.robocert.model.robocert.util.MessageFactory
 
 /**
  * Tests the message spec CSP generator.
@@ -20,6 +21,7 @@ import robocalc.robocert.model.robocert.MessageSpec
 @InjectWith(RoboCertCustomInjectorProvider)
 class MessageSpecGeneratorTest {
 	@Inject extension MessageSpecGenerator
+	@Inject extension MessageFactory
 	@Inject extension MessageSpecFactory
 	@Inject extension CspNormaliser
 
@@ -30,7 +32,7 @@ class MessageSpecGeneratorTest {
 	@Test
 	def void generatePrefixIntEventArrowWithWildcard() {
 		assertGeneratesPrefix(
-			intEvent.topic.arrowSpec(MessageDirection::INBOUND, wildcardArg),
+			intEvent.eventTopic.arrowSpec(MessageDirection::INBOUND, wildcardArg),
 			"test::event.in?_"
 		)
 	}
@@ -38,7 +40,7 @@ class MessageSpecGeneratorTest {
 	@Test
 	def void generatePrefixIntEventArrowWithBinding() {
 		assertGeneratesPrefix(
-			intEvent.topic.arrowSpec(MessageDirection::INBOUND, boundArg("A")),
+			intEvent.eventTopic.arrowSpec(MessageDirection::INBOUND, boundArg("A")),
 			"test::event.in?Bnd__A"
 		)
 	}
@@ -49,7 +51,7 @@ class MessageSpecGeneratorTest {
 	 */
 	@Test
 	def void generatePrefixIntEventArrowWithInt() {
-		assertGeneratesPrefix(intEvent.topic.arrowSpec(MessageDirection::OUTBOUND, intArg(42)),
+		assertGeneratesPrefix(intEvent.eventTopic.arrowSpec(MessageDirection::OUTBOUND, intArg(42)),
 		"test::event.out.42")
 	}
 	
@@ -64,7 +66,7 @@ class MessageSpecGeneratorTest {
 	@Test
 	def void generateCSPEventSetIntEventArrowWithRest() {
 		"{ test::event.in.Bnd__0 | Bnd__0 <- int }".assertEquals(
-			intEvent.topic.arrowSpec(MessageDirection::INBOUND, wildcardArg).generateCSPEventSet.tidy)
+			intEvent.eventTopic.arrowSpec(MessageDirection::INBOUND, wildcardArg).generateCSPEventSet.tidy)
 	}
 
 	/**
@@ -74,7 +76,7 @@ class MessageSpecGeneratorTest {
 	@Test
 	def void generateCSPEventSetIntEventArrowWithInt() {
 		"{| test::event.out.56 |}".assertEquals(
-			intEvent.topic.arrowSpec(MessageDirection::OUTBOUND, intArg(56)).generateCSPEventSet.tidy)
+			intEvent.eventTopic.arrowSpec(MessageDirection::OUTBOUND, intArg(56)).generateCSPEventSet.tidy)
 	}
 
 }

@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject
 import robocalc.robocert.model.robocert.EventTopic
 import robocalc.robocert.model.robocert.MessageTopic
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
+import robocalc.robocert.generator.utils.ActorPairExtensions
 
 /**
  * Scoping logic for message topics.
@@ -18,6 +19,7 @@ import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 class TopicScopeExtensions {
 	@Inject extension CTimedGeneratorUtils
 	@Inject extension TargetExtensions
+	@Inject extension ActorPairExtensions
 
 	/**
 	 * Calculates the scope of operations available to the given topic.
@@ -44,7 +46,7 @@ class TopicScopeExtensions {
 	private def scope(MessageTopic it, (Context) => Iterator<EObject> selector) {
 		// TODO(@MattWindsor91): need to work out what to do with inbound operations;
 		// can they ever happen?
-		val set = spec?.target?.world?.flatMap(selector)?.toSet;
+		val set = spec?.actorPair?.target?.world?.flatMap(selector)?.toSet;
 		if (set !== null) {
 			Scopes.scopeFor(set)
 		}

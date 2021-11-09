@@ -16,6 +16,7 @@ import robocalc.robocert.generator.utils.BindingNameExpander;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.MessageDirection;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.util.MessageSpecFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
@@ -27,6 +28,7 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class BindingNameExpanderTest {
+	@Inject private MessageFactory mf;
 	@Inject private MessageSpecFactory msf;
 	@Inject private RoboCertFactory rcf;
 	@Inject private BindingNameExpander bx;
@@ -49,7 +51,7 @@ class BindingNameExpanderTest {
 	@Test
 	public void testGetUnambiguousName_RootSubsequence() {
 		var w = msf.boundArg("test");
-		var aspec = msf.arrowSpec(msf.topic(msf.intEvent()), MessageDirection.INBOUND, w);
+		var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), MessageDirection.INBOUND, w);
 		var aact = rcf.createArrowAction();
 		aact.setBody(aspec);
 		var astep = rcf.createActionStep();

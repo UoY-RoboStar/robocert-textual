@@ -569,59 +569,72 @@ class WaitAction extends SequenceAction {
  * A specification of a message.
  */
 class MessageSpec {
-	/**
-	 * The topic of the message.
-	 */
+	@genmodel(documentation="The topic of the message.")
 	val MessageTopic[1]#spec topic;
 	
-	/**
-	 * The direction of the message.
-	 */
-	attr MessageDirection[1] direction = "OUTBOUND";
-	
-	/**
-	 * The argument list for the message.
-	 */
+	@genmodel(documentation="The argument list for the message.")
 	val Argument[*] arguments;
 	
+	@genmodel(documentation="The pair of actors participating in this message.")
+	val ActorPair[1]#spec actorPair;
+}
+
+//
+// Actor pairs
+//
+// Most of these come from walking backwards up a MessageSpec to its
+// enclosing SequenceGroup, and won't work if a MessageSpec isn't
+// contained in one.
+//
+
+@genmodel(documentation="A pair of actors referenced by a MessageSpec.
+
+There are multiple ways to resolve this pair, and so multiple subclasses of ActorPair.")
+abstract class ActorPair {
+	@genmodel(documentation="The parent MessageSpec.")
+	ref MessageSpec[1]#actorPair spec;
+
 	//
 	// Derived references
 	//
-	// Most of these come from walking backwards up a MessageSpec to its
-	// enclosing SequenceGroup, and won't work if a MessageSpec isn't
-	// contained in one.
-	//
 	
-	/**
-	 * The target of the message.
-	 *
-	 * If the message is outbound, this will be the 'from' of the message;
-	 * else, the 'to'.
-	 */
-	derived transient readonly volatile ref Target[1] target;
-	
-	/**
-	 * The source of the message.
-	 */
-	derived transient readonly volatile ref Actor[1] from;
-	/**
-	 * The destination of the message.
-	 */
-	derived transient readonly volatile ref Actor[1] to;
+	@genmodel(documentation="The resolved source of the message.")
+	derived transient readonly volatile ref Actor[1] resolvedFrom;
+	@genmodel(documentation="The resolved destination of the message.")
+	derived transient readonly volatile ref Actor[1] resolvedTo;
 }
 
-/**
- * The direction of a message.
- */
+@genmodel(documentation="An explicit actor pair.")
+class ExplicitActorPair extends ActorPair {
+	@genmodel(documentation="The source of the message.")
+	ref Actor[1] from;
+	@genmodel(documentation="The destination of the message.")
+	ref Actor[1] to;
+}
+
+@genmodel(documentation="A fully implicit actor pair.
+
+Such actor pairs are only valid when there are two actors in the sequence,
+one of the actors is a target, the other is a world, and the topic of the
+parent message has a single unambiguous valid direction.")
+class ImplicitActorPair extends ActorPair {
+}
+
+@genmodel(documentation="An actor pair expressed by a direction.
+
+Such actor pairs are only valid when there are two actors in the sequence,
+one of the actors is a target, and the other is a world.")
+class DirectionalActorPair extends ActorPair {
+	@genmodel(documentation="The direction of the pair.")
+	attr MessageDirection[1] direction;
+}
+
+@genmodel(documentation="The direction of an implicit actor pair.")
 enum MessageDirection {
-	/**
-	 * Heading in from world to target.
-	 */
-	INBOUND;
-	/**
-	 * Heading out from target to world.
-	 */
+	@genmodel(documentation="Heading out from target to world.")
 	OUTBOUND;
+	@genmodel(documentation="Heading in from world to target.")
+	INBOUND;
 }
 
 //

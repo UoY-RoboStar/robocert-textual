@@ -71,10 +71,24 @@ class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	}
 	
 	/**
-	 * @return a custom form of MessageSpecImpl.
+	 * @return a custom form of DirectionalActorPair.
 	 */
-	override createMessageSpec() {
-		new MessageSpecImplCustom
+	override createDirectionalActorPair() {
+		new DirectionalActorPairImplCustom
+	}
+	
+	/**
+	 * @return a custom form of ExplicitActorPair.
+	 */
+	override createExplicitActorPair() {
+		new ExplicitActorPairImplCustom
+	}
+	
+	/**
+	 * @return a custom form of ImplicitActorPair.
+	 */
+	override createImplicitActorPair() {
+		new ImplicitActorPairImplCustom
 	}
 	
 	/**

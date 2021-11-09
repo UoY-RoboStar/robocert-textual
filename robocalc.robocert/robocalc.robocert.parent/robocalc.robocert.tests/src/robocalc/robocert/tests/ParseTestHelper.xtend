@@ -85,7 +85,7 @@ class ParseTestHelper {
 	 *         expression.
 	 */
 	def CharSequence liftExpr(CharSequence expr) {
-		liftSubsequence('''<- event Z(«expr»)''')
+		liftSubsequence('''op Z(«expr»)''')
 	}
 	
 	/**
