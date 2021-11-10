@@ -8,11 +8,16 @@ package robocalc.robocert.generator.utils
 
 import circus.robocalc.robochart.BasicPackage
 import circus.robocalc.robochart.NamedElement
+import com.google.common.io.Files
+import robocalc.robocert.generator.tockcsp.top.PathSet
+import com.google.inject.Inject
 
 /**
  * Extensions for locating the CSP definition filenames for things.
  */
 class FilenameExtensions {
+	@Inject PathSet ps;
+	
 	/**
 	 * Gets the path (relative to the CSP root) of this package's 'defs' file.
 	 * 
@@ -20,7 +25,7 @@ class FilenameExtensions {
 	 * 
 	 * @return the package's defs file.
 	 */
-	def getCSPDefsFileName(BasicPackage it) '''defs/«fileBasename»_defs.csp'''
+	def getCSPDefsFileName(BasicPackage it) '''«ps.DEFS_FROM_PACKAGE_PATH»/«fileBasename»_defs.csp'''
 
 	/**
 	 * Gets the path (relative to the CSP root) of this package's main file.
@@ -29,11 +34,19 @@ class FilenameExtensions {
 	 * 
 	 * @return the package's defs file.
 	 */
-	def getCSPMainFileName(BasicPackage it) '''defs/«fileBasename».csp'''
+	def getCSPMainFileName(BasicPackage it) '''«ps.DEFS_FROM_PACKAGE_PATH»/«fileBasename».csp'''
 
-	private def getFileBasename(BasicPackage it) {
+	/**
+	 * Gets the RoboChart basename for a package.
+	 * 
+	 * @param it  the package under consideration.
+	 * 
+	 * @return the package's basename, derived either from its declared name or
+	 *         (if no name exists) its filename.
+	 */
+	def getFileBasename(BasicPackage it) {
 		// from GeneratorUtils
-		name?.basename ?: "file_" + eResource.URI.lastSegment.replace(".rct", "")
+		name?.basename ?: "file_" + Files.getNameWithoutExtension(eResource.URI.lastSegment)
 	}
 
 	/**
@@ -44,7 +57,7 @@ class FilenameExtensions {
 	 * 
 	 * @return the package's defs file.
 	 */
-	def getCSPTopModuleFileName(NamedElement it) '''defs/«topModuleFileBasename».csp'''
+	def getCSPTopModuleFileName(NamedElement it) '''«ps.DEFS_FROM_PACKAGE_PATH»/«topModuleFileBasename».csp'''
 	
 	private def CharSequence getTopModuleFileBasename(NamedElement it) {
 		switch parent: eContainer {

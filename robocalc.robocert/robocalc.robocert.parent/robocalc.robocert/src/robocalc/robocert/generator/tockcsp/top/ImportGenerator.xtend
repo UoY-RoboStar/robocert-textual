@@ -26,6 +26,7 @@ class ImportGenerator {
 	@Inject extension CertPackageExtensions
 	@Inject extension RCPackageExtensions
 	@Inject extension FilenameExtensions
+	@Inject PathSet ps
 
 	/**
 	 * Generates imports.
@@ -57,7 +58,7 @@ class ImportGenerator {
 	private def standardImports() {
 		// robocert_defs is included by this generator, and transitively
 		// includes most of the RoboChart prelude.
-		Iterators.forArray(#["defs/robocert_defs.csp", "instantiations.csp"])
+		Iterators.forArray(#[ps.LIBRARY_FROM_PACKAGE_PATH + "/robocert_defs.csp", ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp"])
 	}
 
 	/**

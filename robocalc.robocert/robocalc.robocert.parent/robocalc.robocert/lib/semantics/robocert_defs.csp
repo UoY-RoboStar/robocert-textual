@@ -13,10 +13,12 @@
 
 {- Root file for the RoboCert CSP support library. -}
 
+-- NOTE: All paths are relative to the package file.
+
 -- These files should have been copied by the RoboChart generator.
-include "defs/state_timed_defs.csp"
-include "defs/core_timed_defs.csp"
-include "defs/robochart_defs.csp"
+include "../../defs/state_timed_defs.csp"
+include "../../defs/core_timed_defs.csp"
+include "../../defs/robochart_defs.csp"
 
 -- These files should have been copied by the RoboCert generator.
-include "defs/robocert_seq_defs.csp"
+include "../lib/robocert_seq_defs.csp"
