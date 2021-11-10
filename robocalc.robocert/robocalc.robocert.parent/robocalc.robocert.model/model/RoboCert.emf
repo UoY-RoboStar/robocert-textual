@@ -128,6 +128,39 @@ abstract class Property {
 }
 
 //
+// Core properties
+//
+
+@genmodel(documentation="A core property over one target.")
+class UnaryCoreProperty extends Property {
+	// TODO(@MattWindsor91): it may one day be the case that core properties
+	// should accept things other than CSP process sources, eg if we track
+	// those properties in other backends, or if we add clock initialised
+	// properties.
+
+	@genmodel(documentation="The subject of the property.")
+	ref CSPProcessSource[1] subject;
+	
+	@genmodel(documentation="The specific type of property being investigated.")
+	attr UnaryCorePropertyType[1] type;
+}
+
+@genmodel(documentation="Enumeration of core properties.")
+enum UnaryCorePropertyType {
+	@genmodel(documentation="Timelock freedom.")
+	TIMELOCK_FREE;
+	@genmodel(documentation="Timed deadlock freedom.")
+	DEADLOCK_FREE;
+	@genmodel(documentation="Determinism.")
+	DETERMINISM;
+	@genmodel(documentation="Termination.")
+	TERMINATION;
+	// TODO(@MattWindsor91): clock initialisation
+}
+
+// TODO(@MattWindsor91): binary types
+
+//
 // EXPRESSIONS
 //
 // Generally, operator expressions are grouped into equivalence classes based
