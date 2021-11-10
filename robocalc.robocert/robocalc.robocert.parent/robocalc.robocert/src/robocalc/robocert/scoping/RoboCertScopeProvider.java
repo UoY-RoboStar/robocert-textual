@@ -30,17 +30,33 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	
 	@Override
 	public IScope getScope(EObject context, EReference reference) {
+		var scope = tryGetScope(context, reference);
+		return scope == null ? super.getScope(context, reference) : scope;
+	}
+	
+	/**
+	 * Tries to get a custom scope for the given context and reference.
+	 *
+	 * @param context   context of the feature being resolved.
+	 * @param reference reference to the feature being resolved.
+	 * 
+	 * @return the custom scope (may be null, in which case we delegate to the
+	 *         parent scoping rules).
+	 */
+	private IScope tryGetScope(EObject context, EReference reference) {
 		if (context instanceof EventTopic e && reference == EVENT_TOPIC__EVENT)
 			return tx.getEventScope(e);
 		if (context instanceof OperationTopic o && reference == OPERATION_TOPIC__OPERATION)
 			return tx.getOperationScope(o);
 		if (context instanceof ConstAssignment k && reference == CONST_ASSIGNMENT__CONSTANTS)
 			return cx.constAssignmentScope(k);
-		if (context instanceof ConstExpr x && reference == CONST_EXPR__CONSTANT) {
-			var target = ex.getTargetOfParentGroup(x);
-			if (target != null)
-				return cx.targetScope(target);
-		}
-		return super.getScope(context, reference);
+		if (context instanceof ConstExpr x && reference == CONST_EXPR__CONSTANT)
+			return constScope(x);
+		return null;
+	}
+
+	private IScope constScope(ConstExpr x) {
+		var target = ex.getTargetOfParentGroup(x);
+		return target == null ? null : cx.targetScope(target);
 	}
 }
