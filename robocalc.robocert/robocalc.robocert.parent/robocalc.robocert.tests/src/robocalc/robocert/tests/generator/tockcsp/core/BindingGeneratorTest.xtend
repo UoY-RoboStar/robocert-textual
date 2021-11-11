@@ -1,4 +1,4 @@
-package robocalc.robocert.tests.generator.tockcsp.top
+package robocalc.robocert.tests.generator.tockcsp.core
 
 import org.junit.jupiter.api.^extension.ExtendWith
 import org.eclipse.xtext.testing.InjectWith
@@ -9,7 +9,7 @@ import com.google.inject.Inject
 import robocalc.robocert.tests.util.CspNormaliser
 import robocalc.robocert.model.robocert.RoboCertFactory
 import static org.junit.Assert.assertEquals
-import robocalc.robocert.generator.tockcsp.top.BindingGenerator
+import robocalc.robocert.generator.tockcsp.core.BindingGenerator
 
 /**
  * Tests the binding CSP generator.

@@ -1,4 +1,4 @@
-package robocalc.robocert.tests.generator.tockcsp.top;
+package robocalc.robocert.tests.generator.tockcsp.core;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -9,7 +9,7 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator;
+import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.model.robocert.CertExpr;
 import robocalc.robocert.model.robocert.LogicalOperator;
 import robocalc.robocert.model.robocert.RelationOperator;

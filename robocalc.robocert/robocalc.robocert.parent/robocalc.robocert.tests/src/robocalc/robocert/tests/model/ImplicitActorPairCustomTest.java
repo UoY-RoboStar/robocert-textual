@@ -17,13 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
 import robocalc.robocert.model.robocert.ImplicitActorPair;
-import robocalc.robocert.model.robocert.MessageDirection;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.World;

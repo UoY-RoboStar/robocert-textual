@@ -5,7 +5,7 @@ import com.google.inject.Inject
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 import robocalc.robocert.model.robocert.EmptyGuard
 import robocalc.robocert.model.robocert.ExprGuard
-import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator
+import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import robocalc.robocert.model.robocert.Guard
 import robocalc.robocert.model.robocert.ElseGuard

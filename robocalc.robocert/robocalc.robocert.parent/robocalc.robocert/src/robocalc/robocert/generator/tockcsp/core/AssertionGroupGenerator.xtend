@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.tockcsp.top
+package robocalc.robocert.generator.tockcsp.core
 
 import com.google.inject.Inject
 import robocalc.robocert.generator.tockcsp.ll.CSPPropertyGenerator

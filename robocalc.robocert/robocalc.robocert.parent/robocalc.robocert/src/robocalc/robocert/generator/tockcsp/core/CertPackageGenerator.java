@@ -1,4 +1,16 @@
-package robocalc.robocert.generator.tockcsp.top;
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
+package robocalc.robocert.generator.tockcsp.core;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,9 +27,11 @@ import robocalc.robocert.model.robocert.Group;
 import robocalc.robocert.model.robocert.SequenceGroup;
 
 /**
- * Top-level generator for tock-CSP.
+ * Generates CSP-M for {@link CertPackage}s.
+ *
+ * @author Matt Windsor
  */
-public class TopGenerator {
+public class CertPackageGenerator {
 	@Inject
 	private AssertionGroupGenerator ag;
 	@Inject

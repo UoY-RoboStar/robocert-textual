@@ -4,7 +4,7 @@ import com.google.inject.Inject
 import robocalc.robocert.model.robocert.DeadlineStep
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
-import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator
+import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator
 
 /**
  * Generates CSP-M for deadlines.

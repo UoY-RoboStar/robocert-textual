@@ -21,7 +21,7 @@ import org.eclipse.xtext.generator.OutputConfiguration;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.top.PathSet;
+import robocalc.robocert.generator.tockcsp.core.PathSet;
 
 /**
  * Overrides output configuration to save CSP to csp-gen.

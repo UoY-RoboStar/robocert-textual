@@ -8,7 +8,7 @@ import robocalc.robocert.model.robocert.Target
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 import robocalc.robocert.model.robocert.Instantiation
 import robocalc.robocert.model.robocert.CertExpr
-import robocalc.robocert.generator.tockcsp.top.ExpressionGenerator
+import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator
 
 /**
  * Generates CSP referring to a target.

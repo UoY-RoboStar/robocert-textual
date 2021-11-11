@@ -11,7 +11,7 @@
  *   Pedro Ribeiro - initial definition
  *   Matt Windsor - porting to RoboCert
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.top;
+package robocalc.robocert.generator.tockcsp.core;
 
 import robocalc.robocert.model.robocert.UnaryCoreProperty;
 

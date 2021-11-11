@@ -1,5 +1,5 @@
 
-package robocalc.robocert.generator.tockcsp.top;
+package robocalc.robocert.generator.tockcsp.core;
 
 /**
  * Contains the paths into which tock-CSP files will be generated.

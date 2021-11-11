@@ -12,7 +12,7 @@ import org.eclipse.xtext.generator.IGeneratorContext;
 import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.top.TopGenerator;
+import robocalc.robocert.generator.tockcsp.core.CertPackageGenerator;
 import robocalc.robocert.generator.utils.FilenameExtensions;
 import robocalc.robocert.model.robocert.CertPackage;
 
@@ -22,7 +22,7 @@ import robocalc.robocert.model.robocert.CertPackage;
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 public class RoboCertGenerator extends AbstractGenerator {
-	@Inject private TopGenerator csp;
+	@Inject private CertPackageGenerator csp;
 	@Inject private FilenameExtensions fx;
 	
 	@Override

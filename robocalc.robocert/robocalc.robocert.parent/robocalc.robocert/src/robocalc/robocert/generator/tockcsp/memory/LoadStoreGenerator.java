@@ -8,7 +8,7 @@ import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.top.BindingGenerator;
+import robocalc.robocert.generator.tockcsp.core.BindingGenerator;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.BindingExpr;
 

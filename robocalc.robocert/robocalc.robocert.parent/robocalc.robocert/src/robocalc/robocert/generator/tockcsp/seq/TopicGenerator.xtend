@@ -8,7 +8,7 @@ import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import circus.robocalc.robochart.generator.csp.untimed.TypeGenerator
 import circus.robocalc.robochart.Type
 import robocalc.robocert.model.robocert.WildcardArgument
-import robocalc.robocert.generator.tockcsp.top.BindingGenerator
+import robocalc.robocert.generator.tockcsp.core.BindingGenerator
 
 /**
  * Generates CSP for message topics.

@@ -9,7 +9,7 @@ package robocalc.robocert.generator.utils
 import circus.robocalc.robochart.BasicPackage
 import circus.robocalc.robochart.NamedElement
 import com.google.common.io.Files
-import robocalc.robocert.generator.tockcsp.top.PathSet
+import robocalc.robocert.generator.tockcsp.core.PathSet
 import com.google.inject.Inject
 
 /**
