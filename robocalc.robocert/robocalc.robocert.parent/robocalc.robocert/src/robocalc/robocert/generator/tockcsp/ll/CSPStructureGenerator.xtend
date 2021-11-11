@@ -88,4 +88,32 @@ class CSPStructureGenerator {
 			«inner»
 		}
 	'''
+	
+	/**
+	 * Generates the bare-bones outer structure of a CSP assertion.
+	 * 
+	 * @param isNegated  whether the assertion is negated.
+	 * @return  CSP-M for the assertion.
+	 */
+	def CharSequence assertion(boolean isNegated, CharSequence body) '''assert«IF isNegated» not«ENDIF» «body»'''
+	
+	/**
+	 * Generates a refinement with a custom model.
+	 * 
+	 * @param lhs the left-hand side of the refinement.
+	 * @param rhs the right-hand side of the refinement.
+	 * @param model the model of the refinement (usually 'T' for traces).
+	 * 
+	 * @return CSP-M for the refinement.
+	 */
+	def CharSequence refine(CharSequence lhs, CharSequence rhs, CharSequence model) '''«lhs» [«model»= «rhs»'''
+
+	/**
+	 * Appends a tau-priority-tock pragma to the given CSP.
+	 * 
+	 * @param it the assertion CSP to extend with the pragma.
+	 * 
+	 * @return the pragma-modified CSP.
+	 */
+	def CharSequence tauPrioritiseTock(CharSequence it) '''«it» :[tau priority]: {tock}'''
 }

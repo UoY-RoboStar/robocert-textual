@@ -8,20 +8,32 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Pedro Ribeiro - initial definition
+ *   Pedro Ribeiro - initial definition (circus.robocalc.robochart.generator.csp)
  *   Matt Windsor - porting to RoboCert
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.core;
 
+import com.google.inject.Inject;
+
+import robocalc.robocert.generator.tockcsp.ll.CSPProcessSourceGenerator;
+import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.UnaryCoreProperty;
+import robocalc.robocert.model.robocert.UnaryCorePropertyType;
 
 /**
- * Generates unary 'core assertions': high level assertions such as
- * divergence and deadlock freedom.
- * 
+ * Generates unary 'core assertions': high level assertions such as divergence
+ * and deadlock freedom.
+ *
  * @author Matt Windsor
  */
 public class UnaryCorePropertyGenerator {
+	@Inject
+	private CSPProcessSourceGenerator cpg;
+
+	@Inject
+	private CSPStructureGenerator csp;
+
 	/**
 	 * Generates CSP-M for a core property.
 	 *
@@ -30,6 +42,101 @@ public class UnaryCorePropertyGenerator {
 	 * @return generated CSP-M for a core property.
 	 */
 	public CharSequence generate(UnaryCoreProperty p) {
-		throw new UnsupportedOperationException("TODO: unimplemented");
+		var t = p.getType();
+		var neg = p.isNegated();
+
+		// Most properties have a straightforward encoding into tock-CSP,
+		// as they translate directly into CSP-M assertions with negation
+		// handled with 'assert/assert not'. Any exceptions go here:
+
+		// All of the below are properties on the process itself.
+		// If we add clock reachability (for instance), it isn't a property on
+		// the process, and it'll go before this bit.
+		// Similar situation for properties that require the tick-tock model.
+		var proc = cpg.generate(p.getSubject(), CSPModel.TRACES);
+
+		if (t == UnaryCorePropertyType.TERMINATION)
+			return neg ? generateNontermination(proc) : generateTermination(proc);
+
+		// All other properties can be handled like this:
+		return csp.assertion(neg, generateSimple(proc, t));
 	}
+
+	//
+	// Termination
+	//
+
+	private CharSequence generateNontermination(CharSequence proc) {
+		return "-- nontermination\n" + csp.assertion(false, "STOP [T= %s\\Events;r__ -> SKIP".formatted(proc));
+	}
+
+	private CharSequence generateTermination(CharSequence proc) {
+		// A termination check has two components:
+		// 1) the process must deadlock and timelock;
+		var deadlocks = csp.assertion(true, generateSimple(proc, UnaryCorePropertyType.DEADLOCK_FREE));
+		// 2) adding a perpetually-live event must remove the deadlock, eg the
+		// deadlock was a SKIP.
+		var rproc = "%s; RUN({r__})".formatted(proc);
+		var rescuable = csp.assertion(false, generateSimple(rproc, UnaryCorePropertyType.DEADLOCK_FREE));
+		return String.join("\n", "-- termination", deadlocks, rescuable);
+	}
+
+	//
+	// Single-assertion properties
+	//
+
+	private CharSequence generateSimple(CharSequence proc, UnaryCorePropertyType t) {
+		// As above, handle the special cases first:
+
+		if (t == UnaryCorePropertyType.TIMELOCK_FREE)
+			return generateTimelockFreedom(proc);
+		// This is slightly more complex than just using FDR's deadlock freedom
+		// check -- see later on.
+		if (t == UnaryCorePropertyType.DEADLOCK_FREE)
+			return generateTimedDeadlockFreedom(proc);
+
+		// Everything else remaining is just a FDR builtin.
+		return csp.tauPrioritiseTock("%s :[%s]".formatted(proc, generateFDRBuiltin(t)));
+	}
+
+	/**
+	 * Generates a timelock freedom assertion body.
+	 *
+	 * @param proc CSP-M for the process to check for timelock freedom.
+	 *
+	 * @return the body of the timelock freedom assertion (eg, missing
+	 *         'assert' or 'assert not').
+	 */
+	private CharSequence generateTimelockFreedom(CharSequence proc) {
+		return csp.tauPrioritiseTock(
+			csp.refine("RUN({tock}) ||| CHAOS(diff(Events, {|tock|}))", proc, "F")
+		);
+	}
+	
+	/**
+	 * Generates a timed deadlock freedom assertion body.
+	 *
+	 * @param proc CSP-M for the process to check for timed deadlock freedom.
+	 *
+	 * @return the body of the timed deadlock freedom assertion (eg, missing
+	 *         'assert' or 'assert not').
+	 */
+	private CharSequence generateTimedDeadlockFreedom(CharSequence proc) {
+		var pproc = csp.function("prioritise", "%s[[tock<-tock,tock<-tock']]".formatted(proc),
+				"<diff(Events,{tock',tock}),{tock}>");
+		return csp.tauPrioritiseTock("%s\\{tock} :[divergence free [FD]]".formatted(pproc));
+	}
+
+	private CharSequence generateFDRBuiltin(UnaryCorePropertyType t) {
+		// Note that the DEADLOCK_FREE reached here is the classic FDR
+		// deadlock freedom, which is not the one we expose as a core
+		// assertion (it requires timelock as well as deadlock).
+		// It exists here mainly because we use it for termination checking.
+		return switch (t) {
+		case DETERMINISM -> "deterministic";
+		case DEADLOCK_FREE -> "deadlock free";
+		default -> throw new IllegalArgumentException("core property type can't be a FDR builtin: %s".formatted(t));
+		};
+	}
+
 }

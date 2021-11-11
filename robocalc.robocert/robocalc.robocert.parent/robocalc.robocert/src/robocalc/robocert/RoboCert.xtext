@@ -97,7 +97,47 @@ Assertion:
  * Top-level disjunction of properties.
  */
 Property:
-	CSPRefinementProperty | SequenceProperty;
+	UnaryCoreProperty | CSPRefinementProperty | SequenceProperty;
+
+/**
+ * Core properties with only one argument.
+ */
+UnaryCoreProperty:
+	subject=[CSPProcessSource|QualifiedName]
+	('is' (negated?='not')? type=IsUnaryCorePropertyType |
+		type=VerbUnaryCorePropertyType |
+		'does' (negated?='not')? type=DoesUnaryCorePropertyType
+	)
+;
+
+// This factoring of an enumeration into 'is', 'does', and 'does not' is common
+// in the RoboCert assertions language.
+
+/**
+ * Unary core property types that agree with 'is'/'is not'.
+ */
+enum IsUnaryCorePropertyType returns UnaryCorePropertyType:
+	DEADLOCK_FREE='deadlock-free' |
+	DETERMINISM='deterministic' |
+	TIMELOCK_FREE='timelock-free'
+;
+
+/**
+ * Unary core property types that are standalone verbs in the third
+ * person present tense.
+ */
+enum VerbUnaryCorePropertyType returns UnaryCorePropertyType:
+	// Remember to add these to DoesNot also.
+	TERMINATION='terminates'
+;
+
+/**
+ * Unary core property types that agree with 'does'/'does not'.
+ */
+enum DoesUnaryCorePropertyType returns UnaryCorePropertyType:
+	// Remember to add these to Verb also.
+	TERMINATION='terminate'
+;
 
 //
 // EXPRESSIONS
@@ -225,7 +265,7 @@ CSPGroup:
  * end of a singleton CSP block.
  */
 fragment CSPGroupOptions *:
-	('(' isUntimed?='untimed' ')')?
+	('(' untimed?='untimed' ')')?
 	instantiation=Instantiation;
 
 //
@@ -262,7 +302,7 @@ terminal SHORT_CODE:
  */
 CSPRefinementProperty:
 	lhs=[CSPProcessSource|QualifiedName]
-	('does' isNegated?='not' type=DoesNotCSPRefinementOperator
+	('does' negated?='not' type=DoesNotCSPRefinementOperator
 	| type=DoesCSPRefinementOperator)
 	rhs=[CSPProcessSource|QualifiedName]
 	InCSPModelSpec?;
@@ -551,8 +591,8 @@ Target:
  */
 SequenceProperty:
 	sequence=[Sequence|QualifiedName]
-	('is' isNegated?='not' type=IsSequencePropertyType
-	| 'does' isNegated?='not' type=DoesNotSequencePropertyType
+	('is' negated?='not' type=IsSequencePropertyType
+	| 'does' negated?='not' type=DoesNotSequencePropertyType
 	| type=DoesSequencePropertyType)
 	InCSPModelSpec?;
 

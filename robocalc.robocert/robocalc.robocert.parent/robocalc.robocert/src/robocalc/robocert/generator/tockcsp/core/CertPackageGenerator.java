@@ -81,6 +81,7 @@ public class CertPackageGenerator {
 	}
 
 	private CharSequence generateGroup(Group it) {
+		// TODO(@MattWindsor91): dependency-inject these somehow
 		if (it instanceof CSPGroup c)
 			return cg.generate(c);
 		if (it instanceof SequenceGroup s)

@@ -121,10 +121,10 @@ class Assertion extends robochart.NamedElement {
 @genmodel(documentation="A property in an assertion.")
 abstract class Property {
 	// TODO(@MattWindsor91): we may eventually want conjunctions/disjunctions,
-	// in which case I might need to re-evaluate whether isNegated belongs here.
+	// in which case I might need to re-evaluate whether negated belongs here.
 
 	@genmodel(documentation="Whether the assertion must fail to hold for the model to be validated.")
-	attr boolean[1] isNegated;
+	attr boolean[1] negated;
 }
 
 //
@@ -932,7 +932,7 @@ We generally interpret CSP-M as tock-CSP and implicitly generate it into a
 timed section, but this can be overridden.")
 class CSPGroup extends Group {
 	@genmodel(documentation="If true, the group should be generated outside of a timed section.")
-	attr boolean[1] isUntimed;
+	attr boolean[1] untimed;
 	
 	@genmodel(documentation="The fragments contained in this group.")
 	val CSPFragment[*]#group fragments;
