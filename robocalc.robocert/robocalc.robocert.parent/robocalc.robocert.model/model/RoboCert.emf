@@ -131,8 +131,8 @@ abstract class Property {
 // Core properties
 //
 
-@genmodel(documentation="A core property over one target.")
-class UnaryCoreProperty extends Property {
+@genmodel(documentation="A core property.")
+class CoreProperty extends Property {
 	// TODO(@MattWindsor91): it may one day be the case that core properties
 	// should accept things other than CSP process sources, eg if we track
 	// those properties in other backends, or if we add clock initialised
@@ -142,11 +142,11 @@ class UnaryCoreProperty extends Property {
 	ref CSPProcessSource[1] subject;
 	
 	@genmodel(documentation="The specific type of property being investigated.")
-	attr UnaryCorePropertyType[1] type;
+	attr CorePropertyType[1] type;
 }
 
 @genmodel(documentation="Enumeration of core properties.")
-enum UnaryCorePropertyType {
+enum CorePropertyType {
 	@genmodel(documentation="Timelock freedom.")
 	TIMELOCK_FREE;
 	@genmodel(documentation="Timed deadlock freedom.")

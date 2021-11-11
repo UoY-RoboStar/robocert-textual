@@ -18,8 +18,8 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.tockcsp.ll.CSPProcessSourceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.CSPModel;
-import robocalc.robocert.model.robocert.UnaryCoreProperty;
-import robocalc.robocert.model.robocert.UnaryCorePropertyType;
+import robocalc.robocert.model.robocert.CoreProperty;
+import robocalc.robocert.model.robocert.CorePropertyType;
 
 /**
  * Generates unary 'core assertions': high level assertions such as divergence
@@ -27,7 +27,7 @@ import robocalc.robocert.model.robocert.UnaryCorePropertyType;
  *
  * @author Matt Windsor
  */
-public class UnaryCorePropertyGenerator {
+public class CorePropertyGenerator {
 	@Inject
 	private CSPProcessSourceGenerator cpg;
 
@@ -41,7 +41,7 @@ public class UnaryCorePropertyGenerator {
 	 *
 	 * @return generated CSP-M for a core property.
 	 */
-	public CharSequence generate(UnaryCoreProperty p) {
+	public CharSequence generate(CoreProperty p) {
 		var t = p.getType();
 		var neg = p.isNegated();
 
@@ -55,7 +55,7 @@ public class UnaryCorePropertyGenerator {
 		// Similar situation for properties that require the tick-tock model.
 		var proc = cpg.generate(p.getSubject(), CSPModel.TRACES);
 
-		if (t == UnaryCorePropertyType.TERMINATION)
+		if (t == CorePropertyType.TERMINATION)
 			return neg ? generateNontermination(proc) : generateTermination(proc);
 
 		// All other properties can be handled like this:
@@ -67,17 +67,17 @@ public class UnaryCorePropertyGenerator {
 	//
 
 	private CharSequence generateNontermination(CharSequence proc) {
-		return "-- nontermination\n" + csp.assertion(false, "STOP [T= %s\\Events;r__ -> SKIP".formatted(proc));
+		return "-- nontermination\n" + csp.assertion(false, csp.refine("STOP", "%s\\Events;r__ -> SKIP".formatted(proc), "T"));
 	}
 
 	private CharSequence generateTermination(CharSequence proc) {
 		// A termination check has two components:
 		// 1) the process must deadlock and timelock;
-		var deadlocks = csp.assertion(true, generateSimple(proc, UnaryCorePropertyType.DEADLOCK_FREE));
+		var deadlocks = csp.assertion(true, generateSimple(proc, CorePropertyType.DEADLOCK_FREE));
 		// 2) adding a perpetually-live event must remove the deadlock, eg the
 		// deadlock was a SKIP.
 		var rproc = "%s; RUN({r__})".formatted(proc);
-		var rescuable = csp.assertion(false, generateSimple(rproc, UnaryCorePropertyType.DEADLOCK_FREE));
+		var rescuable = csp.assertion(false, generateSimple(rproc, CorePropertyType.DEADLOCK_FREE));
 		return String.join("\n", "-- termination", deadlocks, rescuable);
 	}
 
@@ -85,14 +85,14 @@ public class UnaryCorePropertyGenerator {
 	// Single-assertion properties
 	//
 
-	private CharSequence generateSimple(CharSequence proc, UnaryCorePropertyType t) {
+	private CharSequence generateSimple(CharSequence proc, CorePropertyType t) {
 		// As above, handle the special cases first:
 
-		if (t == UnaryCorePropertyType.TIMELOCK_FREE)
+		if (t == CorePropertyType.TIMELOCK_FREE)
 			return generateTimelockFreedom(proc);
 		// This is slightly more complex than just using FDR's deadlock freedom
 		// check -- see later on.
-		if (t == UnaryCorePropertyType.DEADLOCK_FREE)
+		if (t == CorePropertyType.DEADLOCK_FREE)
 			return generateTimedDeadlockFreedom(proc);
 
 		// Everything else remaining is just a FDR builtin.
@@ -127,7 +127,7 @@ public class UnaryCorePropertyGenerator {
 		return csp.tauPrioritiseTock("%s\\{tock} :[divergence free [FD]]".formatted(pproc));
 	}
 
-	private CharSequence generateFDRBuiltin(UnaryCorePropertyType t) {
+	private CharSequence generateFDRBuiltin(CorePropertyType t) {
 		// Note that the DEADLOCK_FREE reached here is the classic FDR
 		// deadlock freedom, which is not the one we expose as a core
 		// assertion (it requires timelock as well as deadlock).

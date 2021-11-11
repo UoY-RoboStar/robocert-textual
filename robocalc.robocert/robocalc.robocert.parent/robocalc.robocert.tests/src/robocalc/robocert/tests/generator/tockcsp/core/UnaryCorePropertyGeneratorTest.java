@@ -22,28 +22,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.core.UnaryCorePropertyGenerator;
+import robocalc.robocert.generator.tockcsp.core.CorePropertyGenerator;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.UnaryCorePropertyType;
+import robocalc.robocert.model.robocert.CorePropertyType;
 import robocalc.robocert.tests.util.CSPNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
- * Tests the {@link UnaryCorePropertyGenerator} on a few properties concerning a
+ * Tests the {@link CorePropertyGenerator} on a few properties concerning a
  * {@link ProcessCSPFragment}.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
-class UnaryCorePropertyGeneratorTest {
+class CorePropertyGeneratorTest {
 	@Inject
 	private RoboCertFactory rc;
 	@Inject
 	private CSPNormaliser cn;
 	@Inject
-	private UnaryCorePropertyGenerator gen;
+	private CorePropertyGenerator gen;
 
 	private ProcessCSPFragment source;
 
@@ -59,7 +59,7 @@ class UnaryCorePropertyGeneratorTest {
 	 */
 	@Test
 	void testDeterminism() {
-		assertGeneratesBody("test :[deterministic]", UnaryCorePropertyType.DETERMINISM);
+		assertGeneratesBody("test :[deterministic]", CorePropertyType.DETERMINISM);
 	}
 
 	/**
@@ -69,13 +69,13 @@ class UnaryCorePropertyGeneratorTest {
 	void testDeadlockFree() {
 		assertGeneratesBody(
 				"prioritise( test[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
-				UnaryCorePropertyType.DEADLOCK_FREE);
+				CorePropertyType.DEADLOCK_FREE);
 	}
 
 	@Test
 	void testTimelockFree() {
 		assertGeneratesBody("RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= test",
-				UnaryCorePropertyType.TIMELOCK_FREE);
+				CorePropertyType.TIMELOCK_FREE);
 	}
 
 	/**
@@ -86,13 +86,13 @@ class UnaryCorePropertyGeneratorTest {
 	 * @param expected expected body, less 'assert', 'not', and tau prioritisation.
 	 * @param type     type for which we are testing.
 	 */
-	private void assertGeneratesBody(String expected, UnaryCorePropertyType type) {
+	private void assertGeneratesBody(String expected, CorePropertyType type) {
 		assertGenerates("assert %s :[tau priority]: {tock}".formatted(expected), type, false);
 		assertGenerates("assert not %s :[tau priority]: {tock}".formatted(expected), type, true);
 	}
 
-	private void assertGenerates(String expected, UnaryCorePropertyType type, boolean isNegated) {
-		final var p = rc.createUnaryCoreProperty();
+	private void assertGenerates(String expected, CorePropertyType type, boolean isNegated) {
+		final var p = rc.createCoreProperty();
 		p.setNegated(isNegated);
 		p.setSubject(source);
 		p.setType(type);

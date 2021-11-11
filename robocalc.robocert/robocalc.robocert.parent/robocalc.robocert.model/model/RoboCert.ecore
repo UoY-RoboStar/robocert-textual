@@ -128,9 +128,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UnaryCoreProperty" eSuperTypes="#//Property">
+  <eClassifiers xsi:type="ecore:EClass" name="CoreProperty" eSuperTypes="#//Property">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A core property over one target."/>
+      <details key="documentation" value="A core property."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subject" lowerBound="1"
         eType="#//CSPProcessSource">
@@ -138,13 +138,13 @@
         <details key="documentation" value="The subject of the property."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//UnaryCorePropertyType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//CorePropertyType">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The specific type of property being investigated."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="UnaryCorePropertyType">
+  <eClassifiers xsi:type="ecore:EEnum" name="CorePropertyType">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Enumeration of core properties."/>
     </eAnnotations>

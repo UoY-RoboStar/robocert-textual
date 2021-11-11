@@ -3579,9 +3579,9 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC%20ESupertypes']"/>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_wVjEEEI2EeyrqahrnHvaKg" name="UnaryCoreProperty" tooltipText="" outgoingEdges="_wWb04EI2EeyrqahrnHvaKg" width="12" height="10">
-      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//UnaryCoreProperty"/>
-      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//UnaryCoreProperty"/>
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_wVjEEEI2EeyrqahrnHvaKg" name="CoreProperty" tooltipText="" outgoingEdges="_wWb04EI2EeyrqahrnHvaKg" width="12" height="10">
+      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//CoreProperty"/>
+      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//CoreProperty"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -3589,26 +3589,26 @@
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_wV960EI2EeyrqahrnHvaKg" name="type : UnaryCorePropertyType = TIMELOCK_FREE" tooltipText="">
-        <target xmi:type="ecore:EAttribute" href="RoboCert.ecore#//UnaryCoreProperty/type"/>
-        <semanticElements xmi:type="ecore:EAttribute" href="RoboCert.ecore#//UnaryCoreProperty/type"/>
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_wV960EI2EeyrqahrnHvaKg" name="type : CorePropertyType = TIMELOCK_FREE" tooltipText="">
+        <target xmi:type="ecore:EAttribute" href="RoboCert.ecore#//CoreProperty/type"/>
+        <semanticElements xmi:type="ecore:EAttribute" href="RoboCert.ecore#//CoreProperty/type"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_wV_wAEI2EeyrqahrnHvaKg" labelAlignment="LEFT" description="_0A4mQ9sQEeuTO4js3GS2GQ">
           <labelFormat>bold</labelFormat>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_wWA-IEI2EeyrqahrnHvaKg" name=" subject : CSPProcessSource" tooltipText="">
-        <target xmi:type="ecore:EReference" href="RoboCert.ecore#//UnaryCoreProperty/subject"/>
-        <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//UnaryCoreProperty/subject"/>
+        <target xmi:type="ecore:EReference" href="RoboCert.ecore#//CoreProperty/subject"/>
+        <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//CoreProperty/subject"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_wWCzUEI2EeyrqahrnHvaKg" labelAlignment="LEFT" description="_0A3YIdsQEeuTO4js3GS2GQ" color="114,159,207">
           <labelFormat>bold</labelFormat>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EReferenceNode']"/>
       </ownedElements>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_wVmucEI2EeyrqahrnHvaKg" name="UnaryCorePropertyType" tooltipText="" width="12" height="10">
-      <target xmi:type="ecore:EEnum" href="RoboCert.ecore#//UnaryCorePropertyType"/>
-      <semanticElements xmi:type="ecore:EEnum" href="RoboCert.ecore#//UnaryCorePropertyType"/>
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_wVmucEI2EeyrqahrnHvaKg" name="CorePropertyType" tooltipText="" width="12" height="10">
+      <target xmi:type="ecore:EEnum" href="RoboCert.ecore#//CorePropertyType"/>
+      <semanticElements xmi:type="ecore:EEnum" href="RoboCert.ecore#//CorePropertyType"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -3617,32 +3617,32 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']"/>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_wWMkUUI2EeyrqahrnHvaKg" name="TIMELOCK_FREE" tooltipText="">
-        <target xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//UnaryCorePropertyType/TIMELOCK_FREE"/>
-        <semanticElements xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//UnaryCorePropertyType/TIMELOCK_FREE"/>
+        <target xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//CorePropertyType/TIMELOCK_FREE"/>
+        <semanticElements xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//CorePropertyType/TIMELOCK_FREE"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_wWNLYEI2EeyrqahrnHvaKg" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']"/>
       </ownedElements>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_wWNycEI2EeyrqahrnHvaKg" name="DEADLOCK_FREE" tooltipText="">
-        <target xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//UnaryCorePropertyType/DEADLOCK_FREE"/>
-        <semanticElements xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//UnaryCorePropertyType/DEADLOCK_FREE"/>
+        <target xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//CorePropertyType/DEADLOCK_FREE"/>
+        <semanticElements xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//CorePropertyType/DEADLOCK_FREE"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_wWOZgEI2EeyrqahrnHvaKg" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']"/>
       </ownedElements>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_wWPAkEI2EeyrqahrnHvaKg" name="DETERMINISM" tooltipText="">
-        <target xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//UnaryCorePropertyType/DETERMINISM"/>
-        <semanticElements xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//UnaryCorePropertyType/DETERMINISM"/>
+        <target xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//CorePropertyType/DETERMINISM"/>
+        <semanticElements xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//CorePropertyType/DETERMINISM"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_wWPnoEI2EeyrqahrnHvaKg" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']"/>
       </ownedElements>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_wWPnoUI2EeyrqahrnHvaKg" name="TERMINATION" tooltipText="">
-        <target xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//UnaryCorePropertyType/TERMINATION"/>
-        <semanticElements xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//UnaryCorePropertyType/TERMINATION"/>
+        <target xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//CorePropertyType/TERMINATION"/>
+        <semanticElements xmi:type="ecore:EEnumLiteral" href="RoboCert.ecore#//CorePropertyType/TERMINATION"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_wWPnokI2EeyrqahrnHvaKg" labelAlignment="LEFT">
           <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']/@style"/>
         </ownedStyle>
@@ -3650,8 +3650,8 @@
       </ownedElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_wWb04EI2EeyrqahrnHvaKg" sourceNode="_wVjEEEI2EeyrqahrnHvaKg" targetNode="_NmBwQfXzEeuDD_pqy1SESA">
-      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//UnaryCoreProperty"/>
-      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//UnaryCoreProperty"/>
+      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//CoreProperty"/>
+      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//CoreProperty"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_wWdqEEI2EeyrqahrnHvaKg" targetArrow="InputClosedArrow" routingStyle="tree">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC%20ESupertypes']/@style"/>
         <beginLabelStyle xmi:type="diagram:BeginLabelStyle" uid="_wWdqEUI2EeyrqahrnHvaKg" showIcon="false">

@@ -97,16 +97,16 @@ Assertion:
  * Top-level disjunction of properties.
  */
 Property:
-	UnaryCoreProperty | CSPRefinementProperty | SequenceProperty;
+	CoreProperty | CSPRefinementProperty | SequenceProperty;
 
 /**
  * Core properties with only one argument.
  */
-UnaryCoreProperty:
+CoreProperty:
 	subject=[CSPProcessSource|QualifiedName]
-	('is' (negated?='not')? type=IsUnaryCorePropertyType |
-		type=VerbUnaryCorePropertyType |
-		'does' (negated?='not')? type=DoesUnaryCorePropertyType
+	('is' (negated?='not')? type=IsCorePropertyType |
+		type=VerbCorePropertyType |
+		'does' (negated?='not')? type=DoesCorePropertyType
 	)
 ;
 
@@ -116,7 +116,7 @@ UnaryCoreProperty:
 /**
  * Unary core property types that agree with 'is'/'is not'.
  */
-enum IsUnaryCorePropertyType returns UnaryCorePropertyType:
+enum IsCorePropertyType returns CorePropertyType:
 	DEADLOCK_FREE='deadlock-free' |
 	DETERMINISM='deterministic' |
 	TIMELOCK_FREE='timelock-free'
@@ -126,7 +126,7 @@ enum IsUnaryCorePropertyType returns UnaryCorePropertyType:
  * Unary core property types that are standalone verbs in the third
  * person present tense.
  */
-enum VerbUnaryCorePropertyType returns UnaryCorePropertyType:
+enum VerbCorePropertyType returns CorePropertyType:
 	// Remember to add these to DoesNot also.
 	TERMINATION='terminates'
 ;
@@ -134,7 +134,7 @@ enum VerbUnaryCorePropertyType returns UnaryCorePropertyType:
 /**
  * Unary core property types that agree with 'does'/'does not'.
  */
-enum DoesUnaryCorePropertyType returns UnaryCorePropertyType:
+enum DoesCorePropertyType returns CorePropertyType:
 	// Remember to add these to Verb also.
 	TERMINATION='terminate'
 ;

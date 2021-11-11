@@ -23,7 +23,7 @@ import robocalc.robocert.model.robocert.AssertionGroup;
 import robocalc.robocert.model.robocert.CSPRefinementProperty;
 import robocalc.robocert.model.robocert.Property;
 import robocalc.robocert.model.robocert.SequenceProperty;
-import robocalc.robocert.model.robocert.UnaryCoreProperty;
+import robocalc.robocert.model.robocert.CoreProperty;
 
 /**
  * Generates CSP for assertion groups.
@@ -36,7 +36,7 @@ class AssertionGroupGenerator {
 	@Inject
 	private SeqPropertyLowerer spl;
 	@Inject
-	private UnaryCorePropertyGenerator ug;
+	private CorePropertyGenerator ug;
 
 	/**
 	 * Generates CSP-M for an assertion group.
@@ -76,7 +76,7 @@ class AssertionGroupGenerator {
 			return cg.generateProperty(c);
 		if (p instanceof SequenceProperty s)
 			return cg.generateProperty(spl.lower(s));
-		if (p instanceof UnaryCoreProperty u)
+		if (p instanceof CoreProperty u)
 			return ug.generate(u);
 		throw new IllegalArgumentException("Unsupported assertion property type: %s (missing match arm?)".formatted(p));
 	}
