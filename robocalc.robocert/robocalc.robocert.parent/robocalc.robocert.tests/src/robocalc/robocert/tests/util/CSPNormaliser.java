@@ -1,9 +1,9 @@
-package robocalc.robocert.tests.util
+package robocalc.robocert.tests.util;
 
 /**
  * Basic CSP normalisation to try make comparison of CSP strings tractable.
  */
-class CspNormaliser {
+public class CSPNormaliser {
 	/**
 	 * Tidies up a CSP char sequence, returning it as a string.
 	 *
@@ -14,7 +14,7 @@ class CspNormaliser {
 	 * 
 	 * @returns a tidied string.
 	 */
-	def String tidy(CharSequence it) {
-		toString.strip.replaceAll("\\s+", " ")
+	public String tidy(CharSequence it) {
+		return it.toString().strip().replaceAll("\\s+", " ");
 	}
 }

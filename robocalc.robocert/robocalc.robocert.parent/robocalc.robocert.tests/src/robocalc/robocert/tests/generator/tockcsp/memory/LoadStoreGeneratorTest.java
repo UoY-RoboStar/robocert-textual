@@ -26,7 +26,7 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.tests.util.CspNormaliser;
+import robocalc.robocert.tests.util.CSPNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -40,7 +40,7 @@ class LoadStoreGeneratorTest {
 	@Inject
 	private LoadStoreGenerator lsg;
 	@Inject
-	private CspNormaliser csp;
+	private CSPNormaliser csp;
 	@Inject
 	private RoboCertFactory rc;
 	

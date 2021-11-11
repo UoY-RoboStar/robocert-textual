@@ -1,9 +1,18 @@
-/**
- * 
- */
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
 package robocalc.robocert.tests.generator.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -22,7 +31,7 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
  * Tests for {@link BindingNameExpander}.
- * 
+ *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
@@ -32,7 +41,7 @@ class BindingNameExpanderTest {
 	@Inject private MessageSpecFactory msf;
 	@Inject private RoboCertFactory rcf;
 	@Inject private BindingNameExpander bx;
-	
+
 	/**
 	 * Tests that getting the unambiguous name of a binding with no parent
 	 * returns the name of that binding alone.
@@ -59,11 +68,11 @@ class BindingNameExpanderTest {
 		var ssq = rcf.createSubsequence();
 		ssq.getSteps().add(astep);
 		var sq = rcf.createSequence();
-		sq.setBody(ssq);	
-		
+		sq.setBody(ssq);
+
 		assertUnambiguousNameEqual("step0_action_body_argument0", w.getBinding());
 	}
-	
+
 	private void assertUnambiguousNameEqual(String expected, Binding b) {
 		assertEquals(expected, bx.getUnambiguousName(b));
 	}

@@ -1,3 +1,15 @@
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
 package robocalc.robocert.tests.generator.tockcsp.seq
 
 
@@ -9,7 +21,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 import robocalc.robocert.generator.tockcsp.seq.MessageSetGenerator
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import static extension org.junit.Assert.assertEquals
-import robocalc.robocert.tests.util.CspNormaliser
+import robocalc.robocert.tests.util.CSPNormaliser
 import robocalc.robocert.tests.util.MessageSpecFactory
 import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSet
@@ -23,7 +35,7 @@ import robocalc.robocert.model.robocert.util.MessageFactory
 @InjectWith(RoboCertCustomInjectorProvider) 
 class MessageSetGeneratorTest {
 	@Inject extension MessageSetGenerator
-	@Inject extension CspNormaliser
+	@Inject extension CSPNormaliser
 	@Inject extension MessageFactory
 	@Inject extension MessageSpecFactory
 	@Inject SetFactory sf

@@ -26,12 +26,12 @@ import robocalc.robocert.generator.tockcsp.core.UnaryCorePropertyGenerator;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.UnaryCorePropertyType;
-import robocalc.robocert.tests.util.CspNormaliser;
+import robocalc.robocert.tests.util.CSPNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
- * Tests the {@link UnaryCorePropertyGenerator} on a few properties concerning
- * a {@link ProcessCSPFragment}.
+ * Tests the {@link UnaryCorePropertyGenerator} on a few properties concerning a
+ * {@link ProcessCSPFragment}.
  *
  * @author Matt Windsor
  */
@@ -41,7 +41,7 @@ class UnaryCorePropertyGeneratorTest {
 	@Inject
 	private RoboCertFactory rc;
 	@Inject
-	private CspNormaliser cn;
+	private CSPNormaliser cn;
 	@Inject
 	private UnaryCorePropertyGenerator gen;
 
@@ -67,21 +67,23 @@ class UnaryCorePropertyGeneratorTest {
 	 */
 	@Test
 	void testDeadlockFree() {
-		assertGeneratesBody("prioritise( test[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]", UnaryCorePropertyType.DEADLOCK_FREE);
+		assertGeneratesBody(
+				"prioritise( test[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
+				UnaryCorePropertyType.DEADLOCK_FREE);
 	}
 
 	@Test
 	void testTimelockFree() {
-		assertGeneratesBody("RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= test", UnaryCorePropertyType.TIMELOCK_FREE);
+		assertGeneratesBody("RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= test",
+				UnaryCorePropertyType.TIMELOCK_FREE);
 	}
 
 	/**
-	 * Asserts that generating positive and negative core assertions of the
-	 * given type produces, respectively, positive and negative FDR assertions
-	 * with the given expected body.
+	 * Asserts that generating positive and negative core assertions of the given
+	 * type produces, respectively, positive and negative FDR assertions with the
+	 * given expected body.
 	 *
-	 * @param expected expected body, less 'assert', 'not', and tau
-	 *                 prioritisation.
+	 * @param expected expected body, less 'assert', 'not', and tau prioritisation.
 	 * @param type     type for which we are testing.
 	 */
 	private void assertGeneratesBody(String expected, UnaryCorePropertyType type) {
@@ -90,7 +92,7 @@ class UnaryCorePropertyGeneratorTest {
 	}
 
 	private void assertGenerates(String expected, UnaryCorePropertyType type, boolean isNegated) {
-		var p = rc.createUnaryCoreProperty();
+		final var p = rc.createUnaryCoreProperty();
 		p.setNegated(isNegated);
 		p.setSubject(source);
 		p.setType(type);

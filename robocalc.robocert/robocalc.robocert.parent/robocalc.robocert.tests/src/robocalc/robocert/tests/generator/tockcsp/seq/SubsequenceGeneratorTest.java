@@ -12,7 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.tests.generator.tockcsp.seq;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -24,22 +24,25 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.Subsequence;
-import robocalc.robocert.tests.util.CspNormaliser;
+import robocalc.robocert.tests.util.CSPNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
  * Tests that the concrete implementation of {@link SubsequenceGenerator}
  * behaves appropriately under certain situations.
- * 
+ *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class SubsequenceGeneratorTest {
-	@Inject private RoboCertFactory rc;
-	@Inject private SubsequenceGenerator sg;
-	@Inject private CspNormaliser n;
-	
+	@Inject
+	private RoboCertFactory rc;
+	@Inject
+	private SubsequenceGenerator sg;
+	@Inject
+	private CSPNormaliser n;
+
 	/**
 	 * Tests that the empty subsequence becomes the CSP-M 'SKIP'.
 	 */
