@@ -7,6 +7,7 @@ import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.WildcardArgument
 import robocalc.robocert.generator.utils.ActorPairExtensions
+import robocalc.robocert.generator.utils.EObjectExtensions
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -14,6 +15,7 @@ import robocalc.robocert.generator.utils.ActorPairExtensions
 class MessageSpecGenerator {
 	@Inject extension TopicGenerator
 	@Inject extension ActorPairExtensions
+	@Inject extension EObjectExtensions
 	@Inject extension TargetExtensions
 	@Inject extension ArgumentGenerator
 
@@ -96,7 +98,7 @@ class MessageSpecGenerator {
 		MessageSpec it) '''«namespace»::«topic.generate»«IF topic.hasDirection».«actorPair.inferredDirection.cspDir»«ENDIF»'''
 
 	private def getNamespace(MessageSpec it) {
-		actorPair?.target?.namespace ?: missingNamespace
+		 targetOfParentGroup?.namespace ?: missingNamespace
 	}
 
 	/**

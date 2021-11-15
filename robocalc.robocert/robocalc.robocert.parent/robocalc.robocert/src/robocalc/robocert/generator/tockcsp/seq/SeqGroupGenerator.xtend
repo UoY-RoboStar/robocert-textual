@@ -30,9 +30,7 @@ class SeqGroupGenerator {
 	 * @return CSP for the sequence group.
 	 */
 	def CharSequence generate(SequenceGroup it) '''
-		-- SEQUENCE GROUP
-		-- from: «target»
-		--   to: «world»
+		-- SEQUENCE GROUP (target «target»)
 		«csp.moduleWithPrivate(name, generatePrivateDefs, generatePublicDefs)»
 	'''
 

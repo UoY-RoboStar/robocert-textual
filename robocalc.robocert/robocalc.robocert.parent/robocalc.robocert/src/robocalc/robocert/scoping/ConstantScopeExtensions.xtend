@@ -47,7 +47,7 @@ class ConstantScopeExtensions {
 	 */
 	private def assertionConstAssignmentScope(ConstAssignment it) {
 		// TODO(@MattWindsor91): this should be part of the metamodel, somehow.
-		getContainerOfType(SequenceProperty)?.sequence?.target?.uninstantiatedTargetScope
+		getContainerOfType(SequenceProperty)?.sequence?.group?.target?.uninstantiatedTargetScope
 	}
 
 	/**

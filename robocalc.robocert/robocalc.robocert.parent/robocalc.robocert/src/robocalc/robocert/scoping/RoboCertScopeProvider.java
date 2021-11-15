@@ -57,6 +57,9 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 
 	private IScope constScope(ConstExpr x) {
 		var target = ex.getTargetOfParentGroup(x);
-		return target == null ? null : cx.targetScope(target);
+		if (target == null) {
+			return null;
+		} 
+		return cx.targetScope(target);
 	}
 }

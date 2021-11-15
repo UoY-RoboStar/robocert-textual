@@ -8,11 +8,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   mattbw - initial definition
+ *   Matt Windsor - initial definition
  ********************************************************************************/
 package robocalc.robocert.tests.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -22,10 +24,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
+import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ImplicitActorPair;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 import robocalc.robocert.tests.util.MessageSpecFactory;
@@ -49,45 +50,45 @@ public class ImplicitActorPairCustomTest {
 	/**
 	 * The actor pair to test.
 	 */
-	protected ImplicitActorPair it;
+	private ImplicitActorPair it;
 	/**
-	 * The target.
+	 * The target actor.
 	 */
-	protected Target target;
+	private Actor target;
 	/**
 	 * The world.
 	 */
-	protected World world;
+	private Actor world;
 
 	/**
 	 * Initialises the objects used for the test.
 	 */
 	@BeforeEach
-	protected void init() {
+	void init() {
 		// TODO(@MattWindsor91): deduplicate this with DirectionalActorPairCustomTest
 
-		target = msf.target();
-		world = rc.createWorld();
+		target = mf.targetActor();
+		world = mf.worldActor();
 
 		it = rc.createImplicitActorPair();
-		var spec = mf.spec(mf.opTopic(msf.nullOp()), it);
+		final var spec = mf.spec(mf.opTopic(msf.nullOp()), it);
 
-		var act = rc.createArrowAction();
+		final var act = rc.createArrowAction();
 		act.setBody(spec);
 
-		var step = rc.createActionStep();
+		final var step = rc.createActionStep();
 		step.setAction(act);
 
-		var seq = rc.createSequence();
+		final var seq = rc.createSequence();
+		seq.getActors().addAll(List.of(target, world));
 
-		var sseq = rc.createSubsequence();
+		final var sseq = rc.createSubsequence();
 		sseq.getSteps().add(step);
 
 		seq.setBody(sseq);
 
-		var sg = rc.createSequenceGroup();
-		sg.setTarget(target);
-		sg.setWorld(world);
+		final var sg = rc.createSequenceGroup();
+		sg.setTarget(msf.target());
 		sg.getSequences().add(seq);
 	}
 
@@ -106,5 +107,4 @@ public class ImplicitActorPairCustomTest {
 	void testGetResolvedTo() {
 		assertEquals(world, it.getResolvedTo());
 	}
-
 }

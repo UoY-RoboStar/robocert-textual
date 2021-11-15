@@ -78,6 +78,6 @@ class SeqPropertyLowerer {
 	private def getTarget(SequenceProperty it) {
 		// TODO(@MattWindsor91): reinstate instantiation
 		// instantiated ? generateInstantiatedTarget : generateStandardTarget
-		sequence?.target
+		sequence?.group?.target
 	}
 }

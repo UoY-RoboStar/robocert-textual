@@ -16,7 +16,7 @@ import org.eclipse.xtext.EcoreUtil2;
 
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.MessageDirection;
-import robocalc.robocert.model.robocert.SequenceGroup;
+import robocalc.robocert.model.robocert.Sequence;
 
 /**
  * Inserts actor-seeking functionality into {@link DirectionalActorPairImpl}.
@@ -52,7 +52,7 @@ class DirectionalActorPairImplCustom extends DirectionalActorPairImpl {
 	 * @return the actor suggested by the comparison against direction.
 	 */
 	private Actor getWorldOrTargetIf(MessageDirection direction) {
-		var group = EcoreUtil2.getContainerOfType(this, SequenceGroup.class);
-		return getDirection() == direction ? group.getTarget() : group.getWorld();
+		var seq = EcoreUtil2.getContainerOfType(this, Sequence.class);
+		return getDirection() == direction ? seq.getTargetActor() : seq.getWorldActor();
 	}
 }

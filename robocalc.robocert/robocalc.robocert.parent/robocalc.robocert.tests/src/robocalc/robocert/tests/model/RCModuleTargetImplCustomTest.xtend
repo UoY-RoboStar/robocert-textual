@@ -1,3 +1,15 @@
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
 package robocalc.robocert.tests.model
 
 
@@ -14,22 +26,14 @@ import circus.robocalc.robochart.RoboChartFactory
 /**
  * Tests any custom functionality on RCModuleTargets, and also tests that the
  * factory resolves them correctly.
+ * 
+ * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension)
 @InjectWith(RoboCertInjectorProvider) 
 class RCModuleTargetImplCustomTest {
 	@Inject RoboCertFactory rf
 	@Inject RoboChartFactory cf
-	
-	/**
-	 * Tests that anyGroup and group give the same, non-null result.
-	 */
-	@Test
-	def testAnyGroup() {
-		val x = example
-		x?.anyGroup.assertNotNull
-		x.group.assertEquals(x.anyGroup)
-	}
 	
 	/**
 	 * Tests that element and module give the same, non-null result.

@@ -7,7 +7,7 @@ import circus.robocalc.robochart.textual.formatting2.RoboChartFormatter
 import com.google.inject.Inject
 import org.eclipse.xtext.formatting2.IFormattableDocument
 import robocalc.robocert.model.robocert.CertPackage
-import robocalc.robocert.model.robocert.Sequence
+import robocalc.robocert.model.robocert.Instantiation
 import robocalc.robocert.services.RoboCertGrammarAccess
 
 class RoboCertFormatter extends RoboChartFormatter {
@@ -21,12 +21,12 @@ class RoboCertFormatter extends RoboChartFormatter {
 		}
 	}
 
-	def dispatch void format(Sequence sequence, extension IFormattableDocument document) {
+	def dispatch void format(Instantiation instantiation, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		sequence.target.format
-		sequence.world.format
-		sequence.body.format
+		for (constAssignment : instantiation.assignments) {
+			constAssignment.format
+		}
 	}
 	
-	// TODO: implement for Subsequence, SequenceStep, ArrowAction, LoopAction, LooseGap, ArrowMessageSpec, GapMessageSpec, Assertion
+	// TODO: implement for ConstAssignment, AssertionGroup, Assertion, LogicalExpr, RelationExpr, MinusExpr, CSPGroup, SequenceGroup, Sequence, Subsequence, ActionStep, DeadlineStep, LoopStep, BlockStep, DefiniteLoopBound, LowerLoopBound, RangeLoopBound, BranchStep, Branch, ExprGuard, ArrowAction, WaitAction, MessageSpec, NamedMessageSet, BinaryMessageSet, ExtensionalMessageSet, ExpressionArgument, WildcardArgument
 }

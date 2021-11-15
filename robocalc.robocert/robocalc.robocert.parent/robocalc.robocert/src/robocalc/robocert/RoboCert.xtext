@@ -348,8 +348,8 @@ enum CSPModel:
  * sequences and message sets.
  */
 SequenceGroup:
-	'sequence' 'group' name=ID
-	'(' target=Target '->' world=World ')' instantiation=Instantiation ':'
+	'sequence' 'group' name=ID '(' 'for' target=Target ')'
+	instantiation=Instantiation ':'
 	BEGIN
 	(sequences+=Sequence | messageSets+=NamedMessageSet)*
 	END;
@@ -358,7 +358,7 @@ SequenceGroup:
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID ':' body=Subsequence;
+	'sequence' name=ID '(' 'between' actors+=Actor (',' actors+=Actor)* (','? 'and' actors+=Actor) ')' ':' body=Subsequence;
 
 /**
  * A subsequence.
@@ -561,11 +561,23 @@ Argument:
 //
 // ACTORS
 //
+
+Actor:
+	StandardActor ('as' name=ID)?
+;
+
 /**
- * The world actor of a sequence diagram.
+ * An actor that resolves to some known relationship of the target's.
  */
-World:
-	'world' {World};
+StandardActor:
+	relationship=TargetActorRelationship;
+
+/**
+ * Relationships of target actors.
+ */
+enum TargetActorRelationship:
+	WORLD='world' |
+	TARGET='target';
 
 //
 // Targets
@@ -574,7 +586,7 @@ World:
  * A target of a sequence diagram.
  */
 Target:
-	('module' {RCModuleTarget} (name=ID ':')? module=[RCModule|QualifiedName]);
+	('module' {RCModuleTarget} module=[RCModule|QualifiedName]) ('as' name=ID)?;
 
 //
 // SEQUENCE PROPERTIES

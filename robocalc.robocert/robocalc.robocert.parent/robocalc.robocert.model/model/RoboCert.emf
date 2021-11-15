@@ -298,30 +298,16 @@ enum Temperature {
 // SEQUENCES
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * A collection of sequence diagrams between a given target and world.
- */
+@genmodel(documentation="A collection of sequence diagrams.")
 class SequenceGroup extends Group, robochart.NamedElement {
-	/**
-	 * The target actor of the sequence group.
-	 */
+	@genmodel(documentation="The target of the sequence group.")
 	val Target[1]#group target;
-	/**
-	 * The world actor of the sequence group.
-	 */
-	val World[1]#group world;
-	/**
-	 * Any message sets named on the sequence group.
-	 */
-	val NamedMessageSet[*]#group messageSets;	
-	/**
-	 * The sequences inside this sequence group.
-	 */
+
+	@genmodel(documentation="Any message sets named on the sequence group.")
+	val NamedMessageSet[*]#group messageSets;
+	
+	@genmodel(documentation="The sequences inside this sequence group.")
 	val Sequence[*]#group sequences;
-	/**
-	 * Picks up both actors of the sequence diagram.
-	 */
-	derived volatile transient readonly ref Actor[2] actors;
 }
 
 @genmodel(documentation="A sequence diagram.")
@@ -335,22 +321,20 @@ class Sequence extends robochart.NamedElement, CSPProcessSource {
 	 */
 	val Subsequence[1] body;
 
+	@genmodel(documentation="The actors participating in this sequence.
+
+These correspond to UML lifelines.")
+	val Actor[2..*]#sequence actors;
+
 	//
 	// Derived properties
 	//
 
-	/**
-	 * Picks up the target of this sequence diagram.
-	 */
-	derived volatile transient readonly ref Target[1] target;
-	/**
-	 * Picks up the world of this sequence diagram.
-	 */
-	derived volatile transient readonly ref World[1] world;
-	/**
-	 * Picks up both actors of the sequence diagram.
-	 */
-	derived volatile transient readonly ref Actor[2] actors;
+	@genmodel(documentation="Shortcut for getting the target actor of the sequence, if any.")
+	derived volatile transient readonly ref StandardActor[0..1] targetActor;
+	
+	@genmodel(documentation="Shortcut for getting the world actor of the sequence, if any.")
+	derived volatile transient readonly ref StandardActor[0..1] worldActor;
 }
 
 /**
@@ -840,27 +824,34 @@ enum BinarySetOperator {
 // ACTORS
 //
 
-/**
- * An actor in a sequence.
- *
- * There are two actors in a sequence: the 'target' of the sequence,
- * which is the system under test; and the 'world', which is the sum of
- * everything connected to the target.  They are bound to names used in the
- * diagram itself, but the target may also name an external RoboChart entity.
- */
-abstract class Actor {
-	@genmodel(documentation="Typically expands to the target's sequence group parameter.")
-	derived volatile transient readonly ref SequenceGroup[0..1] anyGroup;
+@genmodel(documentation="An actor in a sequence.
+
+Actors can be named, for use in ExplicitActorPairs.")
+abstract class Actor extends OptionallyNamedElement {
+	@genmodel(documentation="The sequence to which these actors belong.")
+	ref Sequence[1]#actors sequence;
+	
+	//
+	// Derived properties
+	//
+	
+	@genmodel(documentation="Gets the relationship of this actor to its target, calculating it if necessary.")
+	derived volatile transient readonly attr TargetActorRelationship[1] calculatedRelationship;
 }
 
-/**
- * The world of a sequence.
- */
-class World extends Actor {
-	/**
-	 * The sequence group to which this actor is attached.
-	 */
-	ref SequenceGroup[1]#world group;
+@genmodel(documentation="An actor that has some well-known relationship to the target.")
+class StandardActor extends Actor {
+	@genmodel(documentation="The relationship between this actor and the target.")
+	attr TargetActorRelationship[1] relationship;
+}
+
+enum TargetActorRelationship {
+	@genmodel(documentation="No relationship.")
+	NONE;
+	@genmodel(documentation="The world (environment) above a target.")
+	WORLD;
+	@genmodel(documentation="The target itself.")
+	TARGET;
 }
 
 //
@@ -870,25 +861,18 @@ class World extends Actor {
 @genmodel(documentation="A target of some specification.
 
 Targets are CSP process sources, through appeal to the existing RoboStar
-language semantics.  They are also CSP context sources.")
-abstract class Target
-extends
-	Actor,
-	OptionallyNamedElement,
-	CSPProcessSource
-{
-	// TODO(@MattWindsor91): this may eventually weaken to just Group etc.
-	@genmodel(documentation="Group to which this actor is attached.")
+language semantics.")
+abstract class Target extends CSPProcessSource, OptionallyNamedElement {
+	@genmodel(documentation="The group to which this target belongs.")
 	ref SequenceGroup[1]#target group;
-	
+
 	@genmodel(documentation="Lowest common denominator for the targeted element.")
 	derived volatile transient readonly ref robochart.NamedElement[1] element;	
 }
 
-/**
- * A sequence target referring to a RoboChart module.
- */
+@genmodel(documentation="A sequence target referring to a RoboChart module.")
 class RCModuleTarget extends Target {
+	@genmodel(documentation="The module referred to by this target.")
 	ref robochart.RCModule[1] module;
 }
 

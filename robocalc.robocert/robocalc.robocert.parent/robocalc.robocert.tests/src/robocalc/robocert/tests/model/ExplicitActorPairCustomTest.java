@@ -25,8 +25,8 @@ import com.google.inject.Inject;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ExplicitActorPair;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
-import robocalc.robocert.tests.util.MessageSpecFactory;
 
 /**
  * Tests that the custom version of {@link ExplicitActorPair} implements its
@@ -40,7 +40,7 @@ public class ExplicitActorPairCustomTest {
 	@Inject
 	private RoboCertFactory rc;
 	@Inject
-	private MessageSpecFactory mf;
+	private MessageFactory mf;
 
 	/**
 	 * The actor pair to test.
@@ -76,8 +76,8 @@ public class ExplicitActorPairCustomTest {
 	 */
 	@BeforeEach
 	protected void init() {
-		expectedFrom = mf.target();
-		expectedTo = rc.createWorld();
+		expectedFrom = mf.targetActor();
+		expectedTo = mf.worldActor();
 
 		it = rc.createExplicitActorPair();
 		it.setFrom(expectedFrom);

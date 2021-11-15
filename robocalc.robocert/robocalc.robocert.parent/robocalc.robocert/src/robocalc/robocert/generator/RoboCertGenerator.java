@@ -4,7 +4,7 @@
 package robocalc.robocert.generator;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
@@ -18,24 +18,27 @@ import robocalc.robocert.model.robocert.CertPackage;
 
 /**
  * Generates code from your model files on save.
- * 
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
+ *
+ * See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 public class RoboCertGenerator extends AbstractGenerator {
-	@Inject private CertPackageGenerator csp;
-	@Inject private FilenameExtensions fx;
-	
+	@Inject
+	private CertPackageGenerator csp;
+	@Inject
+	private FilenameExtensions fx;
+
 	@Override
 	public void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		EcoreUtil2.resolveAll(resource.getResourceSet());
+		EcoreUtil.resolveAll(resource.getResourceSet());
 
 		var isCanceled = generateCSPStandardLibrary(fsa, context);
 		if (isCanceled)
 			return;
-		
+
 		generateCSPPackages(resource, fsa, context);
 	}
-	
+
 	private boolean generateCSPStandardLibrary(IFileSystemAccess2 fsa, IGeneratorContext context) {
 		for (var filename : CSP_LIBRARY_FILES) {
 			generateCSPStandardLibraryFile(fsa, filename);
@@ -44,18 +47,18 @@ public class RoboCertGenerator extends AbstractGenerator {
 		}
 		return false;
 	}
-	
+
 	private void generateCSPStandardLibraryFile(IFileSystemAccess2 fsa, String filename) {
-		var stream = getClass().getClassLoader().getResourceAsStream("lib/semantics/"+filename);
+		var stream = getClass().getClassLoader().getResourceAsStream("lib/semantics/" + filename);
 		fsa.generateFile(filename, RoboCertOutputConfigurationProvider.CSP_LIBRARY_OUTPUT, stream);
 	}
 
 	private void generateCSPPackages(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		Iterators.filter(EcoreUtil2.getAllContents(resource, true), CertPackage.class).forEachRemaining(x -> {
-			// TODO(@MattWindsor91): multiple packages in one resource?			
+		Iterators.filter(EcoreUtil.getAllContents(resource, true), CertPackage.class).forEachRemaining(x -> {
+			// TODO(@MattWindsor91): multiple packages in one resource?
 			fsa.generateFile(fx.getFileBasename(x) + ".csp", csp.generate(x));
 		});
 	}
 
-	private static final String[] CSP_LIBRARY_FILES = new String[] {"robocert_defs.csp", "robocert_seq_defs.csp"};
+	private static final String[] CSP_LIBRARY_FILES = new String[] { "robocert_defs.csp", "robocert_seq_defs.csp" };
 }

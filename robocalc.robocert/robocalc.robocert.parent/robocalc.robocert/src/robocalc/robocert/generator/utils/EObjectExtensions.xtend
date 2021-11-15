@@ -31,7 +31,7 @@ class EObjectExtensions {
 	}
 	
 	/**
-	 * If the given EObject is a sequence group, retrieves its target.
+	 * If the given EObject has a parent sequence group, retrieves its target.
 	 * 
 	 * @param it  the object.
 	 * 

@@ -1,3 +1,15 @@
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
 package robocalc.robocert.tests.util
 
 import robocalc.robocert.model.robocert.Actor
@@ -5,9 +17,7 @@ import robocalc.robocert.model.robocert.Argument
 import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.MessageTopic
-import robocalc.robocert.model.robocert.RCModuleTarget
 import robocalc.robocert.model.robocert.RoboCertFactory
-import robocalc.robocert.model.robocert.World
 import circus.robocalc.robochart.RoboChartFactory
 import circus.robocalc.robochart.Event
 import com.google.inject.Inject
@@ -16,6 +26,7 @@ import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.WildcardArgument
 import robocalc.robocert.model.robocert.util.MessageFactory
 import circus.robocalc.robochart.OperationSig
+import robocalc.robocert.model.robocert.TargetActorRelationship
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -150,13 +161,14 @@ class MessageSpecFactory {
 	private def seq() {
 		rcert.createSequence => [ x |
 			x.group = group
+			x.actors.add(mf.standardActor(TargetActorRelationship::WORLD))
+			x.actors.add(mf.standardActor(TargetActorRelationship::TARGET))
 		]
 	}
 
 	private def group() {
 		rcert.createSequenceGroup => [ x |
-			x.target = target
-			x.world = rcert.createWorld
+			x.target = target()
 		]
 	}
 
@@ -183,7 +195,7 @@ class MessageSpecFactory {
 	 */
 	def expectWorld(Actor it) {
 		assertNotNull
-		assertTrue(it instanceof World)
+		assertEquals(TargetActorRelationship::WORLD, calculatedRelationship)
 	}
 
 	/**
@@ -193,11 +205,6 @@ class MessageSpecFactory {
 	 */
 	def expectTarget(Actor it) {
 		assertNotNull
-		switch it {
-			RCModuleTarget:
-				"test".assertEquals(module.name)
-			default:
-				fail("not a target")
-		}
+		assertEquals(TargetActorRelationship::TARGET, calculatedRelationship)
 	}
 }

@@ -3,23 +3,79 @@
  */
 package robocalc.robocert.validation;
 
+import java.util.function.Function;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.xtext.validation.Check;
+
+import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.RoboCertPackage;
+import robocalc.robocert.model.robocert.Sequence;
+import robocalc.robocert.model.robocert.StandardActor;
+import robocalc.robocert.model.robocert.TargetActorRelationship;
 
 /**
- * This class contains custom validation rules. 
+ * This class contains custom validation rules.
  *
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
+ * See
+ * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 public class RoboCertValidator extends AbstractRoboCertValidator {
-	
-//	public static final String INVALID_NAME = "invalidName";
-//
-//	@Check
-//	public void checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.getName().charAt(0))) {
-//			warning("Name should start with a capital",
-//					RoboCertPackage.Literals.GREETING__NAME,
-//					INVALID_NAME);
-//		}
-//	}
-	
+	public static final String TOO_MANY_TARGETS = "tooManyTargets";
+	public static final String TOO_MANY_WORLDS = "tooManyWorlds";
+	public static final String TARGET_NEEDS_WORLD = "targetNeedsWorld";
+	public static final String WORLD_NEEDS_TARGET = "worldNeedsTarget";
+
+	/**
+	 * Checks that the actors of a target-and-world sequence are valid.
+	 *
+	 * @param s the sequence to check.
+	 */
+	@Check
+	public void checkSequenceActorsTargetWorld(Sequence s) {
+		var targets = numTargets(s);
+		var worlds = numWorlds(s);
+
+		// Check only relevant when we have at least one of each of the above
+		if (0 == targets + worlds)
+			return;
+
+		if (1 < targets)
+			actorError("At most one actor in a sequence can be the target", TOO_MANY_TARGETS);
+
+		if (1 < worlds)
+			actorError("At most one actor in a sequence can be the world", TOO_MANY_WORLDS);
+
+		if (0 == worlds)
+			actorError("A sequence with one target actor requires a world actor", TARGET_NEEDS_WORLD);
+
+		if (0 == targets)
+			actorError("A sequence with one world actor requires a target actor", WORLD_NEEDS_TARGET);
+	}
+
+	private void actorError(String string, String code) {
+		error(string, RoboCertPackage.Literals.SEQUENCE__ACTORS, code);
+	}
+
+	//
+	// Utility functions
+	//
+
+	private long numTargets(Sequence g) {
+		return countActors(g.getActors(), x -> isStandardActor(x, TargetActorRelationship.TARGET));
+	}
+
+	private long numWorlds(Sequence g) {
+		return countActors(g.getActors(), x -> isStandardActor(x, TargetActorRelationship.WORLD));
+	}
+
+	private long countActors(EList<Actor> actors, Function<? super Actor, Boolean> f) {
+		return actors.stream().mapToLong(x -> f.apply(x) ? 1 : 0).sum();
+	}
+
+	private boolean isStandardActor(Actor a, TargetActorRelationship rel) {
+		if (a instanceof StandardActor s)
+			return s.getRelationship() == rel;
+		return false;
+	}
 }
