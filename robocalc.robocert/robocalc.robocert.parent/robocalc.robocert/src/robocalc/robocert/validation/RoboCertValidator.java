@@ -10,7 +10,7 @@ import org.eclipse.xtext.validation.Check;
 
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.RoboCertPackage;
-import robocalc.robocert.model.robocert.Sequence;
+import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.StandardActor;
 import robocalc.robocert.model.robocert.TargetActorRelationship;
 
@@ -32,40 +32,40 @@ public class RoboCertValidator extends AbstractRoboCertValidator {
 	 * @param s the sequence to check.
 	 */
 	@Check
-	public void checkSequenceActorsTargetWorld(Sequence s) {
-		var targets = numTargets(s);
-		var worlds = numWorlds(s);
+	public void checkSequenceGroupActorsTargetWorld(SequenceGroup g) {
+		var targets = numTargets(g);
+		var worlds = numWorlds(g);
 
 		// Check only relevant when we have at least one of each of the above
 		if (0 == targets + worlds)
 			return;
 
 		if (1 < targets)
-			actorError("At most one actor in a sequence can be the target", TOO_MANY_TARGETS);
+			actorError("At most one actor in a sequence group can be the target", TOO_MANY_TARGETS);
 
 		if (1 < worlds)
-			actorError("At most one actor in a sequence can be the world", TOO_MANY_WORLDS);
+			actorError("At most one actor in a sequence group can be the world", TOO_MANY_WORLDS);
 
 		if (0 == worlds)
-			actorError("A sequence with one target actor requires a world actor", TARGET_NEEDS_WORLD);
+			actorError("A sequence group with one target actor requires a world actor", TARGET_NEEDS_WORLD);
 
 		if (0 == targets)
-			actorError("A sequence with one world actor requires a target actor", WORLD_NEEDS_TARGET);
+			actorError("A sequence group with one world actor requires a target actor", WORLD_NEEDS_TARGET);
 	}
 
 	private void actorError(String string, String code) {
-		error(string, RoboCertPackage.Literals.SEQUENCE__ACTORS, code);
+		error(string, RoboCertPackage.Literals.SEQUENCE_GROUP__ACTORS, code);
 	}
 
 	//
 	// Utility functions
 	//
 
-	private long numTargets(Sequence g) {
+	private long numTargets(SequenceGroup g) {
 		return countActors(g.getActors(), x -> isStandardActor(x, TargetActorRelationship.TARGET));
 	}
 
-	private long numWorlds(Sequence g) {
+	private long numWorlds(SequenceGroup g) {
 		return countActors(g.getActors(), x -> isStandardActor(x, TargetActorRelationship.WORLD));
 	}
 

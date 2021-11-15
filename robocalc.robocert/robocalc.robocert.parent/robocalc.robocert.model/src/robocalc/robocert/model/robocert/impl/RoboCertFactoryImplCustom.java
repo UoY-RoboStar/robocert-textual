@@ -9,7 +9,7 @@ import robocalc.robocert.model.robocert.ImplicitActorPair;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.RCModuleTarget;
 import robocalc.robocert.model.robocert.RefMessageSet;
-import robocalc.robocert.model.robocert.Sequence;
+import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.StandardActor;
 import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
@@ -30,8 +30,8 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	}
 	
 	@Override
-	public Sequence createSequence() {
-		return new SequenceImplCustom();
+	public SequenceGroup createSequenceGroup() {
+		return new SequenceGroupImplCustom();
 	}
 
 	@Override

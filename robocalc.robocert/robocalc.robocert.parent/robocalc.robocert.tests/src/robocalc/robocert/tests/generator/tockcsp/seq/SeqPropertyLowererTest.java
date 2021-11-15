@@ -124,12 +124,12 @@ class SeqPropertyLowererTest {
 		final var s = rf.createSequence();
 		s.setName("seq");
 		s.setGroup(group(t));
-		s.getActors().addAll(List.of(mf.targetActor(), mf.worldActor()));
 		return s;
 	}
 
 	private SequenceGroup group(Target t) {
 		final var g = rf.createSequenceGroup();
+		g.getActors().addAll(List.of(mf.targetActor(), mf.worldActor()));
 		g.setTarget(t);
 		return g;
 	}

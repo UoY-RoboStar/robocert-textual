@@ -16,7 +16,7 @@ import org.eclipse.xtext.EcoreUtil2;
 
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.OperationTopic;
-import robocalc.robocert.model.robocert.Sequence;
+import robocalc.robocert.model.robocert.SequenceGroup;
 
 /**
  * Inserts actor-seeking functionality into {@link ImplicitActorPairImpl}.
@@ -66,7 +66,7 @@ class ImplicitActorPairImplCustom extends ImplicitActorPairImpl {
 	private Actor getOperationActor(boolean isTo) {
 		// TODO(@MattWindsor91): this is very similar to DirectionalActorPairImplCustom;
 		// it'd be nice to have the common code factored out?
-		var seq = EcoreUtil2.getContainerOfType(this, Sequence.class);
-		return isTo ? seq.getWorldActor() : seq.getTargetActor();
+		var grp = EcoreUtil2.getContainerOfType(this, SequenceGroup.class);
+		return isTo ? grp.getWorldActor() : grp.getTargetActor();
 	}
 }

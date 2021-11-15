@@ -308,6 +308,21 @@ class SequenceGroup extends Group, robochart.NamedElement {
 	
 	@genmodel(documentation="The sequences inside this sequence group.")
 	val Sequence[*]#group sequences;
+	
+	@genmodel(documentation="The actors participating in this sequence.
+
+These correspond to UML lifelines.")
+	val Actor[2..*]#group actors;
+
+	//
+	// Derived properties
+	//
+
+	@genmodel(documentation="Shortcut for getting the target actor of the sequence, if any.")
+	derived volatile transient readonly ref StandardActor[0..1] targetActor;
+	
+	@genmodel(documentation="Shortcut for getting the world actor of the sequence, if any.")
+	derived volatile transient readonly ref StandardActor[0..1] worldActor;
 }
 
 @genmodel(documentation="A sequence diagram.")
@@ -320,21 +335,6 @@ class Sequence extends robochart.NamedElement, CSPProcessSource {
 	 * The top-level subsequence of the sequence diagram.
 	 */
 	val Subsequence[1] body;
-
-	@genmodel(documentation="The actors participating in this sequence.
-
-These correspond to UML lifelines.")
-	val Actor[2..*]#sequence actors;
-
-	//
-	// Derived properties
-	//
-
-	@genmodel(documentation="Shortcut for getting the target actor of the sequence, if any.")
-	derived volatile transient readonly ref StandardActor[0..1] targetActor;
-	
-	@genmodel(documentation="Shortcut for getting the world actor of the sequence, if any.")
-	derived volatile transient readonly ref StandardActor[0..1] worldActor;
 }
 
 /**
@@ -828,8 +828,13 @@ enum BinarySetOperator {
 
 Actors can be named, for use in ExplicitActorPairs.")
 abstract class Actor extends OptionallyNamedElement {
-	@genmodel(documentation="The sequence to which these actors belong.")
-	ref Sequence[1]#actors sequence;
+	// NOTE(@MattWindsor91): it would have been more idiomatic to have Actors
+	// belong to Sequences rather than SequenceGroups, but MessageSets would
+	// need either a complex setup to pick up Actors _or_ would need defining
+	// within Sequences.
+
+	@genmodel(documentation="The sequence group to which these actors belong.")
+	ref SequenceGroup[1]#actors group;
 	
 	//
 	// Derived properties

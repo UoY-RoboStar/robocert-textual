@@ -79,16 +79,15 @@ public class ImplicitActorPairCustomTest {
 		final var step = rc.createActionStep();
 		step.setAction(act);
 
-		final var seq = rc.createSequence();
-		seq.getActors().addAll(List.of(target, world));
-
 		final var sseq = rc.createSubsequence();
 		sseq.getSteps().add(step);
 
+		final var seq = rc.createSequence();
 		seq.setBody(sseq);
 
 		final var sg = rc.createSequenceGroup();
 		sg.setTarget(msf.target());
+		sg.getActors().addAll(List.of(target, world));
 		sg.getSequences().add(seq);
 	}
 

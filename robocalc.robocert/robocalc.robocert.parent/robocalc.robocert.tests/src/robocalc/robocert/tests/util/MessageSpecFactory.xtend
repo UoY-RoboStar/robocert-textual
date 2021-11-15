@@ -161,14 +161,14 @@ class MessageSpecFactory {
 	private def seq() {
 		rcert.createSequence => [ x |
 			x.group = group
-			x.actors.add(mf.standardActor(TargetActorRelationship::WORLD))
-			x.actors.add(mf.standardActor(TargetActorRelationship::TARGET))
 		]
 	}
 
 	private def group() {
 		rcert.createSequenceGroup => [ x |
 			x.target = target()
+			x.actors.add(mf.standardActor(TargetActorRelationship::WORLD))
+			x.actors.add(mf.standardActor(TargetActorRelationship::TARGET))			
 		]
 	}
 

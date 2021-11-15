@@ -348,17 +348,17 @@ enum CSPModel:
  * sequences and message sets.
  */
 SequenceGroup:
-	'sequence' 'group' name=ID '(' 'for' target=Target ')'
-	instantiation=Instantiation ':'
+	'sequence' 'group' name=ID '(' 'for' target=Target instantiation=Instantiation ')'
+	':'
 	BEGIN
-	(sequences+=Sequence | messageSets+=NamedMessageSet)*
+	(actors+= Actor | sequences+=Sequence | messageSets+=NamedMessageSet)*
 	END;
 
 /**
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID '(' 'between' actors+=Actor (',' actors+=Actor)* (','? 'and' actors+=Actor) ')' ':' body=Subsequence;
+	'sequence' name=ID ':' body=Subsequence;
 
 /**
  * A subsequence.
@@ -563,7 +563,7 @@ Argument:
 //
 
 Actor:
-	StandardActor ('as' name=ID)?
+	'use' StandardActor ('as' name=ID)?
 ;
 
 /**

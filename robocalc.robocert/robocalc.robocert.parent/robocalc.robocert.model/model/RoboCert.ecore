@@ -358,17 +358,8 @@
         <details key="documentation" value="The sequences inside this sequence group."/>
       </eAnnotations>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//CSPProcessSource">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A sequence diagram."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
-        eOpposite="#//SequenceGroup/sequences"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
-        upperBound="-1" eType="#//Actor" containment="true" eOpposite="#//Actor/sequence">
+        upperBound="-1" eType="#//Actor" containment="true" eOpposite="#//Actor/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The actors participating in this sequence.&#xD;&#xA;&#xD;&#xA;These correspond to UML lifelines."/>
       </eAnnotations>
@@ -385,6 +376,15 @@
         <details key="documentation" value="Shortcut for getting the world actor of the sequence, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//CSPProcessSource">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A sequence diagram."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
+        eOpposite="#//SequenceGroup/sequences"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Subsequence">
     <eStructuralFeatures xsi:type="ecore:EReference" name="steps" upperBound="-1"
@@ -742,10 +742,10 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An actor in a sequence.&#xD;&#xA;&#xD;&#xA;Actors can be named, for use in ExplicitActorPairs."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
-        eType="#//Sequence" eOpposite="#//Sequence/actors">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
+        eOpposite="#//SequenceGroup/actors">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The sequence to which these actors belong."/>
+        <details key="documentation" value="The sequence group to which these actors belong."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="calculatedRelationship"

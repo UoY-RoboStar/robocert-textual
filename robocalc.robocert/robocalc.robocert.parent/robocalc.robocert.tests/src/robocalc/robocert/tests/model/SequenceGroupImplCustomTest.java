@@ -26,26 +26,26 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.google.inject.Inject;
 
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Sequence;
+import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.StandardActor;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on Sequences, and also tests that the factory
- * resolves it correctly.
+ * Tests any custom functionality on {@link SequenceGroup}s,
+ * and also tests that the factory resolves it correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-class SequenceImplCustomTest {
+class SequenceGroupImplCustomTest {
 	@Inject
 	private RoboCertFactory rf;
 	@Inject
 	private MessageFactory mf;
 
-	private Sequence sequence;
+	private SequenceGroup group;
 	private StandardActor target;
 	private StandardActor world;
 
@@ -54,8 +54,8 @@ class SequenceImplCustomTest {
 		target = mf.targetActor();
 		world = mf.worldActor();
 
-		sequence = rf.createSequence();
-		sequence.getActors().addAll(List.of(target, world));
+		group = rf.createSequenceGroup();
+		group.getActors().addAll(List.of(target, world));
 	}
 
 	/**
@@ -63,7 +63,7 @@ class SequenceImplCustomTest {
 	 */
 	@Test
 	void testTargetActor() {
-		assertEquals(target, sequence.getTargetActor());
+		assertEquals(target, group.getTargetActor());
 	}
 
 	/**
@@ -72,7 +72,7 @@ class SequenceImplCustomTest {
 	 */
 	@Test
 	void testTargetActor_empty() {
-		assertNull(rf.createSequence().getTargetActor());
+		assertNull(rf.createSequenceGroup().getTargetActor());
 	}
 
 	/**
@@ -80,7 +80,7 @@ class SequenceImplCustomTest {
 	 */
 	@Test
 	void testWorldActor() {
-		assertEquals(world, sequence.getWorldActor());
+		assertEquals(world, group.getWorldActor());
 	}
 
 	/**
@@ -89,6 +89,6 @@ class SequenceImplCustomTest {
 	 */
 	@Test
 	void testWorldActor_empty() {
-		assertNull(rf.createSequence().getWorldActor());
+		assertNull(rf.createSequenceGroup().getWorldActor());
 	}
 }

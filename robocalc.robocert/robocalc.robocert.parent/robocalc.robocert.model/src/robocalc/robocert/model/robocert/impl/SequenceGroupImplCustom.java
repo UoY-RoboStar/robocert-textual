@@ -18,11 +18,11 @@ import robocalc.robocert.model.robocert.StandardActor;
 import robocalc.robocert.model.robocert.TargetActorRelationship;
 
 /**
- * Adds derived operation definitions to SequenceImpl.
+ * Adds derived operation definitions to {@link SequenceGroupImpl}.
  *
  * @author Matt Windsor
  */
-public class SequenceImplCustom extends SequenceImpl {
+public class SequenceGroupImplCustom extends SequenceGroupImpl {
 	@Override
 	public StandardActor basicGetWorldActor() {
 		return getStandardActor(TargetActorRelationship.WORLD);
