@@ -58,7 +58,7 @@ class RCModuleTargetImplCustomTest {
 			module = cf.createRCModule=>[
 				name = "foo"
 			]
-			group = rf.createSequenceGroup
+			group = rf.createTargetGroup
 		]
 	}
 }

@@ -66,38 +66,55 @@ abstract class Group extends OptionallyNamedElement {
 	ref CertPackage[1]#groups parent;
 }
 
-@genmodel(documentation="A group containing specifications.")
-abstract class SpecGroup extends Group {
+@genmodel(documentation="A group containing specifications.
+
+Specification groups are context sources by virtue of having a target.")
+abstract class SpecGroup extends Group, CSPContextSource {
 	@genmodel(documentation="The target of this group.")
-	val Target[1]#group target;
+	ref Target[1] target;
 	@genmodel(documentation="The instantiation in effect in this group.")
 	val Instantiation[1]#group instantiation;
 }
-
-// TODO(@MattWindsor91): GitHub #82:
-// create a class for groups-with-targets, and put Instantiations and Targets
-// in there?
 
 //
 // TARGETS
 //
 
+@genmodel(documentation="Group containing one or more specification targets.")
+class TargetGroup extends Group {
+	@genmodel(documentation="Targets contained in this group.")
+	val Target[*]#group targets;
+}
+
 @genmodel(documentation="A specification target.
 
 Targets are CSP process sources, through appeal to the existing RoboStar
 language semantics.")
-abstract class Target extends CSPProcessSource, OptionallyNamedElement {
+abstract class Target extends CSPProcessSource, robochart.NamedElement {
+	// TODO(@MattWindsor91): make these OptionallyNamedElements, with the
+	// name of the underlying element being the default name.
+
 	@genmodel(documentation="The group to which this target belongs.")
-	ref SpecGroup[1]#target group;
+	ref TargetGroup[1]#targets group;
 
 	@genmodel(documentation="Lowest common denominator for the targeted element.")
 	derived volatile transient readonly ref robochart.NamedElement[1] element;	
 }
 
-@genmodel(documentation="A sequence target referring to a RoboChart module.")
+@genmodel(documentation="A target referring to a RoboChart module.")
 class RCModuleTarget extends Target {
 	@genmodel(documentation="The module referred to by this target.")
 	ref robochart.RCModule[1] module;
+}
+
+@genmodel(documentation="Uses the target of a specification group as a process source.
+
+This includes any instantiation for the ")
+class TargetGroupSource extends CSPProcessSource {
+	// TODO(@MattWindsor91): this is not a good workaround for the issue of
+	// needing to take these things as process sources.
+	@genmodel(documentation="The group whose target we are referencing.")
+	ref SpecGroup[1] targetGroup;
 }
 
 //

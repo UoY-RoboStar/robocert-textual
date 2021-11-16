@@ -10,13 +10,17 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.core;
+package robocalc.robocert.generator.tockcsp;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import com.google.inject.Inject;
 
+import robocalc.robocert.generator.tockcsp.core.AssertionGroupGenerator;
+import robocalc.robocert.generator.tockcsp.core.ImportGenerator;
+import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPGroupGenerator;
 import robocalc.robocert.generator.tockcsp.seq.SeqGroupGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
@@ -25,6 +29,7 @@ import robocalc.robocert.model.robocert.CSPGroup;
 import robocalc.robocert.model.robocert.CertPackage;
 import robocalc.robocert.model.robocert.Group;
 import robocalc.robocert.model.robocert.SequenceGroup;
+import robocalc.robocert.model.robocert.TargetGroup;
 
 /**
  * Generates CSP-M for {@link CertPackage}s.
@@ -38,6 +43,8 @@ public class CertPackageGenerator {
 	private CSPGroupGenerator cg;
 	@Inject
 	private SeqGroupGenerator sg;
+	@Inject
+	private TargetGroupGenerator tg;
 	@Inject
 	private ImportGenerator ig;
 	@Inject
@@ -77,17 +84,20 @@ public class CertPackageGenerator {
 	 * @param pkg the top-level package.
 	 */
 	private String generateGroups(CertPackage pkg) {
-		return String.join("\n\n", pkg.getGroups().stream().map(this::generateGroup).toList());
+		return pkg.getGroups().stream().map(this::generateGroup).collect(Collectors.joining("\n\n"));
 	}
 
 	private CharSequence generateGroup(Group it) {
 		// TODO(@MattWindsor91): dependency-inject these somehow
+		if (it instanceof AssertionGroup a)
+			return ag.generate(a);
 		if (it instanceof CSPGroup c)
 			return cg.generate(c);
 		if (it instanceof SequenceGroup s)
 			return sg.generate(s);
-		if (it instanceof AssertionGroup a)
-			return ag.generate(a);
+		if (it instanceof TargetGroup t)
+			return tg.generate(t);
+
 		return ush.unsupported(it, "group", "");
 	}
 

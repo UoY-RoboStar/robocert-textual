@@ -12,8 +12,6 @@
  ********************************************************************************/
 package robocalc.robocert.generator.intf.core;
 
-import robocalc.robocert.generator.tockcsp.ll.TickTockContextGenerator;
-
 /**
  * Enumeration of fields in a specification group.
  *
@@ -60,7 +58,7 @@ public enum SpecGroupField {
 		case MESSAGE_SET_MODULE -> "MsgSets";
 		case PARAMETRIC_CLOSED -> "Closed";
 		case PARAMETRIC_OPEN -> "Open";
-		case TICK_TOCK_CONTEXT -> TickTockContextGenerator.CONTEXT_MODULE;
+		case TICK_TOCK_CONTEXT -> "TTContext";
 		};
 	}
 }

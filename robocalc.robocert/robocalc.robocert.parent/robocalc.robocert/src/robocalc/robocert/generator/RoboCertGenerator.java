@@ -12,7 +12,7 @@ import org.eclipse.xtext.generator.IGeneratorContext;
 import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.core.CertPackageGenerator;
+import robocalc.robocert.generator.tockcsp.CertPackageGenerator;
 import robocalc.robocert.generator.utils.FilenameExtensions;
 import robocalc.robocert.model.robocert.CertPackage;
 

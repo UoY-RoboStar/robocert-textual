@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.tockcsp.seq
+package robocalc.robocert.generator.tockcsp.core
 
 import com.google.inject.Inject
 import robocalc.robocert.generator.utils.VariableExtensions

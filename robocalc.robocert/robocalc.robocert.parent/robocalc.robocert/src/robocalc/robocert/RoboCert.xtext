@@ -17,20 +17,46 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
  * A top-level RoboCert package.
  */
 CertPackage:
-	(groups+=(CSPGroup | SequenceGroup | AssertionGroup))*;
+	(groups+=(TargetGroup | CSPGroup | SequenceGroup | AssertionGroup))*;
 
 //
-// INSTANTIATIONS
+// TARGETS
 //
+
+/**
+ * A target group.
+ * 
+ * As syntactic sugar, unnamed target groups with only one target may be
+ * written as if they were just lone Targets.
+ */
+TargetGroup:
+	'target' (SingletonTargetGroup | FullTargetGroup);
+
+/**
+ * Produces the body of a singleton target group.
+ * 
+ * The instantiation of such a group appears at the end of the target.
+ */
+SingletonTargetGroup returns TargetGroup:
+	targets+=Target;
+
+/**
+ * Produces the body of a non-singleton assertion group.
+ */
+FullTargetGroup returns TargetGroup:
+	{TargetGroup} 'group' (name=ID)? ':' BEGIN ('target' targets+=Target)* END;
+
+/**
+ * A target of a sequence diagram.
+ */
+Target:
+	('module' {RCModuleTarget} name=ID ':' module=[RCModule|QualifiedName]);
+
 /**
  * A target override in a sequence diagram.
  */
 Instantiation:
 	{Instantiation} ('with' BEGIN (assignments+=ConstAssignment) (',' assignments+=ConstAssignment)* END)?;
-
-fragment TargetAndInstantiation *:
-	'for' target=Target instantiation=Instantiation
-;
 
 /**
  * A constant assignment.
@@ -259,18 +285,20 @@ enum Temperature:
  * A CSP group.
  */
 CSPGroup:
-	'csp'
-	(fragments+=CSPFragment CSPGroupOptions | // Singleton syntax
-	'group' CSPGroupOptions ':' BEGIN fragments+=CSPFragment* END // Group syntax
-	);
+	'csp' (SingletonCSPGroup | FullCSPGroup);
 
-/**
- * Contains the options either at the end of a CSP group header, or at the
- * end of a singleton CSP block.
- */
-fragment CSPGroupOptions *:
-	('(' untimed?='untimed' ')')?
-	TargetAndInstantiation;
+SingletonCSPGroup returns CSPGroup:
+	(('(' untimed?='untimed' ')')? &
+	// This should be the same as the version in SequenceGroup
+	('for' target=[Target|QualifiedName] instantiation=Instantiation))
+	fragments+=CSPFragment	;
+
+FullCSPGroup returns CSPGroup:
+	'group'
+	(('(' untimed?='untimed' ')')? &
+	// This should be the same as the version in SequenceGroup
+	('for' target=[Target|QualifiedName] instantiation=Instantiation))
+	':' BEGIN fragments+=CSPFragment* END;
 
 //
 // CSP fragments
@@ -352,7 +380,9 @@ enum CSPModel:
  * sequences and message sets.
  */
 SequenceGroup:
-	'sequence' 'group' name=ID? TargetAndInstantiation
+	'sequence' 'group' name=ID?
+	// This should be the same as the version in CSPGroup
+	'for' target=[Target|QualifiedName] instantiation=Instantiation
 	':'
 	BEGIN
 	(actors+= Actor | sequences+=Sequence | messageSets+=NamedMessageSet)*
@@ -582,15 +612,6 @@ StandardActor:
 enum TargetActorRelationship:
 	WORLD='world' |
 	TARGET='target';
-
-//
-// Targets
-//
-/**
- * A target of a sequence diagram.
- */
-Target:
-	('module' {RCModuleTarget} module=[RCModule|QualifiedName]) ('as' name=ID)?;
 
 //
 // SEQUENCE PROPERTIES

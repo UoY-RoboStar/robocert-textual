@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 
 import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
-import robocalc.robocert.generator.tockcsp.seq.SeqPropertyLowerer;
+import robocalc.robocert.generator.tockcsp.seq.PropertyLowerer;
 import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.CSPProcessSource;
 import robocalc.robocert.model.robocert.CSPRefinementOperator;
@@ -37,6 +37,7 @@ import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.SequenceProperty;
 import robocalc.robocert.model.robocert.SequencePropertyType;
 import robocalc.robocert.model.robocert.Target;
+import robocalc.robocert.model.robocert.TargetGroupSource;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
@@ -45,7 +46,7 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
-class SeqPropertyLowererTest {
+class PropertyLowererTest {
 	@Inject
 	private MessageFactory mf;
 	@Inject
@@ -53,15 +54,17 @@ class SeqPropertyLowererTest {
 	@Inject
 	private RoboChartFactory rcf;
 	@Inject
-	private SeqPropertyLowerer spl;
+	private PropertyLowerer spl;
 
+	private SequenceGroup group;
 	private Sequence sequence;
 	private Target target;
 
 	@BeforeEach
 	void setUp() {
 		target = makeTarget();
-		sequence = makeSequence(target);
+		group = makeGroup(target);
+		sequence = makeSequence(target, group);
 	}
 
 	/**
@@ -99,17 +102,23 @@ class SeqPropertyLowererTest {
 
 		final var lhs = it.getLhs();
 		assertNotNull(lhs);
-		assertEquals(l, lhs);
+		assertEquals(l, stripTargetGroupSource(lhs));
 
 		final var rhs = it.getRhs();
 		assertNotNull(rhs);
-		assertEquals(r, rhs);
+		assertEquals(r, stripTargetGroupSource(rhs));
 
 		final var model = it.getModel();
 		assertNotNull(model);
 		assertEquals(m, model);
 
 		assertEquals(CSPRefinementOperator.REFINES, it.getType());
+	}
+	
+	private CSPProcessSource stripTargetGroupSource(CSPProcessSource s) {
+		if (s instanceof TargetGroupSource t)
+			return t.getTargetGroup().getTarget();
+		return s;
 	}
 
 	private SequenceProperty property(SequencePropertyType t, CSPModel m) {
@@ -120,14 +129,14 @@ class SeqPropertyLowererTest {
 		return p;
 	}
 
-	private Sequence makeSequence(Target t) {
+	private Sequence makeSequence(Target t, SequenceGroup group) {
 		final var s = rf.createSequence();
 		s.setName("seq");
-		s.setGroup(group(t));
+		s.setGroup(group);
 		return s;
 	}
 
-	private SequenceGroup group(Target t) {
+	private SequenceGroup makeGroup(Target t) {
 		final var g = rf.createSequenceGroup();
 		g.getActors().addAll(List.of(mf.targetActor(), mf.worldActor()));
 		g.setTarget(t);

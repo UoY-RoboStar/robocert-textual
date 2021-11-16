@@ -20,6 +20,7 @@ import robocalc.robocert.model.robocert.SequenceGroup
 import robocalc.robocert.generator.utils.MemoryFactory
 import java.util.stream.Collectors
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator
+import robocalc.robocert.generator.tockcsp.core.TargetGenerator
 
 /**
  * Generates the parametric part of a sequence group.

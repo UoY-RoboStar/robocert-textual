@@ -12,47 +12,54 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.core;
 
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.ll.CSPRefinementPropertyGenerator;
-import robocalc.robocert.generator.tockcsp.seq.SeqPropertyLowerer;
+import robocalc.robocert.generator.tockcsp.seq.PropertyLowerer;
 import robocalc.robocert.model.robocert.Assertion;
 import robocalc.robocert.model.robocert.AssertionGroup;
 import robocalc.robocert.model.robocert.CSPRefinementProperty;
+import robocalc.robocert.model.robocert.CoreProperty;
 import robocalc.robocert.model.robocert.Property;
 import robocalc.robocert.model.robocert.SequenceProperty;
-import robocalc.robocert.model.robocert.CoreProperty;
 
 /**
  * Generates CSP for assertion groups.
  *
  * @author Matt Windsor
  */
-class AssertionGroupGenerator {
+public class AssertionGroupGenerator extends GroupGenerator<AssertionGroup> {
 	@Inject
 	private CSPRefinementPropertyGenerator cg;
 	@Inject
-	private SeqPropertyLowerer spl;
+	private PropertyLowerer spl;
 	@Inject
 	private CorePropertyGenerator ug;
 
-	/**
-	 * Generates CSP-M for an assertion group.
-	 *
-	 * @param it the group in question.
-	 *
-	 * @return generated CSP for the assertion group.
-	 */
-	public CharSequence generate(AssertionGroup it) {
-		var body = it.getAssertions().stream().map(this::generateAssertion).collect(Collectors.joining("\n\n"));
-		return String.join("\n", header(it), body, "-- END ASSERTION GROUP");
+	@Override
+	protected Stream<CharSequence> generateBodyElements(AssertionGroup group) {
+		return group.getAssertions().stream().map(this::generateAssertion);
+	}
+	
+	@Override
+	protected boolean isTimed(AssertionGroup group) {
+		// Assertions can't, to the best of our knowledge, be timed.
+		return false;
+	}
+	
+	@Override
+	protected boolean isInModule(AssertionGroup group) {
+		// There is no reason to put assertions in modules; in fact, it might
+		// be that they're not even allowed to be in modules.
+		// Scoping doesn't matter as assertion names are erased at CSP-M level.
+		return false;
 	}
 
-	private CharSequence header(AssertionGroup it) {
-		var name = it.getName();
-		return "-- BEGIN ASSERTION GROUP %s".formatted(name == null ? "(untitled)" : name);
+	@Override
+	protected CharSequence typeName(AssertionGroup group) {
+		return "ASSERTION";
 	}
 
 	/**
@@ -61,7 +68,7 @@ class AssertionGroupGenerator {
 	 * @return generated CSP for the assertion.
 	 */
 	private CharSequence generateAssertion(Assertion a) {
-		return "-- Assertion %s\n%s".formatted(a.getName(), generateBody(a.getProperty()));
+		return "-- Assertion %s\n%s".formatted(a.getName(), generateProperty(a.getProperty()));
 	}
 
 	/**
@@ -69,7 +76,7 @@ class AssertionGroupGenerator {
 	 *
 	 * @return generated CSP for one property.
 	 */
-	private CharSequence generateBody(Property p) {
+	private CharSequence generateProperty(Property p) {
 		// Remember to add new properties as time goes by.
 		// TODO(@MattWindsor91): dependency-inject these, somehow
 		if (p instanceof CSPRefinementProperty c)

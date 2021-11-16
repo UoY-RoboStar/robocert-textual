@@ -4,11 +4,9 @@ import robocalc.robocert.model.robocert.ConstAssignment
 import robocalc.robocert.generator.utils.TargetExtensions
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Target
-import robocalc.robocert.model.robocert.SequenceProperty
 import org.eclipse.xtext.scoping.Scopes
 import java.util.Iterator
 import circus.robocalc.robochart.Variable
-import static extension org.eclipse.xtext.EcoreUtil2.getContainerOfType
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.scoping.IScope
 import robocalc.robocert.generator.utils.EObjectExtensions
@@ -29,25 +27,10 @@ class ConstantScopeExtensions {
 	 * @return the scope (may be null).
 	 */
 	def constAssignmentScope(ConstAssignment it) {
-		sequenceConstAssignmentScope ?: assertionConstAssignmentScope
-	}
-
-	/**
-	 * Tries to get the scope of a constant assignment by walking back to a
-	 * target actor, then retrieving its parametrisation.
-	 */
-	private def sequenceConstAssignmentScope(ConstAssignment it) {
+		// TODO(@MattWindsor91): walk back to spec group, see if it's
+		// inheriting from a previous spec group, and pick up the
+		// uninstantiated constants.
 		targetOfParentGroup?.targetScope
-	}
-
-	/**
-	 * Gets the target of a constant assignment by walking back to an
-	 * assertion, then retrieving its sequence's target's uninstantiated
-	 * constants.
-	 */
-	private def assertionConstAssignmentScope(ConstAssignment it) {
-		// TODO(@MattWindsor91): this should be part of the metamodel, somehow.
-		getContainerOfType(SequenceProperty)?.sequence?.group?.target?.uninstantiatedTargetScope
 	}
 
 	/**
@@ -60,18 +43,7 @@ class ConstantScopeExtensions {
 	def targetScope(Target it) {
 		scopeFor(parameterisation)
 	}
-
-	/**
-	 * Produces a scope containing any uninstantiated constants defined on a target.
-	 * 
-	 * @param it  the target in question.
-	 * 
-	 * @return  the target's constants as a scope.
-	 */
-	private def uninstantiatedTargetScope(Target it) {
-		scopeFor(uninstantiatedConstants(group?.instantiation))
-	}
-
+	
 	/**
 	 * Calculates a scope given an iterator of constants.
 	 * 

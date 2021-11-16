@@ -41,12 +41,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SpecGroup" abstract="true" eSuperTypes="#//Group">
+  <eClassifiers xsi:type="ecore:EClass" name="SpecGroup" abstract="true" eSuperTypes="#//Group #//CSPContextSource">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A group containing specifications."/>
+      <details key="documentation" value="A group containing specifications.&#xD;&#xA;&#xD;&#xA;Specification groups are context sources by virtue of having a target."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
-        eType="#//Target" containment="true" eOpposite="#//Target/group">
+        eType="#//Target">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The target of this group."/>
       </eAnnotations>
@@ -58,12 +58,23 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//CSPProcessSource #//OptionallyNamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="TargetGroup" eSuperTypes="#//Group">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Group containing one or more specification targets."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
+        eType="#//Target" containment="true" eOpposite="#//Target/group">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Targets contained in this group."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//CSPProcessSource ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A specification target.&#xD;&#xA;&#xD;&#xA;Targets are CSP process sources, through appeal to the existing RoboStar&#xD;&#xA;language semantics."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecGroup"
-        eOpposite="#//SpecGroup/target">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//TargetGroup"
+        eOpposite="#//TargetGroup/targets">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The group to which this target belongs."/>
       </eAnnotations>
@@ -78,12 +89,23 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RCModuleTarget" eSuperTypes="#//Target">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A sequence target referring to a RoboChart module."/>
+      <details key="documentation" value="A target referring to a RoboChart module."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The module referred to by this target."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TargetGroupSource" eSuperTypes="#//CSPProcessSource">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Uses the target of a specification group as a process source.&#xD;&#xA;&#xD;&#xA;This includes any instantiation for the "/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetGroup" lowerBound="1"
+        eType="#//SpecGroup">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The group whose target we are referencing."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

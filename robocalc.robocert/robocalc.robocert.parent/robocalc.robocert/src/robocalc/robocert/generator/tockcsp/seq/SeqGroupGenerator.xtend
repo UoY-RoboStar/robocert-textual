@@ -6,6 +6,7 @@ import robocalc.robocert.model.robocert.Instantiation
 import com.google.inject.Inject
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
 import robocalc.robocert.generator.intf.core.SpecGroupField
+import robocalc.robocert.generator.tockcsp.core.TargetGenerator
 
 /**
  * Generator for sequence groups.
