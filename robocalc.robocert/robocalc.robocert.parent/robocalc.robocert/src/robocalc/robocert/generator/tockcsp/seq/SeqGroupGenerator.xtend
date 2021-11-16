@@ -55,8 +55,6 @@ class SeqGroupGenerator {
 	 * @return  the generated CSP-M.
 	 */
 	private def generatePublicDefs(SequenceGroup it) '''
-		«generateTickTockContext»
-
 		«generateOpenDef»
 		«generateClosedDef»
 	'''
