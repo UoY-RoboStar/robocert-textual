@@ -60,26 +60,54 @@ defined in previous groups.")
 	val Group[*]#parent groups;
 }
 
-@genmodel(documentation="A group in a RoboCert package.
-
-Groups contain specifications in a particular RoboCert notation, instantiating
-various constants.")
-abstract class Group {
+@genmodel(documentation="A group in a RoboCert package.")
+abstract class Group extends OptionallyNamedElement {
 	@genmodel(documentation="The parent package.")
 	ref CertPackage[1]#groups parent;
-	
+}
+
+@genmodel(documentation="A group containing specifications.")
+abstract class SpecGroup extends Group {
+	@genmodel(documentation="The target of this group.")
+	val Target[1]#group target;
 	@genmodel(documentation="The instantiation in effect in this group.")
 	val Instantiation[1]#group instantiation;
 }
 
+// TODO(@MattWindsor91): GitHub #82:
+// create a class for groups-with-targets, and put Instantiations and Targets
+// in there?
+
 //
-// INSTANTIATIONS
+// TARGETS
+//
+
+@genmodel(documentation="A specification target.
+
+Targets are CSP process sources, through appeal to the existing RoboStar
+language semantics.")
+abstract class Target extends CSPProcessSource, OptionallyNamedElement {
+	@genmodel(documentation="The group to which this target belongs.")
+	ref SpecGroup[1]#target group;
+
+	@genmodel(documentation="Lowest common denominator for the targeted element.")
+	derived volatile transient readonly ref robochart.NamedElement[1] element;	
+}
+
+@genmodel(documentation="A sequence target referring to a RoboChart module.")
+class RCModuleTarget extends Target {
+	@genmodel(documentation="The module referred to by this target.")
+	ref robochart.RCModule[1] module;
+}
+
+//
+// Instantiations
 //
 
 @genmodel(documentation="Specifies a (partial) instantiation of targets in a group.")
 class Instantiation {
 	@genmodel(documentation="The parent group of this instantiation.")
-	ref Group[1]#instantiation group;
+	ref SpecGroup[1]#instantiation group;
 
 	@genmodel(documentation="Any constant assignments.")
 	val ConstAssignment[*] assignments;
@@ -105,7 +133,7 @@ class ConstAssignment {
 //
 
 @genmodel(documentation="An assertion group.")
-class AssertionGroup extends Group, OptionallyNamedElement {
+class AssertionGroup extends Group {
 	val Assertion[*]#group assertions;
 }
 
@@ -299,10 +327,7 @@ enum Temperature {
 ///////////////////////////////////////////////////////////////////////////////
 
 @genmodel(documentation="A collection of sequence diagrams.")
-class SequenceGroup extends Group, robochart.NamedElement {
-	@genmodel(documentation="The target of the sequence group.")
-	val Target[1]#group target;
-
+class SequenceGroup extends SpecGroup {
 	@genmodel(documentation="Any message sets named on the sequence group.")
 	val NamedMessageSet[*]#group messageSets;
 	
@@ -860,28 +885,6 @@ enum TargetActorRelationship {
 }
 
 //
-// Targets
-//
-
-@genmodel(documentation="A target of some specification.
-
-Targets are CSP process sources, through appeal to the existing RoboStar
-language semantics.")
-abstract class Target extends CSPProcessSource, OptionallyNamedElement {
-	@genmodel(documentation="The group to which this target belongs.")
-	ref SequenceGroup[1]#target group;
-
-	@genmodel(documentation="Lowest common denominator for the targeted element.")
-	derived volatile transient readonly ref robochart.NamedElement[1] element;	
-}
-
-@genmodel(documentation="A sequence target referring to a RoboChart module.")
-class RCModuleTarget extends Target {
-	@genmodel(documentation="The module referred to by this target.")
-	ref robochart.RCModule[1] module;
-}
-
-//
 // SEQUENCE PROPERTIES
 //
 
@@ -919,7 +922,7 @@ enum SequencePropertyType {
 
 We generally interpret CSP-M as tock-CSP and implicitly generate it into a
 timed section, but this can be overridden.")
-class CSPGroup extends Group {
+class CSPGroup extends SpecGroup {
 	@genmodel(documentation="If true, the group should be generated outside of a timed section.")
 	attr boolean[1] untimed;
 	

@@ -10,10 +10,10 @@ import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
 import robocalc.robocert.generator.utils.MemoryFactory.Memory
 import robocalc.robocert.generator.utils.MemoryFactory.Memory.Slot
 import robocalc.robocert.model.robocert.Sequence
-import robocalc.robocert.generator.intf.seq.SeqGroupParametricField
+import robocalc.robocert.generator.intf.core.SpecGroupParametricField
 import robocalc.robocert.model.robocert.Binding
-import robocalc.robocert.generator.utils.BindingNameExpander
 import org.eclipse.xtext.EcoreUtil2
+import robocalc.robocert.generator.utils.name.BindingNamer
 
 /**
  * Generates memory modules for sequences.
@@ -32,7 +32,7 @@ class ModuleGenerator {
 	@Inject CTimedGeneratorUtils gu
 	@Inject CSPStructureGenerator csp
 	@Inject extension TypeGenerator
-	@Inject extension BindingNameExpander
+	@Inject extension BindingNamer
 
 	/**
 	 * Generates the module for a memory.
@@ -71,7 +71,7 @@ class ModuleGenerator {
 	 */
 	def generateChannelRef(Binding b) '''«b.sequence.generateMemoryModuleRef»::«b.unambiguousName»'''
 
-	private def generateMemoryModuleRef(Sequence it) '''«SeqGroupParametricField::MEMORY_MODULE»::«it?.name ?: 'unknown'»'''
+	private def generateMemoryModuleRef(Sequence it) '''«SpecGroupParametricField::MEMORY_MODULE»::«it?.name ?: 'unknown'»'''
 
 	private def getSequence(Binding b) {
 		EcoreUtil2.getContainerOfType(b, Sequence)

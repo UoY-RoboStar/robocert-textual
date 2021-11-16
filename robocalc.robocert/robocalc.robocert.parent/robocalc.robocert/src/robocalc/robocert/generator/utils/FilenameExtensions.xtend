@@ -1,3 +1,18 @@
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Alvaro Miyazawa - original code in RoboChart CSP generator
+ *   Pedro Ribeiro - original code in RoboChart CSP Generator
+ *   Matt Windsor - initial definition in RoboCert
+ ********************************************************************************/
+
 /* NOTE: a lot of this code is adapted from GeneratorUtils in the upstream
  * RoboChart CSP generator, and as such contributors include:
  * 
@@ -14,6 +29,8 @@ import com.google.inject.Inject
 
 /**
  * Extensions for locating the CSP definition filenames for things.
+ * 
+ * @author Matt Windsor
  */
 class FilenameExtensions {
 	@Inject PathSet ps;

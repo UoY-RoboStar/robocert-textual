@@ -10,6 +10,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import com.google.inject.Inject;
 
 import circus.robocalc.robochart.Type;
+import robocalc.robocert.generator.utils.name.BindingNamer;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.Sequence;
 
@@ -19,7 +20,7 @@ import robocalc.robocert.model.robocert.Sequence;
  * @author Matt Windsor
  */
 public class MemoryFactory {
-	@Inject private BindingNameExpander bnx;
+	@Inject private BindingNamer bnx;
 	@Inject private BindingTypeFinder btf;
 	
 	/**

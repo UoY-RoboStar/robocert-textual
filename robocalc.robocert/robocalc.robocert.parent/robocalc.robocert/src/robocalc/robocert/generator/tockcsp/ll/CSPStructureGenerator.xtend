@@ -90,6 +90,17 @@ class CSPStructureGenerator {
 	'''
 	
 	/**
+	 * Generates a namespaced concatenation of various naming elements.
+	 * 
+	 * @param elements the elements to join.
+	 * 
+	 * @return the namespace-joined string.
+	 */
+	def CharSequence namespaced(CharSequence... elements) {
+		String.join("::", elements)
+	}
+	
+	/**
 	 * Generates the bare-bones outer structure of a CSP assertion.
 	 * 
 	 * @param isNegated  whether the assertion is negated.

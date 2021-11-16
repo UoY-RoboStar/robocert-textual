@@ -1,4 +1,4 @@
-package robocalc.robocert.generator.intf.seq;
+package robocalc.robocert.generator.intf.core;
 
 /**
  * Enumeration of fields in the parametric part of a sequence group.
@@ -6,7 +6,7 @@ package robocalc.robocert.generator.intf.seq;
  * These fields currently correspond directly to tock-CSP subdefinitions, but
  * this may eventually change.
  */
-public enum SeqGroupParametricField {
+public enum SpecGroupParametricField {
 	/**
 	 * The module in the sequence group containing any memory definitions.
 	 */

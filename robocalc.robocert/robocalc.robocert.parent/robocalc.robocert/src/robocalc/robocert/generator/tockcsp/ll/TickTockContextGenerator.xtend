@@ -1,15 +1,15 @@
 package robocalc.robocert.generator.tockcsp.ll
 
-import robocalc.robocert.generator.intf.seq.SeqGroupField
-import robocalc.robocert.generator.intf.seq.SequenceLocator
 import robocalc.robocert.model.robocert.ProcessCSPFragment
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.Target
-import robocalc.robocert.model.robocert.SequenceGroup
 import robocalc.robocert.model.robocert.CSPContextSource
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.EventSetCSPFragment
+import robocalc.robocert.generator.tockcsp.core.SpecGroupElementFinder
+import robocalc.robocert.generator.intf.core.SpecGroupField
+import robocalc.robocert.model.robocert.SpecGroup
 
 /**
  * Generates the appropriate tick-tock 'context' (minimal covering set of all
@@ -20,7 +20,7 @@ import robocalc.robocert.model.robocert.EventSetCSPFragment
  *      Acta Informatica. (2021).
  */
 class TickTockContextGenerator {
-	@Inject extension SequenceLocator
+	@Inject extension SpecGroupElementFinder
 	@Inject extension UnsupportedSubclassHandler
 	
 	/**
@@ -71,8 +71,8 @@ class TickTockContextGenerator {
 	 */	
 	def dispatch generateTickTockContext(EventSetCSPFragment it) '''«name»::«CONTEXT_MODULE»'''
 	
-	private def CharSequence generateGroupTickTockContext(SequenceGroup it) {
-		getFullCSPName(SeqGroupField::TICK_TOCK_CONTEXT)
+	private def CharSequence generateGroupTickTockContext(SpecGroup it) {
+		getFullCSPName(SpecGroupField::TICK_TOCK_CONTEXT)
 	}
 
 

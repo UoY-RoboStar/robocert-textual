@@ -14,8 +14,8 @@ package robocalc.robocert.generator.tockcsp.ll;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.intf.seq.SeqGroupParametricField;
-import robocalc.robocert.generator.intf.seq.SequenceLocator;
+import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
+import robocalc.robocert.generator.tockcsp.core.SpecGroupElementFinder;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.CSPProcessSource;
@@ -33,7 +33,7 @@ public class CSPProcessSourceGenerator {
 	@Inject
 	private TickTockContextGenerator tt;
 	@Inject
-	private SequenceLocator sl;
+	private SpecGroupElementFinder sl;
 	@Inject
 	private UnsupportedSubclassHandler ush;
 	
@@ -59,9 +59,9 @@ public class CSPProcessSourceGenerator {
 		if (p instanceof Sequence s)
 			return sl.getFullCSPName(s);
 		
-		// Target processes are embedded inside the CSP for their sequence group.
+		// Target processes are embedded inside the CSP for their group.
 		if (p instanceof Target t)
-			return sl.getFullCSPName(t.getGroup(), SeqGroupParametricField.TARGET);
+			return sl.getFullCSPName(t.getGroup(), SpecGroupParametricField.TARGET);
 
 		return ush.unsupported(p, "CSP process source", "STOP");
 	}

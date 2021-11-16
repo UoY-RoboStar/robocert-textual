@@ -17,8 +17,6 @@ import robocalc.robocert.generator.intf.seq.StepGenerator;
 import robocalc.robocert.generator.tockcsp.seq.StepGeneratorImpl;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl;
-import robocalc.robocert.generator.intf.seq.SequenceLocator;
-import robocalc.robocert.generator.tockcsp.seq.SequenceLocatorImpl;
 import robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom;
 
 /** 
@@ -39,10 +37,6 @@ public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 
 	public Class<? extends StepGenerator> bindStepGenerator() {
 		return StepGeneratorImpl.class;
-	}
-
-	public Class<? extends SequenceLocator> bindSequenceLocator() {
-		return SequenceLocatorImpl.class;
 	}
 
 	/**

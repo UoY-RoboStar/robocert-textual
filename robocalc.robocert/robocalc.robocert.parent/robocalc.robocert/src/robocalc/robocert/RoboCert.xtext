@@ -28,6 +28,10 @@ CertPackage:
 Instantiation:
 	{Instantiation} ('with' BEGIN (assignments+=ConstAssignment) (',' assignments+=ConstAssignment)* END)?;
 
+fragment TargetAndInstantiation *:
+	'for' target=Target instantiation=Instantiation
+;
+
 /**
  * A constant assignment.
  */
@@ -76,13 +80,13 @@ AssertionGroup:
  * The instantiation of such a group appears at the end of the assertion.
  */
 SingletonAssertionGroup returns AssertionGroup:
-	assertions+=Assertion instantiation=Instantiation;
+	assertions+=Assertion;
 
 /**
  * Produces the body of a non-singleton assertion group.
  */
 FullAssertionGroup returns AssertionGroup:
-	{AssertionGroup} 'group' (name=ID)? instantiation=Instantiation ':' BEGIN ('assertion' assertions+=Assertion)* END;
+	{AssertionGroup} 'group' (name=ID)? ':' BEGIN ('assertion' assertions+=Assertion)* END;
 
 /**
  * An assertion, less the leading 'assertion' keyword (because this might be
@@ -266,7 +270,7 @@ CSPGroup:
  */
 fragment CSPGroupOptions *:
 	('(' untimed?='untimed' ')')?
-	instantiation=Instantiation;
+	TargetAndInstantiation;
 
 //
 // CSP fragments
@@ -348,7 +352,7 @@ enum CSPModel:
  * sequences and message sets.
  */
 SequenceGroup:
-	'sequence' 'group' name=ID '(' 'for' target=Target instantiation=Instantiation ')'
+	'sequence' 'group' name=ID? TargetAndInstantiation
 	':'
 	BEGIN
 	(actors+= Actor | sequences+=Sequence | messageSets+=NamedMessageSet)*

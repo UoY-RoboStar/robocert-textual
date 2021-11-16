@@ -1,7 +1,16 @@
-/**
- * 
- */
-package robocalc.robocert.generator.utils;
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
+package robocalc.robocert.generator.utils.name;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
@@ -12,7 +21,7 @@ import robocalc.robocert.model.robocert.Sequence;
 /**
  * Expands binding names to be unambiguous across scope boundaries.
  */
-public class BindingNameExpander {
+public class BindingNamer {
 	/**
 	 * Produces an unambiguous name for a binding within its notational
 	 * container.

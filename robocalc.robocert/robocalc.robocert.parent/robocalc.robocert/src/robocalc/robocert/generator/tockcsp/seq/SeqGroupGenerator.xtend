@@ -4,8 +4,8 @@ import robocalc.robocert.model.robocert.SequenceGroup
 import robocalc.robocert.generator.utils.TargetExtensions
 import robocalc.robocert.model.robocert.Instantiation
 import com.google.inject.Inject
-import robocalc.robocert.generator.intf.seq.SeqGroupField
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
+import robocalc.robocert.generator.intf.core.SpecGroupField
 
 /**
  * Generator for sequence groups.
@@ -72,7 +72,7 @@ class SeqGroupGenerator {
 	 * @return CSP defining the 'closed' form of this group.
 	 */
 	def CharSequence generateClosedDef(SequenceGroup it) '''
-		instance «SeqGroupField::PARAMETRIC_CLOSED.toString» =
+		instance «SpecGroupField::PARAMETRIC_CLOSED.toString» =
 			«generateOpenSig(instantiation)»
 	'''
 
@@ -104,7 +104,7 @@ class SeqGroupGenerator {
 		csp.module(generateOpenSig(null), generateParametric)
 	}
 
-	private def generateTickTockContext() '''instance «SeqGroupField::TICK_TOCK_CONTEXT.toString» = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
+	private def generateTickTockContext() '''instance «SpecGroupField::TICK_TOCK_CONTEXT.toString» = model_shifting(«MessageSetGenerator::QUALIFIED_UNIVERSE_NAME»)'''
 
 	/**
 	 * Generates the signature of an open sequence group definition or reference.
@@ -125,7 +125,7 @@ class SeqGroupGenerator {
 		SequenceGroup it,
 		Instantiation outerInst
 	) {
-		csp.function(SeqGroupField::PARAMETRIC_OPEN.toString, generateOpenSigParams(outerInst))
+		csp.function(SpecGroupField::PARAMETRIC_OPEN.toString, generateOpenSigParams(outerInst))
 	}
 
 	private def generateOpenSigParams(SequenceGroup it, Instantiation outerInst) {

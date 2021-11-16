@@ -1,7 +1,19 @@
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
-import robocalc.robocert.generator.intf.seq.SeqGroupParametricField
+import robocalc.robocert.generator.intf.core.SpecGroupParametricField
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator
 import robocalc.robocert.model.robocert.Sequence
 import robocalc.robocert.model.robocert.SequenceGroup
@@ -14,6 +26,8 @@ import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator
  *
  * Sequence groups are in-part parameterised by any assignments made to their
  * target's parameterisation.
+ * 
+ * @author Matt Windsor
  */
 class SeqGroupParametricGenerator {
 	@Inject CSPStructureGenerator csp
@@ -52,7 +66,7 @@ class SeqGroupParametricGenerator {
 		«IF memories.empty»
 			-- No memories defined in this group
 		«ELSE»
-			«csp.module(SeqGroupParametricField::MEMORY_MODULE.toString, memories.generateMemoriesInner)»
+			«csp.module(SpecGroupParametricField::MEMORY_MODULE.toString, memories.generateMemoriesInner)»
 		«ENDIF»
 	'''
 
@@ -65,14 +79,14 @@ class SeqGroupParametricGenerator {
 	private def generateTargetDef(SequenceGroup it) {
 		csp.timed(
 			csp.definition(
-				SeqGroupParametricField::TARGET.toString,
+				SpecGroupParametricField::TARGET.toString,
 				target.generate(instantiation)
 			)
 		)
 	}
 
 	private def CharSequence generateSequences(Iterable<Sequence> sequences) {
-		csp.module(SeqGroupParametricField::SEQUENCE_MODULE.toString, csp.timed(sequences.generateSequencesInner))
+		csp.module(SpecGroupParametricField::SEQUENCE_MODULE.toString, csp.timed(sequences.generateSequencesInner))
 	}
 	
 	private def generateSequencesInner(Iterable<Sequence> sequences) '''
