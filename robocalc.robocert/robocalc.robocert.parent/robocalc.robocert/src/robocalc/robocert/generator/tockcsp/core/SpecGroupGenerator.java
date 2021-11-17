@@ -34,8 +34,6 @@ import robocalc.robocert.model.robocert.SpecGroup;
  * @see SeqGroupParametricGenerator
  */
 abstract public class SpecGroupGenerator<T extends SpecGroup> extends GroupGenerator<T> {
-	// TODO(@MattWindsor91): generalise this to SpecGroups
-
 	@Inject
 	private CSPStructureGenerator csp;
 	@Inject
