@@ -31,8 +31,9 @@ public abstract class GroupGenerator<T extends Group> {
 	 * @return CSP-M for the group.
 	 */
 	public CharSequence generate(T group) {
-		var body = generateBody(group);
-		return String.join("\n", generateHeader(group), liftBody(group, body), generateFooter(group));
+		var body = join(generateBodyElements(group));
+		var priv = join(generatePrivateElements(group));
+		return String.join("\n", generateHeader(group), liftBody(group, body, priv), generateFooter(group));
 	}
 
 	//
@@ -49,6 +50,19 @@ public abstract class GroupGenerator<T extends Group> {
 	 */
 	protected abstract Stream<CharSequence> generateBodyElements(T group);
 
+	/**
+	 * Generates private elements for the group.
+	 * 
+	 * These are only used if isInModule is true, and are never timed.
+	 * 
+	 * @param group the group in question.
+	 * 
+	 * @return a stream of private elements for the group.
+	 */
+	protected Stream<CharSequence> generatePrivateElements(T group) {
+		return Stream.empty();
+	}
+	
 	/**
 	 * Gets the name of the type of group, for use in headers and footers.
 	 *
@@ -86,13 +100,17 @@ public abstract class GroupGenerator<T extends Group> {
 	// Implementation details
 	//
 
-	private CharSequence liftBody(T group, CharSequence body) {
+	private CharSequence liftBody(T group, CharSequence body, CharSequence privBody) {
 		body = isTimed(group) ? csp.timed(body) : body;
-		return isInModule(group) ? csp.module(gn.getOrSynthesiseName(group), body) : body;
+		if (!isInModule(group))
+			return body;
+		
+		var name = gn.getOrSynthesiseName(group);
+		return privBody.isEmpty() ? csp.module(name, body) : csp.moduleWithPrivate(name, privBody, body);
 	}
 
-	private CharSequence generateBody(T group) {
-		return generateBodyElements(group).collect(Collectors.joining("\n\n"));
+	private CharSequence join(Stream<CharSequence> elements) {
+		return elements.collect(Collectors.joining("\n\n"));
 	}
 
 	private CharSequence generateHeader(T group) {

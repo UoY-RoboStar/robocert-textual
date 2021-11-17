@@ -22,7 +22,7 @@ import robocalc.robocert.generator.tockcsp.core.AssertionGroupGenerator;
 import robocalc.robocert.generator.tockcsp.core.ImportGenerator;
 import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPGroupGenerator;
-import robocalc.robocert.generator.tockcsp.seq.SeqGroupGenerator;
+import robocalc.robocert.generator.tockcsp.seq.SequenceGroupGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.AssertionGroup;
 import robocalc.robocert.model.robocert.CSPGroup;
@@ -42,7 +42,7 @@ public class CertPackageGenerator {
 	@Inject
 	private CSPGroupGenerator cg;
 	@Inject
-	private SeqGroupGenerator sg;
+	private SequenceGroupGenerator sg;
 	@Inject
 	private TargetGroupGenerator tg;
 	@Inject

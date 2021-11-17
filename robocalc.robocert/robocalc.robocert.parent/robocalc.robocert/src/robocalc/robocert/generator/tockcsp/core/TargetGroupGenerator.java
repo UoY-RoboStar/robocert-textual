@@ -69,7 +69,7 @@ public class TargetGroupGenerator extends GroupGenerator<TargetGroup> {
 	}
 
 	private CharSequence tickTockContext(Target t) {
-		return csp.definition("instance " + TargetField.TICK_TOCK_CONTEXT.toString(),
+		return csp.instance(TargetField.TICK_TOCK_CONTEXT.toString(),
 				csp.function("model_shifting", semEvents(t)));
 	}
 

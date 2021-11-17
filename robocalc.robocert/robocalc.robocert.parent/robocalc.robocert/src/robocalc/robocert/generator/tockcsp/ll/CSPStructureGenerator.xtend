@@ -6,6 +6,21 @@ package robocalc.robocert.generator.tockcsp.ll
  * Use of this class makes uniform indenting and formatting easier.
  */
 class CSPStructureGenerator {
+	// This class is in Xtend because it largely abstracts over Xtend's
+	// templating engine.
+	
+	/**
+	 * Generates a module instance declaration.
+	 * 
+	 * @param name  the name of the instance.
+	 * @param body  the body of the instance.
+	 * 
+	 * @return  CSP-M for the instance.
+	 */
+	def CharSequence instance(CharSequence name, CharSequence body) {
+		definition('''instance «name»''', body)
+	}
+	
 	/**
 	 * Generates a process/set/function definition.
 	 * 

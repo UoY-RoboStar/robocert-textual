@@ -18,7 +18,6 @@ import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CSPContextSource;
-import robocalc.robocert.model.robocert.CSPProcessSource;
 import robocalc.robocert.model.robocert.EventSetCSPFragment;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
 import robocalc.robocert.model.robocert.Sequence;
