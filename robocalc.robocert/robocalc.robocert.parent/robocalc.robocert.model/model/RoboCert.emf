@@ -369,26 +369,18 @@ These correspond to UML lifelines.")
 
 @genmodel(documentation="A sequence diagram.")
 class Sequence extends robochart.NamedElement, CSPProcessSource {
-	/**
-	 * The group to which this sequence belongs.
-	 */
+	@genmodel(documentation="The group to which this sequence belongs.")
 	ref SequenceGroup[1]#sequences group;
-	/**
-	 * The top-level subsequence of the sequence diagram.
-	 */
+	@genmodel(documentation="The top-level subsequence of the sequence diagram.")
 	val Subsequence[1] body;
 }
 
-/**
- * A sequence of steps, forming part or all of a sequence diagram.
- */
+@genmodel(documentation="A sequence of steps, forming part or all of a sequence diagram.")
 class Subsequence {
 	@genmodel(documentation="The steps contained within the subsequence.")
 	val SequenceStep[*]#parent steps;
 	
-	/**
-	 * The parent sequence.
-	 */
+	@genmodel(documentation="The parent sequence.")
 	derived volatile transient readonly ref Sequence[0..1] sequence;
 }
 
@@ -398,13 +390,9 @@ class Subsequence {
 
 // NOTE: When adding new steps, remember to extend the step generators.
 
-/**
- * A single step in a subsequence.
- */
+@genmodel(documentation="A single step in a subsequence.")
 abstract class SequenceStep {
-	/**
-	 * The parent subsequence of this step.
-	 */
+	@genmodel(documentation="The parent subsequence of this step.")
 	ref Subsequence[1]#steps parent;
 }
 
@@ -457,65 +445,45 @@ class LoopStep extends BlockStep {
 // Loop bounds
 //
 
-/**
- * A bound on the number of iterations the loop can make.
- */
+@genmodel(documentation="A bound on the number of iterations the loop can make.")
 abstract class LoopBound {
 }
 
-/**
- * A loop bound that makes the loop execute infinitely until otherwise
- * broken.
- */
+@genmodel(documentation="A loop bound that makes the loop execute infinitely until otherwise broken.")
 class InfiniteLoopBound extends LoopBound {
 }
 
-/**
- * A loop bound that executes a specific number of times.
- *
- * Corresponds to UML2 loop(times).
- */
+@genmodel(documentation="A loop bound that executes a specific number of times.
+
+Corresponds to UML2 loop(times).")
 class DefiniteLoopBound extends LoopBound {
-	/**
-	 * The number of times the loop must execute, unless prematurely
-	 * broken.
-	 * Evaluated once only.
-	 */
+	@genmodel(documentation="The number of times the loop must execute, unless prematurely broken.
+
+Evaluated once only.")
  	val CertExpr[1] times;
 }
 
-/**
- * A loop bound that executes a nondeterministic number of times that
- * is at least a lower bound.
- *
- * Corresponds to UML2 loop(lowerTimes, *).
- */
+@genmodel(documentation="A loop bound that executes a nondeterministic number of times that is at least a lower bound.
+
+Corresponds to UML2 loop(lowerTimes, *).")
 class LowerLoopBound extends LoopBound {
-	/**
-	 * The number of times the loop must execute at least, unless
-	 * prematurely broken.
-	 * Evaluated once only.
-	 */
+	@genmodel(documentation="Lower number of times the loop must execute, unless prematurely broken.
+
+Evaluated once only.")
  	val CertExpr[1] lowerTimes;
 }
 
-/**
- * A loop bound that executes a nondeterministic number of times between
- * two bounds.
- *
- * Corresponds to UML2 loop(lowerTimes, upperTimes).
- */
+@genmodel(documentation="A loop bound that executes a nondeterministic number of times between two bounds.
+
+Corresponds to UML2 loop(lowerTimes, upperTimes).")
 class RangeLoopBound extends LoopBound {
-	/**
-	 * The lower number of times the loop must execute, unless
-	 * prematurely broken.
-	 * Evaluated once only.	 
-	 */
+	@genmodel(documentation="Lower number of times the loop must execute, unless prematurely broken.
+
+Evaluated once only.")
 	val CertExpr[1] lowerTimes;
-	/**
-	 * The upper number of times the loop must execute.
-	 * Evaluated once only.
-	 */
+	@genmodel(documentation="The upper number of times the loop must execute.
+
+Evaluated once only.")
 	val CertExpr[1] upperTimes;
 }
 
@@ -580,41 +548,25 @@ class ElseGuard extends Guard {
 // ACTIONS
 //
 
-/**
- * An action in a sequence diagram.
- */
+@genmodel(documentation="An action in a sequence.")
 abstract class SequenceAction {
-	/**
-	 * The step containing this action.
-	 */
+	@genmodel(documentation="The step containing this action.")
 	ref ActionStep[1]#action step;
 }
 
-/**
- * A communicating action in a sequence diagram.
- */
+@genmodel(documentation="A communicating action in a sequence.")
 class ArrowAction extends SequenceAction {
-	/**
-	 * The body of the arrow.
-	 */
+	@genmodel(documentation="The body of the arrow.")
 	val MessageSpec[1] body;
 }
 
-/**
- * A special action marking the end of a diagram.
- *
- * This exists mainly to allow a sequence gap at the end of the diagram.
- */
+@genmodel(documentation="Represents a deadlock event in a sequence.")
 class FinalAction extends SequenceAction {
 }
 
-/**
- * An action representing a wait for some amount of time units.
- */
+@genmodel(documentation="Represents a wait for some amount of time units.")
 class WaitAction extends SequenceAction {
-	/**
-	 * The number of units to wait.
-	 */
+	@genmodel(documentation="The number of units to wait.")
 	val CertExpr[1] units;
 	
 	// TODO(@MattWindsor91): nondeterministic waits
@@ -624,9 +576,7 @@ class WaitAction extends SequenceAction {
 // MESSAGES
 //
 
-/**
- * A specification of a message.
- */
+@genmodel(documentation="A specification of a message.")
 class MessageSpec {
 	@genmodel(documentation="The topic of the message.")
 	val MessageTopic[1]#spec topic;
@@ -700,36 +650,22 @@ enum MessageDirection {
 // Message topics
 //
 
-/**
- * A message topic.
- */
+@genmodel(documentation="A message topic.")
 abstract class MessageTopic {
-	/**
-	 * The parent message specification.
-	 */
+	@genmodel(documentation="The parent message specification.")
 	ref MessageSpec[1]#topic spec;
 }
 
-/**
- * An event message topic.
- */
+@genmodel(documentation="An event message topic.")
 class EventTopic extends MessageTopic {
-	/**
-	 * The name of the event.
-	 */
+	@genmodel(documentation="The name of the event.")
 	ref robochart.Event[1] event;
 }
 
-/**
- * An operation message topic.
- */
+@genmodel(documentation="An operation message topic.")
 class OperationTopic extends MessageTopic {
-	/**
-	 * The name of the operation.
-	 */
+	@genmodel(documentation="The name of the operation.")
 	ref robochart.OperationSig[1] operation;
-// TODO: check whether this should be Operation instead
-// TODO: parameters
 }
 
 //
@@ -756,75 +692,49 @@ class WildcardArgument extends Argument {
 // Message sets
 //
 
-/**
- * A defined and named message set.
- */
+@genmodel(documentation="A defined and named message set.")
 class NamedMessageSet extends robochart.NamedElement {
-	/**
-	 * The sequence group on which this message set is defined.
-	 */
+	@genmodel(documentation="The sequence group on which this message set is defined.")
 	ref SequenceGroup#messageSets group;
 
-	/**
-	 * The inner message set.
-	 */
+	@genmodel(documentation="The inner message set.")
 	val MessageSet[1] set;
 }
 
-/**
- * A set of gap message specifications.
- */
+@genmodel(documentation="A set of message specifications.")
 abstract class MessageSet {
-	/**
-	 * Whether this message set has messages.
-	 *
-	 * For instance, universal message sets are always active, but
-	 * extensional ones may be if no messages are held,
-	 * reference sets are active iff their referred-to sets are,
-	 * and binary message sets depend on the operator and operands.
-	 *
-	 * This is an optimistic estimate, and may falsely report activity
-	 * when there isn't any.
-	 */
+	@genmodel(documentation="Whether this message set has messages.
+
+For instance, universal message sets are always active, but extensional ones may be if no messages are held,
+reference sets are active iff their referred-to sets are,
+and binary message sets depend on the operator and operands.
+
+This is an optimistic estimate, and may falsely report activity when there isn't any.")
 	derived volatile readonly transient attr boolean active;
 	
-	/**
-	 * Whether this message set contains every message.
-	 *
-	 * Universal message sets are always universal,
-	 * reference sets are active iff their referred-to sets are,
-	 * and binary message sets depend on the operator and operands.
-	 *
-	 * This is a pessimistic estimate, and may falsely deny universality
-	 * when there is some.
-	 */
+	@genmodel(documentation="Whether this message set contains every message.
+
+Universal message sets are always universal,
+reference sets are active iff their referred-to sets are,
+and binary message sets depend on the operator and operands.
+
+This is a pessimistic estimate, and may falsely deny universality when there is some.")
 	derived volatile readonly transient attr boolean universal;	
 }
 
-/**
- * A message set that is, itself, a reference to a previously named message
- * set.
- */
+@genmodel(documentation="A message set that is a reference to a previously named message set.")
 class RefMessageSet extends MessageSet {
-	/**
-	 * The message set being named.
-	 */
+	@genmodel(documentation="The message set being named.")
 	ref NamedMessageSet[1] set;
 }
 
-/**
- * A message set that extensionally enumerates allowed or forbidden messages.
- */
+@genmodel(documentation="A message set that extensionally enumerates messages.")
 class ExtensionalMessageSet extends MessageSet {
-	/**
-	 * The message specifications held by this message set.
-	 */
+	@genmodel(documentation="The message specifications held by this message set.")
 	!ordered val MessageSpec[*]#parent messages;
 }
 
-/**
- * A message set that includes all messages.
- */
+@genmodel(documentation="A message set that includes all messages.")
 class UniverseMessageSet extends MessageSet {
 }
 
@@ -844,21 +754,13 @@ class BinaryMessageSet extends MessageSet {
 	attr BinarySetOperator[1] operator;
 }
 
-/**
- * A binary set operator.
- */
+@genmodel(documentation="A binary set operator.")
 enum BinarySetOperator {
-	/**
-	 * Set union ('or').
-	 */
+	@genmodel(documentation="Set union ('or').")
 	UNION;
-	/**
-	 * Set intersection ('and').
-	 */
+	@genmodel(documentation="Set intersection ('and').")
 	INTERSECTION;
-	/**
-	 * Set difference ('except').
-	 */
+	@genmodel(documentation="Set difference ('except').")
 	DIFFERENCE;
 }
 

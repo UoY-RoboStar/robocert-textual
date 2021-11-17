@@ -438,11 +438,22 @@
       <details key="documentation" value="A sequence diagram."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
-        eOpposite="#//SequenceGroup/sequences"/>
+        eOpposite="#//SequenceGroup/sequences">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The group to which this sequence belongs."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The top-level subsequence of the sequence diagram."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Subsequence">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A sequence of steps, forming part or all of a sequence diagram."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="steps" upperBound="-1"
         eType="#//SequenceStep" containment="true" eOpposite="#//SequenceStep/parent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -450,11 +461,22 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"
-        changeable="false" volatile="true" transient="true" derived="true"/>
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent sequence."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceStep" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A single step in a subsequence."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//Subsequence" eOpposite="#//Subsequence/steps"/>
+        eType="#//Subsequence" eOpposite="#//Subsequence/steps">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent subsequence of this step."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ActionStep" eSuperTypes="#//SequenceStep">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -512,21 +534,54 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="InfiniteLoopBound" eSuperTypes="#//LoopBound"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A bound on the number of iterations the loop can make."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InfiniteLoopBound" eSuperTypes="#//LoopBound">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A loop bound that makes the loop execute infinitely until otherwise broken."/>
+    </eAnnotations>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DefiniteLoopBound" eSuperTypes="#//LoopBound">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A loop bound that executes a specific number of times.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(times)."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="#//CertExpr"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LowerLoopBound" eSuperTypes="#//LoopBound">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A loop bound that executes a nondeterministic number of times that is at least a lower bound.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(lowerTimes, *)."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="#//CertExpr" containment="true"/>
+        eType="#//CertExpr" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Lower number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RangeLoopBound" eSuperTypes="#//LoopBound">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A loop bound that executes a nondeterministic number of times between two bounds.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(lowerTimes, upperTimes)."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="#//CertExpr" containment="true"/>
+        eType="#//CertExpr" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Lower number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="upperTimes" lowerBound="1"
-        eType="#//CertExpr" containment="true"/>
+        eType="#//CertExpr" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The upper number of times the loop must execute.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BranchStep" abstract="true" eSuperTypes="#//SequenceStep">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -607,19 +662,47 @@
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An action in a sequence."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//ActionStep"
-        eOpposite="#//ActionStep/action"/>
+        eOpposite="#//ActionStep/action">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The step containing this action."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArrowAction" eSuperTypes="#//SequenceAction">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A communicating action in a sequence."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//MessageSpec"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The body of the arrow."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Represents a deadlock event in a sequence."/>
+    </eAnnotations>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WaitAction" eSuperTypes="#//SequenceAction">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Represents a wait for some amount of time units."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//CertExpr"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The number of units to wait."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageSpec">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A specification of a message."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" lowerBound="1" eType="#//MessageTopic"
         containment="true" eOpposite="#//MessageTopic/spec">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -709,15 +792,36 @@
     </eLiterals>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageTopic" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A message topic."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="spec" lowerBound="1" eType="#//MessageSpec"
-        eOpposite="#//MessageSpec/topic"/>
+        eOpposite="#//MessageSpec/topic">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent message specification."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EventTopic" eSuperTypes="#//MessageTopic">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="event" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An event message topic."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="event" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name of the event."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OperationTopic" eSuperTypes="#//MessageTopic">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An operation message topic."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig"/>
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The name of the operation."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Argument" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -747,25 +851,65 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedMessageSet" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A defined and named message set."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//SequenceGroup"
-        eOpposite="#//SequenceGroup/messageSets"/>
+        eOpposite="#//SequenceGroup/messageSets">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The sequence group on which this message set is defined."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//MessageSet"
-        containment="true"/>
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The inner message set."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageSet" abstract="true">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A set of message specifications."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        changeable="false" volatile="true" transient="true" derived="true"/>
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Whether this message set has messages.&#xD;&#xA;&#xD;&#xA;For instance, universal message sets are always active, but extensional ones may be if no messages are held,&#xD;&#xA;reference sets are active iff their referred-to sets are,&#xD;&#xA;and binary message sets depend on the operator and operands.&#xD;&#xA;&#xD;&#xA;This is an optimistic estimate, and may falsely report activity when there isn't any."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="universal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-        changeable="false" volatile="true" transient="true" derived="true"/>
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Whether this message set contains every message.&#xD;&#xA;&#xD;&#xA;Universal message sets are always universal,&#xD;&#xA;reference sets are active iff their referred-to sets are,&#xD;&#xA;and binary message sets depend on the operator and operands.&#xD;&#xA;&#xD;&#xA;This is a pessimistic estimate, and may falsely deny universality when there is some."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RefMessageSet" eSuperTypes="#//MessageSet">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//NamedMessageSet"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A message set that is a reference to a previously named message set."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="set" lowerBound="1" eType="#//NamedMessageSet">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The message set being named."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExtensionalMessageSet" eSuperTypes="#//MessageSet">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A message set that extensionally enumerates messages."/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="messages" ordered="false"
-        upperBound="-1" eType="#//MessageSpec" containment="true"/>
+        upperBound="-1" eType="#//MessageSpec" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The message specifications held by this message set."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UniverseMessageSet" eSuperTypes="#//MessageSet"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UniverseMessageSet" eSuperTypes="#//MessageSet">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A message set that includes all messages."/>
+    </eAnnotations>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BinaryMessageSet" eSuperTypes="#//MessageSet">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A binary set operation over two message sets."/>
@@ -790,9 +934,24 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="BinarySetOperator">
-    <eLiterals name="UNION"/>
-    <eLiterals name="INTERSECTION" value="1"/>
-    <eLiterals name="DIFFERENCE" value="2"/>
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A binary set operator."/>
+    </eAnnotations>
+    <eLiterals name="UNION">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Set union ('or')."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="INTERSECTION" value="1">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Set intersection ('and')."/>
+      </eAnnotations>
+    </eLiterals>
+    <eLiterals name="DIFFERENCE" value="2">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Set difference ('except')."/>
+      </eAnnotations>
+    </eLiterals>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="#//OptionallyNamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
