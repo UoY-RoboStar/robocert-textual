@@ -12,46 +12,38 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq;
 
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
+import org.eclipse.emf.common.util.EList;
+
 import com.google.inject.Inject;
 
-import circus.robocalc.robochart.Variable;
-import robocalc.robocert.generator.intf.core.SpecGroupField;
-import robocalc.robocert.generator.tockcsp.core.GroupGenerator;
-import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
+import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
+import robocalc.robocert.generator.tockcsp.core.SpecGroupGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.generator.utils.TargetExtensions;
-import robocalc.robocert.model.robocert.Instantiation;
+import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
+import robocalc.robocert.generator.utils.MemoryFactory;
+import robocalc.robocert.model.robocert.Sequence;
 import robocalc.robocert.model.robocert.SequenceGroup;
 
 /**
- * Generator for sequence groups.
+ * Generator for {@link SequenceGroup}s.
  *
- * This generator handles the top-level, unparametrised parts of a sequence
- * group.
- *
- * @see SeqGroupParametricGenerator
+ * @author Matt Windsor
  */
-public class SequenceGroupGenerator extends GroupGenerator<SequenceGroup> {
-	// TODO(@MattWindsor91): generalise this to SpecGroups
-
+public class SequenceGroupGenerator extends SpecGroupGenerator<SequenceGroup> {
 	@Inject
 	private CSPStructureGenerator csp;
 	@Inject
-	private TargetGenerator tg;
-	@Inject
-	private TargetExtensions tx;
+	private SequenceGenerator sg;
 	@Inject
 	private MessageSetGenerator msg;
 	@Inject
-	private SeqGroupParametricGenerator pg;
-
-	@Override
-	protected Stream<CharSequence> generateBodyElements(SequenceGroup group) {
-		return Stream.of(openDef(group), closedDef(group));
-	}
+	private MemoryFactory mf;
+	@Inject
+	private ModuleGenerator mg;
 
 	@Override
 	protected Stream<CharSequence> generatePrivateElements(SequenceGroup group) {
@@ -64,85 +56,42 @@ public class SequenceGroupGenerator extends GroupGenerator<SequenceGroup> {
 	}
 
 	@Override
-	protected boolean isTimed(SequenceGroup group) {
-		// Sequence groups are never timed, as only some of their elements need
-		// to be timed.
-		return false;
+	protected Stream<CharSequence> openDefBodyElements(SequenceGroup it) {
+		var seqs = it.getSequences();
+		return Stream.concat(memModule(seqs), seqModule(seqs));
 	}
 
-	@Override
-	protected boolean isInModule(SequenceGroup group) {
-		// Sequence groups always generate a module.
-		return true;
+	private Stream<CharSequence> memModule(EList<Sequence> sequences) {
+		return mf.buildMemories(sequences.stream()).map(mg::generate)
+				.collect(collectToModule(SpecGroupParametricField.MEMORY_MODULE));
 	}
 
-	/**
-	 * Generates a process definition for the 'closed' form of this group.
-	 *
-	 * The closed form has no parameters, with all constants assigned values either
-	 * from its target's instantiation or from the top-level instantiations.csp
-	 * file.
-	 *
-	 * @param it the group for which we are generating a closed form.
-	 *
-	 * @return CSP defining the 'closed' form of this group.
-	 */
-	private CharSequence closedDef(SequenceGroup it) {
-		return csp.instance(SpecGroupField.PARAMETRIC_CLOSED.toString(), openSig(it, it.getInstantiation()));
+	private Stream<CharSequence> seqModule(EList<Sequence> sequences) {
+		return sequences.stream().map(this::seqDef).collect(collectToModule(SpecGroupParametricField.SEQUENCE_MODULE));
+	}
+
+	private CharSequence seqDef(Sequence s) {
+		return csp.definition(s.getName(), sg.generate(s));
 	}
 
 	/**
-	 * Generates an external reference for the 'open' form of this group.
+	 * Joins a stream of character sequences with newlines, then wraps the result in
+	 * a parametric field module only if the resulting sequence is empty.
 	 *
-	 * The open form has parameters exposed, and any reference to it must fill those
-	 * parameters using either values in the given instantiation or, where values
-	 * are missing, references to the instantiations CSP file.
+	 * @param field the field corresponding to the module to produce.
 	 *
-	 * @param it the group for which we are generating CSP.
-	 *
-	 * @return generated CSP for referring to the 'open' form of this group.
+	 * @return an empty Stream if there is no module; else, a singleton Stream
+	 *         containing the character sequence.
 	 */
-	public CharSequence generateOpenRef(SequenceGroup it, Instantiation instantiation) {
-		var name = csp.namespaced(it.getName(), SpecGroupField.PARAMETRIC_OPEN.toString());
-		return csp.function(name, openSigParams(it, instantiation));
+	private Collector<CharSequence, ?, Stream<CharSequence>> collectToModule(SpecGroupParametricField field) {
+		return Collectors.collectingAndThen(Collectors.joining("\n"), x -> moduleIfNonEmpty(x, field));
 	}
 
-	/**
-	 * Generates a process definition for the 'open' form of this target.
-	 *
-	 * @param it            the group for which we are generating an open form.
-	 * @param instantiation the instantiation (may be null).
-	 *
-	 * @return generated CSP for the 'open' form of a sequence's target.
-	 */
-	public CharSequence openDef(SequenceGroup it) {
-		return csp.module(openSig(it, null), pg.generateParametric(it));
-	}
+	private Stream<CharSequence> moduleIfNonEmpty(CharSequence mod, SpecGroupParametricField field) {
+		// TODO(@MattWindsor91): this is a slightly awkward quickfix?
+		var name = field.toString();
+		var isTimed = field == SpecGroupParametricField.SEQUENCE_MODULE;
 
-	/**
-	 * Generates the signature of an open sequence group definition or reference.
-	 *
-	 * Because the parameters used in the definition are just the constant IDs,
-	 * which are also how we refer to any fallback references to the instantiations
-	 * file, both definitions and references can have the same signature generator.
-	 *
-	 * @param it        the group for which we are generating an open form.
-	 * @param outerInst any instantiation being applied at the outer level (may be
-	 *                  null).
-	 *
-	 * @return CSP referring to, or giving the signature of, the 'open' form of this
-	 *         group.
-	 */
-	private CharSequence openSig(SequenceGroup it, Instantiation outerInst) {
-		return csp.function(SpecGroupField.PARAMETRIC_OPEN.toString(), openSigParams(it, outerInst));
-	}
-
-	private CharSequence[] openSigParams(SequenceGroup it, Instantiation outerInst) {
-		var stream = uninstantiatedConstants(it).map(x -> tg.generateConstant(outerInst, x));
-		return stream.toArray(CharSequence[]::new);
-	}
-
-	private Stream<Variable> uninstantiatedConstants(SequenceGroup it) {
-		return Streams.stream(tx.uninstantiatedConstants(it.getTarget(), it.getInstantiation()));
+		return Stream.of(mod).filter(x -> !x.isEmpty()).map(x -> csp.module(name, csp.timedIf(isTimed, x)));
 	}
 }

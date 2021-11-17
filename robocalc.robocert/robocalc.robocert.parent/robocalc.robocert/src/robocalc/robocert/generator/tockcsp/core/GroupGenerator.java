@@ -3,7 +3,6 @@
  */
 package robocalc.robocert.generator.tockcsp.core;
 
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.inject.Inject;
@@ -31,8 +30,8 @@ public abstract class GroupGenerator<T extends Group> {
 	 * @return CSP-M for the group.
 	 */
 	public CharSequence generate(T group) {
-		var body = join(generateBodyElements(group));
-		var priv = join(generatePrivateElements(group));
+		var body = csp.innerJoin(generateBodyElements(group));
+		var priv = csp.innerJoin(generatePrivateElements(group));
 		return String.join("\n", generateHeader(group), liftBody(group, body, priv), generateFooter(group));
 	}
 
@@ -62,7 +61,7 @@ public abstract class GroupGenerator<T extends Group> {
 	protected Stream<CharSequence> generatePrivateElements(T group) {
 		return Stream.empty();
 	}
-	
+
 	/**
 	 * Gets the name of the type of group, for use in headers and footers.
 	 *
@@ -101,16 +100,12 @@ public abstract class GroupGenerator<T extends Group> {
 	//
 
 	private CharSequence liftBody(T group, CharSequence body, CharSequence privBody) {
-		body = isTimed(group) ? csp.timed(body) : body;
+		body = csp.timedIf(isTimed(group), body);
 		if (!isInModule(group))
 			return body;
-		
+
 		var name = gn.getOrSynthesiseName(group);
 		return privBody.isEmpty() ? csp.module(name, body) : csp.moduleWithPrivate(name, privBody, body);
-	}
-
-	private CharSequence join(Stream<CharSequence> elements) {
-		return elements.collect(Collectors.joining("\n\n"));
 	}
 
 	private CharSequence generateHeader(T group) {

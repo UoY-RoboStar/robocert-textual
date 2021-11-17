@@ -1,5 +1,8 @@
 package robocalc.robocert.generator.tockcsp.ll
 
+import java.util.stream.Stream
+import java.util.stream.Collectors
+
 /**
  * Generates common CSP-M structures such as modules and timed sections.
  * 
@@ -105,6 +108,18 @@ class CSPStructureGenerator {
 	'''
 	
 	/**
+	 * Lifts a body into a timed section if the given Boolean is true.
+	 * 
+	 * @param isTimed the boolean.
+	 * @param inner   the inner body of the possibly-timed section.
+	 * 
+	 * @return  CSP-M for the possibly-timed section.
+	 */
+	def CharSequence timedIf(boolean isTimed, CharSequence inner) {
+		isTimed ? timed(inner) : inner
+	}
+	
+	/**
 	 * Generates a namespaced concatenation of various naming elements.
 	 * 
 	 * @param elements the elements to join.
@@ -142,4 +157,8 @@ class CSPStructureGenerator {
 	 * @return the pragma-modified CSP.
 	 */
 	def CharSequence tauPrioritiseTock(CharSequence it) '''«it» :[tau priority]: {tock}'''
+	
+	def CharSequence innerJoin(Stream<CharSequence> elements) {
+		elements.collect(Collectors.joining("\n"))
+	}
 }
