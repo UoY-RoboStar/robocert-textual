@@ -21,7 +21,6 @@ import circus.robocalc.robochart.Variable;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.seq.SeqGroupParametricGenerator;
 import robocalc.robocert.generator.utils.TargetExtensions;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.SpecGroup;
