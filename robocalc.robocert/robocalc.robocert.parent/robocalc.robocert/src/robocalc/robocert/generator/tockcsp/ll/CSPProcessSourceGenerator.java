@@ -66,7 +66,7 @@ public class CSPProcessSourceGenerator {
 		if (p instanceof TargetGroupSource g)
 			return sl.getFullCSPName(g.getTargetGroup(), SpecGroupParametricField.TARGET);
 		if (p instanceof Target t)
-			return tg.getFullCSPName(t, TargetField.DEFINITION);
+			return tg.getFullCSPName(t, TargetField.CLOSED);
 
 		return ush.unsupported(p, "CSP process source", "STOP");
 	}

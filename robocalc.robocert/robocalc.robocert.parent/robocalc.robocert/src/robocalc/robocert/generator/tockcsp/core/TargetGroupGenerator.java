@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 
-import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.name.GroupNamer;
@@ -32,7 +31,7 @@ public class TargetGroupGenerator extends GroupGenerator<TargetGroup> {
 	@Inject
 	private CSPStructureGenerator csp;
 	@Inject
-	private CTimedGeneratorUtils gu;
+	private TargetGenerator tg;
 	@Inject
 	private GroupNamer gn;
 
@@ -65,7 +64,9 @@ public class TargetGroupGenerator extends GroupGenerator<TargetGroup> {
 	}
 
 	private CharSequence moduleBody(Target t) {
-		return String.join("\n", tickTockContext(t), universe(t), definition(t));
+		// TODO(@MattWindsor91): the open/closed def could do with being
+		// deduplicated with the work in SpecGroupGenerator.
+		return String.join("\n", tickTockContext(t), universe(t), openDef(t), closedDef(t));
 	}
 
 	private CharSequence tickTockContext(Target t) {
@@ -80,18 +81,37 @@ public class TargetGroupGenerator extends GroupGenerator<TargetGroup> {
 	}
 
 	/**
-	 * Produces a reference to the target's definition.
+	 * Produces an 'open' reference to the target's definition.
+	 * 
+	 * This is used by specification groups.
 	 *
 	 * @param t the target in question.
 	 *
 	 * @return CSP-M referencing the name of the RoboStar module that defines the
 	 *         target.
 	 */
-	private CharSequence definition(Target t) {
+	private CharSequence openDef(Target t) {
 		// TODO(@MattWindsor91): the argument here should be configurable.
-		return csp.definition(TargetField.DEFINITION.toString(), gu.getFullProcessName(t.getElement(), false));
+		return csp.definition(TargetField.OPEN.toString(), tg.generateDef(t));
 	}
 
+	/**
+	 * Produces a closed definition for the target.
+	 * 
+	 * This is used by things wanting a CSP process.
+	 *
+	 * @param t the target in question.
+	 *
+	 * @return CSP-M referencing the name of the RoboStar module that defines the
+	 *         target.
+	 */
+	private CharSequence closedDef(Target t) {
+		// TODO(@MattWindsor91): the argument here should be configurable.
+		// TODO(@MattWindsor91): should these targets have an initial instantiation?
+		var def = csp.function(TargetField.OPEN.toString(), tg.generateRefParams(t, null, null, true));
+		return csp.definition(TargetField.CLOSED.toString(), def);
+	}
+	
 	private CharSequence semEvents(Target t) {
 		return csp.namespaced(t.getElement().getName(), "sem__events");
 	}

@@ -54,10 +54,14 @@ class TargetExtensions {
 	 * This iterator should return a stable ordering of uninstantiated constants.
 	 * 
 	 * @param it    the target.
-	 * @param inst  the instantiation in question.
+	 * @param inst  the instantiation in question (may be null).
 	 * @return an iterator of uninstantiated constant names.
 	 */
 	def Iterator<Variable> uninstantiatedConstants(Target it, Instantiation inst) {
+		if (inst === null) {
+			return parameterisation
+		}
+		
 		val instantiated = inst.assignments.flatMap[constants].map[constantKey].toSet
 		parameterisation.filter[!instantiated.contains(constantKey)]
 	}

@@ -18,11 +18,18 @@ package robocalc.robocert.generator.intf.core;
  * @author MattWindsor91
  */
 public enum TargetField {
+	// TODO(@MattWindsor91): deduplicate with SpecGroupField?
+	
 	/**
-	 * The definition of the target.
+	 * The open form of the target.
 	 */
-	DEFINITION,
+	OPEN,
 
+	/**
+	 * The closed (fully instantiated) form of the target.
+	 */
+	CLOSED,
+	
 	/**
 	 * The universe event set of the target.
 	 */
@@ -36,10 +43,11 @@ public enum TargetField {
 	@Override
 	public String toString() {
 		return switch (this) {
-		case DEFINITION -> "Def";
+		case CLOSED -> "Closed";
+		case OPEN -> "Open";
 		case UNIVERSE -> "Universe";
 		case TICK_TOCK_CONTEXT -> "TTContext";
-		default -> throw new IllegalArgumentException("Unexpected value: " + this);
+		default -> throw new IllegalArgumentException("Unexpected value: " + this.name());
 		};
 	}
 }

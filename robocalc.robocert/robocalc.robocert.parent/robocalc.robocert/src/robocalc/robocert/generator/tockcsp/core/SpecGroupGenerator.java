@@ -14,16 +14,15 @@ package robocalc.robocert.generator.tockcsp.core;
 
 import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 
-import circus.robocalc.robochart.Variable;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
+import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.generator.utils.TargetExtensions;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.SpecGroup;
+import robocalc.robocert.model.robocert.Target;
 
 /**
  * Generator for sequence groups.
@@ -39,7 +38,7 @@ abstract public class SpecGroupGenerator<T extends SpecGroup> extends GroupGener
 	@Inject
 	private TargetGenerator tg;
 	@Inject
-	private TargetExtensions tx;
+	private TargetGroupGenerator tgg;
 
 	/**
 	 * Generates the body elements of the open definition.
@@ -143,7 +142,14 @@ abstract public class SpecGroupGenerator<T extends SpecGroup> extends GroupGener
 	private CharSequence targetDef(T it) {
 		// NOTE(@MattWindsor91): as far as I know, this needn't be timed
 		return csp.definition(SpecGroupParametricField.TARGET.toString(),
-				tg.generate(it.getTarget(), it.getInstantiation()));
+				targetDefBody(it.getTarget(), it.getInstantiation()));
+	}
+
+	private CharSequence targetDefBody(Target t, Instantiation inst) {
+		// We're accessing the open form of the target here, filling in
+		// the group's own instantiation.
+		var name = tgg.getFullCSPName(t, TargetField.OPEN);
+		return csp.function(name, tg.generateRefParams(t, null, inst, true));
 	}
 
 	/**
@@ -165,10 +171,7 @@ abstract public class SpecGroupGenerator<T extends SpecGroup> extends GroupGener
 	}
 
 	private CharSequence[] openSigParams(T it, Instantiation outerInst) {
-		return uninstantiatedConstants(it).map(x -> tg.generateConstant(outerInst, x)).toArray(CharSequence[]::new);
+		return tg.generateRefParams(it.getTarget(), it.getInstantiation(), outerInst, false);
 	}
 
-	private Stream<Variable> uninstantiatedConstants(T it) {
-		return Streams.stream(tx.uninstantiatedConstants(it.getTarget(), it.getInstantiation()));
-	}
 }
