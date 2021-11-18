@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.utils.name.BindingNamer;
 import robocalc.robocert.model.robocert.Binding;
-import robocalc.robocert.model.robocert.MessageDirection;
+import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.util.MessageSpecFactory;
@@ -64,7 +64,7 @@ class BindingNamerTest {
 	@Test
 	public void testGetUnambiguousName_RootSubsequence() {
 		final var w = msf.boundArg("test");
-		final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), MessageDirection.INBOUND, w);
+		final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), EdgeDirection.INBOUND, w);
 		final var aact = rcf.createArrowAction();
 		aact.setBody(aspec);
 		final var astep = rcf.createActionStep();

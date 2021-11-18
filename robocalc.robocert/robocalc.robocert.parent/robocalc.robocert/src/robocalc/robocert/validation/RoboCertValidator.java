@@ -5,9 +5,14 @@ package robocalc.robocert.validation;
 
 import java.util.function.Function;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.validation.Check;
 
 import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.Edge;
+import robocalc.robocert.model.robocert.MessageSpec;
+import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RoboCertPackage;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.TargetActor;
@@ -20,10 +25,71 @@ import robocalc.robocert.model.robocert.WorldActor;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 public class RoboCertValidator extends AbstractRoboCertValidator {
+	//
+	// MessageSpec
+	//
+	
+	public static final String EDGE_ACTORS_INDISTINCT = "edgeActorsIndistinct";
+	public static final String OPERATION_NEEDS_TARGET = "operationNeedsTarget";
+	public static final String OPERATION_NOT_FROM_WORLD = "operationNotFromWorld";
+	
+	/**
+	 * Checks that an edge is valid.
+	 *
+	 * @param s the spec to check.
+	 */
+	@Check
+	public void checkEdgeFlow(MessageSpec s) {
+		var e = s.getEdge();
+		var from = e.getResolvedFrom();
+		var to = e.getResolvedTo();
+		if (EcoreUtil2.equals(from, to))
+			edgeError("A message can't go from an actor to the same actor", EDGE_ACTORS_INDISTINCT);
+	}
+		
+	/**
+	 * Checks that the flow of an operation message is valid.
+	 *
+	 * @param s the spec to check.
+	 */
+	@Check
+	public void checkMessageSpecOperationFlow(MessageSpec s) {
+		// This check is only relevant for operation topics.
+		if (!(s.getTopic() instanceof OperationTopic))
+			return;
+		
+		var edge = s.getEdge();
+		
+		var from = edge.getResolvedFrom();
+		var fromIsTarget = from instanceof TargetActor;
+		var fromIsWorld = from instanceof WorldActor;
+		
+		var to = edge.getResolvedTo();
+		var toIsTarget = to instanceof TargetActor;
+		
+		// TODO(@MattWindsor91): make sure we properly handle other kinds of
+		// sequence.
+		
+		if (!fromIsTarget && !toIsTarget)
+			edgeError("At least one of the endpoints of an operation must be the target", OPERATION_NEEDS_TARGET);
+		
+		if (fromIsWorld)
+			edgeError("An operation message cannot originate from the world", OPERATION_NOT_FROM_WORLD);
+	}
+	
+	private void edgeError(String string, String code) {
+		error(string, RoboCertPackage.Literals.MESSAGE_SPEC__EDGE, code);
+	}
+	
+	//
+	// SequenceGroup
+	//
+	
 	public static final String TOO_MANY_TARGETS = "tooManyTargets";
 	public static final String TOO_MANY_WORLDS = "tooManyWorlds";
 	public static final String TARGET_NEEDS_WORLD = "targetNeedsWorld";
 	public static final String WORLD_NEEDS_TARGET = "worldNeedsTarget";
+
 
 	/**
 	 * Checks that the actors of a target-and-world sequence are valid.

@@ -2,10 +2,9 @@ package robocalc.robocert.model.robocert.impl;
 
 import robocalc.robocert.model.robocert.BinaryMessageSet;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.DirectionalActorPair;
-import robocalc.robocert.model.robocert.ExplicitActorPair;
+import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
-import robocalc.robocert.model.robocert.ImplicitActorPair;
+import robocalc.robocert.model.robocert.ImplicitEdge;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.RCModuleTarget;
 import robocalc.robocert.model.robocert.RefMessageSet;
@@ -66,18 +65,13 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	}
 
 	@Override
-	public DirectionalActorPair createDirectionalActorPair() {
-		return new DirectionalActorPairImplCustom();
+	public ImplicitEdge createImplicitEdge() {
+		return new ImplicitEdgeImplCustom();
 	}
 
 	@Override
-	public ExplicitActorPair createExplicitActorPair() {
-		return new ExplicitActorPairImplCustom();
-	}
-
-	@Override
-	public ImplicitActorPair createImplicitActorPair() {
-		return new ImplicitActorPairImplCustom();
+	public ExplicitEdge createExplicitEdge() {
+		return new ExplicitEdgeImplCustom();
 	}
 
 	@Override

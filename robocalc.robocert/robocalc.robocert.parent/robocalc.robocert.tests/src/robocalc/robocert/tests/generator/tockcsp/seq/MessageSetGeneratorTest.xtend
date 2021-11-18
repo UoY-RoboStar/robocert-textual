@@ -23,7 +23,7 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import static extension org.junit.Assert.assertEquals
 import robocalc.robocert.tests.util.CSPNormaliser
 import robocalc.robocert.tests.util.MessageSpecFactory
-import robocalc.robocert.model.robocert.MessageDirection
+import robocalc.robocert.model.robocert.EdgeDirection
 import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.util.SetFactory
 import robocalc.robocert.model.robocert.util.MessageFactory
@@ -53,7 +53,7 @@ class MessageSetGeneratorTest {
 	 */
 	@Test
 	def void generateSimpleSingletonExtensional() {
-		val spec = intEvent.eventTopic.spec(MessageDirection::OUTBOUND.directional, intArg(42))
+		val spec = intEvent.eventTopic.spec(EdgeDirection::OUTBOUND.directional, intArg(42))
 		sf.singleton(spec).assertGenerates("{| test::event.out.42 |}")
 	}
 	

@@ -21,25 +21,28 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import com.google.inject.Inject;
 
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ImplicitActorPair;
+import robocalc.robocert.model.robocert.ImplicitEdge;
+import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 import robocalc.robocert.tests.util.MessageSpecFactory;
 
 /**
- * Tests that the custom version of {@link ImplicitActorPair} implements its
+ * Tests that the custom version of {@link ImplicitEdge} implements its
  * various derived methods correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class ImplicitActorPairCustomTest {
+public class ImplicitEdgeCustomTest {
 	@Inject
 	private RoboCertFactory rc;
 	@Inject
@@ -48,11 +51,11 @@ public class ImplicitActorPairCustomTest {
 	private MessageFactory mf;
 
 	/**
-	 * The actor pair to test.
+	 * The edge to test.
 	 */
-	private ImplicitActorPair it;
+	private ImplicitEdge it;
 	/**
-	 * The target actor.
+	 * The target.
 	 */
 	private Actor target;
 	/**
@@ -64,14 +67,12 @@ public class ImplicitActorPairCustomTest {
 	 * Initialises the objects used for the test.
 	 */
 	@BeforeEach
-	void init() {
-		// TODO(@MattWindsor91): deduplicate this with DirectionalActorPairCustomTest
-
+	void setUp() {
 		target = rc.createTargetActor();
 		world = rc.createWorldActor();
 
-		it = rc.createImplicitActorPair();
-		final var spec = mf.spec(mf.opTopic(msf.nullOp()), it);
+		it = rc.createImplicitEdge();
+		final var spec = mf.spec(mf.eventTopic(msf.intEvent()), it);
 
 		final var act = rc.createArrowAction();
 		act.setBody(spec);
@@ -92,18 +93,38 @@ public class ImplicitActorPairCustomTest {
 	}
 
 	/**
-	 * Tests that the resolved-from for an explicit actor pair is correct.
+	 * Tests that the resolved-from for an implicit edge is correct.
 	 */
-	@Test
-	void testGetResolvedFrom() {
-		assertEquals(target, it.getResolvedFrom());
+	@ParameterizedTest
+	@EnumSource
+	void testGetResolvedFrom(EdgeDirection dir) {
+		it.setDirection(dir);
+		assertEquals(dir == EdgeDirection.INBOUND ? world : target, it.getResolvedFrom());
 	}
 
 	/**
-	 * Tests that the resolved-to for an explicit actor pair is correct.
+	 * Tests that the resolved-from for an implicit edge with no set direction is correct.
 	 */
 	@Test
-	void testGetResolvedTo() {
+	void testGetResolvedFrom_default() {
+		assertEquals(target, it.getResolvedFrom());
+	}
+	
+	/**
+	 * Tests that the resolved-to for an implicit edge is correct.
+	 */
+	@ParameterizedTest
+	@EnumSource
+	void testGetResolvedTo(EdgeDirection dir) {
+		it.setDirection(dir);
+		assertEquals(dir == EdgeDirection.INBOUND ? target : world, it.getResolvedTo());
+	}
+
+	/**
+	 * Tests that the resolved-to for an implicit edge with no set direction is correct.
+	 */
+	@Test
+	void testGetResolvedTo_default() {
 		assertEquals(world, it.getResolvedTo());
 	}
 }

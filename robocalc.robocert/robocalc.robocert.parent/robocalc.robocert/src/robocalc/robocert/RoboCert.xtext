@@ -478,21 +478,20 @@ SequenceAction:
  * A message specification.
  */
 MessageSpec:
-	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? actorPair=ActorPair;
+	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? edge=Edge;
 
 /**
- * An actor pair.
+ * An edge.
  */
-ActorPair:
-	{ImplicitActorPair} |
-	{DirectionalActorPair} direction=MessageDirection |
-	'from' {ExplicitActorPair} from=[Actor|ID] 'to' to=[Actor|ID]
+Edge:
+	{ImplicitEdge} direction=EdgeDirection? |
+	'from' {ExplicitEdge} from=[Actor|ID] 'to' to=[Actor|ID]
 ;
 
 /**
- * The direction of a message with implicit actors.
+ * The direction of an implicit edge.
  */
-enum MessageDirection:
+enum EdgeDirection:
 	INBOUND='in' |
 	OUTBOUND='out';
 

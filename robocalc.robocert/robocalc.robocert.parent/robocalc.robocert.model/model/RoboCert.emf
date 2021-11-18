@@ -585,23 +585,19 @@ class MessageSpec {
 	val Argument[*] arguments;
 	
 	@genmodel(documentation="The pair of actors participating in this message.")
-	val ActorPair[1]#spec actorPair;
+	val Edge[1]#spec edge;
 }
 
 //
-// Actor pairs
-//
-// Most of these come from walking backwards up a MessageSpec to its
-// enclosing SequenceGroup, and won't work if a MessageSpec isn't
-// contained in one.
+// Edges
 //
 
 @genmodel(documentation="A pair of actors referenced by a MessageSpec.
 
-There are multiple ways to resolve this pair, and so multiple subclasses of ActorPair.")
-abstract class ActorPair {
+There are multiple ways to resolve this pair, and so multiple subclasses of Edge.")
+abstract class Edge {
 	@genmodel(documentation="The parent MessageSpec.")
-	ref MessageSpec[1]#actorPair spec;
+	ref MessageSpec[1]#edge spec;
 
 	//
 	// Derived references
@@ -613,34 +609,35 @@ abstract class ActorPair {
 	derived transient readonly volatile ref Actor[1] resolvedTo;
 }
 
-@genmodel(documentation="An explicit actor pair.")
-class ExplicitActorPair extends ActorPair {
+@genmodel(documentation="An explicit edge.")
+class ExplicitEdge extends Edge {
+	// TODO(@MattWindsor91): it is unclear whether these should be allowed
+	// in bidirectional diagrams, as that raises ambiguity at the graphical
+	// notation level.
+
 	@genmodel(documentation="The source of the message.")
 	ref Actor[1] from;
 	@genmodel(documentation="The destination of the message.")
 	ref Actor[1] to;
 }
 
-@genmodel(documentation="A fully implicit actor pair.
+@genmodel(documentation="An edge implied by a direction.
 
-Such actor pairs are only valid when there are two actors in the sequence,
-one of the actors is a target, the other is a world, and the topic of the
-parent message has a single unambiguous valid direction.")
-class ImplicitActorPair extends ActorPair {
-}
-
-@genmodel(documentation="An actor pair expressed by a direction.
-
-Such actor pairs are only valid when there are two actors in the sequence,
-one of the actors is a target, and the other is a world.")
-class DirectionalActorPair extends ActorPair {
+Such edges are only valid when there are two actors in the sequence,
+one of the actors is a target, and the other is a world.
+They also won't work if the message is not embedded in a sequence group.
+")
+class ImplicitEdge extends Edge {
 	@genmodel(documentation="The direction of the pair.")
-	attr MessageDirection[1] direction;
+	attr EdgeDirection[1] direction = "OUTBOUND";
 }
 
-@genmodel(documentation="The direction of an implicit actor pair.")
-enum MessageDirection {
-	@genmodel(documentation="Heading out from target to world.")
+@genmodel(documentation="The direction of an implicit edge.")
+enum EdgeDirection {
+	@genmodel(documentation="Heading out from target to world.
+
+This is the default when no direction is specified, primarily to accommodate
+operations where it is the only allowed direction.")
 	OUTBOUND;
 	@genmodel(documentation="Heading in from world to target.")
 	INBOUND;
@@ -770,7 +767,7 @@ enum BinarySetOperator {
 
 @genmodel(documentation="An actor in a sequence.
 
-Actors can be named, for use in ExplicitActorPairs.")
+Actors can be named, for use in ExplicitEdges.")
 abstract class Actor extends OptionallyNamedElement {
 	// NOTE(@MattWindsor91): it would have been more idiomatic to have Actors
 	// belong to Sequences rather than SequenceGroups, but MessageSets would

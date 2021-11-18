@@ -23,12 +23,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.google.inject.Inject;
 
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ExplicitActorPair;
+import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests that the custom version of {@link ExplicitActorPair} implements its
+ * Tests that the custom version of {@link ExplicitEdge} implements its
  * various derived methods correctly.
  *
  * @author Matt Windsor
@@ -40,9 +40,9 @@ public class ExplicitActorPairCustomTest {
 	private RoboCertFactory rc;
 
 	/**
-	 * The actor pair to test.
+	 * The edge to test.
 	 */
-	protected ExplicitActorPair it;
+	protected ExplicitEdge it;
 	/**
 	 * The expected from-actor.
 	 */
@@ -53,7 +53,7 @@ public class ExplicitActorPairCustomTest {
 	protected Actor expectedTo;
 
 	/**
-	 * Tests that the resolved-from for an explicit actor pair is correct.
+	 * Tests that the resolved-from for an explicit edge is correct.
 	 */
 	@Test
 	void testGetResolvedFrom() {
@@ -61,7 +61,7 @@ public class ExplicitActorPairCustomTest {
 	}
 
 	/**
-	 * Tests that the resolved-to for an explicit actor pair is correct.
+	 * Tests that the resolved-to for an explicit edge is correct.
 	 */
 	@Test
 	void testGetResolvedTo() {
@@ -72,11 +72,11 @@ public class ExplicitActorPairCustomTest {
 	 * Initialises the objects used for the test.
 	 */
 	@BeforeEach
-	protected void init() {
+	protected void setUp() {
 		expectedFrom = rc.createTargetActor();
 		expectedTo = rc.createWorldActor();
 
-		it = rc.createExplicitActorPair();
+		it = rc.createExplicitEdge();
 		it.setFrom(expectedFrom);
 		it.setTo(expectedTo);
 	}

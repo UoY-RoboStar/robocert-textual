@@ -20,7 +20,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 import robocalc.robocert.generator.tockcsp.seq.MessageSpecGenerator
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider
 import static extension org.junit.Assert.assertEquals
-import robocalc.robocert.model.robocert.MessageDirection
+import robocalc.robocert.model.robocert.EdgeDirection
 import robocalc.robocert.tests.util.MessageSpecFactory
 import robocalc.robocert.tests.util.CSPNormaliser
 import robocalc.robocert.model.robocert.MessageSpec
@@ -44,7 +44,7 @@ class MessageSpecGeneratorTest {
 	@Test
 	def void generatePrefixIntEventArrowWithWildcard() {
 		assertGeneratesPrefix(
-			intEvent.eventTopic.arrowSpec(MessageDirection::INBOUND, wildcardArg),
+			intEvent.eventTopic.arrowSpec(EdgeDirection::INBOUND, wildcardArg),
 			"test::event.in?_"
 		)
 	}
@@ -52,7 +52,7 @@ class MessageSpecGeneratorTest {
 	@Test
 	def void generatePrefixIntEventArrowWithBinding() {
 		assertGeneratesPrefix(
-			intEvent.eventTopic.arrowSpec(MessageDirection::INBOUND, boundArg("A")),
+			intEvent.eventTopic.arrowSpec(EdgeDirection::INBOUND, boundArg("A")),
 			"test::event.in?Bnd__A"
 		)
 	}
@@ -63,7 +63,7 @@ class MessageSpecGeneratorTest {
 	 */
 	@Test
 	def void generatePrefixIntEventArrowWithInt() {
-		assertGeneratesPrefix(intEvent.eventTopic.arrowSpec(MessageDirection::OUTBOUND, intArg(42)),
+		assertGeneratesPrefix(intEvent.eventTopic.arrowSpec(EdgeDirection::OUTBOUND, intArg(42)),
 		"test::event.out.42")
 	}
 	
@@ -78,7 +78,7 @@ class MessageSpecGeneratorTest {
 	@Test
 	def void generateCSPEventSetIntEventArrowWithRest() {
 		"{ test::event.in.Bnd__0 | Bnd__0 <- int }".assertEquals(
-			intEvent.eventTopic.arrowSpec(MessageDirection::INBOUND, wildcardArg).generateCSPEventSet.tidy)
+			intEvent.eventTopic.arrowSpec(EdgeDirection::INBOUND, wildcardArg).generateCSPEventSet.tidy)
 	}
 
 	/**
@@ -88,7 +88,7 @@ class MessageSpecGeneratorTest {
 	@Test
 	def void generateCSPEventSetIntEventArrowWithInt() {
 		"{| test::event.out.56 |}".assertEquals(
-			intEvent.eventTopic.arrowSpec(MessageDirection::OUTBOUND, intArg(56)).generateCSPEventSet.tidy)
+			intEvent.eventTopic.arrowSpec(EdgeDirection::OUTBOUND, intArg(56)).generateCSPEventSet.tidy)
 	}
 
 }

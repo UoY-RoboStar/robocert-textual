@@ -12,10 +12,10 @@ import com.google.inject.Inject;
 import circus.robocalc.robochart.Event;
 import circus.robocalc.robochart.OperationSig;
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ActorPair;
+import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.Argument;
-import robocalc.robocert.model.robocert.DirectionalActorPair;
-import robocalc.robocert.model.robocert.MessageDirection;
+import robocalc.robocert.model.robocert.ImplicitEdge;
+import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.MessageSpec;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.RoboCertFactory;
@@ -29,31 +29,31 @@ public class MessageFactory {
 	@Inject private RoboCertFactory rc;
 
 	/**
-	 * Constructs a message spec with the given topic, actors, and arguments.
+	 * Constructs a message spec with the given topic, edge, and arguments.
 	 * 
 	 * @param topic  the topic to use for the message spec.
-	 * @param actors the actor pair to use for the message spec.
+	 * @param edge the edge to use for the message spec.
 	 * @param args   the arguments to use for the message spec.
 	 * 
 	 * @return the specification.
 	 */
-	public MessageSpec spec(MessageTopic topic, ActorPair actors, Argument ...args) {
-		return spec(topic, actors, Arrays.asList(args));
+	public MessageSpec spec(MessageTopic topic, Edge edge, Argument ...args) {
+		return spec(topic, edge, Arrays.asList(args));
 	}
 	
 	/**
-	 * Constructs a message spec with the given topic, actors, and argument collection.
+	 * Constructs a message spec with the given topic, edge, and argument collection.
 	 * 
 	 * @param topic  the topic to use for the message spec.
-	 * @param actors the actor pair to use for the message spec.
+	 * @param edge the edge to use for the message spec.
 	 * @param args   the arguments to use for the message spec.
 	 * 
 	 * @return the specification.
 	 */
-	public MessageSpec spec(MessageTopic topic, ActorPair actors, Collection<? extends Argument> args) {
+	public MessageSpec spec(MessageTopic topic, Edge edge, Collection<? extends Argument> args) {
 		var it = rc.createMessageSpec();
 		it.setTopic(topic);
-		it.setActorPair(actors);
+		it.setEdge(edge);
 		it.getArguments().addAll(args);
 		return it;
 	}
@@ -85,14 +85,14 @@ public class MessageFactory {
 	}
 	
 	/**
-	 * Constructs a directional actor pair.
+	 * Constructs a directional edge.
 	 * 
 	 * @param d the direction to construct a pair over.
 	 * 
-	 * @return the actor pair.
+	 * @return the edge.
 	 */
-	public DirectionalActorPair directional(MessageDirection d) {
-		var it = rc.createDirectionalActorPair();
+	public ImplicitEdge directional(EdgeDirection d) {
+		var it = rc.createImplicitEdge();
 		it.setDirection(d);
 		return it;
 	}

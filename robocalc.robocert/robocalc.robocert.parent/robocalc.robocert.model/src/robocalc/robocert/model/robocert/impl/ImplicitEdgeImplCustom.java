@@ -15,43 +15,43 @@ package robocalc.robocert.model.robocert.impl;
 import org.eclipse.xtext.EcoreUtil2;
 
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.MessageDirection;
+import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.SequenceGroup;
 
 /**
- * Inserts actor-seeking functionality into {@link DirectionalActorPairImpl}.
+ * Inserts actor-seeking functionality into {@link ImplicitEdgeImpl}.
  * 
  * @author Matt Windsor
  */
-class DirectionalActorPairImplCustom extends DirectionalActorPairImpl {
+class ImplicitEdgeImplCustom extends ImplicitEdgeImpl {
 	/**
-	 * Gets the source of the actor pair by delegating to its 'from' feature.
+	 * Gets the source of the edge by delegating to its 'from' feature.
 	 * 
-	 * @return the actor pair source.
+	 * @return the edge source.
 	 */
 	@Override
 	public Actor basicGetResolvedFrom() {
-		return getWorldOrTargetIf(MessageDirection.OUTBOUND);
+		return getWorldOrTargetIf(EdgeDirection.OUTBOUND);
 	}
 	
 	/**
-	 * Gets the destination of the actor pair by delegating to its 'to' feature.
+	 * Gets the destination of the edge by delegating to its 'to' feature.
 	 * 
-	 * @return the actor pair destination.
+	 * @return the edge destination.
 	 */
 	@Override
 	public Actor basicGetResolvedTo() {
-		return getWorldOrTargetIf(MessageDirection.INBOUND);
+		return getWorldOrTargetIf(EdgeDirection.INBOUND);
 	}
 	
 	/**
-	 * Gets the target of this actor pair's enclosing sequence group if its
+	 * Gets the target of this edge's enclosing sequence group if its
 	 * direction is equal to the given direction, and the world otherwise.
 	 *
 	 * @param direction the direction to compare.
 	 * @return the actor suggested by the comparison against direction.
 	 */
-	private Actor getWorldOrTargetIf(MessageDirection direction) {
+	private Actor getWorldOrTargetIf(EdgeDirection direction) {
 		var grp = EcoreUtil2.getContainerOfType(this, SequenceGroup.class);
 		return getDirection() == direction ? grp.getTargetActor() : grp.getWorldActor();
 	}

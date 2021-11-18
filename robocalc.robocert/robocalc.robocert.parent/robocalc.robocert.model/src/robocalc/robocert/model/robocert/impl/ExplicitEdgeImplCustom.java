@@ -15,15 +15,15 @@ package robocalc.robocert.model.robocert.impl;
 import robocalc.robocert.model.robocert.Actor;
 
 /**
- * Inserts actor-seeking functionality into {@link ExplicitActorPairImpl}.
+ * Inserts actor-seeking functionality into {@link ExplicitEdgeImpl}.
  * 
  * @author Matt Windsor
  */
-class ExplicitActorPairImplCustom extends ExplicitActorPairImpl {
+class ExplicitEdgeImplCustom extends ExplicitEdgeImpl {
 	/**
-	 * Gets the source of the actor pair by delegating to its 'from' feature.
+	 * Gets the source of the edge by delegating to its 'from' feature.
 	 * 
-	 * @return the actor pair source.
+	 * @return the edge source.
 	 */
 	@Override
 	public Actor basicGetResolvedFrom() {
@@ -31,9 +31,9 @@ class ExplicitActorPairImplCustom extends ExplicitActorPairImpl {
 	}
 	
 	/**
-	 * Gets the destination of the actor pair by delegating to its 'to' feature.
+	 * Gets the destination of the edge by delegating to its 'to' feature.
 	 * 
-	 * @return the actor pair destination.
+	 * @return the edge destination.
 	 */
 	@Override
 	public Actor basicGetResolvedTo() {

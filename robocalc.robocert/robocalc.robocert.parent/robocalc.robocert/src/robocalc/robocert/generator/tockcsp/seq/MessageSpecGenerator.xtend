@@ -3,18 +3,18 @@ package robocalc.robocert.generator.tockcsp.seq
 import com.google.inject.Inject
 import java.util.List
 import robocalc.robocert.generator.utils.TargetExtensions
-import robocalc.robocert.model.robocert.MessageDirection
+import robocalc.robocert.model.robocert.EdgeDirection
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.WildcardArgument
-import robocalc.robocert.generator.utils.ActorPairExtensions
 import robocalc.robocert.generator.utils.EObjectExtensions
+import robocalc.robocert.generator.utils.EdgeExtensions
 
 /**
  * Generates CSP for various aspects of message specs.
  */
 class MessageSpecGenerator {
 	@Inject extension TopicGenerator
-	@Inject extension ActorPairExtensions
+	@Inject extension EdgeExtensions
 	@Inject extension EObjectExtensions
 	@Inject extension TargetExtensions
 	@Inject extension ArgumentGenerator
@@ -95,7 +95,7 @@ class MessageSpecGenerator {
 	 * lifted into a set comprehension for an event set.
 	 */
 	private def generateChannel(
-		MessageSpec it) '''«namespace»::«topic.generate»«IF topic.hasDirection».«actorPair.inferredDirection.cspDir»«ENDIF»'''
+		MessageSpec it) '''«namespace»::«topic.generate»«IF topic.hasDirection».«edge.inferredDirection.cspDir»«ENDIF»'''
 
 	private def getNamespace(MessageSpec it) {
 		 targetOfParentGroup?.namespace ?: missingNamespace
@@ -112,7 +112,7 @@ class MessageSpecGenerator {
 	 */
 	private def missingNamespace(MessageSpec it) '''{- missing namespace: «it» -} MISSING'''
 
-	def private cspDir(MessageDirection it) {
+	def private cspDir(EdgeDirection it) {
 		switch (it) {
 			case INBOUND:
 				"in"

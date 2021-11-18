@@ -14,7 +14,6 @@ package robocalc.robocert.tests.util
 
 import robocalc.robocert.model.robocert.Actor
 import robocalc.robocert.model.robocert.Argument
-import robocalc.robocert.model.robocert.MessageDirection
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.MessageTopic
 import robocalc.robocert.model.robocert.RoboCertFactory
@@ -28,6 +27,7 @@ import robocalc.robocert.model.robocert.util.MessageFactory
 import circus.robocalc.robochart.OperationSig
 import robocalc.robocert.model.robocert.WorldActor
 import robocalc.robocert.model.robocert.TargetActor
+import robocalc.robocert.model.robocert.EdgeDirection
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -50,7 +50,7 @@ class MessageSpecFactory {
 	 * 
 	 * @return a constructed arrow message spec.
 	 */
-	def MessageSpec arrowSpec(MessageTopic t, MessageDirection dir, Argument... args) {
+	def MessageSpec arrowSpec(MessageTopic t, EdgeDirection dir, Argument... args) {
 		mf.spec(t, mf.directional(dir), args) => [s|arrowParent.body = s]
 	}
 
@@ -73,7 +73,7 @@ class MessageSpecFactory {
 	 * 
 	 * @return a constructed gap message spec.
 	 */
-	def MessageSpec gapSpec(MessageTopic t, MessageDirection dir, Argument... args) {
+	def MessageSpec gapSpec(MessageTopic t, EdgeDirection dir, Argument... args) {
 		mf.spec(t, mf.directional(dir), args) => [s|gapParent.messages.add(s)]
 	}
 
