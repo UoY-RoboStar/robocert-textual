@@ -22,7 +22,6 @@ CertPackage:
 //
 // TARGETS
 //
-
 /**
  * A target group.
  * 
@@ -135,22 +134,18 @@ Property:
 CoreProperty:
 	subject=[CSPProcessSource|QualifiedName]
 	('is' (negated?='not')? type=IsCorePropertyType |
-		type=VerbCorePropertyType |
-		'does' (negated?='not')? type=DoesCorePropertyType
-	)
-;
+	type=VerbCorePropertyType |
+	'does' (negated?='not')? type=DoesCorePropertyType);
 
 // This factoring of an enumeration into 'is', 'does', and 'does not' is common
 // in the RoboCert assertions language.
-
 /**
  * Unary core property types that agree with 'is'/'is not'.
  */
 enum IsCorePropertyType returns CorePropertyType:
 	DEADLOCK_FREE='deadlock-free' |
 	DETERMINISM='deterministic' |
-	TIMELOCK_FREE='timelock-free'
-;
+	TIMELOCK_FREE='timelock-free';
 
 /**
  * Unary core property types that are standalone verbs in the third
@@ -158,16 +153,14 @@ enum IsCorePropertyType returns CorePropertyType:
  */
 enum VerbCorePropertyType returns CorePropertyType:
 	// Remember to add these to DoesNot also.
-	TERMINATION='terminates'
-;
+	TERMINATION='terminates';
 
 /**
  * Unary core property types that agree with 'does'/'does not'.
  */
 enum DoesCorePropertyType returns CorePropertyType:
 	// Remember to add these to Verb also.
-	TERMINATION='terminate'
-;
+	TERMINATION='terminate';
 
 //
 // EXPRESSIONS
@@ -196,7 +189,6 @@ LogicalOrExpr returns CertExpr:
 // These are the operators used in RoboChart, and also dodge a conflict in the
 // grammar where using eg 'and' conflicts with the use of 'and' elsewhere to
 // structure higher-level parts of the grammar.
-
 /**
  * Accepted symbols for logical AND.
  */
@@ -291,7 +283,7 @@ SingletonCSPGroup returns CSPGroup:
 	(('(' untimed?='untimed' ')')? &
 	// This should be the same as the version in SequenceGroup
 	('for' target=[Target|QualifiedName] instantiation=Instantiation))
-	fragments+=CSPFragment	;
+	fragments+=CSPFragment;
 
 FullCSPGroup returns CSPGroup:
 	'group'
@@ -385,7 +377,7 @@ SequenceGroup:
 	'for' target=[Target|QualifiedName] instantiation=Instantiation
 	':'
 	BEGIN
-	(actors+= Actor | sequences+=Sequence | messageSets+=NamedMessageSet)*
+	(actors+=Actor | sequences+=Sequence | messageSets+=NamedMessageSet)*
 	END;
 
 /**
@@ -450,7 +442,7 @@ LoopBound:
  */
 BranchStep:
 	('parallel' {InterleaveStep} |
-	'choice' {AlternativeStep} OptTemperature) ':' BEGIN branches+= Branch (branches+=Branch)+ END;
+	'choice' {AlternativeStep} OptTemperature) ':' BEGIN branches+=Branch (branches+=Branch)+ END;
 
 Branch:
 	guard=Guard ':' body=Subsequence;
@@ -485,8 +477,7 @@ MessageSpec:
  */
 Edge:
 	{ImplicitEdge} direction=EdgeDirection? |
-	'from' {ExplicitEdge} from=[Actor|ID] 'to' to=[Actor|ID]
-;
+	'from' {ExplicitEdge} from=[Actor|ID] 'to' to=[Actor|ID];
 
 /**
  * The direction of an implicit edge.
@@ -594,10 +585,9 @@ Argument:
 //
 // ACTORS
 //
-
 Actor:
-	'use' ({WorldActor} 'world' | {TargetActor} 'target') ('as' name=ID)?
-;
+	'use' ('world' {WorldActor} | 'target' {TargetActor} | 'component' {ComponentActor}
+	node=[ConnectionNode|QualifiedName]) ('as' name=ID)?;
 
 //
 // SEQUENCE PROPERTIES

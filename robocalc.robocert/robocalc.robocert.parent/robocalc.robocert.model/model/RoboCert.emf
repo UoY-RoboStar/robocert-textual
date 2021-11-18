@@ -786,6 +786,16 @@ class TargetActor extends Actor {
 class WorldActor extends Actor {
 }
 
+@genmodel(documentation="Actor that references a component of the target.")
+class ComponentActor extends Actor {
+	@genmodel(documentation="Component being referenced.
+
+It is ill-formed for this node to not be a component of the target,
+and also ill-formed for the same component to form multiple actors.")
+	ref robochart.ConnectionNode[1] node;
+}
+
+
 //
 // SEQUENCE PROPERTIES
 //
