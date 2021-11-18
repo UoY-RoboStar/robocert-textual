@@ -10,9 +10,10 @@ import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.RCModuleTarget;
 import robocalc.robocert.model.robocert.RefMessageSet;
 import robocalc.robocert.model.robocert.SequenceGroup;
-import robocalc.robocert.model.robocert.StandardActor;
 import robocalc.robocert.model.robocert.Subsequence;
+import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
+import robocalc.robocert.model.robocert.WorldActor;
 
 /**
  * Custom factory that injects 'custom' versions of various RoboCert EClasses,
@@ -20,15 +21,20 @@ import robocalc.robocert.model.robocert.UniverseMessageSet;
  */
 public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	@Override
+	public WorldActor createWorldActor() {
+		return new WorldActorImplCustom();
+	}
+	
+	@Override
+	public TargetActor createTargetActor() {
+		return new TargetActorImplCustom();
+	}
+	
+	@Override
 	public RCModuleTarget createRCModuleTarget() {
 		return new RCModuleTargetImplCustom();
 	}
 
-	@Override
-	public StandardActor createStandardActor() {
-		return new StandardActorImplCustom();
-	}
-	
 	@Override
 	public SequenceGroup createSequenceGroup() {
 		return new SequenceGroupImplCustom();

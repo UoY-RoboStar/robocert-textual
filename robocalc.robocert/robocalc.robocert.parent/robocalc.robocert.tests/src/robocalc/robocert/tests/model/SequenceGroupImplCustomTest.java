@@ -27,8 +27,8 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceGroup;
-import robocalc.robocert.model.robocert.StandardActor;
-import robocalc.robocert.model.robocert.util.MessageFactory;
+import robocalc.robocert.model.robocert.TargetActor;
+import robocalc.robocert.model.robocert.WorldActor;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
@@ -42,17 +42,15 @@ import robocalc.robocert.tests.RoboCertInjectorProvider;
 class SequenceGroupImplCustomTest {
 	@Inject
 	private RoboCertFactory rf;
-	@Inject
-	private MessageFactory mf;
 
 	private SequenceGroup group;
-	private StandardActor target;
-	private StandardActor world;
+	private TargetActor target;
+	private WorldActor world;
 
 	@BeforeEach
 	void setUp() {
-		target = mf.targetActor();
-		world = mf.worldActor();
+		target = rf.createTargetActor();
+		world = rf.createWorldActor();
 
 		group = rf.createSequenceGroup();
 		group.getActors().addAll(List.of(target, world));

@@ -67,8 +67,8 @@ public class ImplicitActorPairCustomTest {
 	void init() {
 		// TODO(@MattWindsor91): deduplicate this with DirectionalActorPairCustomTest
 
-		target = mf.targetActor();
-		world = mf.worldActor();
+		target = rc.createTargetActor();
+		world = rc.createWorldActor();
 
 		it = rc.createImplicitActorPair();
 		final var spec = mf.spec(mf.opTopic(msf.nullOp()), it);

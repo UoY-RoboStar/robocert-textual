@@ -21,31 +21,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.model.robocert.StandardActor;
-import robocalc.robocert.model.robocert.TargetActorRelationship;
-import robocalc.robocert.model.robocert.util.MessageFactory;
+import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link StandardActor}s, and also tests that
+ * Tests any custom functionality on {@link WorldActor}s, and also tests that
  * the factory resolves them correctly.
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class StandardActorImplCustomTest {
+public class WorldActorImplCustomTest {
 	@Inject
-	private MessageFactory mf;
+	private RoboCertFactory rc;
 
 	@Test
 	void testToString() {
-		final var world = mf.standardActor(TargetActorRelationship.WORLD);
+		final var world = rc.createWorldActor();
 		assertEquals("<<world>> (untitled)", world.toString());
 		world.setName("test");
 		assertEquals("<<world>> test", world.toString());
-
-		final var target = mf.standardActor(TargetActorRelationship.TARGET);
-		assertEquals("<<target>> (untitled)", target.toString());
-		target.setName("test");
-		assertEquals("<<target>> test", target.toString());
 	}
 }

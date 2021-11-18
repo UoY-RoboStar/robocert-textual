@@ -597,21 +597,8 @@ Argument:
 //
 
 Actor:
-	'use' StandardActor ('as' name=ID)?
+	'use' ({WorldActor} 'world' | {TargetActor} 'target') ('as' name=ID)?
 ;
-
-/**
- * An actor that resolves to some known relationship of the target's.
- */
-StandardActor:
-	relationship=TargetActorRelationship;
-
-/**
- * Relationships of target actors.
- */
-enum TargetActorRelationship:
-	WORLD='world' |
-	TARGET='target';
 
 //
 // SEQUENCE PROPERTIES

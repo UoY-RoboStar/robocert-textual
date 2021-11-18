@@ -5,14 +5,13 @@ package robocalc.robocert.validation;
 
 import java.util.function.Function;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.validation.Check;
 
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.RoboCertPackage;
 import robocalc.robocert.model.robocert.SequenceGroup;
-import robocalc.robocert.model.robocert.StandardActor;
-import robocalc.robocert.model.robocert.TargetActorRelationship;
+import robocalc.robocert.model.robocert.TargetActor;
+import robocalc.robocert.model.robocert.WorldActor;
 
 /**
  * This class contains custom validation rules.
@@ -62,20 +61,14 @@ public class RoboCertValidator extends AbstractRoboCertValidator {
 	//
 
 	private long numTargets(SequenceGroup g) {
-		return countActors(g.getActors(), x -> isStandardActor(x, TargetActorRelationship.TARGET));
+		return countActors(g, x -> x instanceof TargetActor);
 	}
 
 	private long numWorlds(SequenceGroup g) {
-		return countActors(g.getActors(), x -> isStandardActor(x, TargetActorRelationship.WORLD));
+		return countActors(g, x -> x instanceof WorldActor);
 	}
 
-	private long countActors(EList<Actor> actors, Function<? super Actor, Boolean> f) {
-		return actors.stream().mapToLong(x -> f.apply(x) ? 1 : 0).sum();
-	}
-
-	private boolean isStandardActor(Actor a, TargetActorRelationship rel) {
-		if (a instanceof StandardActor s)
-			return s.getRelationship() == rel;
-		return false;
+	private long countActors(SequenceGroup g, Function<? super Actor, Boolean> f) {
+		return g.getActors().stream().mapToLong(x -> f.apply(x) ? 1 : 0).sum();
 	}
 }

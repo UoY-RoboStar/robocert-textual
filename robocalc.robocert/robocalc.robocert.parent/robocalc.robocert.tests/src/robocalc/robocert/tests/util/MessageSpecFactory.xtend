@@ -26,7 +26,8 @@ import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.WildcardArgument
 import robocalc.robocert.model.robocert.util.MessageFactory
 import circus.robocalc.robochart.OperationSig
-import robocalc.robocert.model.robocert.TargetActorRelationship
+import robocalc.robocert.model.robocert.WorldActor
+import robocalc.robocert.model.robocert.TargetActor
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -167,8 +168,8 @@ class MessageSpecFactory {
 	private def group() {
 		rcert.createSequenceGroup => [ x |
 			x.target = target()
-			x.actors.add(mf.standardActor(TargetActorRelationship::WORLD))
-			x.actors.add(mf.standardActor(TargetActorRelationship::TARGET))			
+			x.actors.add(rcert.createTargetActor)
+			x.actors.add(rcert.createWorldActor)			
 		]
 	}
 
@@ -195,7 +196,7 @@ class MessageSpecFactory {
 	 */
 	def expectWorld(Actor it) {
 		assertNotNull
-		assertEquals(TargetActorRelationship::WORLD, calculatedRelationship)
+		assertTrue(it instanceof WorldActor)
 	}
 
 	/**
@@ -205,6 +206,6 @@ class MessageSpecFactory {
 	 */
 	def expectTarget(Actor it) {
 		assertNotNull
-		assertEquals(TargetActorRelationship::TARGET, calculatedRelationship)
+		assertTrue(it instanceof TargetActor)
 	}
 }

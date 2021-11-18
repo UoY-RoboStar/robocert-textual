@@ -12,24 +12,17 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
-import com.google.common.collect.Iterables;
-
-import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.WorldActor;
+import com.google.common.base.Strings;
 
 /**
- * Adds derived operation definitions to {@link SequenceGroupImpl}.
- *
+ * Adds custom functionality to {@link WorldActorImpl}.
+ * 
  * @author Matt Windsor
  */
-public class SequenceGroupImplCustom extends SequenceGroupImpl {
+public class WorldActorImplCustom extends WorldActorImpl {
 	@Override
-	public WorldActor basicGetWorldActor() {
-		return Iterables.getFirst(Iterables.filter(getActors(), WorldActor.class), null);
-	}
-
-	@Override
-	public TargetActor basicGetTargetActor() {
-		return Iterables.getFirst(Iterables.filter(getActors(), TargetActor.class), null);
+	public String toString() {
+		var name = getName();
+		return "<<world>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
 	}
 }

@@ -69,8 +69,8 @@ public class DirectionalActorPairCustomTest {
 	void init() {
 		// TODO(@MattWindsor91): deduplicate this with ImplicitActorPairCustomTest
 
-		target = mf.targetActor();
-		world = mf.worldActor();
+		target = rc.createTargetActor();
+		world = rc.createWorldActor();
 
 		it = mf.directional(MessageDirection.INBOUND);
 		final var spec = mf.spec(mf.eventTopic(msf.intEvent()), it);

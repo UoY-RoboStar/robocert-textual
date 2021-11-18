@@ -5,11 +5,13 @@ package robocalc.robocert.model.robocert.util;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.inject.Inject;
 
 import circus.robocalc.robochart.Event;
 import circus.robocalc.robochart.OperationSig;
+import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ActorPair;
 import robocalc.robocert.model.robocert.Argument;
 import robocalc.robocert.model.robocert.DirectionalActorPair;
@@ -17,8 +19,6 @@ import robocalc.robocert.model.robocert.MessageDirection;
 import robocalc.robocert.model.robocert.MessageSpec;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.StandardActor;
-import robocalc.robocert.model.robocert.TargetActorRelationship;
 
 /**
  * High-level factory for message-related objects.
@@ -98,29 +98,9 @@ public class MessageFactory {
 	}
 	
 	/**
-	 * Constructs an unnamed standard actor.
-	 *
-	 * @param r the relationship between the actor and the sequence target.
-	 *
-	 * @return the constructed relationship.
+	 * @return a list containing target and world actors.
 	 */
-	public StandardActor standardActor(TargetActorRelationship r) {
-		var it = rc.createStandardActor();
-		it.setRelationship(r);
-		return it;
-	}
-	
-	/**
-	 * @return an actor representing the target.
-	 */
-	public StandardActor targetActor() {
-		return standardActor(TargetActorRelationship.TARGET);
-	}
-	
-	/**
-	 * @return an actor representing the world.
-	 */
-	public StandardActor worldActor() {
-		return standardActor(TargetActorRelationship.WORLD);
+	public List<Actor> targetWorldActors() {
+		return List.of(rc.createTargetActor(), rc.createWorldActor());
 	}
 }

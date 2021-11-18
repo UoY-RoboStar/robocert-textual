@@ -361,10 +361,10 @@ These correspond to UML lifelines.")
 	//
 
 	@genmodel(documentation="Shortcut for getting the target actor of the sequence, if any.")
-	derived volatile transient readonly ref StandardActor[0..1] targetActor;
+	derived volatile transient readonly ref TargetActor[0..1] targetActor;
 	
 	@genmodel(documentation="Shortcut for getting the world actor of the sequence, if any.")
-	derived volatile transient readonly ref StandardActor[0..1] worldActor;
+	derived volatile transient readonly ref WorldActor[0..1] worldActor;
 }
 
 @genmodel(documentation="A sequence diagram.")
@@ -779,28 +779,14 @@ abstract class Actor extends OptionallyNamedElement {
 
 	@genmodel(documentation="The sequence group to which these actors belong.")
 	ref SequenceGroup[1]#actors group;
-	
-	//
-	// Derived properties
-	//
-	
-	@genmodel(documentation="Gets the relationship of this actor to its target, calculating it if necessary.")
-	derived volatile transient readonly attr TargetActorRelationship[1] calculatedRelationship;
 }
 
-@genmodel(documentation="An actor that has some well-known relationship to the target.")
-class StandardActor extends Actor {
-	@genmodel(documentation="The relationship between this actor and the target.")
-	attr TargetActorRelationship[1] relationship;
+@genmodel(documentation="Actor that stands for the current target.")
+class TargetActor extends Actor {
 }
 
-enum TargetActorRelationship {
-	@genmodel(documentation="No relationship.")
-	NONE;
-	@genmodel(documentation="The world (environment) above a target.")
-	WORLD;
-	@genmodel(documentation="The target itself.")
-	TARGET;
+@genmodel(documentation="Actor that stands for the environment of the current target.")
+class WorldActor extends Actor {
 }
 
 //

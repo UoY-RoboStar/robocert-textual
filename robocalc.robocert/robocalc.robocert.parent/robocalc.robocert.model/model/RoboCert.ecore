@@ -420,13 +420,13 @@
         <details key="documentation" value="The actors participating in this sequence.&#xD;&#xA;&#xD;&#xA;These correspond to UML lifelines."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targetActor" eType="#//StandardActor"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetActor" eType="#//TargetActor"
         changeable="false" volatile="true" transient="true" derived="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Shortcut for getting the target actor of the sequence, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="worldActor" eType="#//StandardActor"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="worldActor" eType="#//WorldActor"
         changeable="false" volatile="true" transient="true" derived="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Shortcut for getting the world actor of the sequence, if any."/>
@@ -963,41 +963,16 @@
         <details key="documentation" value="The sequence group to which these actors belong."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="calculatedRelationship"
-        lowerBound="1" eType="#//TargetActorRelationship" changeable="false" volatile="true"
-        transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Gets the relationship of this actor to its target, calculating it if necessary."/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StandardActor" eSuperTypes="#//Actor">
+  <eClassifiers xsi:type="ecore:EClass" name="TargetActor" eSuperTypes="#//Actor">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An actor that has some well-known relationship to the target."/>
+      <details key="documentation" value="Actor that stands for the current target."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="relationship" lowerBound="1"
-        eType="#//TargetActorRelationship">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The relationship between this actor and the target."/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="TargetActorRelationship">
-    <eLiterals name="NONE">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="No relationship."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="WORLD" value="1">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The world (environment) above a target."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="TARGET" value="2">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The target itself."/>
-      </eAnnotations>
-    </eLiterals>
+  <eClassifiers xsi:type="ecore:EClass" name="WorldActor" eSuperTypes="#//Actor">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Actor that stands for the environment of the current target."/>
+    </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SequenceProperty" eSuperTypes="#//Property">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

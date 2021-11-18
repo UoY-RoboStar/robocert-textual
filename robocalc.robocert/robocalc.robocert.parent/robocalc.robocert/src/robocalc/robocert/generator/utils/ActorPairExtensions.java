@@ -2,7 +2,7 @@ package robocalc.robocert.generator.utils;
 
 import robocalc.robocert.model.robocert.ActorPair;
 import robocalc.robocert.model.robocert.MessageDirection;
-import robocalc.robocert.model.robocert.TargetActorRelationship;
+import robocalc.robocert.model.robocert.TargetActor;
 
 /**
  * Extensions for {@link ActorPair}s.
@@ -22,11 +22,9 @@ public class ActorPairExtensions {
 	 * @throws UnsupportedOperationException if there is no single target.
 	 */
 	public MessageDirection getInferredDirection(ActorPair pair) {
-		var f = pair.getResolvedFrom();
-		if (f.getCalculatedRelationship() == TargetActorRelationship.TARGET)
+		if (pair.getResolvedFrom() instanceof TargetActor)
 			return MessageDirection.OUTBOUND;
-		var t = pair.getResolvedTo();
-		if (t.getCalculatedRelationship() == TargetActorRelationship.TARGET)
+		if (pair.getResolvedTo() instanceof TargetActor)
 			return MessageDirection.INBOUND;
 		throw new UnsupportedOperationException(
 					"tried to infer direction of an actor pair with an ambiguous target");
