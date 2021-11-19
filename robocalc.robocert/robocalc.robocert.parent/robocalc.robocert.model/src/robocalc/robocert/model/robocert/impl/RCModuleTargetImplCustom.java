@@ -12,6 +12,9 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
+import org.eclipse.emf.common.util.EList;
+
+import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
 
 /**
@@ -25,6 +28,11 @@ class RCModuleTargetImplCustom extends RCModuleTargetImpl {
 		return getModule();
 	}
 
+	@Override
+	public EList<ConnectionNode> getComponents() {
+		return getModule().getNodes();
+	}
+	
 	/**
 	 * @return a human-readable summary of this module.
 	 */

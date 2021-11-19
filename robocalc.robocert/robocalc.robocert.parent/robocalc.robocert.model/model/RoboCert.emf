@@ -96,6 +96,13 @@ abstract class Target extends CSPProcessSource, robochart.NamedElement {
 
 	@genmodel(documentation="The group to which this target belongs.")
 	ref TargetGroup[1]#targets group;
+	
+	//
+	// Derived properties
+	//
+	
+	@genmodel(documentation="Any components accessible from this target.")
+	derived volatile transient readonly ref robochart.ConnectionNode[*] components;
 
 	@genmodel(documentation="Lowest common denominator for the targeted element.")
 	derived volatile transient readonly ref robochart.NamedElement[1] element;	

@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.validation.Check;
+import org.eclipse.xtext.validation.ComposedChecks;
 
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.MessageSpec;
@@ -22,6 +23,7 @@ import robocalc.robocert.model.robocert.WorldActor;
  * See
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
+@ComposedChecks(validators={ActorValidator.class})
 public class RoboCertValidator extends AbstractRoboCertValidator {
 	//
 	// MessageSpec
