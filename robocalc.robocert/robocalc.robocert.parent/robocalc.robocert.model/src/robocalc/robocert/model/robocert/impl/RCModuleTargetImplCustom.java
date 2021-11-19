@@ -12,10 +12,15 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
+import circus.robocalc.robochart.RoboticPlatform;
 
 /**
  * Adds derived operation definitions to {@link RCModuleTargetImpl}.
@@ -30,7 +35,16 @@ class RCModuleTargetImplCustom extends RCModuleTargetImpl {
 
 	@Override
 	public EList<ConnectionNode> getComponents() {
-		return getModule().getNodes();
+		return nodes().filter(x -> !(x instanceof RoboticPlatform)).collect(Collectors.toCollection(BasicEList::new));
+	}
+
+	private Stream<ConnectionNode> nodes() {
+		return getModule().getNodes().stream();
+	}
+	
+	@Override
+	public EList<NamedElement> getContextElements() {
+		return nodes().filter(RoboticPlatform.class::isInstance).map(RoboticPlatform.class::cast).collect(Collectors.toCollection(BasicEList::new));
 	}
 	
 	/**

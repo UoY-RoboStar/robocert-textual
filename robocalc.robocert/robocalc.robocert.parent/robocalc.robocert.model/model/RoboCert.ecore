@@ -86,6 +86,13 @@
         <details key="documentation" value="Any components accessible from this target."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contextElements" upperBound="-1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Any elements inside the context of this target."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="element" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"
         changeable="false" volatile="true" transient="true" derived="true">
@@ -96,12 +103,34 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RCModuleTarget" eSuperTypes="#//Target">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A target referring to a RoboChart module."/>
+      <details key="documentation" value="A target referring to a RoboChart module.&#xD;&#xA;&#xD;&#xA;Such a target has controllers as its components, and the robotic platform as&#xD;&#xA;its context."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The module referred to by this target."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SystemTarget" eSuperTypes="#//Target">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A target referring to a robotic system.&#xD;&#xA;&#xD;&#xA;This is distinct from RCModuleTarget in that it refers to a layer outside of&#xD;&#xA;the module, and its context is the entire world in the RoboWorld sense."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enclosedModule" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The module this system encapsulates."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ControllerTarget" eSuperTypes="#//Target">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A target referring to a RoboChart controller."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="controller" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Controller">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The controller referred to by this target."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
