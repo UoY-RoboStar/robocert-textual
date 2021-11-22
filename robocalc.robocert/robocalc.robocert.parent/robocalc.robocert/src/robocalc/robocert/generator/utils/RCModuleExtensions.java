@@ -11,26 +11,22 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 
-import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.Context;
-import circus.robocalc.robochart.Controller;
-import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.RCModule;
-import circus.robocalc.robochart.RoboticPlatform;
-import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
+import robocalc.robocert.model.robocert.util.DefinitionHelper;
 
 /**
  * Extension methods for dealing with RoboChart modules.
  */
 class RCModuleExtensions {
 	@Inject
-	private ControllerExtensions cx;
+	private DefinitionHelper dh;
 	@Inject
 	private CTimedGeneratorUtils gu;
 	@Inject
-	private RoboticPlatformExtensions px;
+	private ControllerExtensions cx;
 
 	/**
 	 * Gets the variables that make up this module's parameterisation.
@@ -45,11 +41,11 @@ class RCModuleExtensions {
 	}
 
 	private Stream<Variable> platformParams(RCModule it) {
-		return gu.allLocalConstants(platform(it)).parallelStream();
+		return gu.allLocalConstants(dh.platform(it)).parallelStream();
 	}
 
 	private Stream<Variable> controllerParams(RCModule it) {
-		return controllers(it).flatMap(x -> Streams.stream(cx.moduleParameterisation(x)));
+		return dh.controllers(it).flatMap(x -> Streams.stream(cx.moduleParameterisation(x)));
 	}
 
 	/**
@@ -61,24 +57,7 @@ class RCModuleExtensions {
 	 * @return an iterator over the contexts accessible to this module.
 	 */
 	public Stream<Context> contexts(RCModule it) {
-		return Stream.of(platform(it));
+		return Stream.of(dh.platform(it));
 	}
 
-	/**
-	 * Gets the robotic platform definition for a RoboChart module.
-	 *
-	 * @param it the RoboChart module.
-	 * @return the module's robotic platform.
-	 */
-	private RoboticPlatformDef platform(RCModule it) {
-		return nodes(it, RoboticPlatform.class).map(px::definition).findFirst().get();
-	}
-
-	private Stream<ControllerDef> controllers(RCModule it) {
-		return nodes(it, Controller.class).map(cx::definition);
-	}
-
-	private <T extends ConnectionNode> Stream<T> nodes(RCModule m, Class<T> clazz) {
-		return m.getNodes().parallelStream().filter(clazz::isInstance).map(clazz::cast);
-	}
 }

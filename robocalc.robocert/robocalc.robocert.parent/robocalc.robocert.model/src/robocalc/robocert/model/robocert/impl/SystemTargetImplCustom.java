@@ -12,49 +12,47 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
-import circus.robocalc.robochart.RoboticPlatform;
 import robocalc.robocert.model.robocert.util.DefinitionHelper;
 
 /**
- * Adds derived operation definitions to {@link RCModuleTargetImpl}.
+ * Adds derived operation definitions to {@link SystemTargetImpl}.
  *
  * @author Matt Windsor
  */
-class RCModuleTargetImplCustom extends RCModuleTargetImpl {
+class SystemTargetImplCustom extends SystemTargetImpl {
 	@Override
 	public NamedElement basicGetElement() {
-		return getModule();
+		// TODO(@MattWindsor91): this is actually quite odd - the theoretical
+		// element of a system is the system _enclosing_ the module, which is
+		// not quite expressible in the RoboChart metamodel.
+		return getEnclosedModule();
 	}
 
 	@Override
 	public EList<ConnectionNode> getComponents() {
-		return nodes().filter(x -> !(x instanceof RoboticPlatform)).collect(Collectors.toCollection(BasicEList::new));
+		// The only component connected to a system is the module, and that
+		// is inexpressible as a connection node (the metamodel instead
+		// special-cases it).
+		return new BasicEList<>();
 	}
 
-	private Stream<ConnectionNode> nodes() {
-		return getModule().getNodes().stream();
-	}
-	
 	@Override
 	public EList<NamedElement> getContextElements() {
 		var list = new BasicEList<NamedElement>(1);
-		list.add(new DefinitionHelper().platform(getModule()));
+		list.add(new DefinitionHelper().platform(getEnclosedModule()));
 		return list;
 	}
-	
+
 	/**
 	 * @return a human-readable summary of this module.
 	 */
 	@Override
 	public String toString() {
-		return "module " + getModule().getName();
+		return "system of module " + getEnclosedModule().getName();
 	}
 }

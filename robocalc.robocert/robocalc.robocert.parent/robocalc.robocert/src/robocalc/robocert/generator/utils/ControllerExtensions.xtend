@@ -6,7 +6,6 @@
  */
 package robocalc.robocert.generator.utils
 
-import circus.robocalc.robochart.ControllerRef
 import circus.robocalc.robochart.ControllerDef
 import com.google.inject.Inject
 import com.google.common.collect.Iterators
@@ -21,28 +20,6 @@ class ControllerExtensions {
 	@Inject extension CTimedGeneratorUtils
 	@Inject extension OperationExtensions
 	@Inject extension StateMachineExtensions
-
-	/**
-	 * Gets the underlying definition of a controller reference.
-	 * 
-	 * @param it  the controller.
-	 * 
-	 * @return the definition.
-	 */
-	def dispatch ControllerDef definition(ControllerRef it) {
-		ref
-	}
-
-	/**
-	 * Gets the underlying definition of a controller definition.
-	 * 
-	 * @param it  the controller.
-	 * 
-	 * @return the definition (it).
-	 */
-	def dispatch ControllerDef definition(ControllerDef it) {
-		it
-	}
 
 	/**
 	 * Gets this controller's contribution to its module's parameterisation.

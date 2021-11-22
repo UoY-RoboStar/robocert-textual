@@ -27,19 +27,19 @@ import circus.robocalc.robochart.NamedElement;
 import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
 import circus.robocalc.robochart.RoboticPlatform;
-import robocalc.robocert.model.robocert.RCModuleTarget;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link RCModuleTarget}s, and also tests that the
+ * Tests any custom functionality on RCModuleTargets, and also tests that the
  * factory resolves them correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class RCModuleTargetImplCustomTest extends TargetImplCustomTest<RCModuleTarget> {
+public class SystemTargetImplCustomTest extends TargetImplCustomTest<SystemTarget> {
 	@Inject
 	private RoboCertFactory rf;
 	@Inject
@@ -65,13 +65,14 @@ public class RCModuleTargetImplCustomTest extends TargetImplCustomTest<RCModuleT
 		module.setName("foo");
 		module.getNodes().addAll(List.of(ctrl1, ctrl2, rp));
 
-		example = rf.createRCModuleTarget();
-		example.setModule(module);
+		example = rf.createSystemTarget();
+		example.setEnclosedModule(module);
 	}
 
 	@Override
 	protected ConnectionNode[] expectedComponents() {
-		return new ConnectionNode[]{ctrl1, ctrl2};
+		// SystemTargets have no tangible components.
+		return new ConnectionNode[]{};
 	}
 
 	@Override
@@ -86,6 +87,6 @@ public class RCModuleTargetImplCustomTest extends TargetImplCustomTest<RCModuleT
 
 	@Override
 	protected String expectedString() {
-		return "module foo";
+		return "system of module foo";
 	}
 }

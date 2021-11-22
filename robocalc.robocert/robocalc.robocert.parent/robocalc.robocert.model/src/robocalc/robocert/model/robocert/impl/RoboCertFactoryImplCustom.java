@@ -10,6 +10,7 @@ import robocalc.robocert.model.robocert.RCModuleTarget;
 import robocalc.robocert.model.robocert.RefMessageSet;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.Subsequence;
+import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
 import robocalc.robocert.model.robocert.WorldActor;
@@ -17,21 +18,48 @@ import robocalc.robocert.model.robocert.WorldActor;
 /**
  * Custom factory that injects 'custom' versions of various RoboCert EClasses,
  * including implementations of derived elements.
+ * 
+ * @author Matt Windsor
  */
 public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	@Override
-	public WorldActor createWorldActor() {
-		return new WorldActorImplCustom();
+	public BinaryMessageSet createBinaryMessageSet() {
+		return new BinaryMessageSetImplCustom();
 	}
 	
 	@Override
-	public TargetActor createTargetActor() {
-		return new TargetActorImplCustom();
+	public ConstAssignment createConstAssignment() {
+		return new ConstAssignmentImplCustom();
 	}
 	
+	@Override
+	public ExplicitEdge createExplicitEdge() {
+		return new ExplicitEdgeImplCustom();
+	}
+	
+	@Override
+	public ExtensionalMessageSet createExtensionalMessageSet() {
+		return new ExtensionalMessageSetImplCustom();
+	}
+
+	@Override
+	public ImplicitEdge createImplicitEdge() {
+		return new ImplicitEdgeImplCustom();
+	}
+
+	@Override
+	public Instantiation createInstantiation() {
+		return new InstantiationImplCustom();
+	}
+
 	@Override
 	public RCModuleTarget createRCModuleTarget() {
 		return new RCModuleTargetImplCustom();
+	}
+	
+	@Override
+	public RefMessageSet createRefMessageSet() {
+		return new RefMessageSetImplCustom();
 	}
 
 	@Override
@@ -45,13 +73,13 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	}
 
 	@Override
-	public BinaryMessageSet createBinaryMessageSet() {
-		return new BinaryMessageSetImplCustom();
+	public SystemTarget createSystemTarget() {
+		return new SystemTargetImplCustom();
 	}
-	
+
 	@Override
-	public ExtensionalMessageSet createExtensionalMessageSet() {
-		return new ExtensionalMessageSetImplCustom();
+	public TargetActor createTargetActor() {
+		return new TargetActorImplCustom();
 	}
 
 	@Override
@@ -60,27 +88,7 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	}
 
 	@Override
-	public RefMessageSet createRefMessageSet() {
-		return new RefMessageSetImplCustom();
-	}
-
-	@Override
-	public ImplicitEdge createImplicitEdge() {
-		return new ImplicitEdgeImplCustom();
-	}
-
-	@Override
-	public ExplicitEdge createExplicitEdge() {
-		return new ExplicitEdgeImplCustom();
-	}
-
-	@Override
-	public Instantiation createInstantiation() {
-		return new InstantiationImplCustom();
-	}
-
-	@Override
-	public ConstAssignment createConstAssignment() {
-		return new ConstAssignmentImplCustom();
+	public WorldActor createWorldActor() {
+		return new WorldActorImplCustom();
 	}	
 }
