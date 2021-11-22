@@ -438,34 +438,22 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A collection of sequence diagrams."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="messageSets" upperBound="-1"
-        eType="#//NamedMessageSet" containment="true" eOpposite="#//NamedMessageSet/group">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messageSets" ordered="false"
+        upperBound="-1" eType="#//NamedMessageSet" containment="true" eOpposite="#//NamedMessageSet/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Any message sets named on the sequence group."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" upperBound="-1"
-        eType="#//Sequence" containment="true" eOpposite="#//Sequence/group">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" ordered="false"
+        upperBound="-1" eType="#//Sequence" containment="true" eOpposite="#//Sequence/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The sequences inside this sequence group."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
-        upperBound="-1" eType="#//Actor" containment="true" eOpposite="#//Actor/group">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actors" ordered="false"
+        lowerBound="2" upperBound="-1" eType="#//Actor" containment="true" eOpposite="#//Actor/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The actors participating in this sequence.&#xD;&#xA;&#xD;&#xA;These correspond to UML lifelines."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targetActor" eType="#//TargetActor"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the target actor of the sequence, if any."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="worldActor" eType="#//WorldActor"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the world actor of the sequence, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -483,6 +471,24 @@
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The top-level subsequence of the sequence diagram."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lifelines" lowerBound="2"
+        upperBound="-1" eType="#//Actor">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The set of group actors forming lifelines in this diagram.&#xD;&#xA;&#xD;&#xA;The order determines that in which lifelines are shown in the graphical notation."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="systemModuleActor" eType="#//SystemModuleActor"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Shortcut for getting the system module actor of the sequence, if any."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contextActor" eType="#//ContextActor"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Shortcut for getting the context actor of the sequence, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -995,12 +1001,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TargetActor" eSuperTypes="#//Actor">
+  <eClassifiers xsi:type="ecore:EClass" name="SystemModuleActor" eSuperTypes="#//Actor">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Actor that stands for the current target."/>
+      <details key="documentation" value="Actor that stands for the module of a system.&#xD;&#xA;&#xD;&#xA;System modules can't be modelled as components in the same way that&#xD;&#xA;module controllers and controller STMs can, as they aren't ConnectionNodes.&#xD;&#xA;Further, there is always explicitly one unambiguous system module."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WorldActor" eSuperTypes="#//Actor">
+  <eClassifiers xsi:type="ecore:EClass" name="ContextActor" eSuperTypes="#//Actor">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Actor that stands for the environment of the current target."/>
     </eAnnotations>

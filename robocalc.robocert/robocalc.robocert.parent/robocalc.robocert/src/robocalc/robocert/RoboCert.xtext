@@ -396,7 +396,7 @@ SequenceGroup:
  * A sequence diagram.
  */
 Sequence:
-	'sequence' name=ID ':' body=Subsequence;
+	'sequence' name=ID 'for' lifelines+=[Actor|QualifiedName] (',' lifelines+=[Actor|QualifiedName]) (',' | ','? 'and') lifelines+=[Actor|QualifiedName] ':' body=Subsequence;
 
 /**
  * A subsequence.
@@ -598,7 +598,7 @@ Argument:
 // ACTORS
 //
 Actor:
-	'use' ('world' {WorldActor} | 'target' {TargetActor} | 'component' {ComponentActor}
+	'use' ('module' {SystemModuleActor} | 'world' {ContextActor} | 'component' {ComponentActor}
 	node=[ConnectionNode|QualifiedName]) ('as' name=ID)?;
 
 //

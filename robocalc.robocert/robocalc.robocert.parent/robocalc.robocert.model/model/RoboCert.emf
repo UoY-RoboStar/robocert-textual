@@ -378,25 +378,15 @@ enum Temperature {
 @genmodel(documentation="A collection of sequence diagrams.")
 class SequenceGroup extends SpecGroup {
 	@genmodel(documentation="Any message sets named on the sequence group.")
-	val NamedMessageSet[*]#group messageSets;
+	!ordered val NamedMessageSet[*]#group messageSets;
 	
 	@genmodel(documentation="The sequences inside this sequence group.")
-	val Sequence[*]#group sequences;
+	!ordered val Sequence[*]#group sequences;
 	
 	@genmodel(documentation="The actors participating in this sequence.
 
 These correspond to UML lifelines.")
-	val Actor[2..*]#group actors;
-
-	//
-	// Derived properties
-	//
-
-	@genmodel(documentation="Shortcut for getting the target actor of the sequence, if any.")
-	derived volatile transient readonly ref TargetActor[0..1] targetActor;
-	
-	@genmodel(documentation="Shortcut for getting the world actor of the sequence, if any.")
-	derived volatile transient readonly ref WorldActor[0..1] worldActor;
+	!ordered val Actor[2..*]#group actors;
 }
 
 @genmodel(documentation="A sequence diagram.")
@@ -405,6 +395,20 @@ class Sequence extends robochart.NamedElement, Process {
 	ref SequenceGroup[1]#sequences group;
 	@genmodel(documentation="The top-level subsequence of the sequence diagram.")
 	val Subsequence[1] body;
+	@genmodel(documentation="The set of group actors forming lifelines in this diagram.
+
+The order determines that in which lifelines are shown in the graphical notation.")
+	ordered ref Actor[2..*] lifelines;
+	
+	//
+	// Derived properties
+	//
+
+	@genmodel(documentation="Shortcut for getting the system module actor of the sequence, if any.")
+	derived volatile transient readonly ref SystemModuleActor[0..1] systemModuleActor;
+	
+	@genmodel(documentation="Shortcut for getting the context actor of the sequence, if any.")
+	derived volatile transient readonly ref ContextActor[0..1] contextActor;
 }
 
 @genmodel(documentation="A sequence of steps, forming part or all of a sequence diagram.")
@@ -810,12 +814,19 @@ abstract class Actor extends OptionallyNamedElement {
 	ref SequenceGroup[1]#actors group;
 }
 
-@genmodel(documentation="Actor that stands for the current target.")
-class TargetActor extends Actor {
+@genmodel(documentation="Actor that stands for the module of a system.
+
+System modules can't be modelled as components in the same way that
+module controllers and controller STMs can, as they aren't ConnectionNodes.
+Further, there is always explicitly one unambiguous system module.")
+class SystemModuleActor extends Actor {
 }
 
 @genmodel(documentation="Actor that stands for the environment of the current target.")
-class WorldActor extends Actor {
+class ContextActor extends Actor {
+	// TODO(@MattWindsor91): we'll likely need to diversify this into multiple
+	// actor types: RoboWorld worlds, robotic platforms, and general contexts
+	// for instance.
 }
 
 @genmodel(documentation="Actor that references a component of the target.")
