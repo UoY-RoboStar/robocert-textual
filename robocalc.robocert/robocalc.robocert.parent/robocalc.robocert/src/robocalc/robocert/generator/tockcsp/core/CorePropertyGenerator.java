@@ -15,8 +15,8 @@ package robocalc.robocert.generator.tockcsp.core;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.ll.CSPProcessSourceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.ProcessGenerator;
 import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.CoreProperty;
 import robocalc.robocert.model.robocert.CorePropertyType;
@@ -29,7 +29,7 @@ import robocalc.robocert.model.robocert.CorePropertyType;
  */
 public class CorePropertyGenerator {
 	@Inject
-	private CSPProcessSourceGenerator cpg;
+	private ProcessGenerator cpg;
 
 	@Inject
 	private CSPStructureGenerator csp;

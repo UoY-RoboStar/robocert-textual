@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.ll;
+package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import com.google.inject.Inject;
 
@@ -18,21 +18,22 @@ import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.SpecGroupElementFinder;
 import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
+import robocalc.robocert.generator.tockcsp.ll.TickTockContextGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CSPModel;
-import robocalc.robocert.model.robocert.CSPProcessSource;
+import robocalc.robocert.model.robocert.Process;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
 import robocalc.robocert.model.robocert.Sequence;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetGroupSource;
 
 /**
- * Generates CSP-M that interprets CSP process sources as references to the
+ * Generates CSP-M that interprets {@link Process}es as references to the
  * relevant CSP processes.
  *
  * @author Matt Windsor
  */
-public class CSPProcessSourceGenerator {
+public class ProcessGenerator {
 	@Inject
 	private TargetGroupGenerator tg;
 	@Inject
@@ -43,20 +44,20 @@ public class CSPProcessSourceGenerator {
 	private UnsupportedSubclassHandler ush;
 
 	/**
-	 * Generates CSP-M for the process of a process source, potentially lifted into
+	 * Generates CSP-M referencing a process, potentially lifted into
 	 * its tick-tock context.
 	 *
-	 * @param p the process source to generate.
+	 * @param p the process to generate.
 	 * @param m the target semantic model.
 	 *
 	 * @return CSP-M for the generated process.
 	 */
-	public CharSequence generate(CSPProcessSource p, CSPModel m) {
+	public CharSequence generate(Process p, CSPModel m) {
 		var inner = generateInner(p);
 		return m == CSPModel.TICK_TOCK ? tt.liftTickTock(p, inner) : inner;
 	}
 
-	private CharSequence generateInner(CSPProcessSource p) {
+	private CharSequence generateInner(Process p) {
 		// TODO(@MattWindsor91): pattern matched switch, eventually
 
 		if (p instanceof ProcessCSPFragment c)

@@ -69,9 +69,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//CSPProcessSource ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Process ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A specification target.&#xD;&#xA;&#xD;&#xA;Targets are CSP process sources, through appeal to the existing RoboStar&#xD;&#xA;language semantics."/>
+      <details key="documentation" value="A specification target.&#xD;&#xA;&#xD;&#xA;Targets combine several things: a RoboChart element;&#xD;&#xA;a process representing the element from a refinement perspective;&#xD;&#xA;information about the upstream ('context') elements connected to this target;&#xD;&#xA;and information about the downstream elements connected to it."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//TargetGroup"
         eOpposite="#//TargetGroup/targets">
@@ -103,7 +103,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RCModuleTarget" eSuperTypes="#//Target">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A target referring to a RoboChart module.&#xD;&#xA;&#xD;&#xA;Such a target has controllers as its components, and the robotic platform as&#xD;&#xA;its context."/>
+      <details key="documentation" value="A target referring to a RoboChart module.&#xD;&#xA;&#xD;&#xA;Such a target has controllers as its components, and the robotic platform as&#xD;&#xA;its context.  Its process is the module process."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule">
@@ -134,7 +134,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TargetGroupSource" eSuperTypes="#//CSPProcessSource">
+  <eClassifiers xsi:type="ecore:EClass" name="TargetGroupSource" eSuperTypes="#//Process">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Uses the target of a specification group as a process source.&#xD;&#xA;&#xD;&#xA;This includes any instantiation for the "/>
     </eAnnotations>
@@ -231,7 +231,7 @@
       <details key="documentation" value="A core property."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subject" lowerBound="1"
-        eType="#//CSPProcessSource">
+        eType="#//Process">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The subject of the property."/>
       </eAnnotations>
@@ -469,7 +469,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//CSPProcessSource">
+  <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//Process">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A sequence diagram."/>
     </eAnnotations>
@@ -1090,7 +1090,7 @@
       <details key="documentation" value="A fragment of CSP-M that is bound to an event set."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//NamedCSPFragment #//CSPProcessSource">
+  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//NamedCSPFragment #//Process">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment of CSP-M that is bound to a process."/>
     </eAnnotations>
@@ -1109,12 +1109,12 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A property that requires a low-level CSP refinement relation."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" lowerBound="1" eType="#//CSPProcessSource">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" lowerBound="1" eType="#//Process">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Left-hand side of the refinement."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" eType="#//CSPProcessSource">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" eType="#//Process">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Left-hand side of the refinement."/>
       </eAnnotations>
@@ -1166,7 +1166,7 @@
       <details key="documentation" value="Abstract class of anything that can be interpreted as a tick-tock context.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPProcessSource" abstract="true" eSuperTypes="#//CSPContextSource">
+  <eClassifiers xsi:type="ecore:EClass" name="Process" abstract="true" eSuperTypes="#//CSPContextSource">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Abstract class of anything that can be interpreted as a CSP process.&#xD;&#xA;&#xD;&#xA;All CSP process sources have an underlying tick-tock context source, even if&#xD;&#xA;it is just the empty set.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
     </eAnnotations>

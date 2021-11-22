@@ -14,12 +14,11 @@ package robocalc.robocert.generator.tockcsp.core;
 
 import java.util.stream.Stream;
 
-import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 
 import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
-import robocalc.robocert.generator.utils.TargetExtensions;
+import robocalc.robocert.generator.utils.TargetParameterResolver;
 import robocalc.robocert.generator.utils.VariableExtensions;
 import robocalc.robocert.model.robocert.CertExpr;
 import robocalc.robocert.model.robocert.Instantiation;
@@ -34,7 +33,7 @@ public class TargetGenerator {
 	@Inject
 	private ExpressionGenerator eg;
 	@Inject
-	private TargetExtensions tx;
+	private TargetParameterResolver pr;
 	@Inject
 	private VariableExtensions vx;
 	@Inject
@@ -78,7 +77,7 @@ public class TargetGenerator {
 	public CharSequence[] generateRefParams(Target t, Instantiation lastInst, Instantiation thisInst, boolean withId) {
 		// TODO(@MattWindsor91): work out what we need here to have derived
 		// groups.  Maybe a stack of instantiations?
-		var params = Streams.stream(tx.uninstantiatedConstants(t, lastInst)).map(k -> generateConstant(thisInst, k));
+		var params = pr.excludeInstantiated(pr.parameterisation(t), lastInst).map(k -> generateConstant(thisInst, k));
 		if (withId)
 			params = Stream.concat(Stream.of(ID), params);		
 		return params.toArray(CharSequence[]::new);

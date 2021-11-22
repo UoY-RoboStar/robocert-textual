@@ -88,9 +88,11 @@ class TargetGroup extends Group {
 
 @genmodel(documentation="A specification target.
 
-Targets are CSP process sources, through appeal to the existing RoboStar
-language semantics.")
-abstract class Target extends CSPProcessSource, robochart.NamedElement {
+Targets combine several things: a RoboChart element;
+a process representing the element from a refinement perspective;
+information about the upstream ('context') elements connected to this target;
+and information about the downstream elements connected to it.")
+abstract class Target extends Process, robochart.NamedElement {
 	// TODO(@MattWindsor91): make these OptionallyNamedElements, with the
 	// name of the underlying element being the default name.
 
@@ -116,7 +118,7 @@ abstract class Target extends CSPProcessSource, robochart.NamedElement {
 @genmodel(documentation="A target referring to a RoboChart module.
 
 Such a target has controllers as its components, and the robotic platform as
-its context.")
+its context.  Its process is the module process.")
 class RCModuleTarget extends Target {
 	@genmodel(documentation="The module referred to by this target.")
 	ref robochart.RCModule[1] module;
@@ -140,7 +142,7 @@ class ControllerTarget extends Target {
 @genmodel(documentation="Uses the target of a specification group as a process source.
 
 This includes any instantiation for the ")
-class TargetGroupSource extends CSPProcessSource {
+class TargetGroupSource extends Process {
 	// TODO(@MattWindsor91): this is not a good workaround for the issue of
 	// needing to take these things as process sources.
 	@genmodel(documentation="The group whose target we are referencing.")
@@ -214,7 +216,7 @@ class CoreProperty extends Property {
 	// properties.
 
 	@genmodel(documentation="The subject of the property.")
-	ref CSPProcessSource[1] subject;
+	ref Process[1] subject;
 	
 	@genmodel(documentation="The specific type of property being investigated.")
 	attr CorePropertyType[1] type;
@@ -398,7 +400,7 @@ These correspond to UML lifelines.")
 }
 
 @genmodel(documentation="A sequence diagram.")
-class Sequence extends robochart.NamedElement, CSPProcessSource {
+class Sequence extends robochart.NamedElement, Process {
 	@genmodel(documentation="The group to which this sequence belongs.")
 	ref SequenceGroup[1]#sequences group;
 	@genmodel(documentation="The top-level subsequence of the sequence diagram.")
@@ -896,7 +898,7 @@ class EventSetCSPFragment extends NamedCSPFragment, CSPContextSource {
 }
 
 @genmodel(documentation="A fragment of CSP-M that is bound to a process.")
-class ProcessCSPFragment extends NamedCSPFragment, CSPProcessSource {
+class ProcessCSPFragment extends NamedCSPFragment, Process {
 	@genmodel(documentation="The source of the context used for tick-tock model shifting.
 
 We cannot, and do not, check to make sure that this accurately represents
@@ -918,10 +920,10 @@ class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
 @genmodel(documentation="A property that requires a low-level CSP refinement relation.")
 class CSPRefinementProperty extends Property {
 	@genmodel(documentation="Left-hand side of the refinement.")
-	ref CSPProcessSource[1] lhs;
+	ref Process[1] lhs;
 
 	@genmodel(documentation="Left-hand side of the refinement.")
-	ref CSPProcessSource[1] rhs;
+	ref Process[1] rhs;
 
 	@genmodel(documentation="Type of assertion.")
 	attr CSPRefinementOperator[1] type;
@@ -964,5 +966,5 @@ All CSP process sources have an underlying tick-tock context source, even if
 it is just the empty set.
 
 This is predominantly a marker, and doesn't hold any state of its own.")
-abstract class CSPProcessSource extends CSPContextSource {
+abstract class Process extends CSPContextSource {
 }

@@ -1,21 +1,21 @@
 package robocalc.robocert.scoping
 
 import robocalc.robocert.model.robocert.ConstAssignment
-import robocalc.robocert.generator.utils.TargetExtensions
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.Target
 import org.eclipse.xtext.scoping.Scopes
-import java.util.Iterator
 import circus.robocalc.robochart.Variable
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.scoping.IScope
 import robocalc.robocert.generator.utils.EObjectExtensions
+import robocalc.robocert.generator.utils.TargetParameterResolver
+import java.util.stream.Stream
 
 /**
  * Scoping logic for constants.
  */
 class ConstantScopeExtensions {
-	@Inject extension TargetExtensions
+	@Inject extension TargetParameterResolver
 	@Inject extension EObjectExtensions
 	@Inject IQualifiedNameProvider qnp
 
@@ -56,7 +56,7 @@ class ConstantScopeExtensions {
 	 * 
 	 * @return  the iterator as a scope as described above.
 	 */
-	private def scopeFor(Iterator<Variable> it) {
+	private def scopeFor(Stream<Variable> it) {
 		// Need to make sure we expand the iterator only once.
 		// Can't convert to a set as that compresses variables with similar names.
 		val vars = toList;

@@ -6,12 +6,13 @@ import robocalc.robocert.generator.utils.TargetExtensions
 import com.google.inject.Inject
 import org.eclipse.xtext.scoping.Scopes
 import circus.robocalc.robochart.Context
-import java.util.Iterator
 import org.eclipse.emf.ecore.EObject
 import robocalc.robocert.model.robocert.EventTopic
 import robocalc.robocert.model.robocert.MessageTopic
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 import robocalc.robocert.generator.utils.EObjectExtensions
+import java.util.stream.Stream
+import java.util.stream.Collectors
 
 /**
  * Scoping logic for message topics.
@@ -29,7 +30,7 @@ class TopicScopeExtensions {
 	 * @return the scope (may be null).
 	 */
 	def IScope getEventScope(EventTopic it) {
-		it.scope[allEvents.map[it as EObject].iterator]
+		it.scope[allEvents.map[it as EObject].stream]
 	}
 
 	/**
@@ -40,13 +41,13 @@ class TopicScopeExtensions {
 	 * @return the scope (may be null).
 	 */
 	def IScope getOperationScope(OperationTopic it) {
-		it.scope[allOperations.map[it as EObject].iterator]
+		it.scope[allOperations.map[it as EObject].stream]
 	}
 	
-	private def scope(MessageTopic it, (Context) => Iterator<EObject> selector) {
+	private def scope(MessageTopic it, (Context) => Stream<EObject> selector) {
 		// TODO(@MattWindsor91): need to work out what to do with inbound operations;
 		// can they ever happen?
-		val set = spec?.targetOfParentGroup?.world?.flatMap(selector)?.toSet;
+		val set = spec?.targetOfParentGroup?.contexts?.flatMap(selector)?.collect(Collectors::toSet);
 		if (set !== null) {
 			Scopes.scopeFor(set)
 		}

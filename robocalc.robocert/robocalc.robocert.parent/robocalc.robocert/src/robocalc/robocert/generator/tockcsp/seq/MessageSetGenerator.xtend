@@ -10,7 +10,7 @@ import robocalc.robocert.model.robocert.BinaryMessageSet
 import robocalc.robocert.model.robocert.BinarySetOperator
 import robocalc.robocert.generator.utils.MessageSetOptimiser
 import robocalc.robocert.model.robocert.Target
-import robocalc.robocert.generator.utils.TargetExtensions
+import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 
 /**
  * CSP generator for message sets.
@@ -20,7 +20,7 @@ import robocalc.robocert.generator.utils.TargetExtensions
  * generation.
  */
 class MessageSetGenerator {
-	@Inject extension TargetExtensions
+	@Inject extension CTimedGeneratorUtils
 	@Inject extension MessageSetOptimiser
 	@Inject extension MessageSpecGenerator
 
@@ -96,7 +96,7 @@ class MessageSetGenerator {
 	def generateNamedSets(Iterable<NamedMessageSet> sets, Target tgt)
 	'''module MsgSets
 exports
-	«UNIVERSE_NAME» = «tgt.namespace»::«UNIVERSE_DEF_NAME»
+	«UNIVERSE_NAME» = «tgt.element.processId»::«UNIVERSE_DEF_NAME»
 	«IF sets !== null»
 		«FOR set: sets.filterNull»
 			«set.name» = «set.generateNamedSet»

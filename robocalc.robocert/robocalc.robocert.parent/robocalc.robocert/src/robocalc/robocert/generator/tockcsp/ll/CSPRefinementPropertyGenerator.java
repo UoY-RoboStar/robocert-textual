@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.google.inject.Inject;
 
+import robocalc.robocert.generator.tockcsp.ll.csp.ProcessGenerator;
 import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.CSPRefinementOperator;
 import robocalc.robocert.model.robocert.CSPRefinementProperty;
@@ -29,7 +30,7 @@ public class CSPRefinementPropertyGenerator {
 	@Inject
 	private CSPStructureGenerator csp;
 	@Inject
-	private CSPProcessSourceGenerator psg;
+	private ProcessGenerator psg;
 
 	/**
 	 * Generates CSP-M for a refinement property.

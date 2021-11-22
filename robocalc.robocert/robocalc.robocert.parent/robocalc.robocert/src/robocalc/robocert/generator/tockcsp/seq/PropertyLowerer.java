@@ -2,7 +2,7 @@ package robocalc.robocert.generator.tockcsp.seq;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.model.robocert.CSPProcessSource;
+import robocalc.robocert.model.robocert.Process;
 import robocalc.robocert.model.robocert.CSPRefinementProperty;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceProperty;
@@ -44,7 +44,7 @@ public class PropertyLowerer {
 	 *
 	 * @return the left-hand side process source.
 	 */
-	private CSPProcessSource lhs(SequenceProperty it) {
+	private Process lhs(SequenceProperty it) {
 		return getSequenceWhenTypeElseTarget(it, SequencePropertyType.IS_OBSERVED);
 	}
 
@@ -58,7 +58,7 @@ public class PropertyLowerer {
 	 *
 	 * @return the right-hand side process source.
 	 */
-	private CSPProcessSource rhs(SequenceProperty it) {
+	private Process rhs(SequenceProperty it) {
 		return getSequenceWhenTypeElseTarget(it, SequencePropertyType.HOLDS);
 	}
 
@@ -68,7 +68,7 @@ public class PropertyLowerer {
 	 * @return if the sequence property type of it is t, the sequence of t; else,
 	 *         the instantiated target of t.
 	 */
-	private CSPProcessSource getSequenceWhenTypeElseTarget(SequenceProperty it, SequencePropertyType t) {
+	private Process getSequenceWhenTypeElseTarget(SequenceProperty it, SequencePropertyType t) {
 		return it.getType() == t ? it.getSequence() : target(it);
 	}
 
@@ -76,7 +76,7 @@ public class PropertyLowerer {
 	 * @param it the sequence property.
 	 * @return a reference to the sequence's fully instantiated target.
 	 */
-	private CSPProcessSource target(SequenceProperty it) {
+	private Process target(SequenceProperty it) {
 		// This can't just be a reference to the original target, as it needs
 		// to have the instantiation applied.
 		var tgs = rf.createTargetGroupSource();

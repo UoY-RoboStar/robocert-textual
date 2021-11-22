@@ -15,8 +15,6 @@ package robocalc.robocert.tests.generator.tockcsp.seq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.List;
-
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +27,8 @@ import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
 import robocalc.robocert.generator.tockcsp.seq.PropertyLowerer;
 import robocalc.robocert.model.robocert.CSPModel;
-import robocalc.robocert.model.robocert.CSPProcessSource;
 import robocalc.robocert.model.robocert.CSPRefinementOperator;
+import robocalc.robocert.model.robocert.Process;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.Sequence;
 import robocalc.robocert.model.robocert.SequenceGroup;
@@ -96,7 +94,7 @@ class PropertyLowererTest {
 	 * @param r the expected RHS.
 	 * @param m the expected model.
 	 */
-	private void assertLower(SequenceProperty p, CSPProcessSource l, CSPProcessSource r, CSPModel m) {
+	private void assertLower(SequenceProperty p, Process l, Process r, CSPModel m) {
 		final var it = spl.lower(p);
 		assertNotNull(it);
 
@@ -114,9 +112,9 @@ class PropertyLowererTest {
 
 		assertEquals(CSPRefinementOperator.REFINES, it.getType());
 	}
-	
-	private CSPProcessSource stripTargetGroupSource(CSPProcessSource s) {
-		if (s instanceof TargetGroupSource t)
+
+	private Process stripTargetGroupSource(Process s) {
+		if (s instanceof final TargetGroupSource t)
 			return t.getTargetGroup().getTarget();
 		return s;
 	}

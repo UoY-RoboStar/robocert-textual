@@ -110,6 +110,9 @@ public class RoboCertValidator extends AbstractRoboCertValidator {
 		if (1 < worlds)
 			actorError("At most one actor in a sequence group can be the world", TOO_MANY_WORLDS);
 
+		// TODO(@MattWindsor91): these will need relaxing as we move to
+		// non-system sequences.
+		
 		if (0 == worlds)
 			actorError("A sequence group with one target actor requires a world actor", TARGET_NEEDS_WORLD);
 

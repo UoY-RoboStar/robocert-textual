@@ -2,12 +2,12 @@ package robocalc.robocert.generator.tockcsp.seq
 
 import com.google.inject.Inject
 import java.util.List
-import robocalc.robocert.generator.utils.TargetExtensions
 import robocalc.robocert.model.robocert.EdgeDirection
 import robocalc.robocert.model.robocert.MessageSpec
 import robocalc.robocert.model.robocert.WildcardArgument
 import robocalc.robocert.generator.utils.EObjectExtensions
 import robocalc.robocert.generator.utils.EdgeExtensions
+import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -16,7 +16,7 @@ class MessageSpecGenerator {
 	@Inject extension TopicGenerator
 	@Inject extension EdgeExtensions
 	@Inject extension EObjectExtensions
-	@Inject extension TargetExtensions
+	@Inject extension CTimedGeneratorUtils
 	@Inject extension ArgumentGenerator
 
 	/**
@@ -98,7 +98,7 @@ class MessageSpecGenerator {
 		MessageSpec it) '''«namespace»::«topic.generate»«IF topic.hasDirection».«edge.inferredDirection.cspDir»«ENDIF»'''
 
 	private def getNamespace(MessageSpec it) {
-		 targetOfParentGroup?.namespace ?: missingNamespace
+		 targetOfParentGroup?.element?.processId ?: missingNamespace
 	}
 
 	/**

@@ -49,7 +49,19 @@ FullTargetGroup returns TargetGroup:
  * A target of a sequence diagram.
  */
 Target:
-	('module' {RCModuleTarget} name=ID ':' module=[RCModule|QualifiedName]);
+	SystemTarget | RCModuleTarget | ControllerTarget;
+
+// TODO(@MattWindsor91): it'd be nice to factor out the 'name=ID :' bit here,
+// but I'm unsure how to without complicating the metamodel.
+
+SystemTarget:
+	name=ID ':' 'system' 'of' 'module'? enclosedModule=[RCModule|QualifiedName];
+
+RCModuleTarget:
+	name=ID ':' 'module' module=[RCModule|QualifiedName];
+
+ControllerTarget:
+	name=ID ':' 'controller' controller=[Controller|QualifiedName];
 
 /**
  * A target override in a sequence diagram.
@@ -132,7 +144,7 @@ Property:
  * Core properties with only one argument.
  */
 CoreProperty:
-	subject=[CSPProcessSource|QualifiedName]
+	subject=[Process|QualifiedName]
 	('is' (negated?='not')? type=IsCorePropertyType |
 	type=VerbCorePropertyType |
 	'does' (negated?='not')? type=DoesCorePropertyType);
@@ -325,10 +337,10 @@ terminal SHORT_CODE:
  * A RoboCert CSP refinement property.
  */
 CSPRefinementProperty:
-	lhs=[CSPProcessSource|QualifiedName]
+	lhs=[Process|QualifiedName]
 	('does' negated?='not' type=DoesNotCSPRefinementOperator
 	| type=DoesCSPRefinementOperator)
-	rhs=[CSPProcessSource|QualifiedName]
+	rhs=[Process|QualifiedName]
 	InCSPModelSpec?;
 
 /**
