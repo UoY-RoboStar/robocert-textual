@@ -29,6 +29,7 @@ import com.google.inject.Inject;
 
 import circus.robocalc.robochart.Controller;
 import circus.robocalc.robochart.RoboChartFactory;
+import circus.robocalc.robochart.RoboticPlatform;
 import robocalc.robocert.model.robocert.RCModuleTarget;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
@@ -49,6 +50,7 @@ public class RCModuleTargetImplCustomTest {
 
 	private Controller ctrl1;
 	private Controller ctrl2;
+	private RoboticPlatform rp;
 	private RCModuleTarget example;
 
 	/**
@@ -71,6 +73,17 @@ public class RCModuleTargetImplCustomTest {
 		assertThat(components.size(), is(2));
 		assertThat(components, hasItems(ctrl1, ctrl2));
 	}
+	
+	/**
+	 * Tests that the context elements collection just has the robotic
+	 * platform.
+	 */
+	@Test
+	void testContextElements() {
+		var elements = example.getContextElements();
+		assertThat(elements.size(), is(1));
+		assertThat(elements, hasItems(rp));
+	}
 
 	/**
 	 * Tests that the string representation is correct.
@@ -87,10 +100,13 @@ public class RCModuleTargetImplCustomTest {
 
 		ctrl2 = cf.createControllerDef();
 		ctrl2.setName("ctrl2");
+		
+		rp = cf.createRoboticPlatformDef();
+		rp.setName("rp");
 
 		final var module = cf.createRCModule();
 		module.setName("foo");
-		module.getNodes().addAll(List.of(ctrl1, ctrl2));
+		module.getNodes().addAll(List.of(ctrl1, ctrl2, rp));
 
 		example = rf.createRCModuleTarget();
 		example.setModule(module);

@@ -41,9 +41,7 @@ public class RoboCertValidator extends AbstractRoboCertValidator {
 	@Check
 	public void checkEdgeFlow(MessageSpec s) {
 		var e = s.getEdge();
-		var from = e.getResolvedFrom();
-		var to = e.getResolvedTo();
-		if (EcoreUtil.equals(from, to))
+		if (EcoreUtil.equals(e.getResolvedFrom(), e.getResolvedTo()))
 			edgeError("A message cannot mention the same actor at both endpoints", EDGE_ACTORS_INDISTINCT);
 	}
 
