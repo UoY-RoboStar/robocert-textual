@@ -24,11 +24,11 @@ import circus.robocalc.robochart.RoboticPlatform;
 import robocalc.robocert.model.robocert.util.DefinitionHelper;
 
 /**
- * Adds derived operation definitions to {@link RCModuleTargetImpl}.
+ * Adds derived operation definitions to {@link ModuleTargetImpl}.
  *
  * @author Matt Windsor
  */
-class RCModuleTargetImplCustom extends RCModuleTargetImpl {
+class ModuleTargetImplCustom extends ModuleTargetImpl {
 	@Override
 	public NamedElement basicGetElement() {
 		return getModule();

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import com.google.inject.Inject;
 
 import circus.robocalc.robochart.Context;
-import robocalc.robocert.model.robocert.RCModuleTarget;
+import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.Target;
 
@@ -41,7 +41,7 @@ public class TargetExtensions {
 	public Stream<Context> contexts(Target t) {
 		if (t instanceof SystemTarget s)
 			return mx.contexts(s.getEnclosedModule());
-		if (t instanceof RCModuleTarget m)
+		if (t instanceof ModuleTarget m)
 			return mx.contexts(m.getModule());
 		throw new IllegalArgumentException("don't know how to get the contexts of target %s".formatted(t));
 	}

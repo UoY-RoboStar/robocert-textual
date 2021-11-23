@@ -6,7 +6,7 @@ import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
 import robocalc.robocert.model.robocert.ImplicitEdge;
 import robocalc.robocert.model.robocert.Instantiation;
-import robocalc.robocert.model.robocert.RCModuleTarget;
+import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.RefMessageSet;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.Subsequence;
@@ -53,8 +53,8 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	}
 
 	@Override
-	public RCModuleTarget createRCModuleTarget() {
-		return new RCModuleTargetImplCustom();
+	public ModuleTarget createModuleTarget() {
+		return new ModuleTargetImplCustom();
 	}
 	
 	@Override

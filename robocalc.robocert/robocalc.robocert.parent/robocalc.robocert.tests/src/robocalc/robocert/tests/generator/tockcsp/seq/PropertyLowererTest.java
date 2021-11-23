@@ -142,7 +142,7 @@ class PropertyLowererTest {
 	}
 
 	private Target makeTarget() {
-		final var t = rf.createRCModuleTarget();
+		final var t = rf.createModuleTarget();
 		t.setModule(module());
 		return t;
 	}

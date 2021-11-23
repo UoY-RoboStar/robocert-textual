@@ -3,7 +3,7 @@ package robocalc.robocert.generator.utils
 import robocalc.robocert.model.robocert.CertPackage
 import java.util.Iterator
 import circus.robocalc.robochart.NamedElement
-import robocalc.robocert.model.robocert.RCModuleTarget
+import robocalc.robocert.model.robocert.ModuleTarget
 import com.google.common.collect.Iterators
 import robocalc.robocert.model.robocert.Target
 import robocalc.robocert.model.robocert.SequenceGroup
@@ -34,7 +34,7 @@ class CertPackageExtensions {
 		target.targetElement
 	}
 
-	private def dispatch Iterator<NamedElement> getTargetElement(RCModuleTarget it) {
+	private def dispatch Iterator<NamedElement> getTargetElement(ModuleTarget it) {
 		Iterators.singletonIterator(module)
 	}
 

@@ -49,7 +49,7 @@ FullTargetGroup returns TargetGroup:
  * A target of a sequence diagram.
  */
 Target:
-	SystemTarget | RCModuleTarget | ControllerTarget;
+	SystemTarget | ModuleTarget | ControllerTarget;
 
 // TODO(@MattWindsor91): it'd be nice to factor out the 'name=ID :' bit here,
 // but I'm unsure how to without complicating the metamodel.
@@ -57,7 +57,7 @@ Target:
 SystemTarget:
 	name=ID ':' 'system' 'of' 'module'? enclosedModule=[RCModule|QualifiedName];
 
-RCModuleTarget:
+ModuleTarget:
 	name=ID ':' 'module' module=[RCModule|QualifiedName];
 
 ControllerTarget:

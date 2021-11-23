@@ -7150,9 +7150,9 @@
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_jGHgIEYtEeyw5exx0VlVrQ" name="RCModuleTarget" tooltipText="" outgoingEdges="_jGJ8ZUYtEeyw5exx0VlVrQ" width="12" height="10">
-      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//RCModuleTarget"/>
-      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//RCModuleTarget"/>
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_jGHgIEYtEeyw5exx0VlVrQ" name="ModuleTarget" tooltipText="" outgoingEdges="_jGJ8ZUYtEeyw5exx0VlVrQ" width="12" height="10">
+      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//ModuleTarget"/>
+      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//ModuleTarget"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -7161,8 +7161,8 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_jGJVWEYtEeyw5exx0VlVrQ" name=" module : RCModule" tooltipText="">
-        <target xmi:type="ecore:EReference" href="RoboCert.ecore#//RCModuleTarget/module"/>
-        <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//RCModuleTarget/module"/>
+        <target xmi:type="ecore:EReference" href="RoboCert.ecore#//ModuleTarget/module"/>
+        <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//ModuleTarget/module"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_jGJVWUYtEeyw5exx0VlVrQ" labelAlignment="LEFT" description="_jGJVUkYtEeyw5exx0VlVrQ" color="114,159,207">
           <labelFormat>bold</labelFormat>
         </ownedStyle>
@@ -7205,8 +7205,8 @@
       </ownedElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_jGJ8ZUYtEeyw5exx0VlVrQ" sourceNode="_jGHgIEYtEeyw5exx0VlVrQ" targetNode="_jGHgI0YtEeyw5exx0VlVrQ">
-      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//RCModuleTarget"/>
-      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//RCModuleTarget"/>
+      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//ModuleTarget"/>
+      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//ModuleTarget"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_jGKjcEYtEeyw5exx0VlVrQ" targetArrow="InputClosedArrow" routingStyle="tree">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC%20ESupertypes']/@style"/>
         <beginLabelStyle xmi:type="diagram:BeginLabelStyle" uid="_jGKjcUYtEeyw5exx0VlVrQ" showIcon="false">

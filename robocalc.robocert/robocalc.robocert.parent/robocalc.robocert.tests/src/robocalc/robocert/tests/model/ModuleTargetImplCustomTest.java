@@ -27,19 +27,19 @@ import circus.robocalc.robochart.NamedElement;
 import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
 import circus.robocalc.robochart.RoboticPlatform;
-import robocalc.robocert.model.robocert.RCModuleTarget;
+import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link RCModuleTarget}s, and also tests that the
+ * Tests any custom functionality on {@link ModuleTarget}s, and also tests that the
  * factory resolves them correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class RCModuleTargetImplCustomTest extends TargetImplCustomTest<RCModuleTarget> {
+public class ModuleTargetImplCustomTest extends TargetImplCustomTest<ModuleTarget> {
 	@Inject
 	private RoboCertFactory rf;
 	@Inject
@@ -65,7 +65,7 @@ public class RCModuleTargetImplCustomTest extends TargetImplCustomTest<RCModuleT
 		module.setName("foo");
 		module.getNodes().addAll(List.of(ctrl1, ctrl2, rp));
 
-		example = rf.createRCModuleTarget();
+		example = rf.createModuleTarget();
 		example.setModule(module);
 	}
 

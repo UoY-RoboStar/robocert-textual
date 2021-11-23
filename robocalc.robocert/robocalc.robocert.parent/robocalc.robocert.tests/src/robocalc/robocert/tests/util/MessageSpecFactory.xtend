@@ -177,7 +177,7 @@ class MessageSpecFactory {
 	 * @return a mock target.
 	 */
 	def target() {
-		rcert.createRCModuleTarget => [
+		rcert.createModuleTarget => [
 			module = rcModule
 		]
 	}
