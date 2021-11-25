@@ -12,7 +12,9 @@
  ********************************************************************************/
 package robocalc.robocert.tests.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -21,24 +23,28 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
+import robocalc.robocert.model.robocert.ContextActor;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link WorldActor}s, and also tests that
+ * Tests any custom functionality on {@link ContextActor}s, and also tests that
  * the factory resolves them correctly.
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class WorldActorImplCustomTest {
+public class ContextActorImplCustomTest {
 	@Inject
-	private RoboCertFactory rc;
+	private RoboCertFactory rf;
 
+	/**
+	 * Tests that stringifying a context actor works as expected.
+	 */
 	@Test
 	void testToString() {
-		final var world = rc.createWorldActor();
-		assertEquals("<<world>> (untitled)", world.toString());
-		world.setName("test");
-		assertEquals("<<world>> test", world.toString());
+		final var context = rf.createContextActor();
+		assertThat(context.toString(), is(equalTo("<<context>> (untitled)")));
+		context.setName("test");
+		assertThat(context.toString(), is(equalTo("<<context>> test")));
 	}
 }

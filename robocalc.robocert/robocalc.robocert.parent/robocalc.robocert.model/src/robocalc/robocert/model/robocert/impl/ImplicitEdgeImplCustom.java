@@ -31,7 +31,7 @@ class ImplicitEdgeImplCustom extends ImplicitEdgeImpl {
 	 */
 	@Override
 	public Actor basicGetResolvedFrom() {
-		return getWorldOrTargetIf(EdgeDirection.OUTBOUND);
+		return getContextOrModuleIf(EdgeDirection.OUTBOUND);
 	}
 	
 	/**
@@ -41,18 +41,21 @@ class ImplicitEdgeImplCustom extends ImplicitEdgeImpl {
 	 */
 	@Override
 	public Actor basicGetResolvedTo() {
-		return getWorldOrTargetIf(EdgeDirection.INBOUND);
+		return getContextOrModuleIf(EdgeDirection.INBOUND);
 	}
 	
 	/**
-	 * Gets the target of this edge's enclosing sequence group if its
-	 * direction is equal to the given direction, and the world otherwise.
+	 * Gets the system module target lifeline of this edge's enclosing sequence
+	 * if its direction is equal to the given direction, and the context
+	 * otherwise.
 	 *
 	 * @param direction the direction to compare.
 	 * @return the actor suggested by the comparison against direction.
 	 */
-	private Actor getWorldOrTargetIf(EdgeDirection direction) {
+	private Actor getContextOrModuleIf(EdgeDirection direction) {
+		// NOTE(@MattWindsor91): this has to work even if this edge is in a
+		// message set eg. we can't check for sequence features here.
 		var grp = EcoreUtil2.getContainerOfType(this, SequenceGroup.class);
-		return getDirection() == direction ? grp.getTargetActor() : grp.getWorldActor();
+		return getDirection() == direction ? grp.getSystemModuleActor() : grp.getContextActor();
 	}
 }

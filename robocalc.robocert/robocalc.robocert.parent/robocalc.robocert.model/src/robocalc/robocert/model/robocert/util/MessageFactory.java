@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package robocalc.robocert.model.robocert.util;
 
@@ -12,17 +12,15 @@ import com.google.inject.Inject;
 import circus.robocalc.robochart.Event;
 import circus.robocalc.robochart.OperationSig;
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.Argument;
-import robocalc.robocert.model.robocert.ImplicitEdge;
-import robocalc.robocert.model.robocert.EdgeDirection;
+import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.MessageSpec;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 
 /**
  * High-level factory for message-related objects.
- * 
+ *
  * @author Matt Windsor
  */
 public class MessageFactory {
@@ -30,24 +28,24 @@ public class MessageFactory {
 
 	/**
 	 * Constructs a message spec with the given topic, edge, and arguments.
-	 * 
+	 *
 	 * @param topic  the topic to use for the message spec.
 	 * @param edge the edge to use for the message spec.
 	 * @param args   the arguments to use for the message spec.
-	 * 
+	 *
 	 * @return the specification.
 	 */
 	public MessageSpec spec(MessageTopic topic, Edge edge, Argument ...args) {
 		return spec(topic, edge, Arrays.asList(args));
 	}
-	
+
 	/**
 	 * Constructs a message spec with the given topic, edge, and argument collection.
-	 * 
+	 *
 	 * @param topic  the topic to use for the message spec.
 	 * @param edge the edge to use for the message spec.
 	 * @param args   the arguments to use for the message spec.
-	 * 
+	 *
 	 * @return the specification.
 	 */
 	public MessageSpec spec(MessageTopic topic, Edge edge, Collection<? extends Argument> args) {
@@ -57,10 +55,10 @@ public class MessageFactory {
 		it.getArguments().addAll(args);
 		return it;
 	}
-	
+
 	/**
 	 * Constructs an event topic with the given event.
-	 * 
+	 *
 	 * @param e the event to use.
 	 *
 	 * @return the event topic.
@@ -70,10 +68,10 @@ public class MessageFactory {
 		it.setEvent(e);
 		return it;
 	}
-	
+
 	/**
 	 * Constructs an operation topic with the given operation.
-	 * 
+	 *
 	 * @param o the signature of the operation to use.
 	 *
 	 * @return the event topic.
@@ -83,24 +81,12 @@ public class MessageFactory {
 		it.setOperation(o);
 		return it;
 	}
-	
+
 	/**
-	 * Constructs a directional edge.
-	 * 
-	 * @param d the direction to construct a pair over.
-	 * 
-	 * @return the edge.
+	 * @return a list containing all actors defined on a system target.
 	 */
-	public ImplicitEdge directional(EdgeDirection d) {
-		var it = rc.createImplicitEdge();
-		it.setDirection(d);
-		return it;
+	public List<Actor> systemActors() {
+		return List.of(rc.createSystemModuleActor(), rc.createContextActor());
 	}
-	
-	/**
-	 * @return a list containing target and world actors.
-	 */
-	public List<Actor> targetWorldActors() {
-		return List.of(rc.createTargetActor(), rc.createWorldActor());
-	}
+
 }

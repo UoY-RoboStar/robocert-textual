@@ -387,6 +387,21 @@ class SequenceGroup extends SpecGroup {
 
 These correspond to UML lifelines.")
 	!ordered val Actor[2..*]#group actors;
+
+	
+	//
+	// Derived properties
+	//
+
+	// NOTE(@MattWindsor91): these derivations have to be on the *group*, not
+	// the sequences.  This is because implicit edges in message sets rely on
+	// these existing.
+
+	@genmodel(documentation="Shortcut for getting the system module actor of the group, if any.")
+	derived volatile transient readonly ref SystemModuleActor[0..1] systemModuleActor;
+	
+	@genmodel(documentation="Shortcut for getting the context actor of the group, if any.")
+	derived volatile transient readonly ref ContextActor[0..1] contextActor;
 }
 
 @genmodel(documentation="A sequence diagram.")
@@ -399,16 +414,6 @@ class Sequence extends robochart.NamedElement, Process {
 
 The order determines that in which lifelines are shown in the graphical notation.")
 	ordered ref Actor[2..*] lifelines;
-	
-	//
-	// Derived properties
-	//
-
-	@genmodel(documentation="Shortcut for getting the system module actor of the sequence, if any.")
-	derived volatile transient readonly ref SystemModuleActor[0..1] systemModuleActor;
-	
-	@genmodel(documentation="Shortcut for getting the context actor of the sequence, if any.")
-	derived volatile transient readonly ref ContextActor[0..1] contextActor;
 }
 
 @genmodel(documentation="A sequence of steps, forming part or all of a sequence diagram.")
@@ -803,8 +808,8 @@ enum BinarySetOperator {
 
 @genmodel(documentation="An actor in a sequence.
 
-Actors can be named, for use in ExplicitEdges.")
-abstract class Actor extends OptionallyNamedElement {
+Actors have names, for use in lifelines and ExplicitEdges.")
+abstract class Actor extends robochart.NamedElement {
 	// NOTE(@MattWindsor91): it would have been more idiomatic to have Actors
 	// belong to Sequences rather than SequenceGroups, but MessageSets would
 	// need either a complex setup to pick up Actors _or_ would need defining

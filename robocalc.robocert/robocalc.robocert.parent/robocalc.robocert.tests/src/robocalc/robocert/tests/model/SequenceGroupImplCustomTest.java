@@ -12,9 +12,6 @@
  ********************************************************************************/
 package robocalc.robocert.tests.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import java.util.List;
 
 import org.eclipse.xtext.testing.InjectWith;
@@ -22,13 +19,15 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
 
 import com.google.inject.Inject;
 
+import robocalc.robocert.model.robocert.ContextActor;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceGroup;
-import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.WorldActor;
+import robocalc.robocert.model.robocert.SystemModuleActor;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
@@ -44,49 +43,48 @@ class SequenceGroupImplCustomTest {
 	private RoboCertFactory rf;
 
 	private SequenceGroup group;
-	private TargetActor target;
-	private WorldActor world;
+	private SystemModuleActor module;
+	private ContextActor context;
 
 	@BeforeEach
 	void setUp() {
-		target = rf.createTargetActor();
-		world = rf.createWorldActor();
-
+		module = rf.createSystemModuleActor();
+		context = rf.createContextActor();
 		group = rf.createSequenceGroup();
-		group.getActors().addAll(List.of(target, world));
+		group.getActors().addAll(List.of(module, context));
 	}
 
 	/**
-	 * Tests that the 'targetActor' derived property pulls targets correctly.
+	 * Tests that the 'systemModuleActor' derived property resolves correctly.
 	 */
 	@Test
-	void testTargetActor() {
-		assertEquals(target, group.getTargetActor());
+	void testSystemModuleActor() {
+		assertThat(group.getSystemModuleActor(), is(equalTo(module)));
 	}
 
 	/**
-	 * Tests that the 'targetActor' derived property returns null for an empty
+	 * Tests that the 'systemModuleActor' derived property returns null for an empty
 	 * sequence.
 	 */
 	@Test
-	void testTargetActor_empty() {
-		assertNull(rf.createSequenceGroup().getTargetActor());
+	void testSystemModuleActor_empty() {
+		assertThat(rf.createSequenceGroup().getSystemModuleActor(), is(nullValue()));
 	}
 
 	/**
-	 * Tests that the 'targetActor' derived property pulls targets correctly.
+	 * Tests that the 'contextActor' derived property resolves correctly.
 	 */
 	@Test
-	void testWorldActor() {
-		assertEquals(world, group.getWorldActor());
+	void testContextActor() {
+		assertThat(group.getContextActor(), is(equalTo(context)));
 	}
 
 	/**
-	 * Tests that the 'targetActor' derived property returns null for an empty
+	 * Tests that the 'contextActor' derived property returns null for an empty
 	 * sequence.
 	 */
 	@Test
-	void testWorldActor_empty() {
-		assertNull(rf.createSequenceGroup().getWorldActor());
+	void testContextActor_empty() {
+		assertThat(rf.createSequenceGroup().getContextActor(), is(nullValue()));
 	}
 }

@@ -2,6 +2,7 @@ package robocalc.robocert.model.robocert.impl;
 
 import robocalc.robocert.model.robocert.BinaryMessageSet;
 import robocalc.robocert.model.robocert.ConstAssignment;
+import robocalc.robocert.model.robocert.ContextActor;
 import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
 import robocalc.robocert.model.robocert.ImplicitEdge;
@@ -10,15 +11,14 @@ import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.RefMessageSet;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.Subsequence;
+import robocalc.robocert.model.robocert.SystemModuleActor;
 import robocalc.robocert.model.robocert.SystemTarget;
-import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
-import robocalc.robocert.model.robocert.WorldActor;
 
 /**
  * Custom factory that injects 'custom' versions of various RoboCert EClasses,
  * including implementations of derived elements.
- * 
+ *
  * @author Matt Windsor
  */
 public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
@@ -26,17 +26,22 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	public BinaryMessageSet createBinaryMessageSet() {
 		return new BinaryMessageSetImplCustom();
 	}
-	
+
 	@Override
 	public ConstAssignment createConstAssignment() {
 		return new ConstAssignmentImplCustom();
 	}
-	
+
+	@Override
+	public ContextActor createContextActor() {
+		return new ContextActorImplCustom();
+	}
+
 	@Override
 	public ExplicitEdge createExplicitEdge() {
 		return new ExplicitEdgeImplCustom();
 	}
-	
+
 	@Override
 	public ExtensionalMessageSet createExtensionalMessageSet() {
 		return new ExtensionalMessageSetImplCustom();
@@ -56,7 +61,7 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	public ModuleTarget createModuleTarget() {
 		return new ModuleTargetImplCustom();
 	}
-	
+
 	@Override
 	public RefMessageSet createRefMessageSet() {
 		return new RefMessageSetImplCustom();
@@ -73,22 +78,17 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
 	}
 
 	@Override
-	public SystemTarget createSystemTarget() {
-		return new SystemTargetImplCustom();
+	public SystemModuleActor createSystemModuleActor() {
+		return new SystemModuleActorImplCustom();
 	}
 
 	@Override
-	public TargetActor createTargetActor() {
-		return new TargetActorImplCustom();
+	public SystemTarget createSystemTarget() {
+		return new SystemTargetImplCustom();
 	}
 
 	@Override
 	public UniverseMessageSet createUniverseMessageSet() {
 		return new UniverseMessageSetImplCustom();
 	}
-
-	@Override
-	public WorldActor createWorldActor() {
-		return new WorldActorImplCustom();
-	}	
 }

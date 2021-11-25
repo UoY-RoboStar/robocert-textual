@@ -12,12 +12,14 @@
  ********************************************************************************/
 package robocalc.robocert.tests.generator.tockcsp.memory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -26,7 +28,6 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.tests.util.CSPNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -40,33 +41,31 @@ class LoadStoreGeneratorTest {
 	@Inject
 	private LoadStoreGenerator lsg;
 	@Inject
-	private CSPNormaliser csp;
-	@Inject
 	private RoboCertFactory rc;
-	
+
 	/**
 	 * Tests that generating a load prefix for an empty binding list yields an empty
 	 * CSP fragment.
 	 */
 	@Test
 	void testGenerateLoadsEmpty() {
-		assertGenerateLoads("", new Binding[] {});
+		assertThat(List.of(), generatesLoads(""));
 	}
-	
+
 	/**
-	 * Tests that generating a load prefix for an binding list containing the
-	 * same binding multiple times only loads the binding once.
+	 * Tests that generating a load prefix for an binding list containing the same
+	 * binding multiple times only loads the binding once.
 	 */
 	@Test
 	void testGenerateLoadsDuplicate() {
 		// TODO(@MattWindsor91): we're relying on fallback behaviour from the
-		// generator where the binding has no parent sequence.  We really need
+		// generator where the binding has no parent sequence. We really need
 		// to fix this as it isn't stable.
-		
-		var b = rc.createBinding();
+
+		final var b = rc.createBinding();
 		b.setName("foo");
-		
-		assertGenerateLoads("Memory::unknown::foo.get?Bnd__foo ->", new Binding[] {b, b});
+
+		assertThat(List.of(b, b), generatesLoads("Memory::unknown::foo.get?Bnd__foo ->"));
 	}
 
 	/**
@@ -75,30 +74,30 @@ class LoadStoreGeneratorTest {
 	 */
 	@Test
 	void testGenerateStoresEmpty() {
-		assertGenerateStores("", new Binding[] {});
+		assertThat(List.of(), generatesStores(""));
 	}
-	
+
 	/**
-	 * Tests that generating a store prefix for an binding list containing the
-	 * same binding multiple times only loads the binding once.
+	 * Tests that generating a store prefix for an binding list containing the same
+	 * binding multiple times only loads the binding once.
 	 */
 	@Test
 	void testGenerateStoresDuplicate() {
 		// TODO(@MattWindsor91): we're relying on fallback behaviour from the
-		// generator where the binding has no parent sequence.  We really need
+		// generator where the binding has no parent sequence. We really need
 		// to fix this as it isn't stable.
-		
-		var b = rc.createBinding();
+
+		final var b = rc.createBinding();
 		b.setName("foo");
-		
-		assertGenerateStores("Memory::unknown::foo.set!Bnd__foo ->", new Binding[] {b, b});
+
+		assertThat(List.of(b, b), generatesStores("Memory::unknown::foo.set!Bnd__foo ->"));
 	}
 
-	private void assertGenerateLoads(String expected, Binding[] input) {
-		assertEquals(expected, csp.tidy(lsg.generateLoads(Arrays.stream(input))));
+	private Matcher<List<Binding>> generatesLoads(String expected) {
+		return generatesCSP(expected, x -> lsg.generateLoads(x.stream()));
 	}
 
-	private void assertGenerateStores(String expected, Binding[] input) {
-		assertEquals(expected, csp.tidy(lsg.generateStores(Arrays.stream(input))));
+	private Matcher<List<Binding>> generatesStores(String expected) {
+		return generatesCSP(expected, x -> lsg.generateStores(x.stream()));
 	}
 }

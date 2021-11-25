@@ -12,10 +12,9 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
-import com.google.common.collect.Iterables;
-
-import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.WorldActor;
+import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.SystemModuleActor;
 
 /**
  * Adds derived operation definitions to {@link SequenceGroupImpl}.
@@ -24,12 +23,16 @@ import robocalc.robocert.model.robocert.WorldActor;
  */
 public class SequenceGroupImplCustom extends SequenceGroupImpl {
 	@Override
-	public WorldActor basicGetWorldActor() {
-		return Iterables.getFirst(Iterables.filter(getActors(), WorldActor.class), null);
+	public SystemModuleActor basicGetSystemModuleActor() {
+		return getFirstActor(SystemModuleActor.class);
 	}
 
 	@Override
-	public TargetActor basicGetTargetActor() {
-		return Iterables.getFirst(Iterables.filter(getActors(), TargetActor.class), null);
+	public ContextActor basicGetContextActor() {
+		return getFirstActor(ContextActor.class);
+	}
+
+	private <T extends Actor> T getFirstActor(Class<T> clazz) {
+		return getActors().parallelStream().filter(clazz::isInstance).map(clazz::cast).findFirst().orElse(null);
 	}
 }

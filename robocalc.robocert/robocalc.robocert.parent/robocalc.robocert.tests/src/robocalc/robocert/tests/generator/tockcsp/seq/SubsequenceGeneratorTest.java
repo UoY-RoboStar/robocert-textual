@@ -12,7 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.tests.generator.tockcsp.seq;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -23,8 +24,6 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Subsequence;
-import robocalc.robocert.tests.util.CSPNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -40,18 +39,12 @@ class SubsequenceGeneratorTest {
 	private RoboCertFactory rc;
 	@Inject
 	private SubsequenceGenerator sg;
-	@Inject
-	private CSPNormaliser n;
 
 	/**
 	 * Tests that the empty subsequence becomes the CSP-M 'SKIP'.
 	 */
 	@Test
 	void testGenerateEmpty() {
-		assertGenerates("SKIP", rc.createSubsequence());
-	}
-
-	private void assertGenerates(String expected, Subsequence input) {
-		assertEquals(expected, n.tidy(sg.generate(input)));
+		assertThat(rc.createSubsequence(), generatesCSP("SKIP", sg::generate));
 	}
 }

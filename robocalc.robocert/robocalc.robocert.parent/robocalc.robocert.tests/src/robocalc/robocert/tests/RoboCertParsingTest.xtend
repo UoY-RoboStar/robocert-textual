@@ -26,11 +26,11 @@ class RoboCertParsingTest {
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			target M: module Mod
+			target M: system of module Mod
 			sequence group S for M:
-				use target as T
-				use world as W
-				sequence Test:
+				use module as T
+				use context as W
+				sequence Test for T and W:
 					anything until end
 		''')
 		Assertions.assertNotNull(result)

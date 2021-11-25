@@ -12,7 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.tests.generator.tockcsp.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -24,7 +24,7 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.tockcsp.core.BindingGenerator;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.tests.util.CSPNormaliser;
+import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -37,8 +37,6 @@ class BindingGeneratorTest {
 	private RoboCertFactory rc;
 	@Inject
 	private BindingGenerator bg;
-	@Inject
-	private CSPNormaliser csp;
 
 	//
 	// Input
@@ -50,7 +48,7 @@ class BindingGeneratorTest {
 	 */
 	@Test
 	void generateInputWildcard() {
-		assertBindingGeneratesInput(null, "_");
+		assertThat(binding(null), generatesCSP("_", bg::generateInputName));
 	}
 
 	/**
@@ -59,7 +57,7 @@ class BindingGeneratorTest {
 	 */
 	@Test
 	void generateInputBound() {
-		assertBindingGeneratesInput("Foo", "Bnd__Foo");
+		assertThat(binding("Foo"), generatesCSP("Bnd__Foo", bg::generateInputName));
 	}
 
 	//
@@ -72,7 +70,7 @@ class BindingGeneratorTest {
 	 */
 	@Test
 	void generateArgumentWildcard() {
-		assertBindingGeneratesArgument(null, "Bnd__0");
+		assertThat(binding(null), generatesCSP("Bnd__0", this::generateArgumentName));
 	}
 
 	/**
@@ -81,19 +79,15 @@ class BindingGeneratorTest {
 	 */
 	@Test
 	void generateArgumentBound() {
-		assertBindingGeneratesArgument("Foo", "Bnd__Foo");
+		assertThat(binding("Foo"), generatesCSP("Bnd__Foo", this::generateArgumentName));
 	}
 
 	//
 	// Test helpers
 	//
 
-	private void assertBindingGeneratesArgument(String name, CharSequence expected) {
-		assertEquals(expected, csp.tidy(bg.generateArgumentName(binding(name), 0)));
-	}
-
-	private void assertBindingGeneratesInput(String name, CharSequence expected) {
-		assertEquals(expected, csp.tidy(bg.generateInputName(binding(name))));
+	private CharSequence generateArgumentName(Binding b) {
+		return bg.generateArgumentName(b, 0);
 	}
 
 	private Binding binding(String n) {

@@ -19,10 +19,10 @@ import com.google.common.base.Strings;
  * 
  * @author Matt Windsor
  */
-public class WorldActorImplCustom extends WorldActorImpl {
+public class ContextActorImplCustom extends ContextActorImpl {
 	@Override
 	public String toString() {
 		var name = getName();
-		return "<<world>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
+		return "<<context>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
 	}
 }

@@ -12,7 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.tests.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -27,18 +28,20 @@ import robocalc.robocert.tests.RoboCertInjectorProvider;
 /**
  * Tests any custom functionality on {@link TargetActor}s, and also tests that
  * the factory resolves them correctly.
+ * 
+ * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class TargetActorImplCustomTest {
+public class SystemModuleActorImplCustomTest {
 	@Inject
-	private RoboCertFactory rc;
+	private RoboCertFactory rf;
 
 	@Test
 	void testToString() {
-		final var target = rc.createTargetActor();
-		assertEquals("<<target>> (untitled)", target.toString());
-		target.setName("test");
-		assertEquals("<<target>> test", target.toString());
+		final var sma = rf.createSystemModuleActor();
+		assertThat(sma.toString(), is(equalTo("<<module>> (untitled)")));
+		sma.setName("test");
+		assertThat(sma.toString(), is(equalTo("<<module>> test")));
 	}
 }

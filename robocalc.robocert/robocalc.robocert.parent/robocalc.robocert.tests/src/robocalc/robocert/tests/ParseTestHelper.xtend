@@ -60,11 +60,11 @@ class ParseTestHelper {
 	 *         subsequence.
 	 */
 	def CharSequence liftSubsequence(CharSequence subsequence) '''
-		target M: module Mod
+		target M: system of module Mod
 		sequence group X for M:
-			use target
-			use world
-			sequence Y:
+			use module as T
+			use context as W
+			sequence Y for T and W:
 				«subsequence»
 	'''
 	

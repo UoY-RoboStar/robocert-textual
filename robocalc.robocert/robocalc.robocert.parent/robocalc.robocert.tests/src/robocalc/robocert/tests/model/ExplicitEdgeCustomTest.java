@@ -25,19 +25,23 @@ import com.google.inject.Inject;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.util.EdgeFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests that the custom version of {@link ExplicitEdge} implements its
- * various derived methods correctly.
+ * Tests that the custom version of {@link ExplicitEdge} implements its various
+ * derived methods correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class ExplicitActorPairCustomTest {
+public class ExplicitEdgeCustomTest {
 	@Inject
-	private RoboCertFactory rc;
+	private EdgeFactory ef;
+
+	@Inject
+	private RoboCertFactory rf;
 
 	/**
 	 * The edge to test.
@@ -73,11 +77,9 @@ public class ExplicitActorPairCustomTest {
 	 */
 	@BeforeEach
 	protected void setUp() {
-		expectedFrom = rc.createTargetActor();
-		expectedTo = rc.createWorldActor();
+		expectedFrom = rf.createSystemModuleActor();
+		expectedTo = rf.createContextActor();
 
-		it = rc.createExplicitEdge();
-		it.setFrom(expectedFrom);
-		it.setTo(expectedTo);
+		it = ef.edge(expectedFrom, expectedTo);
 	}
 }

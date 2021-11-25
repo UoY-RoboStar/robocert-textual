@@ -14,7 +14,7 @@ package robocalc.robocert.generator.utils;
 
 import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.EdgeDirection;
-import robocalc.robocert.model.robocert.TargetActor;
+import robocalc.robocert.model.robocert.SystemModuleActor;
 
 /**
  * Extensions for {@link Edge}s.
@@ -26,17 +26,17 @@ public class EdgeExtensions {
 	 * Tries to infer the direction of this edge.
 	 *
 	 * An edge can only have a direction if exactly one of its actors is a
-	 * target actor. If so, then the direction is outbound if, and only if, that
-	 * target actor is the from-actor.
+	 * system module actor. If so, then the direction is outbound if, and only
+	 * if, that actor is the from-actor.
 	 *
 	 * @param edge the edge to query.
 	 * @return the direction of the edge.
 	 * @throws UnsupportedOperationException if there is no single target.
 	 */
 	public EdgeDirection getInferredDirection(Edge edge) {
-		if (edge.getResolvedFrom() instanceof TargetActor)
+		if (edge.getResolvedFrom() instanceof SystemModuleActor)
 			return EdgeDirection.OUTBOUND;
-		if (edge.getResolvedTo() instanceof TargetActor)
+		if (edge.getResolvedTo() instanceof SystemModuleActor)
 			return EdgeDirection.INBOUND;
 		throw new UnsupportedOperationException(
 					"tried to infer direction of an edge with an ambiguous target");

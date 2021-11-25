@@ -19,10 +19,10 @@ import com.google.common.base.Strings;
  * 
  * @author Matt Windsor
  */
-public class TargetActorImplCustom extends TargetActorImpl {
+public class SystemModuleActorImplCustom extends SystemModuleActorImpl {
 	@Override
 	public String toString() {
 		var name = getName();
-		return "<<target>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
+		return "<<module>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
 	}
 }

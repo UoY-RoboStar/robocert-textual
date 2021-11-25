@@ -12,7 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.tests.generator.tockcsp.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -26,7 +27,6 @@ import robocalc.robocert.generator.tockcsp.core.CorePropertyGenerator;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.CorePropertyType;
-import robocalc.robocert.tests.util.CSPNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -40,8 +40,6 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 class CorePropertyGeneratorTest {
 	@Inject
 	private RoboCertFactory rc;
-	@Inject
-	private CSPNormaliser cn;
 	@Inject
 	private CorePropertyGenerator gen;
 
@@ -96,6 +94,6 @@ class CorePropertyGeneratorTest {
 		p.setNegated(isNegated);
 		p.setSubject(source);
 		p.setType(type);
-		assertEquals(expected, cn.tidy(gen.generate(p)));
+		assertThat(p, generatesCSP(expected, gen::generate));
 	}
 }

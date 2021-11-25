@@ -136,7 +136,7 @@ class PropertyLowererTest {
 
 	private SequenceGroup makeGroup(Target t) {
 		final var g = rf.createSequenceGroup();
-		g.getActors().addAll(mf.targetWorldActors());
+		g.getActors().addAll(mf.systemActors());
 		g.setTarget(t);
 		return g;
 	}

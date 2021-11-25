@@ -12,10 +12,12 @@
  ********************************************************************************/
 package robocalc.robocert.tests.generator.tockcsp.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -26,7 +28,6 @@ import robocalc.robocert.model.robocert.CertExpr;
 import robocalc.robocert.model.robocert.LogicalOperator;
 import robocalc.robocert.model.robocert.RelationOperator;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
-import robocalc.robocert.tests.util.CSPNormaliser;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -41,16 +42,14 @@ class ExpressionGeneratorTest {
 	private ExpressionFactory ef;
 	@Inject
 	private ExpressionGenerator eg;
-	@Inject
-	private CSPNormaliser n;
 
 	/**
 	 * Tests that generating the Boolean literals works properly.
 	 */
 	@Test
 	void testGenerateBoolExprs() {
-		assertGenerates("true", ef.bool(true));
-		assertGenerates("false", ef.bool(false));
+		assertThat(ef.bool(true), generates("true"));
+		assertThat(ef.bool(false), generates("false"));
 	}
 
 	/**
@@ -58,11 +57,11 @@ class ExpressionGeneratorTest {
 	 */
 	@Test
 	void testGenerateIntExprs() {
-		assertGenerates("0", ef.integer(0));
-		assertGenerates("42", ef.integer(42));
+		assertThat(ef.integer(0), generates("0"));
+		assertThat(ef.integer(42), generates("42"));
 		// This last case is unlikely to happen in practice, because the parser
 		// would consider -1 to be -(1).
-		assertGenerates("-1", ef.integer(-1));
+		assertThat(ef.integer(-1), generates("-1"));
 	}
 
 	/**
@@ -70,9 +69,9 @@ class ExpressionGeneratorTest {
 	 */
 	@Test
 	void testGenerateMinusExprs() {
-		assertGenerates("-(1)", ef.minus(ef.integer(1)));
-		assertGenerates("-(-(42))", ef.minus(ef.minus(ef.integer(42))));
-		assertGenerates("-(const_x)", ef.minus(ef.constant("x")));
+		assertThat(ef.minus(ef.integer(1)), generates("-(1)"));
+		assertThat(ef.minus(ef.minus(ef.integer(42))), generates("-(-(42))"));
+		assertThat(ef.minus(ef.constant("x")), generates("-(const_x)"));
 	}
 
 	/**
@@ -80,8 +79,8 @@ class ExpressionGeneratorTest {
 	 */
 	@Test
 	void testGenerateLogicalExprs() {
-		assertGenerates("(true) and (false)", ef.logic(LogicalOperator.AND, ef.bool(true), ef.bool(false)));
-		assertGenerates("(Bnd__x) or (const_y)", ef.logic(LogicalOperator.OR, ef.binding("x"), ef.constant("y")));
+		assertThat(ef.logic(LogicalOperator.AND, ef.bool(true), ef.bool(false)), generates("(true) and (false)"));
+		assertThat(ef.logic(LogicalOperator.OR, ef.binding("x"), ef.constant("y")), generates("(Bnd__x) or (const_y)"));
 	}
 
 	/**
@@ -89,17 +88,18 @@ class ExpressionGeneratorTest {
 	 */
 	@Test
 	void testGenerateRelationExprs() {
-		assertGenerates("(42) <= (56)", ef.rel(RelationOperator.LE, ef.integer(42), ef.integer(56)));
+		assertThat(ef.rel(RelationOperator.LE, ef.integer(42), ef.integer(56)), generates("(42) <= (56)"));
 	}
 
 	/**
-	 * Asserts that the given input generates CSP-M that tidies to the expected
-	 * output.
+	 * Shortcut for building the Hamcrest matcher for expressions.
 	 *
 	 * @param expected the expected output.
 	 * @param input    the input expression.
+	 *
+	 * @return the matcher.
 	 */
-	private void assertGenerates(String expected, CertExpr input) {
-		assertEquals(expected, n.tidy(eg.generate(input)));
+	private Matcher<CertExpr> generates(String expected) {
+		return generatesCSP(expected, eg::generate);
 	}
 }

@@ -44,7 +44,7 @@ import robocalc.robocert.tests.util.MessageSpecFactory;
 @InjectWith(RoboCertInjectorProvider.class)
 public class ImplicitEdgeCustomTest {
 	@Inject
-	private RoboCertFactory rc;
+	private RoboCertFactory rf;
 	@Inject
 	private MessageSpecFactory msf;
 	@Inject
@@ -55,40 +55,41 @@ public class ImplicitEdgeCustomTest {
 	 */
 	private ImplicitEdge it;
 	/**
-	 * The target.
+	 * The system module actor.
 	 */
-	private Actor target;
+	private Actor module;
 	/**
-	 * The world.
+	 * The context actor.
 	 */
-	private Actor world;
+	private Actor context;
 
 	/**
 	 * Initialises the objects used for the test.
 	 */
 	@BeforeEach
 	void setUp() {
-		target = rc.createTargetActor();
-		world = rc.createWorldActor();
+		module = rf.createSystemModuleActor();
+		context = rf.createContextActor();
 
-		it = rc.createImplicitEdge();
+		it = rf.createImplicitEdge();
 		final var spec = mf.spec(mf.eventTopic(msf.intEvent()), it);
 
-		final var act = rc.createArrowAction();
+		final var act = rf.createArrowAction();
 		act.setBody(spec);
 
-		final var step = rc.createActionStep();
+		final var step = rf.createActionStep();
 		step.setAction(act);
 
-		final var sseq = rc.createSubsequence();
+		final var sseq = rf.createSubsequence();
 		sseq.getSteps().add(step);
 
-		final var seq = rc.createSequence();
+		final var seq = rf.createSequence();
+		seq.getLifelines().addAll(List.of(module, context));
 		seq.setBody(sseq);
 
-		final var sg = rc.createSequenceGroup();
+		final var sg = rf.createSequenceGroup();
 		sg.setTarget(msf.target());
-		sg.getActors().addAll(List.of(target, world));
+		sg.getActors().addAll(List.of(module, context));
 		sg.getSequences().add(seq);
 	}
 
@@ -99,7 +100,7 @@ public class ImplicitEdgeCustomTest {
 	@EnumSource
 	void testGetResolvedFrom(EdgeDirection dir) {
 		it.setDirection(dir);
-		assertEquals(dir == EdgeDirection.INBOUND ? world : target, it.getResolvedFrom());
+		assertEquals(dir == EdgeDirection.INBOUND ? context : module, it.getResolvedFrom());
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class ImplicitEdgeCustomTest {
 	 */
 	@Test
 	void testGetResolvedFrom_default() {
-		assertEquals(target, it.getResolvedFrom());
+		assertEquals(module, it.getResolvedFrom());
 	}
 	
 	/**
@@ -117,7 +118,7 @@ public class ImplicitEdgeCustomTest {
 	@EnumSource
 	void testGetResolvedTo(EdgeDirection dir) {
 		it.setDirection(dir);
-		assertEquals(dir == EdgeDirection.INBOUND ? target : world, it.getResolvedTo());
+		assertEquals(dir == EdgeDirection.INBOUND ? module : context, it.getResolvedTo());
 	}
 
 	/**
@@ -125,6 +126,6 @@ public class ImplicitEdgeCustomTest {
 	 */
 	@Test
 	void testGetResolvedTo_default() {
-		assertEquals(world, it.getResolvedTo());
+		assertEquals(context, it.getResolvedTo());
 	}
 }

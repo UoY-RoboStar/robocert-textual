@@ -456,6 +456,18 @@
         <details key="documentation" value="The actors participating in this sequence.&#xD;&#xA;&#xD;&#xA;These correspond to UML lifelines."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="systemModuleActor" eType="#//SystemModuleActor"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Shortcut for getting the system module actor of the group, if any."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contextActor" eType="#//ContextActor"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Shortcut for getting the context actor of the group, if any."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//Process">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -477,18 +489,6 @@
         upperBound="-1" eType="#//Actor">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The set of group actors forming lifelines in this diagram.&#xD;&#xA;&#xD;&#xA;The order determines that in which lifelines are shown in the graphical notation."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="systemModuleActor" eType="#//SystemModuleActor"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the system module actor of the sequence, if any."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="contextActor" eType="#//ContextActor"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the context actor of the sequence, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -990,9 +990,9 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="#//OptionallyNamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Actor" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An actor in a sequence.&#xD;&#xA;&#xD;&#xA;Actors can be named, for use in ExplicitEdges."/>
+      <details key="documentation" value="An actor in a sequence.&#xD;&#xA;&#xD;&#xA;Actors have names, for use in lifelines and ExplicitEdges."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
         eOpposite="#//SequenceGroup/actors">

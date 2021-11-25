@@ -25,9 +25,10 @@ import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.WildcardArgument
 import robocalc.robocert.model.robocert.util.MessageFactory
 import circus.robocalc.robochart.OperationSig
-import robocalc.robocert.model.robocert.WorldActor
-import robocalc.robocert.model.robocert.TargetActor
 import robocalc.robocert.model.robocert.EdgeDirection
+import robocalc.robocert.model.robocert.util.EdgeFactory
+import robocalc.robocert.model.robocert.SystemModuleActor
+import robocalc.robocert.model.robocert.ContextActor
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -36,6 +37,7 @@ class MessageSpecFactory {
 	// TODO(@MattWindsor91): reduce overlap with model MessageFactory;
 	// the idea is that that will receive non-dummy factory operations.
 	
+	@Inject EdgeFactory ef;
 	@Inject MessageFactory mf;
 	@Inject RoboChartFactory rc;
 	@Inject RoboCertFactory rcert;
@@ -51,7 +53,7 @@ class MessageSpecFactory {
 	 * @return a constructed arrow message spec.
 	 */
 	def MessageSpec arrowSpec(MessageTopic t, EdgeDirection dir, Argument... args) {
-		mf.spec(t, mf.directional(dir), args) => [s|arrowParent.body = s]
+		mf.spec(t, ef.edge(dir), args) => [s|arrowParent.body = s]
 	}
 
 	def private arrowParent() {
@@ -74,7 +76,7 @@ class MessageSpecFactory {
 	 * @return a constructed gap message spec.
 	 */
 	def MessageSpec gapSpec(MessageTopic t, EdgeDirection dir, Argument... args) {
-		mf.spec(t, mf.directional(dir), args) => [s|gapParent.messages.add(s)]
+		mf.spec(t, ef.edge(dir), args) => [s|gapParent.messages.add(s)]
 	}
 
 	/**
@@ -168,8 +170,7 @@ class MessageSpecFactory {
 	private def group() {
 		rcert.createSequenceGroup => [ x |
 			x.target = target()
-			x.actors.add(rcert.createTargetActor)
-			x.actors.add(rcert.createWorldActor)			
+			x.actors.addAll(mf.systemActors)
 		]
 	}
 
@@ -177,8 +178,8 @@ class MessageSpecFactory {
 	 * @return a mock target.
 	 */
 	def target() {
-		rcert.createModuleTarget => [
-			module = rcModule
+		rcert.createSystemTarget => [
+			enclosedModule = rcModule
 		]
 	}
 
@@ -196,7 +197,7 @@ class MessageSpecFactory {
 	 */
 	def expectWorld(Actor it) {
 		assertNotNull
-		assertTrue(it instanceof WorldActor)
+		assertTrue(it instanceof ContextActor)
 	}
 
 	/**
@@ -206,6 +207,6 @@ class MessageSpecFactory {
 	 */
 	def expectTarget(Actor it) {
 		assertNotNull
-		assertTrue(it instanceof TargetActor)
+		assertTrue(it instanceof SystemModuleActor)
 	}
 }
