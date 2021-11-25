@@ -1,3 +1,15 @@
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.ll
 
 import java.util.stream.Stream
@@ -45,7 +57,7 @@ class CSPStructureGenerator {
 	 * @return  CSP-M for the process header.
 	 */
 	def CharSequence function(CharSequence name,
-		CharSequence ... args) '''«name»«IF !args.empty»«setlike('(', ')', args)»«ENDIF»'''
+		CharSequence ... args) '''«name»«IF !args.empty»«tuple(args)»«ENDIF»'''
 
 	/**
 	 * Generates a CSP enumerated set.
@@ -58,9 +70,44 @@ class CSPStructureGenerator {
 		setlike('{|', '|}', args)
 	}
 
-	def private CharSequence setlike(CharSequence lhs, CharSequence rhs, CharSequence ... args) '''«lhs»
-	«FOR arg : args SEPARATOR ',\n'»«arg»«ENDFOR»
-«rhs»'''
+	/**
+	 * Generates a tuple.
+	 * 
+	 * @param args  the contents of the tuple.
+	 * 
+	 * @return  CSP-M for the tuple.
+	 */
+	def tuple(CharSequence ... args) {
+		setlike('(', ')', args)
+	}
+
+	def private CharSequence setlike(CharSequence lhs, CharSequence rhs, CharSequence ... args) {
+		if (args.isLong) {
+			longSetlike(lhs, rhs, args)
+		} else {
+			shortSetlike(lhs, rhs, args)
+		}
+	}
+	
+	def private CharSequence longSetlike(CharSequence lhs, CharSequence rhs, CharSequence ... args) '''
+«lhs»
+	«FOR arg : args SEPARATOR ','»
+		«arg»
+	«ENDFOR»
+«rhs»
+	'''
+	
+	def private CharSequence shortSetlike(CharSequence lhs, CharSequence rhs, CharSequence ... args)
+	'''«FOR arg : args BEFORE lhs SEPARATOR ', ' AFTER rhs»«arg»«ENDFOR»'''
+
+	def private isLong(CharSequence ... args) {
+		// this is a very rudimentary heuristic
+		hasNewlines(args) || 3 < args.size;
+	}
+
+	def private hasNewlines(CharSequence ... args) {
+		args.exists[chars.anyMatch[it == '\n']]
+	}
 
 	/**
 	 * Generates a CSP-M module with a name and public body.
@@ -106,7 +153,7 @@ class CSPStructureGenerator {
 			«inner»
 		}
 	'''
-	
+		
 	/**
 	 * Lifts a body into a timed section if the given Boolean is true.
 	 * 
@@ -160,5 +207,43 @@ class CSPStructureGenerator {
 	
 	def CharSequence innerJoin(Stream<CharSequence> elements) {
 		elements.collect(Collectors.joining("\n"))
+	}
+
+	/**
+	 * Starts a let-within definition with the given elements.
+	 * 
+	 * @param elements the elements to have between 'let' and 'within'.
+	 * 
+	 * @return an object that can be finished with a 'within' call.
+	 */
+	def Let let(CharSequence... elements) {
+		return new Let()
+	}
+
+	/**
+	 * Helper class for producing let-within CSP.
+	 */
+	static class Let {
+		CharSequence[] elements
+		 
+		new (CharSequence... elements) {
+			this.elements = elements
+		}
+		
+		/**
+		 * Finishes a let-within definition.
+		 * 
+		 * @param body the 'within' part of the body.
+		 * 
+		 * @return the finished let-within sequence.
+		 */
+		def CharSequence within(CharSequence body) '''
+		let
+			«FOR element : elements»
+				«element»
+			«ENDFOR»
+		within
+			«body»
+		'''
 	}
 }
