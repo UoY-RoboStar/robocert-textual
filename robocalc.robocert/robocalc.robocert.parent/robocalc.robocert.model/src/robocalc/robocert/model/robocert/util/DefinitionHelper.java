@@ -53,8 +53,7 @@ public class DefinitionHelper {
 	private <T extends ConnectionNode> Stream<T> nodes(RCModule m, Class<T> clazz) {
 		if (m == null)
 			return Stream.empty();
-
-		return m.getNodes().parallelStream().filter(clazz::isInstance).map(clazz::cast);
+		return StreamHelpers.filter(m.getNodes().parallelStream(), clazz);
 	}
 
 	private RoboticPlatformDef platformDef(RoboticPlatform p) {

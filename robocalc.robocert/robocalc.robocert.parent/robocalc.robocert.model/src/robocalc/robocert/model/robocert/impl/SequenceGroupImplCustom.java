@@ -15,6 +15,7 @@ package robocalc.robocert.model.robocert.impl;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ContextActor;
 import robocalc.robocert.model.robocert.SystemModuleActor;
+import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
  * Adds derived operation definitions to {@link SequenceGroupImpl}.
@@ -33,6 +34,6 @@ public class SequenceGroupImplCustom extends SequenceGroupImpl {
 	}
 
 	private <T extends Actor> T getFirstActor(Class<T> clazz) {
-		return getActors().parallelStream().filter(clazz::isInstance).map(clazz::cast).findFirst().orElse(null);
+		return StreamHelpers.filter(getActors().parallelStream(), clazz).findFirst().orElse(null);
 	}
 }

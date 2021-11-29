@@ -58,7 +58,9 @@ class ImportGenerator {
 	private def standardImports() {
 		// robocert_defs is included by this generator, and transitively
 		// includes most of the RoboChart prelude.
-		Iterators.forArray(#[ps.LIBRARY_FROM_PACKAGE_PATH + "/robocert_defs.csp", ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp"])
+		Iterators.forArray(
+			#[ps.LIBRARY_FROM_PACKAGE_PATH + "/robocert_defs.csp",
+				ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp"])
 	}
 
 	/**
@@ -94,7 +96,7 @@ class ImportGenerator {
 	}
 
 	private def dispatch getPackageImportsInner(CertPackage it) {
-		referencedElements.flatMap[elementImports]
+		referencedElements.iterator.flatMap[elementImports]
 	}
 
 	private def dispatch getPackageImportsInner(RCPackage it) {
