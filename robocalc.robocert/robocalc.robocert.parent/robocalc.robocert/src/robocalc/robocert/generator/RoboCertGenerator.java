@@ -49,7 +49,7 @@ public class RoboCertGenerator extends AbstractGenerator {
 	}
 
 	private void generateCSPStandardLibraryFile(IFileSystemAccess2 fsa, String filename) {
-		var stream = getClass().getClassLoader().getResourceAsStream("lib/semantics/" + filename);
+		var stream = RoboCertGenerator.class.getResourceAsStream("lib/semantics/" + filename);
 		fsa.generateFile(filename, RoboCertOutputConfigurationProvider.CSP_LIBRARY_OUTPUT, stream);
 	}
 

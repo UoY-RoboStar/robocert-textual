@@ -45,9 +45,7 @@ class ModuleTargetImplCustom extends ModuleTargetImpl {
 	
 	@Override
 	public EList<NamedElement> getContextElements() {
-		var list = new BasicEList<NamedElement>(1);
-		list.add(new DefinitionHelper().platform(getModule()));
-		return list;
+		return new DefinitionHelper().platform(getModule()).stream().collect(Collectors.toCollection(BasicEList::new));
 	}
 	
 	/**

@@ -26,6 +26,7 @@ import circus.robocalc.robochart.NamedElement
 import com.google.common.io.Files
 import robocalc.robocert.generator.tockcsp.core.PathSet
 import com.google.inject.Inject
+import java.nio.file.Path
 
 /**
  * Extensions for locating the CSP definition filenames for things.
@@ -86,5 +87,23 @@ class FilenameExtensions {
 	private def getBasename(String it) {
 		// from GeneratorUtils
 		it?.replaceAll("::", "_")
+	}
+	
+	/**
+	 * @return whether the path denotes a RoboChart file.
+	 */
+	def isRoboChartFile(Path p) {
+		extensionEquals("rct", p)
+	}
+	
+	/**
+	 * @return whether the path denotes a RoboCert file.
+	 */
+	def isRoboCertFile(Path p) {
+		extensionEquals("rcert", p)
+	}
+	
+	private def extensionEquals(String expected, Path p) {	
+		expected == Files.getFileExtension(p.toString)
 	}
 }

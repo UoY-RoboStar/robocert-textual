@@ -12,6 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.util;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import circus.robocalc.robochart.ConnectionNode;
@@ -33,10 +34,10 @@ public class DefinitionHelper {
 	 * Gets the robotic platform definition for a RoboChart module.
 	 *
 	 * @param it the RoboChart module.
-	 * @return the module's robotic platform.
+	 * @return the module's robotic platform, if it has one.
 	 */
-	public RoboticPlatformDef platform(RCModule it) {
-		return nodes(it, RoboticPlatform.class).map(this::platformDef).findFirst().get();
+	public Optional<RoboticPlatformDef> platform(RCModule it) {
+		return nodes(it, RoboticPlatform.class).map(this::platformDef).findFirst();
 	}
 
 	/**
@@ -50,6 +51,9 @@ public class DefinitionHelper {
 	}
 
 	private <T extends ConnectionNode> Stream<T> nodes(RCModule m, Class<T> clazz) {
+		if (m == null)
+			return Stream.empty();
+
 		return m.getNodes().parallelStream().filter(clazz::isInstance).map(clazz::cast);
 	}
 

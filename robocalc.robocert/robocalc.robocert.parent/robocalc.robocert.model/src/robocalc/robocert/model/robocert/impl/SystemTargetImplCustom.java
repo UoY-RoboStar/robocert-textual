@@ -12,6 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
+import java.util.stream.Collectors;
+
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
@@ -43,9 +45,7 @@ class SystemTargetImplCustom extends SystemTargetImpl {
 
 	@Override
 	public EList<NamedElement> getContextElements() {
-		var list = new BasicEList<NamedElement>(1);
-		list.add(new DefinitionHelper().platform(getEnclosedModule()));
-		return list;
+		return new DefinitionHelper().platform(getEnclosedModule()).stream().collect(Collectors.toCollection(BasicEList::new));
 	}
 
 	/**

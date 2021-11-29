@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 
 import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.RCModule;
+import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import robocalc.robocert.model.robocert.util.DefinitionHelper;
@@ -41,7 +42,7 @@ class RCModuleExtensions {
 	}
 
 	private Stream<Variable> platformParams(RCModule it) {
-		return gu.allLocalConstants(dh.platform(it)).parallelStream();
+		return dh.platform(it).stream().flatMap(x -> gu.allLocalConstants(x).parallelStream());
 	}
 
 	private Stream<Variable> controllerParams(RCModule it) {
@@ -57,7 +58,10 @@ class RCModuleExtensions {
 	 * @return an iterator over the contexts accessible to this module.
 	 */
 	public Stream<Context> contexts(RCModule it) {
-		return Stream.of(dh.platform(it));
+		return dh.platform(it).map(this::id).stream();
 	}
 
+	private Context id(RoboticPlatformDef x) {
+		return x;
+	}
 }
