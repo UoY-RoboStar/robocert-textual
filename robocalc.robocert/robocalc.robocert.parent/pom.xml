@@ -10,15 +10,16 @@
 		<xtextVersion>2.25.0</xtextVersion>
 		<mwe2Version>2.12.1</mwe2Version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<!-- Tycho settings -->
-		<tycho-version>1.7.0</tycho-version>
+		<tycho-version>2.5.0</tycho-version>
 		<!-- Define overridable properties for tycho-surefire-plugin -->
 		<platformSystemProperties></platformSystemProperties>
 		<moduleProperties></moduleProperties>
 		<systemProperties></systemProperties>
 		<additionalTestArguments></additionalTestArguments>
+		<eclipse-repo.url>http://download.eclipse.org/releases/2021-09</eclipse-repo.url>
 	</properties>
 	<modules>
 		<module>robocalc.robocert</module>
@@ -239,6 +240,33 @@
 		</pluginManagement>
 	</build>
 	<repositories>
+		<repository>
+			<id>eclipse-release</id>
+			<url>${eclipse-repo.url}</url>
+			<layout>p2</layout>
+		</repository>
+		<!-- RoboChart repositories -->
+		<repository>
+			<id>robochart-assertions</id>
+			<url>https://www.cs.york.ac.uk/robostar/robotool/assertions/update/</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>robochart-csp-gen</id>
+			<url>https://www.cs.york.ac.uk/robostar/robotool/csp-generator/update/</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>robochart-metamodel</id>
+			<url>https://www.cs.york.ac.uk/robostar/robotool/metamodel/update/</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>robochart-textual</id>
+			<url>https://www.cs.york.ac.uk/robostar/robotool/textual/update/</url>
+			<layout>p2</layout>
+		</repository>
+		<!-- End RoboChart repositories -->
 		<repository>
 			<id>codehaus-snapshots</id>
 			<name>disable dead 'Codehaus Snapshots' repository, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=481478</name>
