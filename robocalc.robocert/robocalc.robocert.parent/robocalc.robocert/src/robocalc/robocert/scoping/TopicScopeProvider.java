@@ -12,38 +12,47 @@
  ********************************************************************************/
 package robocalc.robocert.scoping;
 
-import robocalc.robocert.model.robocert.OperationTopic;
-import robocalc.robocert.model.robocert.Target;
-
-import org.eclipse.xtext.scoping.IScope;
-import robocalc.robocert.generator.utils.TargetExtensions;
-import com.google.inject.Inject;
-import org.eclipse.xtext.scoping.Scopes;
-import circus.robocalc.robochart.Context;
-import org.eclipse.emf.ecore.EObject;
-import robocalc.robocert.model.robocert.EventTopic;
-import robocalc.robocert.model.robocert.MessageTopic;
-import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
-import robocalc.robocert.generator.utils.EObjectExtensions;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.Scopes;
+
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+
+import circus.robocalc.robochart.Context;
+import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
+import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.EventTopic;
+import robocalc.robocert.model.robocert.MessageTopic;
+import robocalc.robocert.model.robocert.OperationTopic;
 
 /**
  * Scoping logic for message topics.
- * 
+ *
  * @author Matt Windsor
  */
 public class TopicScopeProvider {
-	@Inject private CTimedGeneratorUtils gu;
-	@Inject private TargetExtensions tx;
-	@Inject private EObjectExtensions ex;
+	private CTimedGeneratorUtils gu;
+	private ActorContextFinder acf;
+
+	@Inject
+	public TopicScopeProvider(CTimedGeneratorUtils gu, ActorContextFinder acf) {
+		this.gu = gu;
+		this.acf = acf;
+	}
 
 	/**
 	 * Calculates the scope of operations available to the given topic.
-	 * 
+	 *
 	 * @param t the topic for which we are getting scoping information.
-	 * 
+	 *
 	 * @return the scope (may be null).
 	 */
 	public IScope getEventScope(EventTopic t) {
@@ -52,22 +61,36 @@ public class TopicScopeProvider {
 
 	/**
 	 * Calculates the scope of operations available to the given topic.
-	 * 
-	 * @param it  the topic for which we are getting scoping information.
-	 * 
+	 *
+	 * @param it the topic for which we are getting scoping information.
+	 *
 	 * @return the scope (may be null).
 	 */
 	public IScope getOperationScope(OperationTopic t) {
 		return scope(t, gu::allOperations);
 	}
-	
-	private <T extends EObject> IScope scope(MessageTopic it, Function<Context, ArrayList<T>> selector) {
-		var target = ex.getTargetOfParentGroup(it);
-		return (target == null) ? null : scopeOfTarget(target, selector);
+
+	private <T extends EObject> IScope scope(MessageTopic t, Function<Context, List<T>> selector) {
+		return Scopes.scopeFor(scopeSet(t, selector));
 	}
 
-	private <T extends EObject> IScope scopeOfTarget(Target target, Function<Context, ArrayList<T>> selector) {
-		var set = tx.contexts(target).map(selector).flatMap(ArrayList<T>::stream).collect(Collectors.toSet());
-		return Scopes.scopeFor(set);
+	private <T extends EObject> Set<T> scopeSet(MessageTopic t, Function<Context, List<T>> selector) {
+		var edge = t.getSpec().getEdge();
+		var fromCandidates = actorCandidates(edge.getResolvedFrom(), selector);
+		var toCandidates = actorCandidates(edge.getResolvedTo(), selector);
+
+		// If both actors have a well-defined scope set, we want only the items
+		// reachable from both; otherwise, just pick up those on the one
+		// actor.
+		if (fromCandidates.isEmpty())
+			return toCandidates.orElse(Set.of());
+		if (toCandidates.isEmpty())
+			return fromCandidates.orElse(Set.of());
+		return Sets.intersection(fromCandidates.get(), toCandidates.get());
+	}
+
+	private <T extends EObject> Optional<Set<T>> actorCandidates(Actor a, Function<Context, List<T>> selector) {
+		return acf.contexts(a)
+				.map((Stream<Context> x) -> x.map(selector).flatMap(List<T>::stream).collect(Collectors.toSet()));
 	}
 }
