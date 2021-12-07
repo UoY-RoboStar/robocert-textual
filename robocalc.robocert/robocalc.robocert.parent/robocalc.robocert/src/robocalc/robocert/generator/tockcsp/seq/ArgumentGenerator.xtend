@@ -65,7 +65,7 @@ class ArgumentGenerator {
 	 * 
 	 * @return  generated CSP-M for the expression argument.
 	 */
-	def dispatch generateForSet(ExpressionArgument it, int index) {
+	def dispatch generateForSet(ExpressionArgument it, long index) {
 		generateExpressionArgument
 	}	
 	
@@ -81,7 +81,7 @@ class ArgumentGenerator {
 	 * 
 	 * @return  generated CSP-M for the wildcard argument.
 	 */	
-	def dispatch generateForSet(WildcardArgument it, int index)
+	def dispatch generateForSet(WildcardArgument it, long index)
 		'''.«binding.generateArgumentName(index)»'''
 	
 	/**
@@ -92,7 +92,7 @@ class ArgumentGenerator {
 	 * 
 	 * @return  fallback CSP-M for the argument.
 	 */	
-	def dispatch generateForSet(Argument it, int index) {
+	def dispatch generateForSet(Argument it, long index) {
 		unsupported("set argument", "0")
 	}
 

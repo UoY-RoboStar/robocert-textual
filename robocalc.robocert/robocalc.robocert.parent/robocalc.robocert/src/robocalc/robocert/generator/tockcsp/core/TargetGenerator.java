@@ -47,11 +47,11 @@ public class TargetGenerator {
 	 *           don't correspond to such things. There is currently no way to
 	 *           specify an optimised definition.
 	 *
-	 * @param it the target.
+	 * @param t the target.
 	 *
 	 * @return CSP-M for the target definition.
 	 */
-	public CharSequence generateDef(Target it) {
+	public CharSequence generateDef(Target t) {
 		/*
 		 * In email with Pedro (4 Aug): the target of a refinement against a (simple)
 		 * specification should usually be unoptimised (D__); model comparisons should
@@ -60,7 +60,7 @@ public class TargetGenerator {
 		 * TODO(@MattWindsor91): eventually, we should be able to select the
 		 * optimisation level.
 		 */
-		return gu.getFullProcessName(it.getElement(), false);
+		return gu.getFullProcessName(t.getElement(), false);
 	}
 
 	/**

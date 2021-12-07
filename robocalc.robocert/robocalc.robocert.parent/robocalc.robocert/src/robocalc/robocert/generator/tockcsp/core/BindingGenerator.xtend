@@ -47,7 +47,7 @@ class BindingGenerator {
 	 * 
 	 * @return  the generated CSP-M name for the binding in the argument.
 	 */
-	def generateArgumentName(Binding it, int index) {
+	def generateArgumentName(Binding it, long index) {
 		(it?.name ?: index.toString).mangle
 	}
 

@@ -13,6 +13,7 @@
 package robocalc.robocert.generator.tockcsp.seq;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,11 +27,13 @@ import robocalc.robocert.generator.utils.MemoryFactory;
 import robocalc.robocert.model.robocert.Sequence;
 
 /**
- * Generates sequences.
+ * Generates the top-level infrastructure for sequences.
  *
  * @author Matt Windsor
  */
 public class SequenceGenerator {
+	@Inject
+	private MessageSetGenerator msg;
 	@Inject
 	private CSPStructureGenerator csp;
 	@Inject
@@ -59,46 +62,36 @@ public class SequenceGenerator {
 		return mf.hasMemory(s) ? mg.lift(s, inner) : csp.tuple(inner);
 	}
 
-	private CharSequence generateWithoutMemory(Sequence it) {
-		var lines = lcf.createContexts(it);
-		return switch (lines.size()) {
-		case 0 -> "{- no lifelines? -} STOP";
-		case 1 -> generateLifelineBody(it, lines.get(0));
-		default -> generateMulti(it, lines);
-		};
-	}
-
-	private CharSequence generateMulti(Sequence s, List<LifelineContext> lines) {
-		return csp.let(alphas(s, lines), procs(s, lines)).within(lineComposition(lines));
+	private CharSequence generateWithoutMemory(Sequence s) {
+		var lines = lcf.createContexts(s);
+		// Technically, we don't really need a let-within here if we only have
+		// one process, but it simplifies some of the rest of the generator to
+		// not special-case that.
+		var body = csp.iterAlphaParallel(lines.size(), LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
+		return csp.let(alphas(s, lines), procs(s, lines)).within(body);
 	}
 
 	private CharSequence alphas(Sequence s, List<LifelineContext> lines) {
 		// TODO(@MattWindsor91): do NOT synchronise on everything!
-		return defs("alpha", lines, x -> MessageSetGenerator.QUALIFIED_UNIVERSE_NAME);
+		return defs(lines, LifelineContext::alphaCSP, x -> msg.qualifiedUniverseName());
 	}
 
 	private CharSequence procs(Sequence s, List<LifelineContext> lines) {
-		return defs("proc", lines, x -> generateLifelineBody(s, x));
+		return defs(lines, LifelineContext::procCSP, x -> generateLifelineBody(s, x));
 	}
 
-	private CharSequence defs(String type, List<LifelineContext> lines, Function<LifelineContext, CharSequence> f) {
+	private CharSequence defs(List<LifelineContext> lines, BiFunction<LifelineContext, CSPStructureGenerator, CharSequence> lhs, Function<LifelineContext, CharSequence> rhs) {
 		return Streams
 				.mapWithIndex(lines.stream(),
-						(x, i) -> csp.definition(csp.function(type, Long.toString(i)), f.apply(x)))
+						(x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x)))
 				.collect(Collectors.joining("\n"));
-	}
-
-	private String lineComposition(List<LifelineContext> lines) {
-		var lastLine = lines.size() - 1;
-		// this should line up with alphas() and procs() above
-		return "|| line : {0..%d} @ [alpha(line)] proc(line)".formatted(lastLine);
 	}
 
 	private CharSequence generateLifelineBody(Sequence s, LifelineContext line) {
 		// TODO(@MattWindsor91): push through line
 
 		// TODO(@MattWindsor91): elide TCHAOS if not necessary
-		var chaos = csp.function("TCHAOS", MessageSetGenerator.QUALIFIED_UNIVERSE_NAME);
+		var chaos = csp.function("TCHAOS", line.alphaCSP(csp));
 		return String.join("\n", sg.generate(s.getBody()), "; -- end of defined steps", chaos);
 	}
 }

@@ -13,6 +13,9 @@
 package robocalc.robocert.generator.tockcsp.seq;
 
 import java.util.List;
+import java.util.stream.Stream;
+
+import com.google.common.collect.Streams;
 
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ContextActor;
@@ -37,7 +40,11 @@ public class LifelineContextFactory {
 	 * @return the list of contexts.
 	 */
 	public List<LifelineContext> createContexts(Sequence s) {
-		return s.getLifelines().parallelStream().filter(this::actorVisibleInSemantics).map(this::createContext).toList();
+		return Streams.mapWithIndex(actorsVisibleInSemantics(s), this::createContext).toList();
+	}
+	
+	private Stream<Actor> actorsVisibleInSemantics(Sequence s) {
+		return s.getLifelines().parallelStream().filter(this::actorVisibleInSemantics);
 	}
 	
 	private boolean actorVisibleInSemantics(Actor a) {
@@ -45,12 +52,8 @@ public class LifelineContextFactory {
 		return !(a instanceof ContextActor);
 	}
 	
-	private LifelineContext createContext(Actor a) {
-		// TODO(@MattWindsor91): this dependency will flip around as the
-		// message set generator becomes dependent on the context.
-		var alphabet = MessageSetGenerator.QUALIFIED_UNIVERSE_NAME;
-		
+	private LifelineContext createContext(Actor a, long index) {
 		// This will expand in future.
-		return new LifelineContext(a, alphabet);
+		return new LifelineContext(a, index);
 	}
 }

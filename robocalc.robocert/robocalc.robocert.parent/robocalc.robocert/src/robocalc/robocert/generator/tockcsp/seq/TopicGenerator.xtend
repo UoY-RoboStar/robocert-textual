@@ -73,22 +73,22 @@ class TopicGenerator {
 	 * 
 	 * @return  CSP-M for the set comprehension, less any set delimiters.
 	 */
-	def generateRanges(MessageTopic it, Iterable<Pair<Integer, WildcardArgument>> args)
+	def generateRanges(MessageTopic it, Iterable<Pair<Long, WildcardArgument>> args)
 	    '''«FOR p : args SEPARATOR ', '»«generateRange(p.value, p.key)»«ENDFOR»'''
 	
-	private def generateRange(MessageTopic it, WildcardArgument arg, int index)
+	private def generateRange(MessageTopic it, WildcardArgument arg, long index)
 		'''«arg.binding.generateArgumentName(index)» <- «paramTypeAt(index)?.compileType ?: "{- missing type -} int"»'''
 	
-	private def dispatch Type paramTypeAt(EventTopic it, int index) {
+	private def dispatch Type paramTypeAt(EventTopic it, long index) {
 		index == 0 ? event.type : null
 	}
 	
-	private def dispatch Type paramTypeAt(OperationTopic it, int index) {
+	private def dispatch Type paramTypeAt(OperationTopic it, long index) {
 		val it = operation.parameters
-		index < size ? get(index).type : null
+		index < size ? get(index as int).type : null
 	}
 	
-	private def dispatch Type paramTypeAt(MessageTopic it, int index) {
+	private def dispatch Type paramTypeAt(MessageTopic it, long index) {
 		null
 	}
 }

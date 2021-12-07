@@ -67,6 +67,7 @@ public class Main {
 			System.exit(2);
 		}
 		var injector = new RoboCertStandaloneSetup().createInjectorAndDoEMFRegistration();
+		
 		var main = injector.getInstance(Main.class);
 		System.exit(main.runGenerator(args[0]));
 	}

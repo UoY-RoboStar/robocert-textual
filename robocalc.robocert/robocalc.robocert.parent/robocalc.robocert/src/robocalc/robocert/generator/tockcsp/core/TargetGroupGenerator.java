@@ -28,6 +28,8 @@ import robocalc.robocert.model.robocert.TargetGroup;
  * @author Matt Windsor
  */
 public class TargetGroupGenerator extends GroupGenerator<TargetGroup> {
+	// TODO(@MattWindsor91): split reference resolution out of this.
+	
 	@Inject
 	private CSPStructureGenerator csp;
 	@Inject

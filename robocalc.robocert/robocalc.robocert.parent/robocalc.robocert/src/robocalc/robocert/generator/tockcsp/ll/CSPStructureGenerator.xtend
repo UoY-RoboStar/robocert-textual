@@ -60,6 +60,44 @@ class CSPStructureGenerator {
 		CharSequence ... args) '''«name»«IF !args.empty»«tuple(args)»«ENDIF»'''
 
 	/**
+	 * Generates a CSP union construct.
+	 * 
+	 * @param lhs CSP-M for the left-hand side.
+	 * @param rhs CSP-M for the right-hand side.
+	 * 
+	 * @return  CSP-M for the union.
+	 */
+	def CharSequence union(CharSequence lhs, CharSequence rhs) {
+		function('union', lhs, rhs)
+	}
+
+	/**
+	 * Generates a CSP iterated union construct.
+	 * 
+	 * @param setset the set-ofset CSP-M.
+	 * 
+	 * @return  CSP-M for the union.
+	 */	
+	def CharSequence iteratedUnion(CharSequence setset) {
+		function('Union', setset)
+	}
+	
+	def CharSequence setComprehension(CharSequence lhs, CharSequence ... rhss) {
+		setlike('''{ «lhs» | ''', '}', rhss)
+	}
+
+	/**
+	 * Generates a CSP non-enumerated set.
+	 * 
+	 * @param args  the contents of the set.
+	 * 
+	 * @return  CSP-M for the set.
+	 */
+	def CharSequence set(CharSequence ... args) {
+		setlike('{', '}', args)
+	}
+
+	/**
 	 * Generates a CSP enumerated set.
 	 * 
 	 * @param args  the contents of the set.
@@ -98,7 +136,7 @@ class CSPStructureGenerator {
 	'''
 	
 	def private CharSequence shortSetlike(CharSequence lhs, CharSequence rhs, CharSequence ... args)
-	'''«FOR arg : args BEFORE lhs SEPARATOR ', ' AFTER rhs»«arg»«ENDFOR»'''
+	'''«lhs»«FOR arg : args SEPARATOR ', '»«arg»«ENDFOR»«rhs»'''
 
 	def private isLong(CharSequence ... args) {
 		// this is a very rudimentary heuristic
@@ -108,6 +146,36 @@ class CSPStructureGenerator {
 	def private hasNewlines(CharSequence ... args) {
 		args.exists[chars.anyMatch[it == '\n']]
 	}
+	
+	/**
+	 * Generates an iterated alphabetised parallel over the set [0, count),
+	 * where the alphabet and process definitions are handled by the functions
+	 * alphaFun(x) and procFun(x) respectively (where x is an element of the
+	 * set).
+	 * 
+	 * This will generate notationally optimised CSP-M in the special cases of
+	 * 0, 1, and 2 elements.
+	 * 
+	 * @param count    number of processes (and respective alphabets).
+	 * @param alphaFun name of the alphabetisation function (in CSP-M).
+	 * @param procFun  name of the process function (in CSP-M).
+	 * 
+	 * @return an iterated alphabetised parallel composition of procFun(0),
+	 *         ..., procFun(count-1), with alphabets in alphaFun(0), ...,
+	 *         alphaFun(count-1).
+	 */
+	def CharSequence iterAlphaParallel(long count, CharSequence alphaFun, CharSequence procFun)
+	'''
+	«IF count == 0»
+		STOP
+	«ELSEIF count == 1»
+		«procFun»(0)
+	«ELSEIF count == 2»
+		«procFun»(0) [«alphaFun»(0)||«alphaFun»(1)] «procFun»(1)
+	«ELSE»
+		|| x: {0..«count-1»} @ [«alphaFun»(x)] «procFun»(x)
+	«ENDIF»
+	'''
 
 	/**
 	 * Generates a CSP-M module with a name and public body.
@@ -238,12 +306,16 @@ class CSPStructureGenerator {
 		 * @return the finished let-within sequence.
 		 */
 		def CharSequence within(CharSequence body) '''
-		let
-			«FOR element : elements»
-				«element»
-			«ENDFOR»
-		within
+		«IF elements.empty»
 			«body»
+		«ELSE»
+			let
+				«FOR element : elements»
+					«element»
+				«ENDFOR»
+			within
+				«body»
+		«ENDIF»
 		'''
 	}
 }
