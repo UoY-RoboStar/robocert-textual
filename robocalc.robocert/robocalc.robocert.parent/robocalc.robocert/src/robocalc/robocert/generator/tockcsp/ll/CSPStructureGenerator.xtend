@@ -25,6 +25,16 @@ class CSPStructureGenerator {
 	// templating engine.
 	
 	/**
+	 * Generates a comment before something else.
+	 * 
+	 * @param comment  the comment to add.
+	 * @param body     the body to comment.
+	 * 
+	 * @return  CSP-M for the commented body.
+	 */
+	def CharSequence commented(CharSequence comment, CharSequence body) '''{- «comment» -} «body»'''
+	
+	/**
 	 * Generates a module instance declaration.
 	 * 
 	 * @param name  the name of the instance.
@@ -145,6 +155,23 @@ class CSPStructureGenerator {
 	def private hasNewlines(CharSequence ... args) {
 		args.exists[chars.anyMatch[it == 0x0a]]
 	}
+	
+	/**
+	 * Sequential composition.
+	 * 
+	 * @param args the processes to sequentially compose.
+	 * 
+	 * @return CSP-M for the sequential composition of the given arguments.
+	 */
+	def CharSequence seq(CharSequence ... args) '''
+		«IF args.isEmpty»
+			SKIP
+		«ELSE»
+			«FOR step : args SEPARATOR ';'»
+				«step»
+			«ENDFOR»
+		«ENDIF»
+	'''
 	
 	/**
 	 * Generates an iterated alphabetised parallel over the set [0, count),

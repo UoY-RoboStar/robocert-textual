@@ -17,13 +17,16 @@ import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
+import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -45,6 +48,11 @@ class SubsequenceGeneratorTest {
 	 */
 	@Test
 	void testGenerateEmpty() {
-		assertThat(rc.createSubsequence(), generatesCSP("SKIP", sg::generate));
+		assertThat(rc.createSubsequence(), generates("SKIP"));
+	}
+	
+	private Matcher<Subsequence> generates(String expected) {
+		var ctx = new LifelineContext(rc.createSystemModuleActor(), 0);
+		return generatesCSP(expected, s -> sg.generate(s, ctx));
 	}
 }

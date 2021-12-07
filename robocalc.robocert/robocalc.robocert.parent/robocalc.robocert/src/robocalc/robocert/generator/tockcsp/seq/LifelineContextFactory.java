@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
 
+import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ContextActor;
 import robocalc.robocert.model.robocert.Sequence;

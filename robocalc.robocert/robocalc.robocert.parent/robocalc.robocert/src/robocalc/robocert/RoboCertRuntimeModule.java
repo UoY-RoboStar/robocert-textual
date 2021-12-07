@@ -14,9 +14,10 @@ import robocalc.robocert.generator.intf.seq.ActionGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ActionGeneratorImpl;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.intf.seq.StepGenerator;
-import robocalc.robocert.generator.tockcsp.seq.StepGeneratorImpl;
+
 import org.eclipse.xtext.conversion.IValueConverterService;
 import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl;
+import robocalc.robocert.generator.tockcsp.seq.step.StepGeneratorImpl;
 import robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom;
 
 /** 

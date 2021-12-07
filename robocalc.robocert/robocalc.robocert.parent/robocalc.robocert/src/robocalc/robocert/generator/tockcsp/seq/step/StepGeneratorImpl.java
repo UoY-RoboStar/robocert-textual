@@ -1,12 +1,25 @@
-package robocalc.robocert.generator.tockcsp.seq;
+/********************************************************************************
+ * Copyright (c) 2021 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
+package robocalc.robocert.generator.tockcsp.seq.step;
 
 import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 
+import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.StepGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
-import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
+import robocalc.robocert.generator.tockcsp.seq.ActionStepGenerator;
 import robocalc.robocert.model.robocert.ActionStep;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.Branch;
@@ -32,13 +45,11 @@ public class StepGeneratorImpl implements StepGenerator {
 	@Inject
 	private LoopStepGenerator lg;
 	@Inject
-	private UnsupportedSubclassHandler uh;
-	@Inject
 	private LoadStoreGenerator ls;
 
 	@Override
-	public CharSequence generate(SequenceStep it) {
-		return generateLoads(it) + generateAfterLoads(it);
+	public CharSequence generate(SequenceStep s, LifelineContext ctx) {
+		return generateLoads(s) + generateAfterLoads(s, ctx);
 	}
 
 	private String generateLoads(SequenceStep it) {
@@ -64,17 +75,17 @@ public class StepGeneratorImpl implements StepGenerator {
 		return ls.getExprBindings(x.getGuard());
 	}
 
-	private CharSequence generateAfterLoads(SequenceStep it) {
+	private CharSequence generateAfterLoads(SequenceStep s, LifelineContext ctx) {
 		// Remember to extend this with any non-branch steps added to the
 		// metamodel.
-		if (it instanceof ActionStep a)
+		if (s instanceof ActionStep a)
 			return ag.generateActionStep(a);
-		if (it instanceof BranchStep b)
-			return bg.generate(b);
-		if (it instanceof DeadlineStep d)
-			return dg.generate(d);
-		if (it instanceof LoopStep l)
-			return lg.generate(l);
-		return uh.unsupported(it, "step", "STOP");
+		if (s instanceof BranchStep b)
+			return bg.generate(b, ctx);
+		if (s instanceof DeadlineStep d)
+			return dg.generate(d, ctx);
+		if (s instanceof LoopStep l)
+			return lg.generate(l, ctx);
+		throw new IllegalArgumentException("unsupported step type: %s".formatted(s));
 	}
 }

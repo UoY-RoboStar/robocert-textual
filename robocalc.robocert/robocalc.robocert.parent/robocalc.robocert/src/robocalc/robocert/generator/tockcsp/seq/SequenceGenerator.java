@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 
+import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator;
@@ -90,12 +91,12 @@ public class SequenceGenerator {
 				.collect(Collectors.joining());
 	}
 
-	private CharSequence generateLifelineBody(Sequence s, LifelineContext line) {
+	private CharSequence generateLifelineBody(Sequence s, LifelineContext ctx) {
 		// TODO(@MattWindsor91): push through line
 
 		// TODO(@MattWindsor91): elide TCHAOS if not necessary
-		var chaos = csp.function("TCHAOS", line.alphaCSP(csp));
+		var chaos = csp.function("TCHAOS", ctx.alphaCSP(csp));
 		// The strange joining here is an attempt to get the newlines right.
-		return String.join("", sg.generate(s.getBody()), "; -- end of defined steps\n", chaos);
+		return String.join("", sg.generate(s.getBody(), ctx), "; -- end of defined steps\n", chaos);
 	}
 }

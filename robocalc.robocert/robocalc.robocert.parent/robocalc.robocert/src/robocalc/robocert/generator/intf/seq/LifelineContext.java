@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.seq;
+package robocalc.robocert.generator.intf.seq;
 
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Actor;
