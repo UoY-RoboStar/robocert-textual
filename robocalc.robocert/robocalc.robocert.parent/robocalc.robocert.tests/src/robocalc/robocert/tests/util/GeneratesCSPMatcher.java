@@ -83,6 +83,12 @@ public class GeneratesCSPMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
 	}
 	
 	private static String tidy(String it) {
-		return it.strip().replaceAll("\\s+", " ");
+		// Compress whitespace
+		var tidied = it.strip().replaceAll("\\s+", " ");
+		// Remove inner whitespace in delimiters
+		tidied = tidied.replaceAll("\\( +", "(").replaceAll(" +\\)", ")");
+		tidied = tidied.replaceAll("\\{ +", "{").replaceAll(" +\\}", "}");
+		tidied = tidied.replaceAll("\\{\\| +", "{|").replaceAll(" +\\|\\}", "|}");
+		return tidied;
 	}
 }
