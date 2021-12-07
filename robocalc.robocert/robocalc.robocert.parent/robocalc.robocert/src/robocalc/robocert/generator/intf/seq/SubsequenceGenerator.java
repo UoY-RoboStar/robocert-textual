@@ -15,7 +15,7 @@ package robocalc.robocert.generator.intf.seq;
 import robocalc.robocert.model.robocert.Subsequence;
 
 /**
- * Interface for things that generate code for subsequences.
+ * A generator for subsequences.
  * 
  * Subsequences induce cyclic dependencies, so the main purpose of this
  * generator is to help break up the dependency cycle.
@@ -24,7 +24,7 @@ import robocalc.robocert.model.robocert.Subsequence;
  */
 public interface SubsequenceGenerator {
 	/**
-	 * Generates CSP-M for a subsequence (inside a given lifeline).
+	 * Generates code for a subsequence (inside a given lifeline).
 	 * 
 	 * @param s   the subsequence.
 	 * @param ctx the lifeline context, used for deciding which actions are

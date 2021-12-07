@@ -19,7 +19,6 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.StepGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
-import robocalc.robocert.generator.tockcsp.seq.ActionStepGenerator;
 import robocalc.robocert.model.robocert.ActionStep;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.Branch;

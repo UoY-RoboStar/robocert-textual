@@ -12,21 +12,20 @@
  ********************************************************************************/
 package robocalc.robocert.generator.intf.seq;
 
-import robocalc.robocert.model.robocert.SequenceStep;
+import robocalc.robocert.model.robocert.SequenceAction;
 
 /**
- * A generator for sequence steps.
- *
+ * A generator for sequence actions.
+ * 
  * @author Matt Windsor
  */
-public interface StepGenerator {
+public interface ActionGenerator {
 	/**
-	 * Generates code for a sequence step (inside a given lifeline).
-	 *
-	 * @param s   sequence step to generate.
-	 * @param ctx context of the lifeline for which we are generating CSP-M.
-	 *
-	 * @return code for the sequence step.
+	 * Generates code for a action.
+	 * 
+	 * @param a the action.
+	 * 
+	 * @return the generated code.
 	 */
-	public CharSequence generate(SequenceStep s, LifelineContext ctx);
+	public CharSequence generate(SequenceAction a);
 }
