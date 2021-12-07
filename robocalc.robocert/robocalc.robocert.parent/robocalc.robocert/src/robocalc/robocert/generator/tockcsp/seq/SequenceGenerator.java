@@ -22,6 +22,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.utils.MemoryFactory;
 import robocalc.robocert.model.robocert.Sequence;
@@ -32,6 +33,8 @@ import robocalc.robocert.model.robocert.Sequence;
  * @author Matt Windsor
  */
 public class SequenceGenerator {
+	@Inject
+	private LetGenerator lg;
 	@Inject
 	private MessageSetGenerator msg;
 	@Inject
@@ -68,7 +71,7 @@ public class SequenceGenerator {
 		// one process, but it simplifies some of the rest of the generator to
 		// not special-case that.
 		var body = csp.iterAlphaParallel(lines.size(), LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
-		return csp.let(alphas(s, lines), procs(s, lines)).within(body);
+		return lg.let(alphas(s, lines), procs(s, lines)).within(body);
 	}
 
 	private CharSequence alphas(Sequence s, List<LifelineContext> lines) {
@@ -77,14 +80,14 @@ public class SequenceGenerator {
 	}
 
 	private CharSequence procs(Sequence s, List<LifelineContext> lines) {
-		return defs(lines, LifelineContext::procCSP, x -> generateLifelineBody(s, x));
+		return defs(lines, LifelineContext::procCSP, x -> csp.tuple(generateLifelineBody(s, x)));
 	}
 
 	private CharSequence defs(List<LifelineContext> lines, BiFunction<LifelineContext, CSPStructureGenerator, CharSequence> lhs, Function<LifelineContext, CharSequence> rhs) {
 		return Streams
 				.mapWithIndex(lines.stream(),
 						(x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x)))
-				.collect(Collectors.joining("\n"));
+				.collect(Collectors.joining());
 	}
 
 	private CharSequence generateLifelineBody(Sequence s, LifelineContext line) {
@@ -92,6 +95,7 @@ public class SequenceGenerator {
 
 		// TODO(@MattWindsor91): elide TCHAOS if not necessary
 		var chaos = csp.function("TCHAOS", line.alphaCSP(csp));
-		return String.join("\n", sg.generate(s.getBody()), "; -- end of defined steps", chaos);
+		// The strange joining here is an attempt to get the newlines right.
+		return String.join("", sg.generate(s.getBody()), "; -- end of defined steps\n", chaos);
 	}
 }

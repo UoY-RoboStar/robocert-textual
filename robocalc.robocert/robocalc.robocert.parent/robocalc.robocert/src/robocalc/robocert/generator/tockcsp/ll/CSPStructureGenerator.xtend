@@ -83,7 +83,7 @@ class CSPStructureGenerator {
 	}
 	
 	def CharSequence setComprehension(CharSequence lhs, CharSequence ... rhss) {
-		setlike('''{ «lhs» | ''', '}', rhss)
+		setlike('''{ «lhs» | ''', ' }', rhss)
 	}
 
 	/**
@@ -94,7 +94,7 @@ class CSPStructureGenerator {
 	 * @return  CSP-M for the set.
 	 */
 	def CharSequence set(CharSequence ... args) {
-		setlike('{', '}', args)
+		setlike('{ ', ' }', args)
 	}
 
 	/**
@@ -105,7 +105,7 @@ class CSPStructureGenerator {
 	 * @return  CSP-M for the enumerated set.
 	 */
 	def CharSequence enumeratedSet(CharSequence ... args) {
-		setlike('{|', '|}', args)
+		setlike('{| ', ' |}', args)
 	}
 
 	/**
@@ -132,8 +132,7 @@ class CSPStructureGenerator {
 	«FOR arg : args SEPARATOR ','»
 		«arg»
 	«ENDFOR»
-«rhs»
-	'''
+«rhs»'''
 	
 	def private CharSequence shortSetlike(CharSequence lhs, CharSequence rhs, CharSequence ... args)
 	'''«lhs»«FOR arg : args SEPARATOR ', '»«arg»«ENDFOR»«rhs»'''
@@ -144,7 +143,7 @@ class CSPStructureGenerator {
 	}
 
 	def private hasNewlines(CharSequence ... args) {
-		args.exists[chars.anyMatch[it == '\n']]
+		args.exists[chars.anyMatch[it == 0x0a]]
 	}
 	
 	/**
@@ -275,47 +274,5 @@ class CSPStructureGenerator {
 	
 	def CharSequence innerJoin(Stream<CharSequence> elements) {
 		elements.collect(Collectors.joining("\n"))
-	}
-
-	/**
-	 * Starts a let-within definition with the given elements.
-	 * 
-	 * @param elements the elements to have between 'let' and 'within'.
-	 * 
-	 * @return an object that can be finished with a 'within' call.
-	 */
-	def Let let(CharSequence... elements) {
-		return new Let()
-	}
-
-	/**
-	 * Helper class for producing let-within CSP.
-	 */
-	static class Let {
-		CharSequence[] elements
-		 
-		new (CharSequence... elements) {
-			this.elements = elements
-		}
-		
-		/**
-		 * Finishes a let-within definition.
-		 * 
-		 * @param body the 'within' part of the body.
-		 * 
-		 * @return the finished let-within sequence.
-		 */
-		def CharSequence within(CharSequence body) '''
-		«IF elements.empty»
-			«body»
-		«ELSE»
-			let
-				«FOR element : elements»
-					«element»
-				«ENDFOR»
-			within
-				«body»
-		«ENDIF»
-		'''
 	}
 }
