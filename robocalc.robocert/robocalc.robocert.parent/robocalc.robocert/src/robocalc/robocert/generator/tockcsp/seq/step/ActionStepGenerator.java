@@ -20,7 +20,6 @@ import robocalc.robocert.generator.intf.seq.ActionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.MessageSetGenerator;
 import robocalc.robocert.generator.tockcsp.seq.MessageSpecGenerator;
-import robocalc.robocert.generator.utils.MessageSetOptimiser;
 import robocalc.robocert.model.robocert.ActionStep;
 import robocalc.robocert.model.robocert.ArrowAction;
 import robocalc.robocert.model.robocert.MessageSpec;
@@ -28,11 +27,12 @@ import robocalc.robocert.model.robocert.SequenceAction;
 
 /**
  * Generates CSP-M for action steps.
+ * 
+ * @author Matt Windsor
  */
 public class ActionStepGenerator {
 	private CSPStructureGenerator csp;
 	private ActionGenerator ag;
-	private MessageSetOptimiser mso;
 	private MessageSetGenerator msg;
 	private MessageSpecGenerator mpg;
 
@@ -43,12 +43,19 @@ public class ActionStepGenerator {
 	// It does *not* handle the injection of stores; we do that in the
 	// generator for ArrowActions.
 
+	/**
+	 * Constructs an action step generator.
+	 *
+	 * @param csp CSP structure generator.
+	 * @param ag  action generator.
+	 * @param msg message set generator.
+	 * @param mpg message spec generator.
+	 */
 	@Inject
-	public ActionStepGenerator(CSPStructureGenerator csp, ActionGenerator ag, MessageSetOptimiser mso,
+	public ActionStepGenerator(CSPStructureGenerator csp, ActionGenerator ag,
 			MessageSetGenerator msg, MessageSpecGenerator mpg) {
 		this.csp = csp;
 		this.ag = ag;
-		this.mso = mso;
 		this.msg = msg;
 		this.mpg = mpg;
 	}
@@ -89,8 +96,7 @@ public class ActionStepGenerator {
 	 * @return the generated CSP.
 	 */
 	private CharSequence gapSet(ActionStep a) {
-		a.setGap(mso.optimise(a.getGap()));
-		return msg.generate(a.getGap());
+		return msg.optimiseAndGenerate(a.getGap(), a::setGap);
 	}
 
 	/**
