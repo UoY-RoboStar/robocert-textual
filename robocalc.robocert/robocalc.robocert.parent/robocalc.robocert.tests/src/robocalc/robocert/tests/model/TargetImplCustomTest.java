@@ -2,7 +2,7 @@ package robocalc.robocert.tests.model;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static robocalc.robocert.tests.util.EcoreEqualToMatcher.structurallyEqualTo;
+import static robocalc.robocert.tests.util.IsStructurallyEqualTo.structurallyEqualTo;
 
 import java.util.List;
 

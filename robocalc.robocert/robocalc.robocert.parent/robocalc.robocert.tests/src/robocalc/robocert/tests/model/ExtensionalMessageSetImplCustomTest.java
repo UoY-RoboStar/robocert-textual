@@ -12,41 +12,47 @@
  ********************************************************************************/
 package robocalc.robocert.tests.model;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static robocalc.robocert.tests.util.SetPropertyMatcher.notUniversal;
 
+import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.google.inject.Inject;
-
-import robocalc.robocert.model.robocert.ContextActor;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.util.SetFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link ContextActor}s, and also tests that
- * the factory resolves them correctly.
+ * Tests any custom functionality on ExtensionalMessageSets, and also tests that the factory
+ * resolves it correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class ContextActorImplCustomTest {
-	@Inject
-	private RoboCertFactory rf;
+class ExtensionalMessageSetImplCustomTest {
 
-	/**
-	 * Tests that stringifying a context actor works as expected.
-	 */
-	@Test
-	void testToString() {
-		final var context = rf.createContextActor();
-		assertThat(context.toString(), is(equalTo("<<context>> (untitled)")));
-		context.setName("test");
-		assertThat(context.toString(), is(equalTo("<<context>> test")));
-	}
+  @Inject
+  protected SetFactory sf;
+  @Inject
+  protected RoboCertFactory rf;
+
+  /**
+   * Tests to make sure that empty extensional gap message sets are inactive and non-universal.
+   */
+  @Test
+  void testProperties_Empty() {
+    assertThat(sf.empty(), is(notUniversal().andInactive()));
+  }
+
+  /**
+   * Tests to make sure non-empty extensional gap message sets are active but non-universal.
+   */
+  @Test
+  void testProperties_NonEmpty() {
+    assertThat(sf.singleton(rf.createMessageSpec()), is(notUniversal().andActive()));
+  }
 }

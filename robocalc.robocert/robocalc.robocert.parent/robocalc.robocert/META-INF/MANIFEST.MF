@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Automatic-Module-Name: robocalc.robocert
+Main-Class: robocalc.robocert.generator.Main
 Bundle-ManifestVersion: 2
 Bundle-Name: robocalc.robocert
 Bundle-Vendor: My Company

@@ -22,7 +22,7 @@ import org.hamcrest.TypeSafeMatcher;
  * 
  * @author Matt Windsor
  */
-public class EcoreEqualToMatcher<T extends EObject> extends TypeSafeMatcher<T> {
+public class IsStructurallyEqualTo<T extends EObject> extends TypeSafeMatcher<T> {
 	private T expected;
 	
 	/**
@@ -30,8 +30,8 @@ public class EcoreEqualToMatcher<T extends EObject> extends TypeSafeMatcher<T> {
 	 *
 	 * @param expected the object to test against.
 	 */	
-	public static <T extends EObject> EcoreEqualToMatcher<T> structurallyEqualTo(T expected) {
-		return new EcoreEqualToMatcher<>(expected);
+	public static <T extends EObject> IsStructurallyEqualTo<T> structurallyEqualTo(T expected) {
+		return new IsStructurallyEqualTo<>(expected);
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class EcoreEqualToMatcher<T extends EObject> extends TypeSafeMatcher<T> {
 	 *
 	 * @param expected the object to test against.
 	 */
-	public EcoreEqualToMatcher(T expected) {
+	public IsStructurallyEqualTo(T expected) {
 		this.expected = expected;
 	}
 	

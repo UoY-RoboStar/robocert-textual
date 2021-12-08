@@ -15,7 +15,7 @@ package robocalc.robocert.model.robocert.impl;
 import com.google.common.base.Strings;
 
 /**
- * Adds custom functionality to {@link TargetActorImpl}.
+ * Adds custom functionality to {@link SystemModuleActorImpl}.
  * 
  * @author Matt Windsor
  */
