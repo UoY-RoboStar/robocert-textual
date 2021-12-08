@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dc6c845b-0673-411e-a28e-4da7ede0e537" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/util/IsIntExprWithValue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/util/SetPropertyMatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.model/src/robocalc/robocert/model/robocert/impl/SystemModuleActorImplCustom.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.model/src/robocalc/robocert/model/robocert/impl/SystemModuleActorImplCustom.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/BinaryMessageSetImplCustomTest.xtend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/ConstAssignmentImplCustomTest.xtend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/ContextActorImplCustomTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/ContextActorImplCustomTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/ExtensionalMessageSetImplCustomTest.xtend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/InstantiationImplCustomTest.xtend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/RefMessageSetImplCustomTest.xtend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/SubsequenceImplCustomTest.xtend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/TargetImplCustomTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/TargetImplCustomTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/UniverseMessageSetImplCustomTest.xtend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/util/EcoreEqualToMatcher.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/META-INF/MANIFEST.MF" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="22047TBDBBEz5N4NGjwL5itApHk" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2014652" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="copyright" />
+  </component>
+  <component name="RunManager" selected="JUnit.Tests">
+    <configuration name="FirefightingUAV" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="temurin-17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="robocalc.robocert.generator.Main" />
+      <module name="robocalc.robocert" />
+      <option name="PROGRAM_PARAMETERS" value="$USER_HOME$/Documents/svn/RoboCalc/Examples/FirefightingUAV/FirefightingUAV" />
+      <option name="VM_PARAMETERS" value="--add-opens java.base/java.lang=ALL-UNNAMED" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Tests" type="JUnit" factoryName="JUnit">
+      <module name="robocalc.robocert.tests" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="temurin-17" />
+      <option name="PACKAGE_NAME" value="robocalc.robocert.tests" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="FirefightingUAV-JAR" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/robocert/robocert.jar" />
+      <option name="PROGRAM_PARAMETERS" value="~/Documents/Svn/RoboCalc/Examples/FirefightingUAV/robochart" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.FirefightingUAV" />
+      <item itemvalue="JAR Application.FirefightingUAV-JAR" />
+      <item itemvalue="JUnit.Tests" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>$USER_HOME$/.subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dc6c845b-0673-411e-a28e-4da7ede0e537" name="Changes" comment="" />
+      <created>1638961005173</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1638961005173</updated>
+      <workItem from="1638961006841" duration="16889000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

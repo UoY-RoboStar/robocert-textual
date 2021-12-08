@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/bin" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src-gen" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/xtend-gen" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="library" name="eclipse.emf.ecore" level="project" />
+    <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202105071032" level="project" />
+    <orderEntry type="library" name="google.guava" level="project" />
+    <orderEntry type="library" name="eclipse.xtext" level="project" />
+    <orderEntry type="library" name="google.inject.guice" level="project" />
+  </component>
+</module>

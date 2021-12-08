@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src-gen" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/xtend-gen" isTestSource="true" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="junit5">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="module" module-name="robocalc.robocert" />
+    <orderEntry type="module" module-name="robocalc.robocert.model" />
+    <orderEntry type="library" name="eclipse.xtext" level="project" />
+    <orderEntry type="library" scope="TEST" name="google.inject.guice" level="project" />
+    <orderEntry type="library" name="eclipse.xtext.testing" level="project" />
+    <orderEntry type="library" scope="TEST" name="junit.jupiter" level="project" />
+    <orderEntry type="library" scope="TEST" name="hamcrest" level="project" />
+    <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202105071032" level="project" />
+  </component>
+</module>

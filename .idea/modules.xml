@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/robocalc.robocert.iml" filepath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/robocalc.robocert.iml" />
+      <module fileurl="file://$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.model/robocalc.robocert.model.iml" filepath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.model/robocalc.robocert.model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/robocalc.robocert.tests.iml" filepath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/robocalc.robocert.tests.iml" />
+    </modules>
+  </component>
+</project>
