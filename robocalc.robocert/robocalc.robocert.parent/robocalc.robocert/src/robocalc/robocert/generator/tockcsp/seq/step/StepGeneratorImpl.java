@@ -78,7 +78,7 @@ public class StepGeneratorImpl implements StepGenerator {
 		// Remember to extend this with any non-branch steps added to the
 		// metamodel.
 		if (s instanceof ActionStep a)
-			return ag.generateActionStep(a);
+			return ag.generate(a, ctx);
 		if (s instanceof BranchStep b)
 			return bg.generate(b, ctx);
 		if (s instanceof DeadlineStep d)

@@ -16,16 +16,17 @@ import robocalc.robocert.model.robocert.SequenceAction;
 
 /**
  * A generator for sequence actions.
- * 
+ *
  * @author Matt Windsor
  */
 public interface ActionGenerator {
-	/**
-	 * Generates code for a action.
-	 * 
-	 * @param a the action.
-	 * 
-	 * @return the generated code.
-	 */
-	public CharSequence generate(SequenceAction a);
+
+  /**
+   * Generates code for an action from the perspective of a lifeline..
+   *
+   * @param a   the action.
+   * @param ctx context for the current lifeline.
+   * @return the generated code.
+   */
+  public CharSequence generate(SequenceAction a, LifelineContext ctx);
 }

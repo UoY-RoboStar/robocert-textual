@@ -12,10 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq.step;
 
-import java.util.stream.Collectors;
-
 import com.google.inject.Inject;
-
+import java.util.stream.Collectors;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.BranchGenerator;
@@ -29,92 +27,85 @@ import robocalc.robocert.model.robocert.Temperature;
  *
  * @author Matt Windsor
  */
-public class BranchStepGenerator {
-	private CSPStructureGenerator csp;
-	private BranchGenerator bg;
+public record BranchStepGenerator(CSPStructureGenerator csp,
+                                  BranchGenerator bg) {
 
-	@Inject
-	public BranchStepGenerator(CSPStructureGenerator csp, BranchGenerator bg) {
-		this.csp = csp;
-		this.bg = bg;
-	}
+  /**
+   * The CSP-M external choice operator.
+   */
+  private static final String EXT_CHOICE = "[]";
+  /**
+   * The CSP-M internal choice operator.
+   */
+  private static final String INT_CHOICE = "|~|";
+  /**
+   * The CSP-M interleave operator.
+   */
+  private static final String INTERLEAVE = "|||";
 
-	/**
-	 * Generates CSP-M for a branch step.
-	 *
-	 * @param b   branch step to generate.
-	 * @param ctx context of the lifeline for which we are generating CSP-M.
-	 *
-	 * @return the generated CSP-M process.
-	 */
-	public CharSequence generate(BranchStep b, LifelineContext ctx) {
-		return csp.commented(comment(b), csp.tuple(body(b, ctx)));
-	}
+  @Inject
+  public BranchStepGenerator {
+  }
 
-	private CharSequence body(BranchStep b, LifelineContext ctx) {
-		return b.getBranches().parallelStream().map(x -> csp.tuple(bg.generate(x, ctx)))
-				.collect(Collectors.joining(operator(b)));
-	}
+  /**
+   * Generates CSP-M for a branch step.
+   *
+   * @param b   branch step to generate.
+   * @param ctx context of the lifeline for which we are generating CSP-M.
+   * @return the generated CSP-M process.
+   */
+  public CharSequence generate(BranchStep b, LifelineContext ctx) {
+    return csp.commented(comment(b), csp.tuple(body(b, ctx)));
+  }
 
-	/**
-	 * Gets a debug comment corresponding to the branch step.
-	 *
-	 * @param b the step to generate.
-	 *
-	 * @return the comment.
-	 */
-	private CharSequence comment(BranchStep b) {
-		if (b instanceof InterleaveStep)
-			return "interleave";
-		if (b instanceof AlternativeStep a)
-			return "alternative (%s)".formatted(a.getTemperature());
-		// This will result in an exception later anyway.
-		return "?";
-	}
+  private CharSequence body(BranchStep b, LifelineContext ctx) {
+    return b.getBranches().parallelStream().map(x -> csp.tuple(bg.generate(x, ctx)))
+        .collect(Collectors.joining(operator(b)));
+  }
 
-	/**
-	 * Gets the CSP-M operator corresponding to the branch step.
-	 *
-	 * @param it the step to generate.
-	 *
-	 * @return the corresponding CSP-M.
-	 */
-	private CharSequence operator(BranchStep b) {
-		if (b instanceof InterleaveStep)
-			return INTERLEAVE;
-		if (b instanceof AlternativeStep a)
-			return altOperator(a.getTemperature());
-		throw new IllegalArgumentException("unsupported branch operator: %s".formatted(b));
-	}
+  /**
+   * Gets a debug comment corresponding to the branch step.
+   *
+   * @param b the step to generate.
+   * @return the comment.
+   */
+  private CharSequence comment(BranchStep b) {
+    if (b instanceof InterleaveStep) {
+      return "interleave";
+    }
+    if (b instanceof AlternativeStep a) {
+      return "alternative (%s)".formatted(a.getTemperature());
+    }
+    // This will result in an exception later anyway.
+    return "?";
+  }
 
-	/**
-	 * Expands to the CSP operator for joining together branches on an alternative
-	 * branch step.
-	 *
-	 * @param t the temperature of the alternative step to generate.
-	 *
-	 * @return CSP-M external choice if the step is hot; internal otherwise.
-	 */
-	private CharSequence altOperator(Temperature t) {
-		return switch (t) {
-		case COLD -> INT_CHOICE;
-		case HOT -> EXT_CHOICE;
-		default -> throw new IllegalArgumentException("unsupported temperature: %s".formatted(t));
-		};
-	}
+  /**
+   * Gets the CSP-M operator corresponding to the branch step.
+   *
+   * @param b the step to generate.
+   * @return the corresponding CSP-M.
+   */
+  private CharSequence operator(BranchStep b) {
+    if (b instanceof InterleaveStep) {
+      return INTERLEAVE;
+    }
+    if (b instanceof AlternativeStep a) {
+      return altOperator(a.getTemperature());
+    }
+    throw new IllegalArgumentException("unsupported branch operator: %s".formatted(b));
+  }
 
-	/**
-	 * The CSP-M external choice operator.
-	 */
-	private static final String EXT_CHOICE = "[]";
-
-	/**
-	 * The CSP-M internal choice operator.
-	 */
-	private static final String INT_CHOICE = "|~|";
-
-	/**
-	 * The CSP-M interleave operator.
-	 */
-	private static final String INTERLEAVE = "|||";
+  /**
+   * Expands to the CSP operator for joining together branches on an alternative branch step.
+   *
+   * @param t the temperature of the alternative step to generate.
+   * @return CSP-M external choice if the step is hot; internal otherwise.
+   */
+  private CharSequence altOperator(Temperature t) {
+    return switch (t) {
+      case COLD -> INT_CHOICE;
+      case HOT -> EXT_CHOICE;
+    };
+  }
 }
