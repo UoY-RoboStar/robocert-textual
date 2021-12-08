@@ -5,20 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc6c845b-0673-411e-a28e-4da7ede0e537" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/util/IsIntExprWithValue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/util/SetPropertyMatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.model/src/robocalc/robocert/model/robocert/impl/SystemModuleActorImplCustom.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.model/src/robocalc/robocert/model/robocert/impl/SystemModuleActorImplCustom.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/BinaryMessageSetImplCustomTest.xtend" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/ConstAssignmentImplCustomTest.xtend" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/ContextActorImplCustomTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/ContextActorImplCustomTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/ExtensionalMessageSetImplCustomTest.xtend" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/InstantiationImplCustomTest.xtend" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/RefMessageSetImplCustomTest.xtend" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/SubsequenceImplCustomTest.xtend" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/TargetImplCustomTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/TargetImplCustomTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/model/UniverseMessageSetImplCustomTest.xtend" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/util/EcoreEqualToMatcher.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/ActionGeneratorImpl.xtend" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +22,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -57,7 +53,7 @@
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="settings.editor.selected.configurable" value="copyright" />
   </component>
-  <component name="RunManager" selected="JUnit.Tests">
+  <component name="RunManager" selected="Application.FirefightingUAV">
     <configuration name="FirefightingUAV" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="temurin-17" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -105,7 +101,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1638961005173</updated>
-      <workItem from="1638961006841" duration="16889000" />
+      <workItem from="1638961006841" duration="18434000" />
     </task>
     <servers />
   </component>
