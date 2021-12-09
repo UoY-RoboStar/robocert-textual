@@ -11,7 +11,7 @@ import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom;
 import circus.robocalc.robochart.RoboChartFactory;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.generator.intf.seq.ActionGenerator;
-import robocalc.robocert.generator.tockcsp.seq.ActionGeneratorImpl;
+import robocalc.robocert.generator.tockcsp.seq.action.ActionGeneratorImpl;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.intf.seq.StepGenerator;
 

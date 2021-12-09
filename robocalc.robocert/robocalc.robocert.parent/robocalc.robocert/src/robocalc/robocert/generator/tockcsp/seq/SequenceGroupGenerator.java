@@ -24,6 +24,7 @@ import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.core.SpecGroupGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.generator.utils.MemoryFactory;
 import robocalc.robocert.model.robocert.Sequence;
 import robocalc.robocert.model.robocert.SequenceGroup;

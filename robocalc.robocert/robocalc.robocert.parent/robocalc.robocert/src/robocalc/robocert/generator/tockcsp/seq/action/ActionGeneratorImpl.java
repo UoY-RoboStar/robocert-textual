@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ******************************************************************************/
-package robocalc.robocert.generator.tockcsp.seq;
+package robocalc.robocert.generator.tockcsp.seq.action;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.ActionGenerator;
@@ -18,6 +18,7 @@ import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
 import robocalc.robocert.model.robocert.ArrowAction;
 import robocalc.robocert.model.robocert.FinalAction;
 import robocalc.robocert.model.robocert.SequenceAction;

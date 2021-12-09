@@ -13,36 +13,35 @@
 package robocalc.robocert.generator.tockcsp.seq;
 
 import com.google.inject.Inject;
-import robocalc.robocert.model.robocert.Subsequence;
-import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.StepGenerator;
+import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
+import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.model.robocert.Subsequence;
 
 /**
  * A generator that emits CSP for sequences and subsequences.
- * 
+ *
  * @author Matt Windsor
  */
-public class SubsequenceGeneratorImpl implements SubsequenceGenerator {
-	private CSPStructureGenerator csp;
-	private StepGenerator sg;
-	
+public record SubsequenceGeneratorImpl(
+		CSPStructureGenerator csp,
+		StepGenerator sg) implements SubsequenceGenerator {
+
 	/**
 	 * Constructs a subsequence generator.
-	 * 
+	 *
 	 * @param csp CSP structure generator used for the sequential composition.
 	 * @param sg  step generator used for each step in the subsequence.
 	 */
 	@Inject
-	public SubsequenceGeneratorImpl(CSPStructureGenerator csp, StepGenerator sg) {
-		this.csp = csp;
-		this.sg = sg;
+	public SubsequenceGeneratorImpl {
 	}
 
 	@Override
 	public CharSequence generate(Subsequence s, LifelineContext ctx) {
-		var steps = s.getSteps().parallelStream().map(x -> sg.generate(x, ctx)).toArray(CharSequence[]::new);
+		var steps = s.getSteps().parallelStream().map(x -> sg.generate(x, ctx))
+				.toArray(CharSequence[]::new);
 		return csp.seq(steps);
 	}
 }

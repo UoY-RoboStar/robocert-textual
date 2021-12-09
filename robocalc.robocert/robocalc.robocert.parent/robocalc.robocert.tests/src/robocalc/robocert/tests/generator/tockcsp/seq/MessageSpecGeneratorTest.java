@@ -22,7 +22,7 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.generator.tockcsp.seq.MessageSpecGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 import robocalc.robocert.model.robocert.Argument;
 import robocalc.robocert.model.robocert.EdgeDirection;

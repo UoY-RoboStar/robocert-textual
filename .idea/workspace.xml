@@ -5,12 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc6c845b-0673-411e-a28e-4da7ede0e537" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/message/TopicGenerator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/intf/seq/ActionGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/intf/seq/ActionGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/ActionGeneratorImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/ActionGeneratorImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/generator/tockcsp/seq/MessageSetGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/generator/tockcsp/seq/MessageSetGeneratorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/generator/tockcsp/seq/MessageSpecGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert.tests/src/robocalc/robocert/tests/generator/tockcsp/seq/MessageSpecGeneratorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/RoboCertRuntimeModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/RoboCertRuntimeModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/ActionGeneratorImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/action/ActionGeneratorImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/MessageSetGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/message/MessageSetGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/MessageSpecGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/message/MessageSpecGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/SequenceGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/SequenceGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/SequenceGroupGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/SequenceGroupGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/SubsequenceGeneratorImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/SubsequenceGeneratorImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/TopicGenerator.xtend" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/step/ActionStepGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/step/ActionStepGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/step/BranchStepGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/step/BranchStepGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/step/StepGeneratorImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/seq/step/StepGeneratorImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +62,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2014652" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="copyright" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunManager" selected="JUnit.Tests">
     <configuration name="FirefightingUAV" type="Application" factoryName="Application">
@@ -105,7 +112,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1638961005173</updated>
-      <workItem from="1638961006841" duration="18948000" />
+      <workItem from="1638961006841" duration="19564000" />
+      <workItem from="1639042627441" duration="542000" />
+      <workItem from="1639043183870" duration="2554000" />
     </task>
     <servers />
   </component>
@@ -126,5 +135,8 @@
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/robocalc_robocert_parent$Tests.ic" NAME="Tests Coverage Results" MODIFIED="1639045244972" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
