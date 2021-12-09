@@ -13,7 +13,7 @@ import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.CertPackageGenerator;
-import robocalc.robocert.generator.utils.FilenameExtensions;
+import robocalc.robocert.generator.utils.name.GroupNamer;
 import robocalc.robocert.model.robocert.CertPackage;
 
 /**
@@ -26,13 +26,13 @@ public class RoboCertGenerator extends AbstractGenerator {
 	@Inject
 	private CertPackageGenerator csp;
 	@Inject
-	private FilenameExtensions fx;
+	private GroupNamer gn;
 
 	@Override
 	public void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		EcoreUtil.resolveAll(resource.getResourceSet());
 
-		var isCanceled = generateCSPStandardLibrary(fsa, context);
+		final var isCanceled = generateCSPStandardLibrary(fsa, context);
 		if (isCanceled)
 			return;
 
@@ -49,14 +49,18 @@ public class RoboCertGenerator extends AbstractGenerator {
 	}
 
 	private void generateCSPStandardLibraryFile(IFileSystemAccess2 fsa, String filename) {
-		var stream = RoboCertGenerator.class.getResourceAsStream("lib/semantics/" + filename);
+		final var stream = RoboCertGenerator.class.getResourceAsStream("lib/semantics/" + filename);
 		fsa.generateFile(filename, RoboCertOutputConfigurationProvider.CSP_LIBRARY_OUTPUT, stream);
 	}
 
 	private void generateCSPPackages(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		Iterators.filter(EcoreUtil.getAllContents(resource, true), CertPackage.class).forEachRemaining(x -> {
+			if (context.getCancelIndicator().isCanceled()) {
+				return;
+			}
+
 			// TODO(@MattWindsor91): multiple packages in one resource?
-			fsa.generateFile(fx.getFileBasename(x) + ".csp", csp.generate(x));
+			fsa.generateFile(gn.getPackageName(x) + ".csp", csp.generate(x));
 		});
 	}
 

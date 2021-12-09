@@ -5,15 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc6c845b-0673-411e-a28e-4da7ede0e537" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/PackageFinder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/CertPackageGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/CertPackageGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/RoboCertGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/RoboCertGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/lib/semantics/robocert_defs.csp" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/lib/semantics/robocert_defs.csp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/core/ImportGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/core/ImportGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/core/PathSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/tockcsp/core/PathSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/CertPackageExtensions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/RCModuleExtensions.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/RCModuleExtensions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/RCPackageExtensions.xtend" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/FilenameExtensions.xtend" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/FilenameExtensions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/name/GroupNamer.java" beforeDir="false" afterPath="$PROJECT_DIR$/robocalc.robocert/robocalc.robocert.parent/robocalc.robocert/src/robocalc/robocert/generator/utils/name/GroupNamer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +124,7 @@
       <updated>1638961005173</updated>
       <workItem from="1638961006841" duration="19564000" />
       <workItem from="1639042627441" duration="542000" />
-      <workItem from="1639043183870" duration="17691000" />
+      <workItem from="1639043183870" duration="20252000" />
     </task>
     <servers />
   </component>

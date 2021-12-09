@@ -65,34 +65,32 @@ public record ImportGenerator(PathSet ps,
   // Pulled out of GeneratorUtils
   private Stream<String> imports(Resource r) {
     // We need to import:
-    // - the RoboCert standard library;
-    // - for each RoboChart package in the resource set, its resource defs file;
+    // - the RoboCert standard library (transitively, the RoboChart standard library);
+    // - for each anonymous RoboChart package in the resource set, its resource defs file;
     // - for each RoboCert package in the resource:
     //   - for each Target, its associated RoboChart element's:
     //     - resource defs file;
     //     - top-level module file;
     //     - imports' defs files;
     //   - for each import, its resource defs file.
-    return Streams.concat(standardImports(), rcSiblingImports(r), certPackageImports(r)).distinct();
+    return Streams.concat(standardImports(), anonymousImports(r), certPackageImports(r)).distinct();
   }
 
   private Stream<String> standardImports() {
     // robocert_defs is included by this generator, and transitively
     // includes most of the RoboChart prelude.
     return Stream.of(ps.LIBRARY_FROM_PACKAGE_PATH + "/robocert_defs.csp",
-        ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp");
+        ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp"
+        );
   }
 
-  private Stream<String> rcSiblingImports(Resource r) {
-    return pf.packagesInSiblingResources(r, RCPackage.class).filter(this::isValidRc)
+  private Stream<String> anonymousImports(Resource r) {
+    return pf.packagesInSiblingResources(r, RCPackage.class).filter(this::isAnonymousRc)
         .map(x -> defsInclude(x.eResource()));
   }
 
-  private boolean isValidRc(RCPackage p) {
-    // TODO(@MattWindsor91): the original definition of this required packages to be anonymous
-    // (p.getName() == null), but, when I've tried this, it's omitted core_defs.csp.  I am unsure
-    // as to why.
-    return Objects.equals(p.eResource().getURI().fileExtension(), "rct");
+  private boolean isAnonymousRc(RCPackage p) {
+    return p.getName() == null && Objects.equals(p.eResource().getURI().fileExtension(), "rct");
   }
 
   private Stream<String> certPackageImports(Resource r) {

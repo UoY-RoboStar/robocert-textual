@@ -18,6 +18,7 @@
 -- These files should have been copied by the RoboChart generator.
 include "../../defs/state_timed_defs.csp"
 include "../../defs/core_timed_defs.csp"
+include "../../defs/core_defs.csp"
 include "../../defs/robochart_defs.csp"
 
 -- Used to test for deadlock freedom.
