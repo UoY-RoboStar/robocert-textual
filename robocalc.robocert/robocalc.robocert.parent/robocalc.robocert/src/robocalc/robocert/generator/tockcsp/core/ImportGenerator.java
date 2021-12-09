@@ -14,123 +14,129 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.core;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.eclipse.emf.ecore.resource.Resource;
-
-import com.google.common.collect.Streams;
-import com.google.inject.Inject;
-
 import circus.robocalc.robochart.BasicPackage;
 import circus.robocalc.robochart.NamedElement;
+import circus.robocalc.robochart.RCPackage;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
-import robocalc.robocert.generator.utils.CertPackageExtensions;
-import robocalc.robocert.generator.utils.FilenameExtensions;
-import robocalc.robocert.generator.utils.RCPackageExtensions;
+import com.google.common.collect.Streams;
+import com.google.inject.Inject;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.eclipse.emf.ecore.resource.Resource;
+import robocalc.robocert.generator.utils.PackageFinder;
 import robocalc.robocert.model.robocert.CertPackage;
+import robocalc.robocert.model.robocert.Target;
+import robocalc.robocert.model.robocert.TargetGroup;
+import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
  * A generator that expands out imports for a top-level resource.
  *
  * @author Matt Windsor
  */
-public class ImportGenerator {
-	// TODO(@MattWindsor91): try merge this with upstream. We can't easily
-	// just take upstream directly, as it doesn't directly pick up everything
-	// that generates an import in robocert. However, this version of the
-	// import generator has diverged quite a bit from the original!
+public record ImportGenerator(PathSet ps,
+                              PackageFinder pf,
+                              CTimedGeneratorUtils gu) {
+  // TODO(@MattWindsor91): try merge this with upstream. We can't easily
+  // just take upstream directly, as it doesn't directly pick up everything
+  // that generates an import in robocert. However, this version of the
+  // import generator has diverged quite a bit from the original!
 
-	// TODO(@MattWindsor91): we assume there is an instantiations.csp file
-	// at the moment, and, as such, a) import it; and b) import every package
-	// rather than just the anonymous ones. This should be fixed in line with
-	// upstream, eventually, I think?
-	@Inject
-	private CertPackageExtensions cpx;
-	@Inject
-	private RCPackageExtensions rpx;
-	@Inject
-	private FilenameExtensions fx;
-	@Inject
-	private PathSet ps;
-	@Inject
-	private CTimedGeneratorUtils gu;
+  // TODO(@MattWindsor91): we assume there is an instantiations.csp file
+  // at the moment, and, as such, a) import it; and b) import every package
+  // rather than just the anonymous ones. This should be fixed in line with
+  // upstream, eventually, I think?
 
-	/**
-	 * Generates imports.
-	 *
-	 * @param r the resource for which we are generating imports.
-	 * @return the generated imports.
-	 */
-	public CharSequence generateImports(Resource r) {
-		return imports(r).map("include \"%s\""::formatted).collect(Collectors.joining("\n"));
-	}
+  @Inject
+  public ImportGenerator {
+  }
 
-	// Pulled out of GeneratorUtils
-	private Stream<String> imports(Resource r) {
-		// Trying to distinct CharSequences doesn't seem to work
-		// properly, hence the conversion.
-		return Stream.concat(standardImports(), Stream.concat(rcPackageDefImports(r), packageImports(r)))
-				.map(CharSequence::toString).distinct();
-	}
+  /**
+   * Generates imports.
+   *
+   * @param r the resource for which we are generating imports.
+   * @return the generated imports.
+   */
+  public CharSequence generate(Resource r) {
+    return imports(r).map("include \"%s\""::formatted).collect(Collectors.joining("\n"));
+  }
 
-	/**
-	 * Gets the standard RoboChart definitions imports.
-	 *
-	 * @return an iterator of import filenames.
-	 */
-	private Stream<CharSequence> standardImports() {
-		// robocert_defs is included by this generator, and transitively
-		// includes most of the RoboChart prelude.
-		return Stream.of(ps.LIBRARY_FROM_PACKAGE_PATH + "/robocert_defs.csp",
-				ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp");
-	}
+  // Pulled out of GeneratorUtils
+  private Stream<String> imports(Resource r) {
+    // We need to import:
+    // - the RoboCert standard library;
+    // - for each RoboChart package in the resource set, its resource defs file;
+    // - for each RoboCert package in the resource:
+    //   - for each Target, its associated RoboChart element's:
+    //     - resource defs file;
+    //     - top-level module file;
+    //     - imports' defs files;
+    //   - for each import, its resource defs file.
+    return Streams.concat(standardImports(), rcSiblingImports(r), certPackageImports(r)).distinct();
+  }
 
-	/**
-	 * Gets 'defs' imports for any RoboChart package reachable through this
-	 * resource's set.
-	 *
-	 * @param r the resource to query.
-	 *
-	 * @return an iterator of import filenames.
-	 */
-	private Stream<CharSequence> rcPackageDefImports(Resource r) {
-		// TODO(@MattWindsor91): this may sometimes need to be filtered to
-		// anonymous only.
-		return Streams.stream(rpx.getPackages(r)).map(fx::getCSPDefsFileName);
-	}
+  private Stream<String> standardImports() {
+    // robocert_defs is included by this generator, and transitively
+    // includes most of the RoboChart prelude.
+    return Stream.of(ps.LIBRARY_FROM_PACKAGE_PATH + "/robocert_defs.csp",
+        ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp");
+  }
 
-	/**
-	 * Scrapes the resource's package for imports.
-	 *
-	 * The exact type of imports retrieved in this way depends on the type of
-	 * package.
-	 *
-	 * @param it the resource to query.
-	 *
-	 * @return a stream of input filenames.
-	 */
-	private Stream<CharSequence> packageImports(Resource r) {
-		return Streams.stream(rpx.getBasicPackage(r)).flatMap(this::packageImports);
-	}
+  private Stream<String> rcSiblingImports(Resource r) {
+    return pf.packagesInSiblingResources(r, RCPackage.class).filter(this::isValidRc)
+        .map(x -> defsInclude(x.eResource()));
+  }
 
-	private Stream<CharSequence> packageImports(BasicPackage p) {
-		return Stream.concat(namedImports(p), packageImportsInner(p));
-	}
+  private boolean isValidRc(RCPackage p) {
+    // TODO(@MattWindsor91): the original definition of this required packages to be anonymous
+    // (p.getName() == null), but, when I've tried this, it's omitted core_defs.csp.  I am unsure
+    // as to why.
+    return Objects.equals(p.eResource().getURI().fileExtension(), "rct");
+  }
 
-	private Stream<CharSequence> packageImportsInner(BasicPackage p) {
-		// TODO(@MattWindsor91): is this ever not a CertPackage in practice?
-		if (p instanceof CertPackage c)
-			return cpx.getReferencedElements(c).flatMap(this::elementImports);
-		return Stream.of(fx.getCSPMainFileName(p));
-	}
+  private Stream<String> certPackageImports(Resource r) {
+    return pf.packagesInResource(r, CertPackage.class)
+        .flatMap(p -> Stream.concat(targetImports(p), namedImports(p)));
+  }
 
-	private Stream<CharSequence> elementImports(NamedElement element) {
-		return Streams.stream(rpx.getPackage(element)).flatMap(p -> Stream
-				.concat(Stream.of(fx.getCSPDefsFileName(p), fx.getCSPTopModuleFileName(element)), namedImports(p)));
-	}
+  private Stream<String> targetImports(CertPackage p) {
+    return targetElements(p).flatMap(this::elementImports);
+  }
 
-	private Stream<CharSequence> namedImports(BasicPackage p) {
-		return gu.allImports(p).stream().map(fx::getCSPDefsFileName);
-	}
+  private Stream<NamedElement> targetElements(CertPackage p) {
+    // We used to pick up only targets referenced in a SpecGroup here for efficiency, but
+    // this means that the definitions of the targets themselves break - for perhaps obvious
+    // reasons.  If we want to optimise out unused targets, we'll need to optimise out their
+    // definitions entirely (and then make sure they can't be used by other files?).
+    return StreamHelpers.filter(p.getGroups().stream(), TargetGroup.class)
+        .flatMap(x -> x.getTargets().stream()).map(
+            Target::getElement);
+  }
+
+  private Stream<String> elementImports(NamedElement elt) {
+    // This is basically the same as the analogous code in GeneratorUtils
+    final var resource = elt.eResource();
+    return rcPackages(resource).flatMap(p -> elementImportsInPackage(resource, elt, p));
+  }
+
+  private Stream<String> elementImportsInPackage(Resource r, NamedElement elt, RCPackage p) {
+    final var directs = Stream.of(
+        defsInclude(r),
+        ps.include(gu.calculateTopModule(elt))
+    );
+    return Stream.concat(directs, namedImports(p));
+  }
+
+  private String defsInclude(Resource r) {
+    return ps.include(gu.getFileName(r) + "_defs");
+  }
+
+  private Stream<RCPackage> rcPackages(Resource r) {
+    return pf.packagesInResource(r, RCPackage.class);
+  }
+
+  private Stream<String> namedImports(BasicPackage p) {
+    return gu.allImports(p).stream().map(x -> defsInclude(x.eResource()));
+  }
 }

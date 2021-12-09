@@ -21,7 +21,7 @@ import robocalc.robocert.model.robocert.util.DefinitionHelper;
 /**
  * Extension methods for dealing with RoboChart modules.
  */
-class RCModuleExtensions {
+public class RCModuleExtensions {
 	@Inject
 	private DefinitionHelper dh;
 	@Inject

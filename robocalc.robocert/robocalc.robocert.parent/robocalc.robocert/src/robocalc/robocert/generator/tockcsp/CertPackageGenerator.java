@@ -56,7 +56,7 @@ public class CertPackageGenerator {
 	 * @param pkg the package being generated.
 	 */
 	public CharSequence generate(CertPackage pkg) {
-		return String.join("\n\n", generateHeader(), ig.generateImports(pkg.eResource()), generateGroups(pkg));
+		return String.join("\n\n", generateHeader(), ig.generate(pkg.eResource()), generateGroups(pkg));
 	}
 
 	/**
