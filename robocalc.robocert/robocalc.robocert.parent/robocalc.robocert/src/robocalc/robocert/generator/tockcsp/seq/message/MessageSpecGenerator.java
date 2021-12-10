@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import org.eclipse.xtext.xbase.lib.Pair;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ArgumentGenerator;
-import robocalc.robocert.generator.utils.EdgeExtensions;
 import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.MessageSpec;
 import robocalc.robocert.model.robocert.WildcardArgument;
@@ -34,7 +33,7 @@ import robocalc.robocert.model.robocert.WildcardArgument;
 public record MessageSpecGenerator(CSPStructureGenerator csp,
 																	 TopicGenerator tg,
 																	 ArgumentGenerator ag,
-																	 EdgeExtensions ex) {
+																	 ChannelGenerator ex) {
 
 	/**
 	 * Constructs a message spec generator.
@@ -81,7 +80,7 @@ public record MessageSpecGenerator(CSPStructureGenerator csp,
 	}
 
 	private CharSequence generateManyCSPEventSet(List<MessageSpec> it) {
-		var sets = it.stream().map(this::generateCSPEventSet).toArray(CharSequence[]::new);
+		final var sets = it.stream().map(this::generateCSPEventSet).toArray(CharSequence[]::new);
 		return csp.iteratedUnion(csp.set(sets));
 	}
 
@@ -94,7 +93,7 @@ public record MessageSpecGenerator(CSPStructureGenerator csp,
 	public CharSequence generateCSPEventSet(MessageSpec it) {
 		// TODO(@MattWindsor91): optimise this some more
 
-		var wcs = wildcards(it);
+		final var wcs = wildcards(it);
 		if (wcs.isEmpty()) {
 			return csp.enumeratedSet(generatePrefix(it));
 		}
@@ -136,8 +135,8 @@ public record MessageSpecGenerator(CSPStructureGenerator csp,
 	 * for an event set.
 	 */
 	private CharSequence generateChannel(MessageSpec spec) {
-		var to = spec.getEdge().getResolvedTo();
-		var sb = new StringBuffer(csp.namespaced(ex.namespace(to), tg.generate(spec.getTopic())));
+		final var to = spec.getEdge().getResolvedTo();
+		final var sb = new StringBuffer(csp.namespaced(ex.namespace(to), tg.generate(spec.getTopic())));
 		direction(spec).ifPresent(x -> sb.append(".").append(generateDirection(x)));
 		return sb.toString();
 	}
