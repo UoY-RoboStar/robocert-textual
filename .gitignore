@@ -49,3 +49,6 @@ bin/
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# IDEA
+workspace.xml
