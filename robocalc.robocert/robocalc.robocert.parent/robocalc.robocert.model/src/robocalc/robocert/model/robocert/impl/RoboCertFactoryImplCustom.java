@@ -3,11 +3,13 @@ package robocalc.robocert.model.robocert.impl;
 import robocalc.robocert.model.robocert.BinaryMessageSet;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
 import robocalc.robocert.model.robocert.ImplicitEdge;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.ModuleTarget;
+import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RefMessageSet;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.Subsequence;
@@ -16,79 +18,89 @@ import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
 
 /**
- * Custom factory that injects 'custom' versions of various RoboCert EClasses,
- * including implementations of derived elements.
+ * Custom factory that injects 'custom' versions of various RoboCert EClasses, including
+ * implementations of derived elements.
  *
  * @author Matt Windsor
  */
 public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
-	@Override
-	public BinaryMessageSet createBinaryMessageSet() {
-		return new BinaryMessageSetImplCustom();
-	}
+  @Override
+  public BinaryMessageSet createBinaryMessageSet() {
+    return new BinaryMessageSetImplCustom();
+  }
 
-	@Override
-	public ConstAssignment createConstAssignment() {
-		return new ConstAssignmentImplCustom();
-	}
+  @Override
+  public ConstAssignment createConstAssignment() {
+    return new ConstAssignmentImplCustom();
+  }
 
-	@Override
-	public ContextActor createContextActor() {
-		return new ContextActorImplCustom();
-	}
+  @Override
+  public ContextActor createContextActor() {
+    return new ContextActorImplCustom();
+  }
 
-	@Override
-	public ExplicitEdge createExplicitEdge() {
-		return new ExplicitEdgeImplCustom();
-	}
+  @Override
+  public EventTopic createEventTopic() {
+    return new EventTopicImplCustom();
+  }
 
-	@Override
-	public ExtensionalMessageSet createExtensionalMessageSet() {
-		return new ExtensionalMessageSetImplCustom();
-	}
+  @Override
+  public ExplicitEdge createExplicitEdge() {
+    return new ExplicitEdgeImplCustom();
+  }
 
-	@Override
-	public ImplicitEdge createImplicitEdge() {
-		return new ImplicitEdgeImplCustom();
-	}
+  @Override
+  public ExtensionalMessageSet createExtensionalMessageSet() {
+    return new ExtensionalMessageSetImplCustom();
+  }
 
-	@Override
-	public Instantiation createInstantiation() {
-		return new InstantiationImplCustom();
-	}
+  @Override
+  public ImplicitEdge createImplicitEdge() {
+    return new ImplicitEdgeImplCustom();
+  }
 
-	@Override
-	public ModuleTarget createModuleTarget() {
-		return new ModuleTargetImplCustom();
-	}
+  @Override
+  public Instantiation createInstantiation() {
+    return new InstantiationImplCustom();
+  }
 
-	@Override
-	public RefMessageSet createRefMessageSet() {
-		return new RefMessageSetImplCustom();
-	}
+  @Override
+  public ModuleTarget createModuleTarget() {
+    return new ModuleTargetImplCustom();
+  }
 
-	@Override
-	public SequenceGroup createSequenceGroup() {
-		return new SequenceGroupImplCustom();
-	}
+  @Override
+  public OperationTopic createOperationTopic() {
+    return new OperationTopicImplCustom();
+  }
 
-	@Override
-	public Subsequence createSubsequence() {
-		return new SubsequenceImplCustom();
-	}
+  @Override
+  public RefMessageSet createRefMessageSet() {
+    return new RefMessageSetImplCustom();
+  }
 
-	@Override
-	public SystemModuleActor createSystemModuleActor() {
-		return new SystemModuleActorImplCustom();
-	}
+  @Override
+  public SequenceGroup createSequenceGroup() {
+    return new SequenceGroupImplCustom();
+  }
 
-	@Override
-	public SystemTarget createSystemTarget() {
-		return new SystemTargetImplCustom();
-	}
+  @Override
+  public Subsequence createSubsequence() {
+    return new SubsequenceImplCustom();
+  }
 
-	@Override
-	public UniverseMessageSet createUniverseMessageSet() {
-		return new UniverseMessageSetImplCustom();
-	}
+  @Override
+  public SystemModuleActor createSystemModuleActor() {
+    return new SystemModuleActorImplCustom();
+  }
+
+  @Override
+  public SystemTarget createSystemTarget() {
+    return new SystemTargetImplCustom();
+  }
+
+  @Override
+  public UniverseMessageSet createUniverseMessageSet() {
+    return new UniverseMessageSetImplCustom();
+  }
 }

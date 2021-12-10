@@ -692,6 +692,15 @@ operations where it is the only allowed direction.")
 abstract class MessageTopic {
 	@genmodel(documentation="The parent message specification.")
 	ref MessageSpec[1]#topic spec;
+	
+	//
+	// Derived properties
+	//
+	
+	@genmodel(documentation="The types of all parameters accepted by this topic.
+
+For event topics, there is at most one pseudo-parameter: the type of the event.")
+	derived transient readonly volatile ref robochart.Type[*] paramTypes;	
 }
 
 @genmodel(documentation="An event message topic.")

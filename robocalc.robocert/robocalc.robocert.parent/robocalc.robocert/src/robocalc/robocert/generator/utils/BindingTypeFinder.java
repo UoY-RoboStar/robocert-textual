@@ -13,8 +13,6 @@
 
 package robocalc.robocert.generator.utils;
 
-import com.google.inject.Inject;
-
 import circus.robocalc.robochart.Type;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.MessageSpec;
@@ -27,17 +25,8 @@ import robocalc.robocert.model.robocert.WildcardArgument;
  *
  * @author Matt Windsor
  */
-public record BindingTypeFinder(TopicParameterFinder tx) {
+public class BindingTypeFinder {
 	// TODO(@MattWindsor91): expose this through the metamodel.
-
-	/**
-	 * Constructs a binding type finder.
-	 *
-	 * @param tx a topic parameter finder.
-	 */
-	@Inject
-	public BindingTypeFinder {
-	}
 
 	/**
 	 * Gets the type of a {@link Binding} by traversing its container(s).
@@ -74,14 +63,7 @@ public record BindingTypeFinder(TopicParameterFinder tx) {
 	}
 
 	private Type typeFromMessageSpec(MessageSpec spec, WildcardArgument arg) {
-		final var index = spec.getArguments().indexOf(arg);
-		if (index == -1) {
-			throw new IndexOutOfBoundsException("couldn't find index of argument: " + arg);
-		}
-		final var param = tx.paramTypes(spec.getTopic()).skip(index).findFirst();
-		if (param.isEmpty()) {
-			throw new IndexOutOfBoundsException("argument index out of range: %d".formatted(index));
-		}
-		return param.get();
+		final var i = spec.getArguments().indexOf(arg);
+		return spec.getTopic().getParamTypes().get(i);
 	}
 }
