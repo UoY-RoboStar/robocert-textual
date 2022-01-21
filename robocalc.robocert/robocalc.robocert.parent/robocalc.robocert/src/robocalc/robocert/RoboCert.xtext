@@ -67,7 +67,7 @@ ControllerTarget:
  * A target override in a sequence diagram.
  */
 Instantiation:
-	{Instantiation} ('with' BEGIN (assignments+=ConstAssignment) (',' assignments+=ConstAssignment)* END)?;
+	{Instantiation} ('with' BEGIN (assignments+=ConstAssignment)+ END)?;
 
 /**
  * A constant assignment.
