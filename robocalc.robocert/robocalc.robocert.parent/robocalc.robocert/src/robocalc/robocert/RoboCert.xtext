@@ -406,7 +406,7 @@ Sequence:
  * steps ('x then y then...').
  */
 Subsequence:
-	BEGIN ('nothing' {Subsequence} | (steps+=InteractionFragment) ('then' steps+=InteractionFragment)*) END;
+	BEGIN ('nothing' {Subsequence} | (steps+=InteractionFragment)+) END;
 
 //
 // INTERACTION FRAGMENTS
