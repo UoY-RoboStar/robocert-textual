@@ -516,7 +516,7 @@ MessageTopic:
  * A named message set.
  */
 NamedMessageSet:
-	'message' 'set' name=ID ':' set=MessageSet;
+	'message' 'set' name=ID '=' set=MessageSet;
 
 /**
  * A gap specification.
@@ -582,7 +582,7 @@ PrimitiveSet returns MessageSet:
  * An extensional message set (including singleton message sets).
  */
 ExtensionalMessageSet:
-	'{|' {ExtensionalMessageSet} messages+=MessageSpec (',' messages+=MessageSpec)* '|}' |
+	'{' {ExtensionalMessageSet} messages+=MessageSpec (',' messages+=MessageSpec)* '}' |
 	messages+=MessageSpec;
 
 //
