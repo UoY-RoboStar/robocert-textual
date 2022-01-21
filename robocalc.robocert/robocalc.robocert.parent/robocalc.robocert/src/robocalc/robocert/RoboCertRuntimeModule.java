@@ -13,11 +13,11 @@ import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.generator.intf.seq.ActionGenerator;
 import robocalc.robocert.generator.tockcsp.seq.action.ActionGeneratorImpl;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
-import robocalc.robocert.generator.intf.seq.StepGenerator;
+import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
 import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl;
-import robocalc.robocert.generator.tockcsp.seq.step.StepGeneratorImpl;
+import robocalc.robocert.generator.tockcsp.seq.step.InteractionFragmentGeneratorImpl;
 import robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom;
 
 /** 
@@ -36,8 +36,8 @@ public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 		return SubsequenceGeneratorImpl.class;
 	}
 
-	public Class<? extends StepGenerator> bindStepGenerator() {
-		return StepGeneratorImpl.class;
+	public Class<? extends InteractionFragmentGenerator> bindStepGenerator() {
+		return InteractionFragmentGeneratorImpl.class;
 	}
 
 	/**

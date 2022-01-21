@@ -14,7 +14,7 @@ package robocalc.robocert.generator.tockcsp.seq;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
-import robocalc.robocert.generator.intf.seq.StepGenerator;
+import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Subsequence;
@@ -26,7 +26,7 @@ import robocalc.robocert.model.robocert.Subsequence;
  */
 public record SubsequenceGeneratorImpl(
 		CSPStructureGenerator csp,
-		StepGenerator sg) implements SubsequenceGenerator {
+		InteractionFragmentGenerator sg) implements SubsequenceGenerator {
 
 	/**
 	 * Constructs a subsequence generator.

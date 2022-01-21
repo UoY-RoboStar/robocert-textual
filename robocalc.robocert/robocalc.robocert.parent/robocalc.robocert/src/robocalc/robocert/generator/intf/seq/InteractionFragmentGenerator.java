@@ -12,21 +12,21 @@
  ********************************************************************************/
 package robocalc.robocert.generator.intf.seq;
 
-import robocalc.robocert.model.robocert.SequenceStep;
+import robocalc.robocert.model.robocert.InteractionFragment;
 
 /**
- * A generator for sequence steps.
+ * A top-level generator for interaction fragments.
  *
  * @author Matt Windsor
  */
-public interface StepGenerator {
+public interface InteractionFragmentGenerator {
 	/**
-	 * Generates code for a sequence step (inside a given lifeline).
+	 * Generates code for an interaction fragment (inside a given lifeline).
 	 *
-	 * @param s   sequence step to generate.
+	 * @param f   fragment to generate.
 	 * @param ctx context of the lifeline for which we are generating CSP-M.
 	 *
 	 * @return code for the sequence step.
 	 */
-	public CharSequence generate(SequenceStep s, LifelineContext ctx);
+	public CharSequence generate(InteractionFragment f, LifelineContext ctx);
 }

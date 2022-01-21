@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import com.google.inject.Inject;
 
 import robocalc.robocert.generator.intf.seq.LifelineContext;
-import robocalc.robocert.generator.intf.seq.StepGenerator;
+import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.model.robocert.ActionStep;
 import robocalc.robocert.model.robocert.Binding;
@@ -25,7 +25,7 @@ import robocalc.robocert.model.robocert.Branch;
 import robocalc.robocert.model.robocert.BranchStep;
 import robocalc.robocert.model.robocert.DeadlineStep;
 import robocalc.robocert.model.robocert.LoopStep;
-import robocalc.robocert.model.robocert.SequenceStep;
+import robocalc.robocert.model.robocert.InteractionFragment;
 
 /**
  * Generator for sequence steps.
@@ -34,7 +34,7 @@ import robocalc.robocert.model.robocert.SequenceStep;
  *
  * @author Matt Windsor
  */
-public class StepGeneratorImpl implements StepGenerator {
+public class InteractionFragmentGeneratorImpl implements InteractionFragmentGenerator {
 	@Inject
 	private ActionStepGenerator ag;
 	@Inject
@@ -47,21 +47,21 @@ public class StepGeneratorImpl implements StepGenerator {
 	private LoadStoreGenerator ls;
 
 	@Override
-	public CharSequence generate(SequenceStep s, LifelineContext ctx) {
-		return generateLoads(s) + generateAfterLoads(s, ctx);
+	public CharSequence generate(InteractionFragment f, LifelineContext ctx) {
+		return generateLoads(f) + generateAfterLoads(f, ctx);
 	}
 
-	private String generateLoads(SequenceStep it) {
-		return ls.generateLoads(controlFlowBindings(it)).toString();
+	private String generateLoads(InteractionFragment f) {
+		return ls.generateLoads(controlFlowBindings(f)).toString();
 	}
 
-	private Stream<Binding> controlFlowBindings(SequenceStep it) {
+	private Stream<Binding> controlFlowBindings(InteractionFragment f) {
 		// TODO(@MattWindsor91): make this part of the metamodel?
-		if (it instanceof ActionStep a)
+		if (f instanceof ActionStep a)
 			return ls.getExprBindings(a);
-		if (it instanceof BranchStep b)
+		if (f instanceof BranchStep b)
 			return branchBindings(b);
-		if (it instanceof LoopStep l)
+		if (f instanceof LoopStep l)
 			return ls.getExprBindings(l.getBound());
 		return Stream.empty();
 	}
@@ -74,17 +74,17 @@ public class StepGeneratorImpl implements StepGenerator {
 		return ls.getExprBindings(x.getGuard());
 	}
 
-	private CharSequence generateAfterLoads(SequenceStep s, LifelineContext ctx) {
+	private CharSequence generateAfterLoads(InteractionFragment f, LifelineContext ctx) {
 		// Remember to extend this with any non-branch steps added to the
 		// metamodel.
-		if (s instanceof ActionStep a)
+		if (f instanceof ActionStep a)
 			return ag.generate(a, ctx);
-		if (s instanceof BranchStep b)
+		if (f instanceof BranchStep b)
 			return bg.generate(b, ctx);
-		if (s instanceof DeadlineStep d)
+		if (f instanceof DeadlineStep d)
 			return dg.generate(d, ctx);
-		if (s instanceof LoopStep l)
+		if (f instanceof LoopStep l)
 			return lg.generate(l, ctx);
-		throw new IllegalArgumentException("unsupported step type: %s".formatted(s));
+		throw new IllegalArgumentException("unsupported step type: %s".formatted(f));
 	}
 }

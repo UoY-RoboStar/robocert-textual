@@ -406,15 +406,15 @@ Sequence:
  * steps ('x then y then...').
  */
 Subsequence:
-	BEGIN ('nothing' {Subsequence} | (steps+=SequenceStep) ('then' steps+=SequenceStep)*) END;
+	BEGIN ('nothing' {Subsequence} | (steps+=InteractionFragment) ('then' steps+=InteractionFragment)*) END;
 
 //
-// STEPS
+// INTERACTION FRAGMENTS
 //
 /**
  * A step in a sequence diagram.
  */
-SequenceStep:
+InteractionFragment:
 	BlockStep |
 	BranchStep |
 	{ActionStep} gap=Gap action=SequenceAction OptTemperature;
@@ -425,7 +425,7 @@ SequenceStep:
 /**
  * A block step.
  */
-BlockStep returns SequenceStep:
+BlockStep:
 	('within' {DeadlineStep} units=TimeUnits |
 	'loop' {LoopStep} bound=MaybeLoopBound) ('as' name=ID)? ':' body=Subsequence;
 

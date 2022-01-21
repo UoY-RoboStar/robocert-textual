@@ -494,12 +494,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Subsequence">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A sequence of steps, forming part or all of a sequence diagram."/>
+      <details key="documentation" value="A contiguous ordered list of interaction fragments."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="steps" upperBound="-1"
-        eType="#//SequenceStep" containment="true" eOpposite="#//SequenceStep/parent">
+        eType="#//InteractionFragment" containment="true" eOpposite="#//InteractionFragment/parent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The steps contained within the subsequence."/>
+        <details key="documentation" value="The interaction fragments contained within the subsequence."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"
@@ -509,9 +509,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceStep" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="InteractionFragment" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A single step in a subsequence."/>
+      <details key="documentation" value="A single interaction fragment in a subsequence."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
         eType="#//Subsequence" eOpposite="#//Subsequence/steps">
@@ -520,7 +520,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ActionStep" eSuperTypes="#//SequenceStep">
+  <eClassifiers xsi:type="ecore:EClass" name="ActionStep" eSuperTypes="#//InteractionFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A sequence step containing a primitive action."/>
     </eAnnotations>
@@ -543,7 +543,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BlockStep" abstract="true" eSuperTypes="#//SequenceStep #//OptionallyNamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="BlockStep" abstract="true" eSuperTypes="#//InteractionFragment #//OptionallyNamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Step that contains exactly one body.&#xD;&#xA;&#xD;&#xA;Often, but not always, these will be (what UML would call) combined&#xD;&#xA;fragments.&#xD;&#xA;&#xD;&#xA;Block steps can optionally have a name, which allows breaking."/>
     </eAnnotations>
@@ -625,7 +625,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BranchStep" abstract="true" eSuperTypes="#//SequenceStep">
+  <eClassifiers xsi:type="ecore:EClass" name="BranchStep" abstract="true" eSuperTypes="#//InteractionFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Abstract step containing two or more branches."/>
     </eAnnotations>
