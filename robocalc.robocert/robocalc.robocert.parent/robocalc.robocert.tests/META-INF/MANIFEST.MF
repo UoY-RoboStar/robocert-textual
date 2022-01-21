@@ -9,9 +9,9 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: robocalc.robocert,
  robocalc.robocert.model,
  org.junit.jupiter.api;bundle-version="[5.1.0,6.0.0)",
+ org.hamcrest;bundle-version="2.2.0",
  org.eclipse.xtext.testing,
  org.eclipse.xtext.xbase.testing,
- org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
  circus.robocalc.robochart;bundle-version="2.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: robocalc.robocert.tests;x-internal=true

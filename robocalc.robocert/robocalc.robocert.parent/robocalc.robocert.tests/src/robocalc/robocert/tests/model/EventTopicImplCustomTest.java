@@ -15,13 +15,10 @@ package robocalc.robocert.tests.model;
 
 import circus.robocalc.robochart.Event;
 import circus.robocalc.robochart.RoboChartFactory;
-import circus.robocalc.robochart.Type;
-import circus.robocalc.robochart.TypeRef;
 import com.google.inject.Inject;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import org.eclipse.xtext.testing.InjectWith;
