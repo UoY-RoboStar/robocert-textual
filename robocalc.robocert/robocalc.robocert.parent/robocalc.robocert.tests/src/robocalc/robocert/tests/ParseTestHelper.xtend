@@ -12,13 +12,13 @@ package robocalc.robocert.tests
 import robocalc.robocert.model.robocert.CertPackage
 import robocalc.robocert.model.robocert.Subsequence
 import robocalc.robocert.model.robocert.SequenceGroup
-import robocalc.robocert.model.robocert.ActionStep
 import robocalc.robocert.model.robocert.ArrowAction
 import robocalc.robocert.model.robocert.ExpressionArgument
 import robocalc.robocert.model.robocert.CertExpr
 import static org.junit.jupiter.api.Assertions.*
 import org.eclipse.xtext.testing.util.ParseHelper
 import com.google.inject.Inject
+import robocalc.robocert.model.robocert.OccurrenceFragment
 
 /** 
  * Boilerplate for doing parser tests.
@@ -99,7 +99,7 @@ class ParseTestHelper {
 	 * @return the unlifted expression.
 	 */
 	def CertExpr unliftExpr(CertPackage it) {
-		var action = unliftSubsequence.steps.filter(ActionStep).get(0).action;
+		var action = unliftSubsequence.steps.filter(OccurrenceFragment).get(0).action;
 		if (action instanceof ArrowAction) {
 			var arg = action.body.arguments.get(0)
 			if (arg instanceof ExpressionArgument) {

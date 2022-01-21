@@ -77,7 +77,7 @@ public class ImplicitEdgeCustomTest {
 		final var act = rf.createArrowAction();
 		act.setBody(spec);
 
-		final var step = rf.createActionStep();
+		final var step = rf.createOccurrenceFragment();
 		step.setAction(act);
 
 		final var sseq = rf.createSubsequence();

@@ -34,6 +34,8 @@ import robocalc.robocert.model.robocert.ContextActor
  * Provides ways of creating dummy message specifications.
  */
 class MessageSpecFactory {
+	// TODO(@MattWindsor91): lots of old terminology here, eg 'gap' for 'intraMessages'.
+	
 	// TODO(@MattWindsor91): reduce overlap with model MessageFactory;
 	// the idea is that that will receive non-dummy factory operations.
 	
@@ -58,8 +60,7 @@ class MessageSpecFactory {
 
 	def private arrowParent() {
 		rcert.createArrowAction => [
-			step = rcert.createActionStep => [
-				gap = rcert.createExtensionalMessageSet
+			step = rcert.createOccurrenceFragment => [
 				parent = sseq
 			]
 		]
@@ -88,7 +89,7 @@ class MessageSpecFactory {
 	}
 
 	/**
-	 * Hoists the given set into being the gap set for an action step that
+	 * Hoists the given set into being the gap set for an UntilFragment that
 	 * is attached to the test subsequence.
 	 * 
 	 * Acts in-place.
@@ -96,8 +97,8 @@ class MessageSpecFactory {
 	 * @param g  the set to hoist.
 	 */
 	def setupAsGap(MessageSet g) {
-		rcert.createActionStep => [
-			gap = g
+		rcert.createUntilFragment => [
+			intraMessages = g
 			parent = sseq
 		]		
 	}

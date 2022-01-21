@@ -67,7 +67,7 @@ class BindingNamerTest {
 		final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), EdgeDirection.INBOUND, w);
 		final var aact = rcf.createArrowAction();
 		aact.setBody(aspec);
-		final var astep = rcf.createActionStep();
+		final var astep = rcf.createOccurrenceFragment();
 		astep.setAction(aact);
 		final var ssq = rcf.createSubsequence();
 		ssq.getSteps().add(astep);

@@ -441,16 +441,21 @@ abstract class InteractionFragment {
 // Non-block steps
 //
 
-@genmodel(documentation="A sequence step containing a primitive action.")
-class ActionStep extends InteractionFragment {
-	@genmodel(documentation="The specification of what can happen in the 'gap' before the action.")
-	val MessageSet[1] gap;
-
+@genmodel(documentation="An interaction fragment referring to a particular occurrence in time.")
+class OccurrenceFragment extends InteractionFragment {
 	@genmodel(documentation="The action proper.")
 	val SequenceAction[1]#step action;
 	
 	@genmodel(documentation="The temperature of this action.")
 	attr Temperature[1] temperature;
+}
+
+@genmodel(documentation="An interaction fragment blocking the diagram until an occurrence happens.
+
+This is an extension to UML.")
+class UntilFragment extends OccurrenceFragment {
+	@genmodel(documentation="The messages that may occur while waiting for 'action'.")
+	val MessageSet[1] intraMessages;
 }
 
 //
@@ -592,7 +597,7 @@ class ElseGuard extends Guard {
 @genmodel(documentation="An action in a sequence.")
 abstract class SequenceAction {
 	@genmodel(documentation="The step containing this action.")
-	ref ActionStep[1]#action step;
+	ref OccurrenceFragment[1]#action step;
 }
 
 @genmodel(documentation="A communicating action in a sequence.")

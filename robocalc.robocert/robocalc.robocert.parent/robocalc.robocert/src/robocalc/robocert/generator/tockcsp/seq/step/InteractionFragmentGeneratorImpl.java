@@ -19,12 +19,12 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
-import robocalc.robocert.model.robocert.ActionStep;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.Branch;
 import robocalc.robocert.model.robocert.BranchStep;
 import robocalc.robocert.model.robocert.DeadlineStep;
 import robocalc.robocert.model.robocert.LoopStep;
+import robocalc.robocert.model.robocert.OccurrenceFragment;
 import robocalc.robocert.model.robocert.InteractionFragment;
 
 /**
@@ -57,7 +57,7 @@ public class InteractionFragmentGeneratorImpl implements InteractionFragmentGene
 
 	private Stream<Binding> controlFlowBindings(InteractionFragment f) {
 		// TODO(@MattWindsor91): make this part of the metamodel?
-		if (f instanceof ActionStep a)
+		if (f instanceof OccurrenceFragment a)
 			return ls.getExprBindings(a);
 		if (f instanceof BranchStep b)
 			return branchBindings(b);
@@ -77,7 +77,7 @@ public class InteractionFragmentGeneratorImpl implements InteractionFragmentGene
 	private CharSequence generateAfterLoads(InteractionFragment f, LifelineContext ctx) {
 		// Remember to extend this with any non-branch steps added to the
 		// metamodel.
-		if (f instanceof ActionStep a)
+		if (f instanceof OccurrenceFragment a)
 			return ag.generate(a, ctx);
 		if (f instanceof BranchStep b)
 			return bg.generate(b, ctx);

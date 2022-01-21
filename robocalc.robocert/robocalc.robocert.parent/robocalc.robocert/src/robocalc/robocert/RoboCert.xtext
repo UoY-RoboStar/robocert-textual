@@ -420,7 +420,16 @@ Subsequence:
 InteractionFragment:
 	BlockStep |
 	BranchStep |
-	{ActionStep} gap=Gap action=SequenceAction OptTemperature;
+	{OccurrenceFragment} action=SequenceAction OptTemperature |
+	UntilFragment;
+
+/**
+ * An until-fragment.
+ */
+UntilFragment:
+	(('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet | 'block' {UntilFragment} intraMessages=EmptySet)
+	'until' action=SequenceAction OptTemperature;
+
 
 //
 // Block steps
@@ -522,20 +531,14 @@ NamedMessageSet:
 	'message' 'set' name=ID '=' set=MessageSet;
 
 /**
- * A gap specification.
- */
-Gap returns MessageSet:
-	('any' | 'anything') AllowSet 'until' | EmptySet;
-
-/**
- * The topmost level of a gap set specification, one of:
+ * The topmost level of an intra-message set specification, one of:
  * 
  * - 'in X';
  * - 'in X except Y';
  * - 'except Y';
  * - '' (universe implied).
  */
-AllowSet returns MessageSet:
+IntraMessageSet returns MessageSet:
 	'in' MessageSet |
 	{UniverseMessageSet} ({BinaryMessageSet.lhs=current} operator=DiffOperator rhs=UnionOrInterSet)?;
 

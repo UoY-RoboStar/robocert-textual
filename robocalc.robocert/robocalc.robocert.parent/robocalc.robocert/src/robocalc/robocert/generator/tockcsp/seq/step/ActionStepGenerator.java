@@ -21,10 +21,11 @@ import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
-import robocalc.robocert.model.robocert.ActionStep;
 import robocalc.robocert.model.robocert.ArrowAction;
 import robocalc.robocert.model.robocert.MessageSpec;
+import robocalc.robocert.model.robocert.OccurrenceFragment;
 import robocalc.robocert.model.robocert.SequenceAction;
+import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
  * Generates CSP-M for action steps.
@@ -61,7 +62,9 @@ public record ActionStepGenerator(CSPStructureGenerator csp,
 	 * @param ctx context for the current lifeline.
 	 * @return the generated CSP-M.
 	 */
-	public CharSequence generate(ActionStep a, LifelineContext ctx) {
+	public CharSequence generate(OccurrenceFragment a, LifelineContext ctx) {
+		// TODO(@MattWindsor91): separate until generation and occurrence generation
+		
 		// TODO(@MattWindsor91): temperature of action step?
 		return csp.function(gap(a), csp.function(EVENTUALLY_PROC, ag.generate(a.getAction(), ctx)));
 	}
@@ -75,7 +78,7 @@ public record ActionStepGenerator(CSPStructureGenerator csp,
 	 * @param a the action step.
 	 * @return the generated CSP-M.
 	 */
-	private CharSequence gap(ActionStep a) {
+	private CharSequence gap(OccurrenceFragment a) {
 		return csp.function(GAP_PROC, gapSet(a), actionSet(a.getAction()));
 	}
 
@@ -88,8 +91,10 @@ public record ActionStepGenerator(CSPStructureGenerator csp,
 	 * @param a the action step.
 	 * @return the generated CSP.
 	 */
-	private CharSequence gapSet(ActionStep a) {
-		return msg.optimiseAndGenerate(a.getGap(), a::setGap);
+	private CharSequence gapSet(OccurrenceFragment a) {
+		if (a instanceof UntilFragment u)
+			return msg.optimiseAndGenerate(u.getIntraMessages(), u::setIntraMessages);
+		return csp.set(); // for now
 	}
 
 	/**
