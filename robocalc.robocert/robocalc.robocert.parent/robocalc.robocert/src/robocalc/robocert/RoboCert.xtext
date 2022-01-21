@@ -426,7 +426,7 @@ InteractionFragment:
  * A block step.
  */
 BlockStep:
-	('within' {DeadlineStep} units=TimeUnits |
+	('taking' {DeadlineStep} 'at' 'most' units=TimeUnits |
 	'loop' {LoopStep} bound=MaybeLoopBound) ('as' name=ID)? ':' body=Subsequence;
 
 //
