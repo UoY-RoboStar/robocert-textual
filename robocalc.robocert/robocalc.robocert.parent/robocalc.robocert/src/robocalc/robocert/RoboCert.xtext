@@ -71,9 +71,12 @@ Instantiation:
 
 /**
  * A constant assignment.
+ * 
+ * As with many such lists, the definition of ConstAssignment allows commas
+ * with an optional trailing (potentially Oxford-style) 'and'.
  */
 ConstAssignment:
-	ConstName ('and' ConstName)* AssignWords value=CertExpr;
+	ConstName (',' ConstName)* (','? 'and' ConstName)? AssignWords value=CertExpr;
 
 /**
  * Adds a constant to the constants list.
