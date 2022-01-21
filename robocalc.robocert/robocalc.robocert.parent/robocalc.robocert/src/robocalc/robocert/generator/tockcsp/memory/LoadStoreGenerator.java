@@ -81,7 +81,7 @@ public class LoadStoreGenerator {
 	 * @return the CSP-M prefix.
 	 */
 	public CharSequence generateStores(Stream<Binding> bindings) {
-		return generatePrefix(bindings, "set!", x -> bg.generateExpressionName(x));
+		return generatePrefix(bindings, "set!", bg::generateExpressionName);
 	}
 
 	/**

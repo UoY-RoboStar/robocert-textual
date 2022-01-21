@@ -33,7 +33,7 @@ Cold(A) = A |~| tock -> Cold(A)
 
 
 Timed(OneStep) {
-  -- Semantics of an action step with a gap.
+  -- Semantics of an until fragment.
   --
   -- TODO(@MattWindsor91): the precise tick-tock semantics of gaps is currently
   -- unstable, as it is unclear as to whether gaps should:
@@ -44,7 +44,7 @@ Timed(OneStep) {
   --
   -- This, coupled with making the generator always emit, seems to be the least
   -- worst solution for now (2021-09-09).
-  Action(gap_evts, alpha_P)(P) = TCHAOS(diff(gap_evts, alpha_P)) /\ P
+  Until(intraMessages__, initial__)(P__) = TCHAOS(diff(intraMessages__, initial__)) /\ P__
 }
 
 {-

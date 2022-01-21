@@ -450,14 +450,6 @@ class OccurrenceFragment extends InteractionFragment {
 	attr Temperature[1] temperature;
 }
 
-@genmodel(documentation="An interaction fragment blocking the diagram until an occurrence happens.
-
-This is an extension to UML.")
-class UntilFragment extends OccurrenceFragment {
-	@genmodel(documentation="The messages that may occur while waiting for 'action'.")
-	val MessageSet[1] intraMessages;
-}
-
 //
 // Block steps
 //
@@ -477,6 +469,14 @@ abstract class BlockStep extends InteractionFragment, OptionallyNamedElement {
 class DeadlineStep extends BlockStep {
 	@genmodel(documentation="Deadline, in time units after the start of the block.")
 	val CertExpr[1] units;
+}
+
+@genmodel(documentation="An interaction fragment blocking the diagram until any occurrence happens on the block.
+
+This is an extension to UML.")
+class UntilFragment extends BlockStep {
+	@genmodel(documentation="The messages that may occur while waiting for 'action'.")
+	val MessageSet[1] intraMessages;
 }
 
 @genmodel(documentation="A step containing one or more sequence elements in loop.")

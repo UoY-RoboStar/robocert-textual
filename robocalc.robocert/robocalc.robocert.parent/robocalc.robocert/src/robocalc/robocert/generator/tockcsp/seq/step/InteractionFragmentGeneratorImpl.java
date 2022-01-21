@@ -26,25 +26,27 @@ import robocalc.robocert.model.robocert.DeadlineStep;
 import robocalc.robocert.model.robocert.LoopStep;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
 import robocalc.robocert.model.robocert.InteractionFragment;
+import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
  * Generator for sequence steps.
- *
+ * <p>
  * This generator mainly just delegates into lower-level generators.
  *
  * @author Matt Windsor
  */
-public class InteractionFragmentGeneratorImpl implements InteractionFragmentGenerator {
+public record InteractionFragmentGeneratorImpl(
+		OccurrenceFragmentGenerator ag,
+		BranchStepGenerator bg,
+		DeadlineStepGenerator dg,
+		LoopStepGenerator lg,
+		UntilFragmentGenerator ug,
+		LoadStoreGenerator ls) implements
+		InteractionFragmentGenerator {
+
 	@Inject
-	private ActionStepGenerator ag;
-	@Inject
-	private BranchStepGenerator bg;
-	@Inject
-	private DeadlineStepGenerator dg;
-	@Inject
-	private LoopStepGenerator lg;
-	@Inject
-	private LoadStoreGenerator ls;
+	public InteractionFragmentGeneratorImpl {
+	}
 
 	@Override
 	public CharSequence generate(InteractionFragment f, LifelineContext ctx) {
@@ -57,12 +59,15 @@ public class InteractionFragmentGeneratorImpl implements InteractionFragmentGene
 
 	private Stream<Binding> controlFlowBindings(InteractionFragment f) {
 		// TODO(@MattWindsor91): make this part of the metamodel?
-		if (f instanceof OccurrenceFragment a)
+		if (f instanceof OccurrenceFragment a) {
 			return ls.getExprBindings(a);
-		if (f instanceof BranchStep b)
+		}
+		if (f instanceof BranchStep b) {
 			return branchBindings(b);
-		if (f instanceof LoopStep l)
+		}
+		if (f instanceof LoopStep l) {
 			return ls.getExprBindings(l.getBound());
+		}
 		return Stream.empty();
 	}
 
@@ -77,14 +82,21 @@ public class InteractionFragmentGeneratorImpl implements InteractionFragmentGene
 	private CharSequence generateAfterLoads(InteractionFragment f, LifelineContext ctx) {
 		// Remember to extend this with any non-branch steps added to the
 		// metamodel.
-		if (f instanceof OccurrenceFragment a)
+		if (f instanceof OccurrenceFragment a) {
 			return ag.generate(a, ctx);
-		if (f instanceof BranchStep b)
+		}
+		if (f instanceof BranchStep b) {
 			return bg.generate(b, ctx);
-		if (f instanceof DeadlineStep d)
+		}
+		if (f instanceof DeadlineStep d) {
 			return dg.generate(d, ctx);
-		if (f instanceof LoopStep l)
+		}
+		if (f instanceof LoopStep l) {
 			return lg.generate(l, ctx);
-		throw new IllegalArgumentException("unsupported step type: %s".formatted(f));
+		}
+		if (f instanceof UntilFragment u) {
+			return ug.generate(u, ctx);
+		}
+		throw new IllegalArgumentException("unsupported fragment type: %s".formatted(f));
 	}
 }

@@ -411,6 +411,13 @@ Sequence:
 Subsequence:
 	BEGIN ('nothing' {Subsequence} | (steps+=InteractionFragment)+) END;
 
+/**
+ * A subsequence with only one item in it, and no blocking.
+ */
+SingletonSubsequence returns Subsequence:
+	steps+=InteractionFragment
+;
+
 //
 // INTERACTION FRAGMENTS
 //
@@ -428,7 +435,7 @@ InteractionFragment:
  */
 UntilFragment:
 	(('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet | 'block' {UntilFragment} intraMessages=EmptySet)
-	'until' action=SequenceAction OptTemperature;
+	'until' (body=SingletonSubsequence | ':' body=Subsequence);
 
 
 //
