@@ -56,6 +56,6 @@ class ImplicitEdgeImplCustom extends ImplicitEdgeImpl {
 		// NOTE(@MattWindsor91): this has to work even if this edge is in a
 		// message set eg. we can't check for sequence features here.
 		var grp = EcoreUtil2.getContainerOfType(this, SequenceGroup.class);
-		return getDirection() == direction ? grp.getSystemModuleActor() : grp.getContextActor();
+		return getDirection() == direction ? grp.getSystemModuleActor() : grp.getWorld();
 	}
 }

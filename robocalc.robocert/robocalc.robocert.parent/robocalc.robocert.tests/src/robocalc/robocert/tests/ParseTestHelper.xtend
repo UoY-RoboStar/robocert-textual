@@ -63,7 +63,7 @@ class ParseTestHelper {
 		target M: system of module Mod
 		sequence group X for M:
 			use module as T
-			use context as W
+			use world as W
 			sequence Y for T and W:
 				«subsequence»
 	'''
@@ -99,7 +99,7 @@ class ParseTestHelper {
 	 * @return the unlifted expression.
 	 */
 	def CertExpr unliftExpr(CertPackage it) {
-		var action = unliftSubsequence.steps.filter(OccurrenceFragment).get(0).action;
+		var action = unliftSubsequence.fragments.filter(OccurrenceFragment).get(0).occurrence;
 		if (action instanceof ArrowAction) {
 			var arg = action.body.arguments.get(0)
 			if (arg instanceof ExpressionArgument) {

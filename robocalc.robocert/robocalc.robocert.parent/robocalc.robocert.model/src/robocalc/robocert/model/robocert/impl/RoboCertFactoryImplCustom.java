@@ -2,7 +2,7 @@ package robocalc.robocert.model.robocert.impl;
 
 import robocalc.robocert.model.robocert.BinaryMessageSet;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
@@ -35,8 +35,8 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   }
 
   @Override
-  public ContextActor createContextActor() {
-    return new ContextActorImplCustom();
+  public World createWorld() {
+    return new WorldImplCustom();
   }
 
   @Override

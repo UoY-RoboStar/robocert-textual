@@ -67,14 +67,14 @@ class BindingNamerTest {
 		final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), EdgeDirection.INBOUND, w);
 		final var aact = rcf.createArrowAction();
 		aact.setBody(aspec);
-		final var astep = rcf.createOccurrenceFragment();
-		astep.setAction(aact);
+		final var fragment = rcf.createOccurrenceFragment();
+		fragment.setOccurrence(aact);
 		final var ssq = rcf.createSubsequence();
-		ssq.getSteps().add(astep);
+		ssq.getFragments().add(fragment);
 		final var sq = rcf.createSequence();
 		sq.setBody(ssq);
 
-		assertUnambiguousNameEqual("step0_action_body_argument0", w.getBinding());
+		assertUnambiguousNameEqual("fragment0_occurrence_body_argument0", w.getBinding());
 	}
 
 	private void assertUnambiguousNameEqual(String expected, Binding b) {

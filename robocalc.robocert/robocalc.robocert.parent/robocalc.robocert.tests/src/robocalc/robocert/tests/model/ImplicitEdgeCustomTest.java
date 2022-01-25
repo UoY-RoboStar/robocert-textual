@@ -61,7 +61,7 @@ public class ImplicitEdgeCustomTest {
 	/**
 	 * The context actor.
 	 */
-	private Actor context;
+	private Actor world;
 
 	/**
 	 * Initialises the objects used for the test.
@@ -69,27 +69,27 @@ public class ImplicitEdgeCustomTest {
 	@BeforeEach
 	void setUp() {
 		module = rf.createSystemModuleActor();
-		context = rf.createContextActor();
+		world = rf.createWorld();
 
 		it = rf.createImplicitEdge();
 		final var spec = mf.spec(mf.eventTopic(msf.intEvent()), it);
 
-		final var act = rf.createArrowAction();
-		act.setBody(spec);
+		final var occ = rf.createArrowAction();
+		occ.setBody(spec);
 
-		final var step = rf.createOccurrenceFragment();
-		step.setAction(act);
+		final var fragment = rf.createOccurrenceFragment();
+		fragment.setOccurrence(occ);
 
 		final var sseq = rf.createSubsequence();
-		sseq.getSteps().add(step);
+		sseq.getFragments().add(fragment);
 
 		final var seq = rf.createSequence();
-		seq.getLifelines().addAll(List.of(module, context));
+		seq.getLifelines().addAll(List.of(module, world));
 		seq.setBody(sseq);
 
 		final var sg = rf.createSequenceGroup();
 		sg.setTarget(msf.target());
-		sg.getActors().addAll(List.of(module, context));
+		sg.getActors().addAll(List.of(module, world));
 		sg.getSequences().add(seq);
 	}
 
@@ -100,7 +100,7 @@ public class ImplicitEdgeCustomTest {
 	@EnumSource
 	void testGetResolvedFrom(EdgeDirection dir) {
 		it.setDirection(dir);
-		assertEquals(dir == EdgeDirection.INBOUND ? context : module, it.getResolvedFrom());
+		assertEquals(dir == EdgeDirection.INBOUND ? world : module, it.getResolvedFrom());
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class ImplicitEdgeCustomTest {
 	@EnumSource
 	void testGetResolvedTo(EdgeDirection dir) {
 		it.setDirection(dir);
-		assertEquals(dir == EdgeDirection.INBOUND ? module : context, it.getResolvedTo());
+		assertEquals(dir == EdgeDirection.INBOUND ? module : world, it.getResolvedTo());
 	}
 
 	/**
@@ -126,6 +126,6 @@ public class ImplicitEdgeCustomTest {
 	 */
 	@Test
 	void testGetResolvedTo_default() {
-		assertEquals(context, it.getResolvedTo());
+		assertEquals(world, it.getResolvedTo());
 	}
 }

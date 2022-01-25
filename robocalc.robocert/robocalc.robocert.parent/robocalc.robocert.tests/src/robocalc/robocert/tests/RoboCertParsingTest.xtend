@@ -29,7 +29,7 @@ class RoboCertParsingTest {
 			target M: system of module Mod
 			sequence group S for M:
 				use module as T
-				use context as W
+				use world as W
 				sequence Test for T and W:
 					anything until end
 		''')

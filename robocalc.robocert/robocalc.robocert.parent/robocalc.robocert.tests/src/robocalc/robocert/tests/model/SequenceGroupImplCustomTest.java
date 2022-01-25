@@ -24,7 +24,7 @@ import static org.hamcrest.CoreMatchers.*;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.SystemModuleActor;
@@ -44,14 +44,14 @@ class SequenceGroupImplCustomTest {
 
 	private SequenceGroup group;
 	private SystemModuleActor module;
-	private ContextActor context;
+	private World world;
 
 	@BeforeEach
 	void setUp() {
 		module = rf.createSystemModuleActor();
-		context = rf.createContextActor();
+		world = rf.createWorld();
 		group = rf.createSequenceGroup();
-		group.getActors().addAll(List.of(module, context));
+		group.getActors().addAll(List.of(module, world));
 	}
 
 	/**
@@ -76,7 +76,7 @@ class SequenceGroupImplCustomTest {
 	 */
 	@Test
 	void testContextActor() {
-		assertThat(group.getContextActor(), is(equalTo(context)));
+		assertThat(group.getWorld(), is(equalTo(world)));
 	}
 
 	/**
@@ -85,6 +85,6 @@ class SequenceGroupImplCustomTest {
 	 */
 	@Test
 	void testContextActor_empty() {
-		assertThat(rf.createSequenceGroup().getContextActor(), is(nullValue()));
+		assertThat(rf.createSequenceGroup().getWorld(), is(nullValue()));
 	}
 }

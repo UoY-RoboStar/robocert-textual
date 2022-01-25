@@ -29,8 +29,6 @@ import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
  *   approachable introduction to what is going on here.
  */
 
-// TODO(@MattWindsor91): port all documentation from doc comments to genmodel
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // UTILITIES
@@ -400,8 +398,8 @@ These correspond to UML lifelines.")
 	@genmodel(documentation="Shortcut for getting the system module actor of the group, if any.")
 	derived volatile transient readonly ref SystemModuleActor[0..1] systemModuleActor;
 	
-	@genmodel(documentation="Shortcut for getting the context actor of the group, if any.")
-	derived volatile transient readonly ref ContextActor[0..1] contextActor;
+	@genmodel(documentation="Shortcut for getting the world of the group, if any.")
+	derived volatile transient readonly ref World[0..1] world;
 }
 
 @genmodel(documentation="A sequence diagram.")
@@ -419,7 +417,7 @@ The order determines that in which lifelines are shown in the graphical notation
 @genmodel(documentation="A contiguous ordered list of interaction fragments.")
 class Subsequence {
 	@genmodel(documentation="The interaction fragments contained within the subsequence.")
-	ordered val InteractionFragment[*]#parent steps;
+	ordered val InteractionFragment[*]#parent fragments;
 	
 	@genmodel(documentation="The parent sequence.")
 	derived volatile transient readonly ref Sequence[0..1] sequence;
@@ -434,7 +432,7 @@ class Subsequence {
 @genmodel(documentation="A single interaction fragment in a subsequence.")
 abstract class InteractionFragment {
 	@genmodel(documentation="The parent subsequence of this step.")
-	ref Subsequence[1]#steps parent;
+	ref Subsequence[1]#fragments parent;
 }
 
 //
@@ -443,10 +441,10 @@ abstract class InteractionFragment {
 
 @genmodel(documentation="An interaction fragment referring to a particular occurrence in time.")
 class OccurrenceFragment extends InteractionFragment {
-	@genmodel(documentation="The action proper.")
-	val SequenceAction[1]#step action;
+	@genmodel(documentation="The occurrence proper.")
+	val Occurrence[1]#fragment occurrence;
 	
-	@genmodel(documentation="The temperature of this action.")
+	@genmodel(documentation="The temperature of this occurrence.")
 	attr Temperature[1] temperature;
 }
 
@@ -475,7 +473,7 @@ class DeadlineStep extends BlockStep {
 
 This is an extension to UML.")
 class UntilFragment extends BlockStep {
-	@genmodel(documentation="The messages that may occur while waiting for 'action'.")
+	@genmodel(documentation="The messages that may occur while waiting for 'body'.")
 	val MessageSet[1] intraMessages;
 }
 
@@ -534,7 +532,7 @@ Evaluated once only.")
 }
 
 //
-// Branch steps
+// Branch fragments
 //
 
 @genmodel(documentation="Abstract step containing two or more branches.")
@@ -591,27 +589,27 @@ class ElseGuard extends Guard {
 }
 
 //
-// ACTIONS
+// OCCURRENCES
 //
 
-@genmodel(documentation="An action in a sequence.")
-abstract class SequenceAction {
-	@genmodel(documentation="The step containing this action.")
-	ref OccurrenceFragment[1]#action step;
+@genmodel(documentation="An occurrence in a sequence.")
+abstract class Occurrence {
+	@genmodel(documentation="The fragment containing this action.")
+	ref OccurrenceFragment[1]#occurrence fragment;
 }
 
 @genmodel(documentation="A communicating action in a sequence.")
-class ArrowAction extends SequenceAction {
+class ArrowAction extends Occurrence {
 	@genmodel(documentation="The body of the arrow.")
 	val MessageSpec[1] body;
 }
 
 @genmodel(documentation="Represents a deadlock event in a sequence.")
-class FinalAction extends SequenceAction {
+class FinalAction extends Occurrence {
 }
 
 @genmodel(documentation="Represents a wait for some amount of time units.")
-class WaitAction extends SequenceAction {
+class WaitAction extends Occurrence {
 	@genmodel(documentation="The number of units to wait.")
 	val CertExpr[1] units;
 	
@@ -842,10 +840,7 @@ class SystemModuleActor extends Actor {
 }
 
 @genmodel(documentation="Actor that stands for the environment of the current target.")
-class ContextActor extends Actor {
-	// TODO(@MattWindsor91): we'll likely need to diversify this into multiple
-	// actor types: RoboWorld worlds, robotic platforms, and general contexts
-	// for instance.
+class World extends Actor {
 }
 
 @genmodel(documentation="Actor that references a component of the target.")

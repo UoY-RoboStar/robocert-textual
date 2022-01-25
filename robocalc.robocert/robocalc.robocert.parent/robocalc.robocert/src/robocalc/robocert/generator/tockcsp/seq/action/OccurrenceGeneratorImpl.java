@@ -13,7 +13,7 @@
 package robocalc.robocert.generator.tockcsp.seq.action;
 
 import com.google.inject.Inject;
-import robocalc.robocert.generator.intf.seq.ActionGenerator;
+import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
@@ -21,7 +21,7 @@ import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
 import robocalc.robocert.model.robocert.ArrowAction;
 import robocalc.robocert.model.robocert.FinalAction;
-import robocalc.robocert.model.robocert.SequenceAction;
+import robocalc.robocert.model.robocert.Occurrence;
 import robocalc.robocert.model.robocert.WaitAction;
 
 /**
@@ -29,11 +29,11 @@ import robocalc.robocert.model.robocert.WaitAction;
  *
  * @author Matt Windsor
  */
-public record ActionGeneratorImpl(CSPStructureGenerator csp,
-                                  ExpressionGenerator eg,
-                                  LoadStoreGenerator lsg,
-                                  MessageSpecGenerator msg) implements
-    ActionGenerator {
+public record OccurrenceGeneratorImpl(CSPStructureGenerator csp,
+                                      ExpressionGenerator eg,
+                                      LoadStoreGenerator lsg,
+                                      MessageSpecGenerator msg) implements
+    OccurrenceGenerator {
 
   /**
    * Constructs an action generator.
@@ -44,17 +44,17 @@ public record ActionGeneratorImpl(CSPStructureGenerator csp,
    * @param msg a message spec generator, used for arrow actions.
    */
   @Inject
-  public ActionGeneratorImpl {
+  public OccurrenceGeneratorImpl {
   }
 
   /**
-   * Generates CSP-M for an action.
+   * Generates CSP-M for an occurrence.
    *
-   * @param a   the sequence action.
+   * @param a   the occurrence.
    * @param ctx context for the current lifeline.
    * @return the generated CSP.
    */
-  public CharSequence generate(SequenceAction a, LifelineContext ctx) {
+  public CharSequence generate(Occurrence a, LifelineContext ctx) {
     // TODO(@MattWindsor91): use lifeline context.
 
     if (a instanceof ArrowAction r) {

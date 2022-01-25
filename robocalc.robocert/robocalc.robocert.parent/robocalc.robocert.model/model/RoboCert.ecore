@@ -462,10 +462,10 @@
         <details key="documentation" value="Shortcut for getting the system module actor of the group, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="contextActor" eType="#//ContextActor"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="world" eType="#//World"
         changeable="false" volatile="true" transient="true" derived="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the context actor of the group, if any."/>
+        <details key="documentation" value="Shortcut for getting the world of the group, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -496,7 +496,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A contiguous ordered list of interaction fragments."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="steps" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
         eType="#//InteractionFragment" containment="true" eOpposite="#//InteractionFragment/parent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The interaction fragments contained within the subsequence."/>
@@ -514,32 +514,26 @@
       <details key="documentation" value="A single interaction fragment in a subsequence."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//Subsequence" eOpposite="#//Subsequence/steps">
+        eType="#//Subsequence" eOpposite="#//Subsequence/fragments">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The parent subsequence of this step."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ActionStep" eSuperTypes="#//InteractionFragment">
+  <eClassifiers xsi:type="ecore:EClass" name="OccurrenceFragment" eSuperTypes="#//InteractionFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A sequence step containing a primitive action."/>
+      <details key="documentation" value="An interaction fragment referring to a particular occurrence in time."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="gap" lowerBound="1" eType="#//MessageSet"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="occurrence" lowerBound="1"
+        eType="#//Occurrence" containment="true" eOpposite="#//Occurrence/fragment">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The specification of what can happen in the 'gap' before the action."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="1"
-        eType="#//SequenceAction" containment="true" eOpposite="#//SequenceAction/step">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The action proper."/>
+        <details key="documentation" value="The occurrence proper."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
         eType="#//Temperature">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The temperature of this action."/>
+        <details key="documentation" value="The temperature of this occurrence."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -562,6 +556,17 @@
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Deadline, in time units after the start of the block."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UntilFragment" eSuperTypes="#//BlockStep">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An interaction fragment blocking the diagram until any occurrence happens on the block.&#xD;&#xA;&#xD;&#xA;This is an extension to UML."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intraMessages" lowerBound="1"
+        eType="#//MessageSet" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The messages that may occur while waiting for 'body'."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -703,18 +708,18 @@
       <details key="documentation" value="A guard that is true if all other guards in the BranchStep are false.&#xD;&#xA;&#xD;&#xA;It is ill-formed to have multiple ElseGuards in a step, or to have both an&#xD;&#xA;ElseGuard and an EmptyGuard in a step."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceAction" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="Occurrence" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An action in a sequence."/>
+      <details key="documentation" value="An occurrence in a sequence."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="step" lowerBound="1" eType="#//ActionStep"
-        eOpposite="#//ActionStep/action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fragment" lowerBound="1"
+        eType="#//OccurrenceFragment" eOpposite="#//OccurrenceFragment/occurrence">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The step containing this action."/>
+        <details key="documentation" value="The fragment containing this action."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ArrowAction" eSuperTypes="#//SequenceAction">
+  <eClassifiers xsi:type="ecore:EClass" name="ArrowAction" eSuperTypes="#//Occurrence">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A communicating action in a sequence."/>
     </eAnnotations>
@@ -725,12 +730,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//SequenceAction">
+  <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//Occurrence">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Represents a deadlock event in a sequence."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WaitAction" eSuperTypes="#//SequenceAction">
+  <eClassifiers xsi:type="ecore:EClass" name="WaitAction" eSuperTypes="#//Occurrence">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Represents a wait for some amount of time units."/>
     </eAnnotations>
@@ -1013,7 +1018,7 @@
       <details key="documentation" value="Actor that stands for the module of a system.&#xD;&#xA;&#xD;&#xA;System modules can't be modelled as components in the same way that&#xD;&#xA;module controllers and controller STMs can, as they aren't ConnectionNodes.&#xD;&#xA;Further, there is always explicitly one unambiguous system module."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ContextActor" eSuperTypes="#//Actor">
+  <eClassifiers xsi:type="ecore:EClass" name="World" eSuperTypes="#//Actor">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Actor that stands for the environment of the current target."/>
     </eAnnotations>

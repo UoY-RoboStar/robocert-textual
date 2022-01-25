@@ -28,21 +28,6 @@ public class LoadStoreGenerator {
 	private ModuleGenerator mg;
 
 	/**
-	 * Generates a memory load prefix for all bindings referenced in child
-	 * expressions of this object.
-	 *
-	 * This should be inserted before the main CSP artefact generated from the
-	 * object.
-	 *
-	 * @param it the object whose memory loads we are generating.
-	 *
-	 * @return the CSP-M prefix.
-	 */
-	public CharSequence generateExpressionLoads(EObject it) {
-		return generateLoads(getExprBindings(it));
-	}
-
-	/**
 	 * Generates a memory load prefix for a set of bindings.
 	 *
 	 * This should be inserted before whatever CSP process is going to reference the

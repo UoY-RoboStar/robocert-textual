@@ -68,7 +68,7 @@ public class SubsequenceImplCustomTest {
 		seq.setBody(top);
 		final var loop = rf.createLoopStep();
 		loop.setBody(body);
-		top.getSteps().add(loop);
+		top.getFragments().add(loop);
 
 		assertThat(body.getSequence(), is(equalTo(seq)));
 	}

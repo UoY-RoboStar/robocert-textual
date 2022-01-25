@@ -10,19 +10,23 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.model.robocert.impl;
+package robocalc.robocert.generator.intf.seq;
 
-import com.google.common.base.Strings;
+import robocalc.robocert.model.robocert.Occurrence;
 
 /**
- * Adds custom functionality to {@link WorldActorImpl}.
- * 
+ * A generator for occurrences.
+ *
  * @author Matt Windsor
  */
-public class ContextActorImplCustom extends ContextActorImpl {
-	@Override
-	public String toString() {
-		var name = getName();
-		return "<<context>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
-	}
+public interface OccurrenceGenerator {
+
+  /**
+   * Generates code for an occurrence from the perspective of a lifeline.
+   *
+   * @param occ the occurrence.
+   * @param ctx context for the current lifeline.
+   * @return the generated code.
+   */
+  CharSequence generate(Occurrence occ, LifelineContext ctx);
 }

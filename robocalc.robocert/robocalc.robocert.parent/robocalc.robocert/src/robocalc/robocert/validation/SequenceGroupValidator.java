@@ -18,7 +18,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar;
 
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
-import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.RoboCertPackage;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.SystemModuleActor;
@@ -52,7 +52,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check
 	public void checkSystemTargetActorCounts(SequenceGroup g) {
-		if (!hasSystemTarget(g))
+		if (hasNonSystemTarget(g))
 			return;
 
 		if (1 != countActors(g, SystemModuleActor.class))
@@ -61,7 +61,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 		if (hasActors(g, ComponentActor.class))
 			actorError("System sequence groups cannot have components; use 'module'", SYS_COMPONENTS);
 
-		if (1 != countActors(g, ContextActor.class))
+		if (1 != countActors(g, World.class))
 			actorError("There must be precisely one context actor", SYS_NEEDS_ONE_CONTEXT);
 	}
 
@@ -74,10 +74,10 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check
 	public void checkActorCounts(SequenceGroup g) {
-		if (!hasSystemTarget(g) && hasActors(g, SystemModuleActor.class))
+		if (hasNonSystemTarget(g) && hasActors(g, SystemModuleActor.class))
 			actorError("Only system sequence groups can have module actors", SMA_NEEDS_SYSTEM);
 
-		if (1 < countActors(g, ContextActor.class))
+		if (1 < countActors(g, World.class))
 			actorError("At most one actor in a sequence group can be the context", TOO_MANY_CONTEXTS);
 	}
 
@@ -91,12 +91,12 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 
 	// TODO(@MattWindsor91): I think these are used/useful/duplicated elsewhere?
 
-	private boolean hasSystemTarget(SequenceGroup g) {
-		return g.getTarget() instanceof SystemTarget;
+	private boolean hasNonSystemTarget(SequenceGroup g) {
+		return !(g.getTarget() instanceof SystemTarget);
 	}
 
 	private boolean hasActors(SequenceGroup g, Class<? extends Actor> clazz) {
-		return !g.getActors().parallelStream().filter(clazz::isInstance).findAny().isEmpty();
+		return g.getActors().parallelStream().anyMatch(clazz::isInstance);
 	}
 
 	private long countActors(SequenceGroup g, Class<? extends Actor> clazz) {

@@ -409,13 +409,13 @@ Sequence:
  * steps ('x then y then...').
  */
 Subsequence:
-	BEGIN ('nothing' {Subsequence} | (steps+=InteractionFragment)+) END;
+	BEGIN ('nothing' {Subsequence} | (fragments+=InteractionFragment)+) END;
 
 /**
  * A subsequence with only one item in it, and no blocking.
  */
 SingletonSubsequence returns Subsequence:
-	steps+=InteractionFragment
+	fragments+=InteractionFragment
 ;
 
 //
@@ -427,7 +427,7 @@ SingletonSubsequence returns Subsequence:
 InteractionFragment:
 	BlockStep |
 	BranchStep |
-	{OccurrenceFragment} action=SequenceAction OptTemperature |
+	{OccurrenceFragment} occurrence=Occurrence OptTemperature |
 	UntilFragment;
 
 /**
@@ -485,12 +485,12 @@ Guard:
 	'when' {ExprGuard} expr=CertExpr;
 
 //
-// ACTIONS
+// OCCURRENCES
 //
 /**
  * An action in a sequence diagram.
  */
-SequenceAction:
+Occurrence:
 	{ArrowAction} body=MessageSpec |
 	'after' {WaitAction} units=TimeUnits |
 	'end' {FinalAction};
@@ -612,7 +612,7 @@ Argument:
 // ACTORS
 //
 Actor:
-	'use' ('module' {SystemModuleActor} | 'context' {ContextActor} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
+	'use' ('module' {SystemModuleActor} | 'world' {World} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
 
 //
 // SEQUENCE PROPERTIES

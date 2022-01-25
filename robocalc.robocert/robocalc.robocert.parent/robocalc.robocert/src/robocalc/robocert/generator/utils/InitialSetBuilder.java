@@ -18,7 +18,7 @@ import robocalc.robocert.model.robocert.ArrowAction;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.MessageSpec;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
-import robocalc.robocert.model.robocert.SequenceAction;
+import robocalc.robocert.model.robocert.Occurrence;
 import robocalc.robocert.model.robocert.Subsequence;
 
 /**
@@ -36,19 +36,19 @@ public class InitialSetBuilder {
    * @return the messages that the subsequence can initially offer.
    */
   public Stream<MessageSpec> initialSet(Subsequence sseq) {
-    return sseq.getSteps().stream().limit(1).flatMap(this::fragmentInitialSet).distinct();
+    return sseq.getFragments().stream().limit(1).flatMap(this::fragmentInitialSet).distinct();
   }
 
   private Stream<MessageSpec> fragmentInitialSet(InteractionFragment fragment) {
     // TODO(@MattWindsor91): expand this to consider more.
     if (fragment instanceof OccurrenceFragment o)
-      return occurrenceInitialSet(o.getAction());
+      return occurrenceInitialSet(o.getOccurrence());
 
     throw new IllegalArgumentException("can't get initial set for fragment %s".formatted(fragment));
   }
 
-  private Stream<MessageSpec> occurrenceInitialSet(SequenceAction occurrence) {
-    if (occurrence instanceof ArrowAction a)
+  private Stream<MessageSpec> occurrenceInitialSet(Occurrence occ) {
+    if (occ instanceof ArrowAction a)
       return Stream.of(a.getBody());
 
     return Stream.empty();

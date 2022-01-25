@@ -13,7 +13,7 @@
 package robocalc.robocert.model.robocert.impl;
 
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.SystemModuleActor;
 import robocalc.robocert.model.robocert.util.StreamHelpers;
 
@@ -29,8 +29,8 @@ public class SequenceGroupImplCustom extends SequenceGroupImpl {
 	}
 
 	@Override
-	public ContextActor basicGetContextActor() {
-		return getFirstActor(ContextActor.class);
+	public World basicGetWorld() {
+		return getFirstActor(World.class);
 	}
 
 	private <T extends Actor> T getFirstActor(Class<T> clazz) {

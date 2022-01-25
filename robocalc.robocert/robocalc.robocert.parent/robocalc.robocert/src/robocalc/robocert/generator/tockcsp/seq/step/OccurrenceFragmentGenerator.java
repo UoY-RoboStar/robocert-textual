@@ -14,7 +14,7 @@ package robocalc.robocert.generator.tockcsp.seq.step;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.intf.seq.ActionGenerator;
+import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
@@ -27,7 +27,7 @@ import robocalc.robocert.model.robocert.OccurrenceFragment;
  * @author Matt Windsor
  */
 public record OccurrenceFragmentGenerator(CSPStructureGenerator csp,
-																					ActionGenerator ag,
+																					OccurrenceGenerator occGen,
 																					MessageSetGenerator msg,
 																					MessageSpecGenerator mpg) {
 	// This generator handles the injection of loads for any possible
@@ -41,7 +41,7 @@ public record OccurrenceFragmentGenerator(CSPStructureGenerator csp,
 	 * Constructs an action step generator.
 	 *
 	 * @param csp CSP structure generator.
-	 * @param ag  action generator.
+	 * @param occGen occurrence generator.
 	 * @param msg message set generator.
 	 * @param mpg message spec generator.
 	 */
@@ -57,7 +57,7 @@ public record OccurrenceFragmentGenerator(CSPStructureGenerator csp,
 	 * @return the generated CSP-M.
 	 */
 	public CharSequence generate(OccurrenceFragment fragment, LifelineContext ctx) {
-		final var body = ag.generate(fragment.getAction(), ctx);
+		final var body = occGen.generate(fragment.getOccurrence(), ctx);
 		return switch (fragment.getTemperature()) {
 			case COLD -> csp.function(COLD_PROC, body);
 			case HOT -> body;

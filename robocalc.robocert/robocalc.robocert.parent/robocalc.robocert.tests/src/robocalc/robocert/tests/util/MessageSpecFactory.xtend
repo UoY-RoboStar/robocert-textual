@@ -28,7 +28,7 @@ import circus.robocalc.robochart.OperationSig
 import robocalc.robocert.model.robocert.EdgeDirection
 import robocalc.robocert.model.robocert.util.EdgeFactory
 import robocalc.robocert.model.robocert.SystemModuleActor
-import robocalc.robocert.model.robocert.ContextActor
+import robocalc.robocert.model.robocert.World
 
 /**
  * Provides ways of creating dummy message specifications.
@@ -60,7 +60,7 @@ class MessageSpecFactory {
 
 	def private arrowParent() {
 		rcert.createArrowAction => [
-			step = rcert.createOccurrenceFragment => [
+			fragment = rcert.createOccurrenceFragment => [
 				parent = sseq
 			]
 		]
@@ -198,7 +198,7 @@ class MessageSpecFactory {
 	 */
 	def expectWorld(Actor it) {
 		assertNotNull
-		assertTrue(it instanceof ContextActor)
+		assertTrue(it instanceof World)
 	}
 
 	/**

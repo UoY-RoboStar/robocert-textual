@@ -13,8 +13,8 @@
 package robocalc.robocert.generator.tockcsp.seq;
 
 import com.google.inject.Inject;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
+import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Subsequence;
@@ -26,13 +26,13 @@ import robocalc.robocert.model.robocert.Subsequence;
  */
 public record SubsequenceGeneratorImpl(
 		CSPStructureGenerator csp,
-		InteractionFragmentGenerator sg) implements SubsequenceGenerator {
+		InteractionFragmentGenerator fragGen) implements SubsequenceGenerator {
 
 	/**
 	 * Constructs a subsequence generator.
 	 *
 	 * @param csp CSP structure generator used for the sequential composition.
-	 * @param sg  step generator used for each step in the subsequence.
+	 * @param fragGen generator used for each fragment in the subsequence.
 	 */
 	@Inject
 	public SubsequenceGeneratorImpl {
@@ -40,8 +40,7 @@ public record SubsequenceGeneratorImpl(
 
 	@Override
 	public CharSequence generate(Subsequence s, LifelineContext ctx) {
-		var steps = s.getSteps().parallelStream().map(x -> sg.generate(x, ctx))
-				.toArray(CharSequence[]::new);
-		return csp.seq(steps);
+		return csp.seq(s.getFragments().parallelStream().map(x -> fragGen.generate(x, ctx))
+				.toArray(CharSequence[]::new));
 	}
 }

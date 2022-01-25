@@ -19,7 +19,7 @@ import com.google.common.collect.Streams;
 
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.Sequence;
 
 /**
@@ -41,6 +41,7 @@ public class LifelineContextFactory {
 	 * @return the list of contexts.
 	 */
 	public List<LifelineContext> createContexts(Sequence s) {
+		//noinspection UnstableApiUsage
 		return Streams.mapWithIndex(actorsVisibleInSemantics(s), this::createContext).toList();
 	}
 	
@@ -50,7 +51,7 @@ public class LifelineContextFactory {
 	
 	private boolean actorVisibleInSemantics(Actor a) {
 		// This may change in future.
-		return !(a instanceof ContextActor);
+		return !(a instanceof World);
 	}
 	
 	private LifelineContext createContext(Actor a, long index) {

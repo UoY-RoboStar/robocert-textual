@@ -23,19 +23,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link ContextActor}s, and also tests that
+ * Tests any custom functionality on {@link World}s, and also tests that
  * the factory resolves them correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class ContextActorImplCustomTest {
+public class WorldImplCustomTest {
 	@Inject
 	private RoboCertFactory rf;
 
@@ -44,9 +44,9 @@ public class ContextActorImplCustomTest {
 	 */
 	@Test
 	void testToString() {
-		final var context = rf.createContextActor();
-		assertThat(context.toString(), is(equalTo("<<context>> (untitled)")));
-		context.setName("test");
-		assertThat(context.toString(), is(equalTo("<<context>> test")));
+		final var world = rf.createWorld();
+		assertThat(world.toString(), is(equalTo("<<context>> (untitled)")));
+		world.setName("test");
+		assertThat(world.toString(), is(equalTo("<<context>> test")));
 	}
 }

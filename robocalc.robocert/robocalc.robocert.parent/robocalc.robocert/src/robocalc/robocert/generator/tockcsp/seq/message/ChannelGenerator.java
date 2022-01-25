@@ -21,7 +21,7 @@ import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.TargetExtensions;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
-import robocalc.robocert.model.robocert.ContextActor;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.ModuleTarget;
@@ -64,7 +64,7 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 		// The namespacing here follows rule 15 of the RoboChart semantics,
 		// in that we usually take the namespace of the 'to' actor.  There is
 		// one exception for contexts.
-		if (to instanceof ContextActor c) {
+		if (to instanceof World c) {
 			return contextNamespace(c);
 		}
 		if (to instanceof SystemModuleActor s) {
@@ -77,7 +77,7 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 				"tried to infer direction of an edge with an ambiguous target");
 	}
 
-	private CharSequence contextNamespace(ContextActor c) {
+	private CharSequence contextNamespace(World c) {
 		final var tgt = c.getGroup().getTarget();
 		// This effectively flips system contexts to take the *from*-actor,
 		// as the module must be the only other actor available in a system

@@ -20,10 +20,10 @@ import org.eclipse.xtext.validation.EValidatorRegistrar;
 import com.google.inject.Inject;
 
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ContextActor;
 import robocalc.robocert.model.robocert.MessageSpec;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RoboCertPackage;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.EdgeFactory;
 
 /**
@@ -55,7 +55,7 @@ public class MessageSpecValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check
 	public void checkEdgeFlow(MessageSpec s) {
-		var e = s.getEdge();
+		final var e = s.getEdge();
 		if (EcoreUtil.equals(e.getResolvedFrom(), e.getResolvedTo()))
 			edgeError("A message cannot mention the same actor at both endpoints", EDGE_ACTORS_INDISTINCT);
 	}
@@ -71,7 +71,7 @@ public class MessageSpecValidator extends AbstractDeclarativeValidator {
 		if (!(s.getTopic() instanceof OperationTopic))
 			return;
 		
-		var e = ef.resolvedEdge(s.getEdge());
+		final var e = ef.resolvedEdge(s.getEdge());
 		if (isContext(e.getFrom()))
 			edgeError("Operation messages must not originate from a context", OPERATION_FROM_CONTEXT);
 		if (!isContext(e.getTo()))
@@ -87,6 +87,6 @@ public class MessageSpecValidator extends AbstractDeclarativeValidator {
 	}
 
 	private boolean isContext(Actor a) {
-		return a instanceof ContextActor;
+		return a instanceof World;
 	}
 }

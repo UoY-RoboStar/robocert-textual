@@ -10,8 +10,8 @@ import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter;
 import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom;
 import circus.robocalc.robochart.RoboChartFactory;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.generator.intf.seq.ActionGenerator;
-import robocalc.robocert.generator.tockcsp.seq.action.ActionGeneratorImpl;
+import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
+import robocalc.robocert.generator.tockcsp.seq.action.OccurrenceGeneratorImpl;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 
@@ -28,8 +28,8 @@ public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 		return RoboCertOutputConfigurationProvider.class;
 	}
 
-	public Class<? extends ActionGenerator> bindActionGenerator() {
-		return ActionGeneratorImpl.class;
+	public Class<? extends OccurrenceGenerator> bindActionGenerator() {
+		return OccurrenceGeneratorImpl.class;
 	}
 
 	public Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
