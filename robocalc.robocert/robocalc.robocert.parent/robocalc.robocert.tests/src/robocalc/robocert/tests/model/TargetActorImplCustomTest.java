@@ -39,9 +39,9 @@ public class TargetActorImplCustomTest {
 
 	@Test
 	void testToString() {
-		final var sma = rf.createTargetActor();
-		assertThat(sma.toString(), is(equalTo("<<module>> (untitled)")));
-		sma.setName("test");
-		assertThat(sma.toString(), is(equalTo("<<module>> test")));
+		final var actor = rf.createTargetActor();
+		assertThat(actor.toString(), is(equalTo("<<target>> (untitled)")));
+		actor.setName("test");
+		assertThat(actor.toString(), is(equalTo("<<target>> test")));
 	}
 }

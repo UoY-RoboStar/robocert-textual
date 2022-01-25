@@ -23,6 +23,6 @@ public class TargetActorImplCustom extends TargetActorImpl {
 	@Override
 	public String toString() {
 		final var name = getName();
-		return "<<module>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
+		return "<<target>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
 	}
 }
