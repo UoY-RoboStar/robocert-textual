@@ -27,7 +27,6 @@ import robocalc.robocert.model.robocert.ComponentActor;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.DefinitionHelper;
 
@@ -105,12 +104,6 @@ public record ActorContextFinder(DefinitionHelper dh) {
 	 * @return the stream of contexts in scope of the actor.
 	 */
 	private Stream<Context> contextsOfTargetWorld(Target t) {
-		// Both of these return the robotic platform of the target's module.
-		// Technically, what we are returning for system targets is the
-		// contribution of the robotic system's 'world' *via* its platform.
-		if (t instanceof SystemTarget s) {
-			return contextsOfModuleContext(s.getEnclosedModule());
-		}
 		// Module target contexts come from the robotic platform directly.
 		if (t instanceof ModuleTarget m) {
 			return contextsOfModuleContext(m.getModule());

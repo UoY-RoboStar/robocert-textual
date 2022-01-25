@@ -26,9 +26,9 @@ class RoboCertParsingTest {
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			target M: system of module Mod
+			target M: module Mod
 			sequence group S for M:
-				use module as T
+				use target as T
 				use world as W
 				sequence Test for T and W:
 					anything until end

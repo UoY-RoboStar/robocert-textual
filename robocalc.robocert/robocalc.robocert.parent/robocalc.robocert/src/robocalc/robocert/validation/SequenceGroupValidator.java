@@ -18,11 +18,11 @@ import org.eclipse.xtext.validation.EValidatorRegistrar;
 
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
+import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.RoboCertPackage;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.SystemTarget;
 
 /**
  * Validates aspects of sequence groups.
@@ -35,6 +35,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 		// per discussion in ComposedChecks annotation documentation
 	}
 
+	// TODO(@MattWindsor91): systematic codes
 	public static final String SMA_NEEDS_SYSTEM = "smaNeedsSystem";
 	public static final String SYS_COMPONENTS = "sysComponents";
 	public static final String SYS_NEEDS_ONE_SMA = "sysNeedsOneSMA";
@@ -44,19 +45,20 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 
 	/**
 	 * Checks that the counts of actors of certain types are valid if the sequence
-	 * group has a system target.
+	 * group has a module target.
 	 *
 	 * This composes with checkActorCounts.
 	 *
 	 * @param g the sequence group to check.
 	 */
 	@Check
-	public void checkSystemTargetActorCounts(SequenceGroup g) {
-		if (hasNonSystemTarget(g))
+	public void checkModuleTargetActorCounts(SequenceGroup g) {
+		// TODO(@MattWindsor91): module target -> component target
+		if (hasNonModuleTarget(g))
 			return;
 
 		if (1 != countActors(g, TargetActor.class))
-			actorError("There must be precisely one system module actor", SYS_NEEDS_ONE_SMA);
+			actorError("There must be precisely one target actor", SYS_NEEDS_ONE_SMA);
 
 		if (hasActors(g, ComponentActor.class))
 			actorError("System sequence groups cannot have components; use 'module'", SYS_COMPONENTS);
@@ -74,8 +76,8 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check
 	public void checkActorCounts(SequenceGroup g) {
-		if (hasNonSystemTarget(g) && hasActors(g, TargetActor.class))
-			actorError("Only system sequence groups can have module actors", SMA_NEEDS_SYSTEM);
+		if (hasNonModuleTarget(g) && hasActors(g, TargetActor.class))
+			actorError("Only module groups can have module actors", SMA_NEEDS_SYSTEM);
 
 		if (1 < countActors(g, World.class))
 			actorError("At most one actor in a sequence group can be the context", TOO_MANY_CONTEXTS);
@@ -91,8 +93,8 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 
 	// TODO(@MattWindsor91): I think these are used/useful/duplicated elsewhere?
 
-	private boolean hasNonSystemTarget(SequenceGroup g) {
-		return !(g.getTarget() instanceof SystemTarget);
+	private boolean hasNonModuleTarget(SequenceGroup g) {
+		return !(g.getTarget() instanceof ModuleTarget);
 	}
 
 	private boolean hasActors(SequenceGroup g, Class<? extends Actor> clazz) {

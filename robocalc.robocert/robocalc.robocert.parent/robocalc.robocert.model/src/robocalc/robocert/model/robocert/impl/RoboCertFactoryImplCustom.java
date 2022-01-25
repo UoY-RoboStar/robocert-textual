@@ -2,7 +2,6 @@ package robocalc.robocert.model.robocert.impl;
 
 import robocalc.robocert.model.robocert.BinaryMessageSet;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
@@ -14,8 +13,8 @@ import robocalc.robocert.model.robocert.RefMessageSet;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
+import robocalc.robocert.model.robocert.World;
 
 /**
  * Custom factory that injects 'custom' versions of various RoboCert EClasses, including
@@ -92,11 +91,6 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   @Override
   public TargetActor createTargetActor() {
     return new TargetActorImplCustom();
-  }
-
-  @Override
-  public SystemTarget createSystemTarget() {
-    return new SystemTargetImplCustom();
   }
 
   @Override

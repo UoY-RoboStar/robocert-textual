@@ -26,7 +26,6 @@ import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.SystemTarget;
 
 /**
  * Generates CSP-M for message channels.
@@ -59,16 +58,19 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 	 * @throws UnsupportedOperationException if there is no single target.
 	 */
 	public CharSequence namespace(Actor to) {
+		// TODO(@MattWindsor91): this needs radical rethinking for multi-actor
+		// sequences.
+		
 		// TODO: asynchronous communications
 
 		// The namespacing here follows rule 15 of the RoboChart semantics,
 		// in that we usually take the namespace of the 'to' actor.  There is
-		// one exception for contexts.
+		// one exception for worlds.
 		if (to instanceof World c) {
-			return contextNamespace(c);
+			return worldNamespace(c);
 		}
 		if (to instanceof TargetActor s) {
-			return systemModuleNamespace(s);
+			return targetNamespace(s);
 		}
 		if (to instanceof ComponentActor k) {
 			return componentNamespace(k);
@@ -77,16 +79,11 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 				"tried to infer direction of an edge with an ambiguous target");
 	}
 
-	private CharSequence contextNamespace(World c) {
+	private CharSequence worldNamespace(World c) {
 		final var tgt = c.getGroup().getTarget();
 		// This effectively flips system contexts to take the *from*-actor,
 		// as the module must be the only other actor available in a system
 		// diagram.
-		if (tgt instanceof SystemTarget s) {
-			return s.getEnclosedModule().getName();
-		}
-
-		// Business as usual from here on out.
 		if (tgt instanceof ModuleTarget m) {
 			return m.getModule().getName();
 		}
@@ -94,11 +91,11 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 		throw new IllegalArgumentException("can't get context namespace when actor is %s".formatted(c));
 	}
 
-	private CharSequence systemModuleNamespace(TargetActor s) {
-		if (s.getGroup().getTarget() instanceof SystemTarget t) {
-			return t.getEnclosedModule().getName();
+	private CharSequence targetNamespace(TargetActor s) {
+		if (s.getGroup().getTarget() instanceof ModuleTarget t) {
+			return t.getModule().getName();
 		}
-		throw new IllegalArgumentException("can't get system namespace when actor is %s".formatted(s));
+		throw new IllegalArgumentException("can't get target namespace when actor is %s".formatted(s));
 	}
 
 	private CharSequence componentNamespace(ComponentActor k) {

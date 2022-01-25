@@ -113,19 +113,9 @@ abstract class Target extends Process, robochart.NamedElement {
 	derived volatile transient readonly ref robochart.NamedElement[1] element;	
 }
 
-@genmodel(documentation="A target referring to a robotic system.
-
-This is distinct from ModuleTarget in that it refers to a layer outside of
-the module, and its context is the entire world in the RoboWorld sense.")
-class SystemTarget extends Target {
-	@genmodel(documentation="The module this system encapsulates.")
-	ref robochart.RCModule[1] enclosedModule;
-}
-
 @genmodel(documentation="A target referring to a RoboChart module.
 
-Such a target has controllers as its components, and the robotic platform as
-its context.  Its process is the module process.")
+Such a target has the robotic platform as its context and its element is the module.")
 class ModuleTarget extends Target {
 	@genmodel(documentation="The module referred to by this target.")
 	ref robochart.RCModule[1] module;

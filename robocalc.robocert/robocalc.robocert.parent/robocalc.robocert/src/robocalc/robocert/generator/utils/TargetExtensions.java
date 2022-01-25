@@ -15,7 +15,6 @@ package robocalc.robocert.generator.utils;
 import java.util.stream.Stream;
 
 import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.Target;
 
 /**
@@ -27,8 +26,6 @@ public class TargetExtensions {
 	// TODO(@MattWindsor91): move to metamodel?
 	
 	public Stream<String> namePath(Target t) {
-		if (t instanceof SystemTarget s)
-			return Stream.of(s.getEnclosedModule().getName());
 		if (t instanceof ModuleTarget m)
 			return Stream.of(m.getModule().getName());
 		

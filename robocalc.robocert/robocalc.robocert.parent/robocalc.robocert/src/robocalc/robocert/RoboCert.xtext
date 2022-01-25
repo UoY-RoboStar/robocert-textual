@@ -49,13 +49,10 @@ FullTargetGroup returns TargetGroup:
  * A target of a sequence diagram.
  */
 Target:
-	SystemTarget | ModuleTarget | ControllerTarget;
+	ModuleTarget | ControllerTarget;
 
 // TODO(@MattWindsor91): it'd be nice to factor out the 'name=ID :' bit here,
 // but I'm unsure how to without complicating the metamodel.
-
-SystemTarget:
-	name=ID ':' 'system' 'of' 'module'? enclosedModule=[RCModule|QualifiedName];
 
 ModuleTarget:
 	name=ID ':' 'module' module=[RCModule|QualifiedName];
@@ -612,7 +609,7 @@ Argument:
 // ACTORS
 //
 Actor:
-	'use' ('module' {TargetActor} | 'world' {World} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
+	'use' ('target' {TargetActor} | 'world' {World} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
 
 //
 // SEQUENCE PROPERTIES

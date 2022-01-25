@@ -21,7 +21,6 @@ import com.google.inject.Inject;
 import circus.robocalc.robochart.Variable;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.Target;
 
 /**
@@ -45,8 +44,6 @@ public class TargetParameterResolver {
 	 * @return a stream of all constants defined on this target's module.
 	 */
 	public Stream<Variable> parameterisation(Target t) {
-		if (t instanceof SystemTarget s)
-			return mx.parameterisation(s.getEnclosedModule());
 		if (t instanceof ModuleTarget m)
 			return mx.parameterisation(m.getModule());
 		throw new IllegalArgumentException("don't know how to get parameterisation of %s".formatted(t));

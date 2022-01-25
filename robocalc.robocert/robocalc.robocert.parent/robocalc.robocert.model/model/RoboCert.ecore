@@ -101,20 +101,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SystemTarget" eSuperTypes="#//Target">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A target referring to a robotic system.&#xD;&#xA;&#xD;&#xA;This is distinct from ModuleTarget in that it refers to a layer outside of&#xD;&#xA;the module, and its context is the entire world in the RoboWorld sense."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="enclosedModule" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The module this system encapsulates."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModuleTarget" eSuperTypes="#//Target">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A target referring to a RoboChart module.&#xD;&#xA;&#xD;&#xA;Such a target has controllers as its components, and the robotic platform as&#xD;&#xA;its context.  Its process is the module process."/>
+      <details key="documentation" value="A target referring to a RoboChart module.&#xD;&#xA;&#xD;&#xA;Such a target has the robotic platform as its context and its element is the module."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule">
