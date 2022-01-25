@@ -27,7 +27,7 @@ import com.google.inject.Inject;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceGroup;
-import robocalc.robocert.model.robocert.SystemModuleActor;
+import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
@@ -43,32 +43,32 @@ class SequenceGroupImplCustomTest {
 	private RoboCertFactory rf;
 
 	private SequenceGroup group;
-	private SystemModuleActor module;
+	private TargetActor module;
 	private World world;
 
 	@BeforeEach
 	void setUp() {
-		module = rf.createSystemModuleActor();
+		module = rf.createTargetActor();
 		world = rf.createWorld();
 		group = rf.createSequenceGroup();
 		group.getActors().addAll(List.of(module, world));
 	}
 
 	/**
-	 * Tests that the 'systemModuleActor' derived property resolves correctly.
+	 * Tests that the 'TargetActor' derived property resolves correctly.
 	 */
 	@Test
-	void testSystemModuleActor() {
-		assertThat(group.getSystemModuleActor(), is(equalTo(module)));
+	void testTargetActor() {
+		assertThat(group.getTargetActor(), is(equalTo(module)));
 	}
 
 	/**
-	 * Tests that the 'systemModuleActor' derived property returns null for an empty
+	 * Tests that the 'TargetActor' derived property returns null for an empty
 	 * sequence.
 	 */
 	@Test
-	void testSystemModuleActor_empty() {
-		assertThat(rf.createSequenceGroup().getSystemModuleActor(), is(nullValue()));
+	void testTargetActor_empty() {
+		assertThat(rf.createSequenceGroup().getTargetActor(), is(nullValue()));
 	}
 
 	/**

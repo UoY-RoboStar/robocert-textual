@@ -612,7 +612,7 @@ Argument:
 // ACTORS
 //
 Actor:
-	'use' ('module' {SystemModuleActor} | 'world' {World} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
+	'use' ('module' {TargetActor} | 'world' {World} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
 
 //
 // SEQUENCE PROPERTIES

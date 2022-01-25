@@ -26,7 +26,7 @@ import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.SystemModuleActor;
+import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.DefinitionHelper;
@@ -67,7 +67,7 @@ public record ActorContextFinder(DefinitionHelper dh) {
 		}
 
 		// See API note above.
-		if (a instanceof SystemModuleActor) {
+		if (a instanceof TargetActor) {
 			return Optional.empty();
 		}
 

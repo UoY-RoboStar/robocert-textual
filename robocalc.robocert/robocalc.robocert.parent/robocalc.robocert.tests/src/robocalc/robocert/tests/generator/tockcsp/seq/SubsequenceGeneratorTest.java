@@ -52,7 +52,7 @@ class SubsequenceGeneratorTest {
 	}
 	
 	private Matcher<Subsequence> generates(String expected) {
-		var ctx = new LifelineContext(rc.createSystemModuleActor(), 0);
+		var ctx = new LifelineContext(rc.createTargetActor(), 0);
 		return generatesCSP(expected, s -> sg.generate(s, ctx));
 	}
 }

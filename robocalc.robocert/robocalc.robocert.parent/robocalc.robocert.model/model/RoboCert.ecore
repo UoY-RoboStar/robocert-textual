@@ -456,10 +456,10 @@
         <details key="documentation" value="The actors participating in this sequence.&#xD;&#xA;&#xD;&#xA;These correspond to UML lifelines."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="systemModuleActor" eType="#//SystemModuleActor"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetActor" eType="#//TargetActor"
         changeable="false" volatile="true" transient="true" derived="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the system module actor of the group, if any."/>
+        <details key="documentation" value="Shortcut for getting the target actor of the group, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="world" eType="#//World"
@@ -1013,9 +1013,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SystemModuleActor" eSuperTypes="#//Actor">
+  <eClassifiers xsi:type="ecore:EClass" name="TargetActor" eSuperTypes="#//Actor">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Actor that stands for the module of a system.&#xD;&#xA;&#xD;&#xA;System modules can't be modelled as components in the same way that&#xD;&#xA;module controllers and controller STMs can, as they aren't ConnectionNodes.&#xD;&#xA;Further, there is always explicitly one unambiguous system module."/>
+      <details key="documentation" value="Actor that stands for the current target."/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="World" eSuperTypes="#//Actor">

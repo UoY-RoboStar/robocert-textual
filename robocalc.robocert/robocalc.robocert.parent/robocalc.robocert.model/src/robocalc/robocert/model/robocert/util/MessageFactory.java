@@ -86,7 +86,7 @@ public class MessageFactory {
 	 * @return a list containing all actors defined on a module target.
 	 */
 	public List<Actor> systemActors() {
-		return List.of(rc.createSystemModuleActor(), rc.createWorld());
+		return List.of(rc.createTargetActor(), rc.createWorld());
 	}
 
 }

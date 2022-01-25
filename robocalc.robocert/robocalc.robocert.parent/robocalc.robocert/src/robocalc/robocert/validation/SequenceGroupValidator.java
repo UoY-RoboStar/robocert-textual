@@ -21,7 +21,7 @@ import robocalc.robocert.model.robocert.ComponentActor;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.RoboCertPackage;
 import robocalc.robocert.model.robocert.SequenceGroup;
-import robocalc.robocert.model.robocert.SystemModuleActor;
+import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.SystemTarget;
 
 /**
@@ -55,7 +55,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 		if (hasNonSystemTarget(g))
 			return;
 
-		if (1 != countActors(g, SystemModuleActor.class))
+		if (1 != countActors(g, TargetActor.class))
 			actorError("There must be precisely one system module actor", SYS_NEEDS_ONE_SMA);
 
 		if (hasActors(g, ComponentActor.class))
@@ -74,7 +74,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check
 	public void checkActorCounts(SequenceGroup g) {
-		if (hasNonSystemTarget(g) && hasActors(g, SystemModuleActor.class))
+		if (hasNonSystemTarget(g) && hasActors(g, TargetActor.class))
 			actorError("Only system sequence groups can have module actors", SMA_NEEDS_SYSTEM);
 
 		if (1 < countActors(g, World.class))

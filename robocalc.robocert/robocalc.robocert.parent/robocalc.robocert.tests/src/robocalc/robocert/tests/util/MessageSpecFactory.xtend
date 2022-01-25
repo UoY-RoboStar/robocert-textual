@@ -27,7 +27,7 @@ import robocalc.robocert.model.robocert.util.MessageFactory
 import circus.robocalc.robochart.OperationSig
 import robocalc.robocert.model.robocert.EdgeDirection
 import robocalc.robocert.model.robocert.util.EdgeFactory
-import robocalc.robocert.model.robocert.SystemModuleActor
+import robocalc.robocert.model.robocert.TargetActor
 import robocalc.robocert.model.robocert.World
 
 /**
@@ -208,6 +208,6 @@ class MessageSpecFactory {
 	 */
 	def expectTarget(Actor it) {
 		assertNotNull
-		assertTrue(it instanceof SystemModuleActor)
+		assertTrue(it instanceof TargetActor)
 	}
 }

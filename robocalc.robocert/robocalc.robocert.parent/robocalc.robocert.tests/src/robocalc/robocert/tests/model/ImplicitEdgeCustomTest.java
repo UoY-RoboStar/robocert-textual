@@ -68,7 +68,7 @@ public class ImplicitEdgeCustomTest {
 	 */
 	@BeforeEach
 	void setUp() {
-		module = rf.createSystemModuleActor();
+		module = rf.createTargetActor();
 		world = rf.createWorld();
 
 		it = rf.createImplicitEdge();

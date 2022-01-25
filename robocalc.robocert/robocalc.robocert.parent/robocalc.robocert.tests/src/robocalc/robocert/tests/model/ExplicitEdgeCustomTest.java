@@ -77,7 +77,7 @@ public class ExplicitEdgeCustomTest {
 	 */
 	@BeforeEach
 	protected void setUp() {
-		expectedFrom = rf.createSystemModuleActor();
+		expectedFrom = rf.createTargetActor();
 		expectedTo = rf.createWorld();
 
 		it = ef.edge(expectedFrom, expectedTo);

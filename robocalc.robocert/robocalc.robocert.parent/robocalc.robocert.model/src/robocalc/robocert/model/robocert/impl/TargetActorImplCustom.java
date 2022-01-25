@@ -15,14 +15,14 @@ package robocalc.robocert.model.robocert.impl;
 import com.google.common.base.Strings;
 
 /**
- * Adds custom functionality to {@link SystemModuleActorImpl}.
+ * Adds custom functionality to {@link TargetActorImpl}.
  * 
  * @author Matt Windsor
  */
-public class SystemModuleActorImplCustom extends SystemModuleActorImpl {
+public class TargetActorImplCustom extends TargetActorImpl {
 	@Override
 	public String toString() {
-		var name = getName();
+		final var name = getName();
 		return "<<module>> " + (Strings.isNullOrEmpty(name) ? "(untitled)" : name);
 	}
 }

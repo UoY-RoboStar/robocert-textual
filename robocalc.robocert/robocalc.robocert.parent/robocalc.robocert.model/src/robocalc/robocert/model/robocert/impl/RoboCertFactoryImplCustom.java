@@ -13,7 +13,7 @@ import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RefMessageSet;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.Subsequence;
-import robocalc.robocert.model.robocert.SystemModuleActor;
+import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.SystemTarget;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
 
@@ -90,8 +90,8 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   }
 
   @Override
-  public SystemModuleActor createSystemModuleActor() {
-    return new SystemModuleActorImplCustom();
+  public TargetActor createTargetActor() {
+    return new TargetActorImplCustom();
   }
 
   @Override

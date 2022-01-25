@@ -395,8 +395,8 @@ These correspond to UML lifelines.")
 	// the sequences.  This is because implicit edges in message sets rely on
 	// these existing.
 
-	@genmodel(documentation="Shortcut for getting the system module actor of the group, if any.")
-	derived volatile transient readonly ref SystemModuleActor[0..1] systemModuleActor;
+	@genmodel(documentation="Shortcut for getting the target actor of the group, if any.")
+	derived volatile transient readonly ref TargetActor[0..1] targetActor;
 	
 	@genmodel(documentation="Shortcut for getting the world of the group, if any.")
 	derived volatile transient readonly ref World[0..1] world;
@@ -831,12 +831,8 @@ abstract class Actor extends robochart.NamedElement {
 	ref SequenceGroup[1]#actors group;
 }
 
-@genmodel(documentation="Actor that stands for the module of a system.
-
-System modules can't be modelled as components in the same way that
-module controllers and controller STMs can, as they aren't ConnectionNodes.
-Further, there is always explicitly one unambiguous system module.")
-class SystemModuleActor extends Actor {
+@genmodel(documentation="Actor that stands for the current target.")
+class TargetActor extends Actor {
 }
 
 @genmodel(documentation="Actor that stands for the environment of the current target.")

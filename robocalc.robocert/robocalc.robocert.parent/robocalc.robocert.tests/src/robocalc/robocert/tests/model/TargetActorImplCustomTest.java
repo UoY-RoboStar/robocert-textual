@@ -26,20 +26,20 @@ import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link TargetActor}s, and also tests that
+ * Tests any custom functionality on target actors, and also tests that
  * the factory resolves them correctly.
  * 
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class SystemModuleActorImplCustomTest {
+public class TargetActorImplCustomTest {
 	@Inject
 	private RoboCertFactory rf;
 
 	@Test
 	void testToString() {
-		final var sma = rf.createSystemModuleActor();
+		final var sma = rf.createTargetActor();
 		assertThat(sma.toString(), is(equalTo("<<module>> (untitled)")));
 		sma.setName("test");
 		assertThat(sma.toString(), is(equalTo("<<module>> test")));

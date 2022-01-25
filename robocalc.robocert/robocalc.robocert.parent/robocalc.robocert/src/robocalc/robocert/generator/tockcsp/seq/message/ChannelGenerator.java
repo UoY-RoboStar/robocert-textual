@@ -25,7 +25,7 @@ import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.SystemModuleActor;
+import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.SystemTarget;
 
 /**
@@ -67,7 +67,7 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 		if (to instanceof World c) {
 			return contextNamespace(c);
 		}
-		if (to instanceof SystemModuleActor s) {
+		if (to instanceof TargetActor s) {
 			return systemModuleNamespace(s);
 		}
 		if (to instanceof ComponentActor k) {
@@ -94,7 +94,7 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 		throw new IllegalArgumentException("can't get context namespace when actor is %s".formatted(c));
 	}
 
-	private CharSequence systemModuleNamespace(SystemModuleActor s) {
+	private CharSequence systemModuleNamespace(TargetActor s) {
 		if (s.getGroup().getTarget() instanceof SystemTarget t) {
 			return t.getEnclosedModule().getName();
 		}
@@ -121,7 +121,7 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 	public EdgeDirection getInferredDirection(Edge edge) {
 		// TODO(@MattWindsor91): asynchronous edges
 
-		if (edge.getResolvedFrom() instanceof SystemModuleActor) {
+		if (edge.getResolvedFrom() instanceof TargetActor) {
 			return EdgeDirection.OUTBOUND;
 		}
 		return EdgeDirection.INBOUND;
