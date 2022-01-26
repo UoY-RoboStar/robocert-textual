@@ -86,7 +86,7 @@ public class RefMessageSetImplCustomTest {
 
 	private ExtensionalMessageSet single() {
 		final var set = rf.createExtensionalMessageSet();
-		set.getMessages().add(rf.createMessageSpec());
+		set.getMessages().add(rf.createMessage());
 		return set;
 	}
 }

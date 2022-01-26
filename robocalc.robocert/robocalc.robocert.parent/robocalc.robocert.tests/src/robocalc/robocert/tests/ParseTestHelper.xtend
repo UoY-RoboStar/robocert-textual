@@ -101,7 +101,7 @@ class ParseTestHelper {
 	def CertExpr unliftExpr(CertPackage it) {
 		var action = unliftSubsequence.fragments.filter(OccurrenceFragment).get(0).occurrence;
 		if (action instanceof MessageOccurrence) {
-			var arg = action.body.arguments.get(0)
+			var arg = action.message.arguments.get(0)
 			if (arg instanceof ExpressionArgument) {
 				arg.expr
 			}

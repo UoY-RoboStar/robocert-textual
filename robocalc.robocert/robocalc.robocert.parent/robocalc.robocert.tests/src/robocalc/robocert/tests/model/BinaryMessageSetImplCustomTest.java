@@ -137,6 +137,6 @@ class BinaryMessageSetImplCustomTest {
 	}
 
 	private ExtensionalMessageSet single() {
-		return sf.extensional(List.of(rf.createMessageSpec()));
+		return sf.extensional(List.of(rf.createMessage()));
 	}
 }

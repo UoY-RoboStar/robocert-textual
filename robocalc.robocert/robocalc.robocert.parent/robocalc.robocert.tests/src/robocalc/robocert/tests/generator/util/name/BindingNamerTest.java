@@ -26,7 +26,6 @@ import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.util.MessageFactory;
-import robocalc.robocert.tests.util.MessageSpecFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -40,7 +39,7 @@ class BindingNamerTest {
 	@Inject
 	private MessageFactory mf;
 	@Inject
-	private MessageSpecFactory msf;
+	private robocalc.robocert.tests.util.MessageFactory msf;
 	@Inject
 	private RoboCertFactory rcf;
 	@Inject
@@ -65,16 +64,16 @@ class BindingNamerTest {
 	public void testGetUnambiguousName_RootSubsequence() {
 		final var w = msf.boundArg("test");
 		final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), EdgeDirection.INBOUND, w);
-		final var aact = rcf.createMessageOccurrence();
-		aact.setBody(aspec);
+		final var occ = rcf.createMessageOccurrence();
+		occ.setMessage(aspec);
 		final var fragment = rcf.createOccurrenceFragment();
-		fragment.setOccurrence(aact);
+		fragment.setOccurrence(occ);
 		final var ssq = rcf.createSubsequence();
 		ssq.getFragments().add(fragment);
 		final var sq = rcf.createSequence();
 		sq.setBody(ssq);
 
-		assertUnambiguousNameEqual("fragment0_occurrence_body_argument0", w.getBinding());
+		assertUnambiguousNameEqual("fragment0_occurrence_message_argument0", w.getBinding());
 	}
 
 	private void assertUnambiguousNameEqual(String expected, Binding b) {

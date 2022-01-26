@@ -32,7 +32,6 @@ import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
-import robocalc.robocert.tests.util.MessageSpecFactory;
 
 /**
  * Tests that the custom version of {@link ImplicitEdge} implements its
@@ -46,7 +45,7 @@ public class ImplicitEdgeCustomTest {
 	@Inject
 	private RoboCertFactory rf;
 	@Inject
-	private MessageSpecFactory msf;
+	private robocalc.robocert.tests.util.MessageFactory msf;
 	@Inject
 	private MessageFactory mf;
 
@@ -75,7 +74,7 @@ public class ImplicitEdgeCustomTest {
 		final var spec = mf.spec(mf.eventTopic(msf.intEvent()), it);
 
 		final var occ = rf.createMessageOccurrence();
-		occ.setBody(spec);
+		occ.setMessage(spec);
 
 		final var fragment = rf.createOccurrenceFragment();
 		fragment.setOccurrence(occ);

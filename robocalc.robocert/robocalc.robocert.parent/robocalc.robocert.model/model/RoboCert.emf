@@ -593,7 +593,7 @@ abstract class Occurrence {
 Unlike UML, there is only one occurrence for both ends of the message.")
 class MessageOccurrence extends Occurrence {
 	@genmodel(documentation="The message itself.")
-	val MessageSpec[1] body;
+	val Message[1] message;
 }
 
 @genmodel(documentation="Represents a deadlock event in a sequence.")
@@ -613,9 +613,9 @@ class WaitAction extends Occurrence {
 //
 
 @genmodel(documentation="A specification of a message.")
-class MessageSpec {
+class Message {
 	@genmodel(documentation="The topic of the message.")
-	val MessageTopic[1]#spec topic;
+	val MessageTopic[1]#message topic;
 	
 	@genmodel(documentation="The argument list for the message.")
 	val Argument[*] arguments;
@@ -628,12 +628,12 @@ class MessageSpec {
 // Edges
 //
 
-@genmodel(documentation="A pair of actors referenced by a MessageSpec.
+@genmodel(documentation="A pair of actors referenced by a Message.
 
 There are multiple ways to resolve this pair, and so multiple subclasses of Edge.")
 abstract class Edge {
-	@genmodel(documentation="The parent MessageSpec.")
-	ref MessageSpec[1]#edge spec;
+	@genmodel(documentation="The parent Message.")
+	ref Message[1]#edge spec;
 
 	//
 	// Derived references
@@ -686,7 +686,7 @@ operations where it is the only allowed direction.")
 @genmodel(documentation="A message topic.")
 abstract class MessageTopic {
 	@genmodel(documentation="The parent message specification.")
-	ref MessageSpec[1]#topic spec;
+	ref Message[1]#topic message;
 	
 	//
 	// Derived properties
@@ -773,7 +773,7 @@ class RefMessageSet extends MessageSet {
 @genmodel(documentation="A message set that extensionally enumerates messages.")
 class ExtensionalMessageSet extends MessageSet {
 	@genmodel(documentation="The message specifications held by this message set.")
-	!ordered val MessageSpec[*]#parent messages;
+	!ordered val Message[*]#set messages;
 }
 
 @genmodel(documentation="A message set that includes all messages.")

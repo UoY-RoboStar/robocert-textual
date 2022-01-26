@@ -14,7 +14,7 @@ package robocalc.robocert.tests.util
 
 import robocalc.robocert.model.robocert.Actor
 import robocalc.robocert.model.robocert.Argument
-import robocalc.robocert.model.robocert.MessageSpec
+import robocalc.robocert.model.robocert.Message
 import robocalc.robocert.model.robocert.MessageTopic
 import robocalc.robocert.model.robocert.RoboCertFactory
 import circus.robocalc.robochart.RoboChartFactory
@@ -23,7 +23,6 @@ import com.google.inject.Inject
 import static extension org.junit.jupiter.api.Assertions.*
 import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.WildcardArgument
-import robocalc.robocert.model.robocert.util.MessageFactory
 import circus.robocalc.robochart.OperationSig
 import robocalc.robocert.model.robocert.EdgeDirection
 import robocalc.robocert.model.robocert.util.EdgeFactory
@@ -33,14 +32,14 @@ import robocalc.robocert.model.robocert.World
 /**
  * Provides ways of creating dummy message specifications.
  */
-class MessageSpecFactory {
+class MessageFactory {
 	// TODO(@MattWindsor91): lots of old terminology here, eg 'gap' for 'intraMessages'.
 	
 	// TODO(@MattWindsor91): reduce overlap with model MessageFactory;
 	// the idea is that that will receive non-dummy factory operations.
 	
 	@Inject EdgeFactory ef;
-	@Inject MessageFactory mf;
+	@Inject robocalc.robocert.model.robocert.util.MessageFactory mf;
 	@Inject RoboChartFactory rc;
 	@Inject RoboCertFactory rcert;
 
@@ -54,8 +53,8 @@ class MessageSpecFactory {
 	 * 
 	 * @return a constructed arrow message spec.
 	 */
-	def MessageSpec arrowSpec(MessageTopic t, EdgeDirection dir, Argument... args) {
-		mf.spec(t, ef.edge(dir), args) => [s|arrowParent.body = s]
+	def Message arrowSpec(MessageTopic t, EdgeDirection dir, Argument... args) {
+		mf.spec(t, ef.edge(dir), args) => [s|arrowParent.message = s]
 	}
 
 	def private arrowParent() {
@@ -76,7 +75,7 @@ class MessageSpecFactory {
 	 * 
 	 * @return a constructed gap message spec.
 	 */
-	def MessageSpec gapSpec(MessageTopic t, EdgeDirection dir, Argument... args) {
+	def Message gapSpec(MessageTopic t, EdgeDirection dir, Argument... args) {
 		mf.spec(t, ef.edge(dir), args) => [s|gapParent.messages.add(s)]
 	}
 

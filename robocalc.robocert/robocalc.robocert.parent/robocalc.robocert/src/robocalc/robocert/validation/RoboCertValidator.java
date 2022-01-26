@@ -11,6 +11,6 @@ import org.eclipse.xtext.validation.ComposedChecks;
  * See
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
-@ComposedChecks(validators = { ActorValidator.class, MessageSpecValidator.class, SequenceGroupValidator.class })
+@ComposedChecks(validators = { ActorValidator.class, MessageValidator.class, SequenceGroupValidator.class })
 public class RoboCertValidator extends AbstractRoboCertValidator {
 }

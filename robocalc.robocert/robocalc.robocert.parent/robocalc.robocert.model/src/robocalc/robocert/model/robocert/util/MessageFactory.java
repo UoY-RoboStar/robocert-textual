@@ -14,7 +14,7 @@ import circus.robocalc.robochart.OperationSig;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.Argument;
 import robocalc.robocert.model.robocert.Edge;
-import robocalc.robocert.model.robocert.MessageSpec;
+import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 
@@ -35,7 +35,7 @@ public class MessageFactory {
 	 *
 	 * @return the specification.
 	 */
-	public MessageSpec spec(MessageTopic topic, Edge edge, Argument ...args) {
+	public Message spec(MessageTopic topic, Edge edge, Argument ...args) {
 		return spec(topic, edge, Arrays.asList(args));
 	}
 
@@ -48,8 +48,8 @@ public class MessageFactory {
 	 *
 	 * @return the specification.
 	 */
-	public MessageSpec spec(MessageTopic topic, Edge edge, Collection<? extends Argument> args) {
-		var it = rc.createMessageSpec();
+	public Message spec(MessageTopic topic, Edge edge, Collection<? extends Argument> args) {
+		final var it = rc.createMessage();
 		it.setTopic(topic);
 		it.setEdge(edge);
 		it.getArguments().addAll(args);
@@ -64,7 +64,7 @@ public class MessageFactory {
 	 * @return the event topic.
 	 */
 	public MessageTopic eventTopic(Event e) {
-		var it = rc.createEventTopic();
+		final var it = rc.createEventTopic();
 		it.setEvent(e);
 		return it;
 	}
@@ -77,7 +77,7 @@ public class MessageFactory {
 	 * @return the event topic.
 	 */
 	public MessageTopic opTopic(OperationSig o) {
-		var it = rc.createOperationTopic();
+		final var it = rc.createOperationTopic();
 		it.setOperation(o);
 		return it;
 	}

@@ -20,7 +20,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar;
 import com.google.inject.Inject;
 
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.MessageSpec;
+import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RoboCertPackage;
 import robocalc.robocert.model.robocert.World;
@@ -31,7 +31,7 @@ import robocalc.robocert.model.robocert.util.EdgeFactory;
  *
  * @author Matt Windsor
  */
-public class MessageSpecValidator extends AbstractDeclarativeValidator {
+public class MessageValidator extends AbstractDeclarativeValidator {
 	@Inject
 	private EdgeFactory ef;
 	
@@ -41,7 +41,7 @@ public class MessageSpecValidator extends AbstractDeclarativeValidator {
 	}
 
 	//
-	// MessageSpec
+	// Message
 	//
 
 	public static final String EDGE_ACTORS_INDISTINCT = "edgeActorsIndistinct";
@@ -54,7 +54,7 @@ public class MessageSpecValidator extends AbstractDeclarativeValidator {
 	 * @param s the spec to check.
 	 */
 	@Check
-	public void checkEdgeFlow(MessageSpec s) {
+	public void checkEdgeFlow(Message s) {
 		final var e = s.getEdge();
 		if (EcoreUtil.equals(e.getResolvedFrom(), e.getResolvedTo()))
 			edgeError("A message cannot mention the same actor at both endpoints", EDGE_ACTORS_INDISTINCT);
@@ -66,7 +66,7 @@ public class MessageSpecValidator extends AbstractDeclarativeValidator {
 	 * @param s the spec to check.
 	 */
 	@Check
-	public void checkMessageSpecOperationFlow(MessageSpec s) {
+	public void checkMessageOperationFlow(Message s) {
 		// This check is only relevant for operation topics.
 		if (!(s.getTopic() instanceof OperationTopic))
 			return;
@@ -83,7 +83,7 @@ public class MessageSpecValidator extends AbstractDeclarativeValidator {
 	}
 
 	private void edgeError(String string, String code) {
-		error(string, RoboCertPackage.Literals.MESSAGE_SPEC__EDGE, code);
+		error(string, RoboCertPackage.Literals.MESSAGE__EDGE, code);
 	}
 
 	private boolean isContext(Actor a) {

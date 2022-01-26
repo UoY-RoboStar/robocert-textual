@@ -712,8 +712,8 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An occurrence that represents a message communication.&#xD;&#xA;&#xD;&#xA;Unlike UML, there is only one occurrence for both ends of the message."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//MessageSpec"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
+        eType="#//Message" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The message itself."/>
       </eAnnotations>
@@ -735,12 +735,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MessageSpec">
+  <eClassifiers xsi:type="ecore:EClass" name="Message">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A specification of a message."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="topic" lowerBound="1" eType="#//MessageTopic"
-        containment="true" eOpposite="#//MessageTopic/spec">
+        containment="true" eOpposite="#//MessageTopic/message">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The topic of the message."/>
       </eAnnotations>
@@ -760,12 +760,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Edge" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A pair of actors referenced by a MessageSpec.&#xD;&#xA;&#xD;&#xA;There are multiple ways to resolve this pair, and so multiple subclasses of Edge."/>
+      <details key="documentation" value="A pair of actors referenced by a Message.&#xD;&#xA;&#xD;&#xA;There are multiple ways to resolve this pair, and so multiple subclasses of Edge."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="spec" lowerBound="1" eType="#//MessageSpec"
-        eOpposite="#//MessageSpec/edge">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="spec" lowerBound="1" eType="#//Message"
+        eOpposite="#//Message/edge">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The parent MessageSpec."/>
+        <details key="documentation" value="The parent Message."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resolvedFrom" lowerBound="1"
@@ -826,8 +826,8 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A message topic."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="spec" lowerBound="1" eType="#//MessageSpec"
-        eOpposite="#//MessageSpec/topic">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="message" lowerBound="1"
+        eType="#//Message" eOpposite="#//Message/topic">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The parent message specification."/>
       </eAnnotations>
@@ -937,7 +937,7 @@
       <details key="documentation" value="A message set that extensionally enumerates messages."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="messages" ordered="false"
-        upperBound="-1" eType="#//MessageSpec" containment="true">
+        upperBound="-1" eType="#//Message" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The message specifications held by this message set."/>
       </eAnnotations>

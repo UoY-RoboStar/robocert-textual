@@ -27,7 +27,6 @@ import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.util.EdgeFactory;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.model.robocert.util.SetFactory;
-import robocalc.robocert.tests.util.MessageSpecFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -45,7 +44,7 @@ public class MessageSetGeneratorTest {
 	@Inject
 	private EdgeFactory ef;
 	@Inject
-	private MessageSpecFactory msf;
+	private robocalc.robocert.tests.util.MessageFactory msf;
 	@Inject
 	private SetFactory sf;
 

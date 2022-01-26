@@ -18,7 +18,7 @@ import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
-import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
 
 /**
@@ -29,7 +29,7 @@ import robocalc.robocert.model.robocert.OccurrenceFragment;
 public record OccurrenceFragmentGenerator(CSPStructureGenerator csp,
 																					OccurrenceGenerator occGen,
 																					MessageSetGenerator msg,
-																					MessageSpecGenerator mpg) {
+																					MessageGenerator mpg) {
 	// This generator handles the injection of loads for any possible
 	// expressions in the action, as it is safe to do so at this level (no
 	// Action recursively includes any more Steps or Actions).

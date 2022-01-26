@@ -15,7 +15,7 @@ package robocalc.robocert.generator.utils;
 
 import circus.robocalc.robochart.Type;
 import robocalc.robocert.model.robocert.Binding;
-import robocalc.robocert.model.robocert.MessageSpec;
+import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.WildcardArgument;
 
@@ -31,7 +31,7 @@ public class BindingTypeFinder {
 	/**
 	 * Gets the type of a {@link Binding} by traversing its container(s).
 	 * <p>
-	 * For instance, a binding within a {@link MessageSpec} will be resolved against the parameters of
+	 * For instance, a binding within a {@link Message} will be resolved against the parameters of
 	 * its corresponding {@link MessageTopic}.
 	 *
 	 * @param b the binding whose type is to be resolved.
@@ -52,8 +52,8 @@ public class BindingTypeFinder {
 	private Type typeFromWildcardArgument(WildcardArgument arg) {
 		final var parent = arg.eContainer();
 
-		if (parent instanceof MessageSpec spec) {
-			return typeFromMessageSpec(spec, arg);
+		if (parent instanceof Message spec) {
+			return typeFromMessage(spec, arg);
 		}
 
 		// If WildcardArguments can ever come from things other than message
@@ -62,7 +62,7 @@ public class BindingTypeFinder {
 		throw new UnsupportedOperationException("Unsupported wildcard argument container: " + parent);
 	}
 
-	private Type typeFromMessageSpec(MessageSpec spec, WildcardArgument arg) {
+	private Type typeFromMessage(Message spec, WildcardArgument arg) {
 		final var i = spec.getArguments().indexOf(arg);
 		return spec.getTopic().getParamTypes().get(i);
 	}

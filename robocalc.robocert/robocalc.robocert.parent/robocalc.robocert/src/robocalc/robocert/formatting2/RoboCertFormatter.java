@@ -26,5 +26,5 @@ public class RoboCertFormatter extends RoboChartFormatter {
 		}
 	}
 	
-	// TODO: implement for Instantiation, ConstAssignment, AssertionGroup, Assertion, LogicalExpr, RelationExpr, MinusExpr, CSPGroup, SequenceGroup, Sequence, Subsequence, ActionStep, DeadlineStep, LoopStep, BlockStep, DefiniteLoopBound, LowerLoopBound, RangeLoopBound, BranchStep, Branch, ExprGuard, MessageOccurrence, WaitAction, MessageSpec, NamedMessageSet, BinaryMessageSet, ExtensionalMessageSet, ExpressionArgument, WildcardArgument
+	// TODO: implement for Instantiation, ConstAssignment, AssertionGroup, Assertion, LogicalExpr, RelationExpr, MinusExpr, CSPGroup, SequenceGroup, Sequence, Subsequence, ActionStep, DeadlineStep, LoopStep, BlockStep, DefiniteLoopBound, LowerLoopBound, RangeLoopBound, BranchStep, Branch, ExprGuard, MessageOccurrence, WaitAction, Message, NamedMessageSet, BinaryMessageSet, ExtensionalMessageSet, ExpressionArgument, WildcardArgument
 }

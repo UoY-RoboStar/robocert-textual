@@ -744,9 +744,9 @@
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
       </ownedElements>
     </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_hn6LMNsNEeuTO4js3GS2GQ" name="MessageSpec" tooltipText="" outgoingEdges="_ho97INsNEeuTO4js3GS2GQ _t-oS5ulIEeuyEcy6CjKGtA _5sd_lkhqEeyhlLDeN_U_Vw" incomingEdges="_t-nr3OlIEeuyEcy6CjKGtA" width="12" height="10">
-      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//MessageSpec"/>
-      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//MessageSpec"/>
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_hn6LMNsNEeuTO4js3GS2GQ" name="Message" tooltipText="" outgoingEdges="_ho97INsNEeuTO4js3GS2GQ _t-oS5ulIEeuyEcy6CjKGtA _5sd_lkhqEeyhlLDeN_U_Vw" incomingEdges="_t-nr3OlIEeuyEcy6CjKGtA" width="12" height="10">
+      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//Message"/>
+      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//Message"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -916,9 +916,9 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC%20ESupertypes']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_ho97INsNEeuTO4js3GS2GQ" sourceNode="_hn6LMNsNEeuTO4js3GS2GQ" targetNode="_hn6yQdsNEeuTO4js3GS2GQ" beginLabel="[1..1] spec" endLabel="[1..1] topic">
-      <target xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageSpec/topic"/>
+      <target xmi:type="ecore:EReference" href="RoboCert.ecore#//Message/topic"/>
       <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageTopic/spec"/>
-      <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageSpec/topic"/>
+      <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//Message/topic"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_hpAXY9sNEeuTO4js3GS2GQ" description="_hpAXYNsNEeuTO4js3GS2GQ" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
         <beginLabelStyle xmi:type="diagram:BeginLabelStyle" uid="_hpAXZNsNEeuTO4js3GS2GQ" showIcon="false">
           <labelFormat>bold</labelFormat>
@@ -1084,8 +1084,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC_EReference']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_t-oS5ulIEeuyEcy6CjKGtA" name="[0..*] arguments" sourceNode="_hn6LMNsNEeuTO4js3GS2GQ" targetNode="_-JR58NsNEeuTO4js3GS2GQ">
-      <target xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageSpec/arguments"/>
-      <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageSpec/arguments"/>
+      <target xmi:type="ecore:EReference" href="RoboCert.ecore#//Message/arguments"/>
+      <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//Message/arguments"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_t-o58OlIEeuyEcy6CjKGtA" description="_-JhKh9sNEeuTO4js3GS2GQ" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
         <centerLabelStyle xmi:type="diagram:CenterLabelStyle" uid="_t-o58ulIEeuyEcy6CjKGtA" showIcon="false">
           <customFeatures>labelSize</customFeatures>
@@ -1159,8 +1159,8 @@
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC_EReference']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_5sd_lkhqEeyhlLDeN_U_Vw" sourceNode="_hn6LMNsNEeuTO4js3GS2GQ" targetNode="_vBxXcEhqEeyhlLDeN_U_Vw" beginLabel="[1..1] spec" endLabel="[1..1] edge">
-      <target xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageSpec/edge"/>
-      <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageSpec/edge"/>
+      <target xmi:type="ecore:EReference" href="RoboCert.ecore#//Message/edge"/>
+      <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//Message/edge"/>
       <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//Edge/spec"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_5semoEhqEeyhlLDeN_U_Vw" description="_hpAXYNsNEeuTO4js3GS2GQ" sourceArrow="FillDiamond" routingStyle="manhattan" strokeColor="0,0,0">
         <beginLabelStyle xmi:type="diagram:BeginLabelStyle" uid="_5semoUhqEeyhlLDeN_U_Vw" showIcon="false">
@@ -2645,7 +2645,7 @@
         <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
-      <ownedElements xmi:type="diagram:DNodeListElement" uid="_2U-lQtsPEeuTO4js3GS2GQ" name=" body : MessageSpec" tooltipText="">
+      <ownedElements xmi:type="diagram:DNodeListElement" uid="_2U-lQtsPEeuTO4js3GS2GQ" name=" body : Message" tooltipText="">
         <target xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageOccurrence/body"/>
         <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageOccurrence/body"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_2U-lRNsPEeuTO4js3GS2GQ" labelAlignment="LEFT" description="_2U-lQ9sPEeuTO4js3GS2GQ" color="114,159,207">

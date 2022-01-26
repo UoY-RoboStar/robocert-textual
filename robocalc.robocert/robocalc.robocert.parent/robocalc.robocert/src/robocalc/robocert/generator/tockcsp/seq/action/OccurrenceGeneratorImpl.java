@@ -18,7 +18,7 @@ import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
-import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.FinalAction;
 import robocalc.robocert.model.robocert.Occurrence;
@@ -32,7 +32,7 @@ import robocalc.robocert.model.robocert.WaitAction;
 public record OccurrenceGeneratorImpl(CSPStructureGenerator csp,
                                       ExpressionGenerator eg,
                                       LoadStoreGenerator lsg,
-                                      MessageSpecGenerator msg) implements
+                                      MessageGenerator msg) implements
     OccurrenceGenerator {
 
   /**
@@ -72,7 +72,7 @@ public record OccurrenceGeneratorImpl(CSPStructureGenerator csp,
 
   private CharSequence generateArrow(MessageOccurrence r) {
     // TODO(@MattWindsor91): This should really be in the CSPStructureGenerator... somehow.
-    return "%s -> %sSKIP".formatted(msg.generatePrefix(r.getBody()), lsg.generateBindingStores(r));
+    return "%s -> %sSKIP".formatted(msg.generatePrefix(r.getMessage()), lsg.generateBindingStores(r));
   }
 
   private CharSequence generateWait(WaitAction w) {

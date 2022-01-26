@@ -53,6 +53,6 @@ class ExtensionalMessageSetImplCustomTest {
    */
   @Test
   void testProperties_NonEmpty() {
-    assertThat(sf.singleton(rf.createMessageSpec()), is(notUniversal().andActive()));
+    assertThat(sf.singleton(rf.createMessage()), is(notUniversal().andActive()));
   }
 }

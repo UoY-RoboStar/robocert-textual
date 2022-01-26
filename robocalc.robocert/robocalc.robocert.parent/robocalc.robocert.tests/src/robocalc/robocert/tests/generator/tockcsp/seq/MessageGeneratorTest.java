@@ -22,12 +22,11 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 import robocalc.robocert.model.robocert.Argument;
 import robocalc.robocert.model.robocert.EdgeDirection;
-import robocalc.robocert.tests.util.MessageSpecFactory;
-import robocalc.robocert.model.robocert.MessageSpec;
+import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 
 /**
@@ -37,10 +36,10 @@ import robocalc.robocert.model.robocert.util.MessageFactory;
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
-public class MessageSpecGeneratorTest {
-	@Inject private MessageSpecGenerator msg;
+public class MessageGeneratorTest {
+	@Inject private MessageGenerator msg;
 	@Inject private MessageFactory mf;
-	@Inject private MessageSpecFactory msf;
+	@Inject private robocalc.robocert.tests.util.MessageFactory msf;
 
 	/**
 	 * Tests prefix generation of an arrow message set concerning an integer event
@@ -87,15 +86,15 @@ public class MessageSpecGeneratorTest {
 		assertThat(intSpec(EdgeDirection.OUTBOUND, msf.intArg(56)), generatesCSPEventSet("{| test::event.out.56 |}"));
 	}
 	
-	private MessageSpec intSpec(EdgeDirection dir, Argument... args) {
+	private Message intSpec(EdgeDirection dir, Argument... args) {
 		return msf.arrowSpec(mf.eventTopic(msf.intEvent()), dir, args);
 	}
 
-	private Matcher<MessageSpec> generatesCSPEventSet(String expected) {
+	private Matcher<Message> generatesCSPEventSet(String expected) {
 		return generatesCSP(expected, msg::generateCSPEventSet);
 	}
 
-	private Matcher<MessageSpec> generatesPrefix(String expected) {
+	private Matcher<Message> generatesPrefix(String expected) {
 		return generatesCSP(expected, msg::generatePrefix);
 	}
 }

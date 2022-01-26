@@ -75,7 +75,7 @@ public class TopicScopeProvider {
 	}
 
 	private <T extends EObject> Set<T> scopeSet(MessageTopic t, Function<Context, List<T>> selector) {
-		var edge = t.getSpec().getEdge();
+		var edge = t.getMessage().getEdge();
 		var fromCandidates = actorCandidates(edge.getResolvedFrom(), selector);
 		var toCandidates = actorCandidates(edge.getResolvedTo(), selector);
 

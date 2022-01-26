@@ -4,7 +4,7 @@ import robocalc.robocert.model.robocert.RoboCertFactory
 import com.google.inject.Inject
 import robocalc.robocert.model.robocert.MessageSet
 import robocalc.robocert.model.robocert.BinarySetOperator
-import robocalc.robocert.model.robocert.MessageSpec
+import robocalc.robocert.model.robocert.Message
 
 /**
  * Contains utility methods for constructing sets.
@@ -16,7 +16,7 @@ class SetFactory {
 	 * @param elements  the contents to put into the set.
 	 * @return an extensional set with the given contents.
 	 */
-	def extensional(Iterable<MessageSpec> elements) {
+	def extensional(Iterable<Message> elements) {
 		rf.createExtensionalMessageSet=>[messages.addAll(elements)]
 	}
 	
@@ -24,7 +24,7 @@ class SetFactory {
 	 * @param element  the content to put into the set.
 	 * @return a singleton extensional set with the given element.
 	 */
-	def singleton(MessageSpec element) {
+	def singleton(Message element) {
 		rf.createExtensionalMessageSet=>[messages.add(element)]
 	}
 	

@@ -41,7 +41,7 @@ import robocalc.robocert.model.robocert.UniverseMessageSet;
 public record MessageSetGenerator(CSPStructureGenerator csp,
 																	TargetGroupGenerator tgg,
 																	MessageSetOptimiser mso,
-																	MessageSpecGenerator msg) {
+																	MessageGenerator msg) {
 	// TODO(@MattWindsor91): split named set functionality out of this.
 
 	/**

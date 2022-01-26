@@ -18,7 +18,7 @@ import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
-import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.generator.utils.InitialSetBuilder;
 import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.model.robocert.UntilFragment;
@@ -30,7 +30,7 @@ public record UntilFragmentGenerator(
     CSPStructureGenerator csp,
     InitialSetBuilder initialSetBuilder,
     MessageSetGenerator messageSetGen,
-    MessageSpecGenerator messageSpecGen,
+    MessageGenerator MessageGen,
     SubsequenceGenerator subsequenceGen)
  {
 
@@ -83,7 +83,7 @@ public record UntilFragmentGenerator(
    * @return the generated CSP sequence.
    */
   private CharSequence initialSet(Subsequence sseq) {
-    return messageSpecGen.generateBulkCSPEventSet(initialSetBuilder.initialSet(sseq).toList());
+    return MessageGen.generateBulkCSPEventSet(initialSetBuilder.initialSet(sseq).toList());
   }
 
   /**

@@ -494,7 +494,7 @@ Guard:
  * An action in a sequence diagram.
  */
 Occurrence:
-	{MessageOccurrence} body=MessageSpec |
+	{MessageOccurrence} message=Message |
 	'after' {WaitAction} units=TimeUnits |
 	'end' {FinalAction};
 
@@ -504,7 +504,7 @@ Occurrence:
 /**
  * A message specification.
  */
-MessageSpec:
+Message:
 	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? edge=Edge;
 
 /**
@@ -598,8 +598,8 @@ PrimitiveSet returns MessageSet:
  * An extensional message set (including singleton message sets).
  */
 ExtensionalMessageSet:
-	'{' {ExtensionalMessageSet} messages+=MessageSpec (',' messages+=MessageSpec)* '}' |
-	messages+=MessageSpec;
+	'{' {ExtensionalMessageSet} messages+=Message (',' messages+=Message)* '}' |
+	messages+=Message;
 
 //
 // Arguments
