@@ -157,8 +157,8 @@
     <genClasses image="false" ecoreClass="RoboCert.ecore#//SequenceAction">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceAction/step"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//ArrowAction">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ArrowAction/body"/>
+    <genClasses ecoreClass="RoboCert.ecore#//MessageOccurrence">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//MessageOccurrence/body"/>
     </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//FinalAction"/>
     <genClasses ecoreClass="RoboCert.ecore#//WaitAction">

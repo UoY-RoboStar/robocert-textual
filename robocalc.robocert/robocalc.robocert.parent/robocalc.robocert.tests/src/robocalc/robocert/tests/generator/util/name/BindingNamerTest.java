@@ -65,7 +65,7 @@ class BindingNamerTest {
 	public void testGetUnambiguousName_RootSubsequence() {
 		final var w = msf.boundArg("test");
 		final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), EdgeDirection.INBOUND, w);
-		final var aact = rcf.createArrowAction();
+		final var aact = rcf.createMessageOccurrence();
 		aact.setBody(aspec);
 		final var fragment = rcf.createOccurrenceFragment();
 		fragment.setOccurrence(aact);

@@ -12,7 +12,7 @@ package robocalc.robocert.tests
 import robocalc.robocert.model.robocert.CertPackage
 import robocalc.robocert.model.robocert.Subsequence
 import robocalc.robocert.model.robocert.SequenceGroup
-import robocalc.robocert.model.robocert.ArrowAction
+import robocalc.robocert.model.robocert.MessageOccurrence
 import robocalc.robocert.model.robocert.ExpressionArgument
 import robocalc.robocert.model.robocert.CertExpr
 import static org.junit.jupiter.api.Assertions.*
@@ -100,7 +100,7 @@ class ParseTestHelper {
 	 */
 	def CertExpr unliftExpr(CertPackage it) {
 		var action = unliftSubsequence.fragments.filter(OccurrenceFragment).get(0).occurrence;
-		if (action instanceof ArrowAction) {
+		if (action instanceof MessageOccurrence) {
 			var arg = action.body.arguments.get(0)
 			if (arg instanceof ExpressionArgument) {
 				arg.expr

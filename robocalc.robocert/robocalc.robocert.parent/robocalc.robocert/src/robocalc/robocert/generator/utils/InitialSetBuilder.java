@@ -14,7 +14,7 @@
 package robocalc.robocert.generator.utils;
 
 import java.util.stream.Stream;
-import robocalc.robocert.model.robocert.ArrowAction;
+import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.MessageSpec;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
@@ -48,7 +48,7 @@ public class InitialSetBuilder {
   }
 
   private Stream<MessageSpec> occurrenceInitialSet(Occurrence occ) {
-    if (occ instanceof ArrowAction a)
+    if (occ instanceof MessageOccurrence a)
       return Stream.of(a.getBody());
 
     return Stream.empty();

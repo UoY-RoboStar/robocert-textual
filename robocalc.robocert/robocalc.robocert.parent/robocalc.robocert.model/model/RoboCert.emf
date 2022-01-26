@@ -588,9 +588,11 @@ abstract class Occurrence {
 	ref OccurrenceFragment[1]#occurrence fragment;
 }
 
-@genmodel(documentation="A communicating action in a sequence.")
-class ArrowAction extends Occurrence {
-	@genmodel(documentation="The body of the arrow.")
+@genmodel(documentation="An occurrence that represents a message communication.
+
+Unlike UML, there is only one occurrence for both ends of the message.")
+class MessageOccurrence extends Occurrence {
+	@genmodel(documentation="The message itself.")
 	val MessageSpec[1] body;
 }
 

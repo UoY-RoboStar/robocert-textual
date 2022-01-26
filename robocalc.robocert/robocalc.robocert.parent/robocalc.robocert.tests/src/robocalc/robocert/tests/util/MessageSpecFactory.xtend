@@ -59,7 +59,7 @@ class MessageSpecFactory {
 	}
 
 	def private arrowParent() {
-		rcert.createArrowAction => [
+		rcert.createMessageOccurrence => [
 			fragment = rcert.createOccurrenceFragment => [
 				parent = sseq
 			]

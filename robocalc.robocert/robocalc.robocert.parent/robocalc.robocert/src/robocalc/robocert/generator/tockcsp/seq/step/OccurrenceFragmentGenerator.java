@@ -35,7 +35,7 @@ public record OccurrenceFragmentGenerator(CSPStructureGenerator csp,
 	// Action recursively includes any more Steps or Actions).
 	//
 	// It does *not* handle the injection of stores; we do that in the
-	// generator for ArrowActions.
+	// generator for MessageOccurrences.
 
 	/**
 	 * Constructs an action step generator.

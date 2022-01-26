@@ -494,7 +494,7 @@ Guard:
  * An action in a sequence diagram.
  */
 Occurrence:
-	{ArrowAction} body=MessageSpec |
+	{MessageOccurrence} body=MessageSpec |
 	'after' {WaitAction} units=TimeUnits |
 	'end' {FinalAction};
 

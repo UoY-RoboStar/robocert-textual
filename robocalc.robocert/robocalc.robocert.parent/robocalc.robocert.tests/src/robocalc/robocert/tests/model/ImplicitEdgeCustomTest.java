@@ -74,7 +74,7 @@ public class ImplicitEdgeCustomTest {
 		it = rf.createImplicitEdge();
 		final var spec = mf.spec(mf.eventTopic(msf.intEvent()), it);
 
-		final var occ = rf.createArrowAction();
+		final var occ = rf.createMessageOccurrence();
 		occ.setBody(spec);
 
 		final var fragment = rf.createOccurrenceFragment();

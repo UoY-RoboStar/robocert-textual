@@ -19,7 +19,7 @@ import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSpecGenerator;
-import robocalc.robocert.model.robocert.ArrowAction;
+import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.FinalAction;
 import robocalc.robocert.model.robocert.Occurrence;
 import robocalc.robocert.model.robocert.WaitAction;
@@ -57,7 +57,7 @@ public record OccurrenceGeneratorImpl(CSPStructureGenerator csp,
   public CharSequence generate(Occurrence a, LifelineContext ctx) {
     // TODO(@MattWindsor91): use lifeline context.
 
-    if (a instanceof ArrowAction r) {
+    if (a instanceof MessageOccurrence r) {
       return generateArrow(r);
     }
     // TODO(@MattWindsor91): one day, possibly more than one type of final action.
@@ -70,7 +70,7 @@ public record OccurrenceGeneratorImpl(CSPStructureGenerator csp,
     throw new IllegalArgumentException("unsupported sequence action: %s".formatted(a));
   }
 
-  private CharSequence generateArrow(ArrowAction r) {
+  private CharSequence generateArrow(MessageOccurrence r) {
     // TODO(@MattWindsor91): This should really be in the CSPStructureGenerator... somehow.
     return "%s -> %sSKIP".formatted(msg.generatePrefix(r.getBody()), lsg.generateBindingStores(r));
   }

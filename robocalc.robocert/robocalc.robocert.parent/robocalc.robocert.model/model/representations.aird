@@ -2635,9 +2635,9 @@
         </computedStyleDescriptions>
       </data>
     </ownedAnnotationEntries>
-    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_2U4eoNsPEeuTO4js3GS2GQ" name="ArrowAction" tooltipText="" outgoingEdges="_2VBBgNsPEeuTO4js3GS2GQ" width="12" height="10">
-      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//ArrowAction"/>
-      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//ArrowAction"/>
+    <ownedDiagramElements xmi:type="diagram:DNodeList" uid="_2U4eoNsPEeuTO4js3GS2GQ" name="MessageOccurrence" tooltipText="" outgoingEdges="_2VBBgNsPEeuTO4js3GS2GQ" width="12" height="10">
+      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//MessageOccurrence"/>
+      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//MessageOccurrence"/>
       <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
       <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
       <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
@@ -2646,8 +2646,8 @@
       </ownedStyle>
       <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
       <ownedElements xmi:type="diagram:DNodeListElement" uid="_2U-lQtsPEeuTO4js3GS2GQ" name=" body : MessageSpec" tooltipText="">
-        <target xmi:type="ecore:EReference" href="RoboCert.ecore#//ArrowAction/body"/>
-        <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//ArrowAction/body"/>
+        <target xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageOccurrence/body"/>
+        <semanticElements xmi:type="ecore:EReference" href="RoboCert.ecore#//MessageOccurrence/body"/>
         <ownedStyle xmi:type="diagram:BundledImage" uid="_2U-lRNsPEeuTO4js3GS2GQ" labelAlignment="LEFT" description="_2U-lQ9sPEeuTO4js3GS2GQ" color="114,159,207">
           <labelFormat>bold</labelFormat>
         </ownedStyle>
@@ -2686,8 +2686,8 @@
       </ownedElements>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_2VBBgNsPEeuTO4js3GS2GQ" sourceNode="_2U4eoNsPEeuTO4js3GS2GQ" targetNode="_2U664NsPEeuTO4js3GS2GQ">
-      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//ArrowAction"/>
-      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//ArrowAction"/>
+      <target xmi:type="ecore:EClass" href="RoboCert.ecore#//MessageOccurrence"/>
+      <semanticElements xmi:type="ecore:EClass" href="RoboCert.ecore#//MessageOccurrence"/>
       <ownedStyle xmi:type="diagram:EdgeStyle" uid="_2VBBgdsPEeuTO4js3GS2GQ" targetArrow="InputClosedArrow" routingStyle="tree">
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC%20ESupertypes']/@style"/>
         <beginLabelStyle xmi:type="diagram:BeginLabelStyle" uid="_2VBBgtsPEeuTO4js3GS2GQ" showIcon="false">
