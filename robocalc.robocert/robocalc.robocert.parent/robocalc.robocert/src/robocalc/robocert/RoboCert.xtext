@@ -389,8 +389,14 @@ SequenceGroup:
 	'for' target=[Target|QualifiedName] instantiation=Instantiation
 	':'
 	BEGIN
-	(actors+=Actor | sequences+=Sequence | messageSets+=NamedMessageSet)*
+	(ActorList | sequences+=Sequence | messageSets+=NamedMessageSet)*
 	END;
+
+fragment ActorList *:
+	// should match 'use X', 'use X, Y', 'use X and Y', 'use X, Y and Z',
+	// 'use X, Y, and Z', and so on.
+	'use' actors+=Actor (',' actors+=Actor)* (','? 'and' actors+=Actor)?
+;
 
 /**
  * A sequence diagram.
@@ -609,7 +615,7 @@ Argument:
 // ACTORS
 //
 Actor:
-	'use' ('target' {TargetActor} | 'world' {World} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
+	('target' {TargetActor} | 'world' {World} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
 
 //
 // SEQUENCE PROPERTIES
