@@ -12,6 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.util;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -30,5 +31,17 @@ public class StreamHelpers {
 	 */
 	public static <T, U extends T> Stream<U> filter(Stream<T> in, Class<U> clazz) {
 		return in.filter(clazz::isInstance).map(clazz::cast);
+	}
+
+	/**
+	 * Gets the first item, if any, of a stream that has the given type.
+	 * @param <T> the input type.
+	 * @param <U> the output type.
+	 * @param in the input stream.
+	 * @param clazz class of the output type.
+	 * @return the first item, if any, of the input stream that is an instance of type U.
+	 */
+	public static <T, U extends T> Optional<U> firstOfClass(Stream<T> in, Class<U> clazz) {
+		return filter(in, clazz).findFirst();
 	}
 }
