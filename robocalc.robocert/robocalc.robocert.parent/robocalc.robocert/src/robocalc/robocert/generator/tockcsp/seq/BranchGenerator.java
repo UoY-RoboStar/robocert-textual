@@ -32,9 +32,8 @@ import robocalc.robocert.model.robocert.util.StreamHelpers;
  *
  * @author Matt Windsor
  */
-public class BranchGenerator {
-	private ExpressionGenerator eg;
-	private SubsequenceGenerator sg;
+public record BranchGenerator(ExpressionGenerator eg,
+															SubsequenceGenerator sg) {
 
 	/**
 	 * Constructs a branch generator.
@@ -43,9 +42,7 @@ public class BranchGenerator {
 	 * @param sg a subsequence generator.
 	 */
 	@Inject
-	public BranchGenerator(ExpressionGenerator eg, SubsequenceGenerator sg) {
-		this.eg = eg;
-		this.sg = sg;
+	public BranchGenerator {
 	}
 
 	/**
@@ -53,7 +50,6 @@ public class BranchGenerator {
 	 *
 	 * @param b   branch for which we are generating CSP-M.
 	 * @param ctx context of the lifeline for which we are generating CSP-M.
-	 *
 	 * @return the generated CSP-M.
 	 */
 	public CharSequence generate(Branch b, LifelineContext ctx) {
@@ -62,12 +58,15 @@ public class BranchGenerator {
 	}
 
 	private CharSequence guard(Guard g) {
-		if (g instanceof EmptyGuard)
+		if (g instanceof EmptyGuard) {
 			return "";
-		if (g instanceof ExprGuard e)
+		}
+		if (g instanceof ExprGuard e) {
 			return "%s & ".formatted(eg.generate(e.getExpr()));
-		if (g instanceof ElseGuard l)
+		}
+		if (g instanceof ElseGuard l) {
 			return "{- else -} not %s & ".formatted(elseGuard(l));
+		}
 		throw new IllegalArgumentException("unsupported guard type: %s".formatted(g));
 	}
 
