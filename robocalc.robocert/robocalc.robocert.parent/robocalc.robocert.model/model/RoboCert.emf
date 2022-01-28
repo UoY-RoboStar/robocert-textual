@@ -426,7 +426,7 @@ abstract class InteractionFragment {
 }
 
 //
-// Non-block steps
+// Non-combined fragments
 //
 
 @genmodel(documentation="An interaction fragment referring to a particular occurrence in time.")
@@ -439,22 +439,26 @@ class OccurrenceFragment extends InteractionFragment {
 }
 
 //
+// Combined fragments
+//
+
+@genmodel(documentation="Abstract class for combined fragments.")
+abstract class CombinedFragment extends InteractionFragment, OptionallyNamedElement {
+	// TODO(@MattWindsor91): derived property for all subsequences?
+}
+
+//
 // Block steps
 //
 
-@genmodel(documentation="Step that contains exactly one body.
-
-Often, but not always, these will be (what UML would call) combined
-fragments.
-
-Block steps can optionally have a name, which allows breaking.")
-abstract class BlockStep extends InteractionFragment, OptionallyNamedElement {
+@genmodel(documentation="Combined fragment that contains exactly one body.")
+abstract class BlockFragment extends CombinedFragment {
 	@genmodel(documentation="The body of the block.")
 	val Subsequence[1] body;
 }
 
 @genmodel(documentation="Step imposing a termination deadline on a block.")
-class DeadlineStep extends BlockStep {
+class DeadlineStep extends BlockFragment {
 	@genmodel(documentation="Deadline, in time units after the start of the block.")
 	val CertExpr[1] units;
 }
@@ -462,13 +466,13 @@ class DeadlineStep extends BlockStep {
 @genmodel(documentation="An interaction fragment blocking the diagram until any occurrence happens on the block.
 
 This is an extension to UML.")
-class UntilFragment extends BlockStep {
+class UntilFragment extends BlockFragment {
 	@genmodel(documentation="The messages that may occur while waiting for 'body'.")
 	val MessageSet[1] intraMessages;
 }
 
-@genmodel(documentation="A step containing one or more sequence elements in loop.")
-class LoopStep extends BlockStep {
+@genmodel(documentation="A fragment containing one or more sequence elements in loop.")
+class LoopFragment extends BlockFragment {
 	@genmodel(documentation="The loop bound.")
 	val LoopBound[1] bound;
 
@@ -525,23 +529,23 @@ Evaluated once only.")
 // Branch fragments
 //
 
-@genmodel(documentation="Abstract step containing two or more branches.")
-abstract class BranchStep extends InteractionFragment {
-	@genmodel(documentation="The branches available in this step.")
-	val Branch[2..*]#parent branches;
+@genmodel(documentation="Abstract fragment containing two or more branches.")
+abstract class BranchFragment extends CombinedFragment {
+	@genmodel(documentation="The branches available in this fragment.")
+	val Branch[2..*]#fragment branches;
 }
 
-@genmodel(documentation="An alternative choice step.")
-class AlternativeStep extends BranchStep {
+@genmodel(documentation="An alternative choice fragment.")
+class AltFragment extends BranchFragment {
 	@genmodel(documentation="The temperature of this alternative.")
 	attr Temperature[1] temperature;
 }
 
-@genmodel(documentation="An interleaving composition step.")
-class InterleaveStep extends BranchStep {
+@genmodel(documentation="An interleaving composition fragment.")
+class ParFragment extends BranchFragment {
 }
 
-@genmodel(documentation="A potentially-guarded subsequence used in a BranchStep.")
+@genmodel(documentation="A potentially-guarded subsequence used in a BranchFragment.")
 class Branch {
 	@genmodel(documentation="The guard for this branch.")
 	val Guard[1]#parent guard;
@@ -552,8 +556,8 @@ class Branch {
 	// This mainly exists to allow us to (eventually) set up ElseGuards,
 	// which require us to traverse up to the Branch, enumerate all the
 	// expressions, and negate them.
-	@genmodel(documentation="The parent step containing this branch (along with others).")
-	ref BranchStep[1]#branches parent;
+	@genmodel(documentation="The fragment containing this branch (along with others).")
+	ref BranchFragment[1]#branches fragment;
 }
 
 @genmodel(documentation="A condition placed on a Branch.")
@@ -571,7 +575,7 @@ class ExprGuard extends Guard {
 	val CertExpr[1] expr;
 }
 
-@genmodel(documentation="A guard that is true if all other guards in the BranchStep are false.
+@genmodel(documentation="A guard that is true if all other guards in the BranchFragment are false.
 
 It is ill-formed to have multiple ElseGuards in a step, or to have both an
 ElseGuard and an EmptyGuard in a step.")

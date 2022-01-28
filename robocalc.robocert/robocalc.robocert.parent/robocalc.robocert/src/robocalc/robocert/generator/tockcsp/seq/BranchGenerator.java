@@ -81,6 +81,6 @@ public class BranchGenerator {
 	}
 
 	private Stream<Guard> neighbourGuards(ElseGuard l) {
-		return l.getParent().getParent().getBranches().stream().map(Branch::getGuard);
+		return l.getParent().getFragment().getBranches().stream().map(Branch::getGuard);
 	}
 }

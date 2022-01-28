@@ -21,7 +21,7 @@ import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.DefiniteLoopBound;
 import robocalc.robocert.model.robocert.InfiniteLoopBound;
 import robocalc.robocert.model.robocert.LoopBound;
-import robocalc.robocert.model.robocert.LoopStep;
+import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.LowerLoopBound;
 import robocalc.robocert.model.robocert.RangeLoopBound;
 
@@ -55,7 +55,7 @@ public record LoopFragmentGenerator(
 	 * @param ctx the context for the lifeline on which the step sits.
 	 * @return the generated CSP.
 	 */
-	public CharSequence generate(LoopStep l, LifelineContext ctx) {
+	public CharSequence generate(LoopFragment l, LifelineContext ctx) {
 		return csp.function(bound(l.getBound()), sg.generate(l.getBody(), ctx));
 	}
 

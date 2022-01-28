@@ -437,8 +437,8 @@ EndSubsequence returns Subsequence:
  * A step in a sequence diagram.
  */
 InteractionFragment:
-	BlockStep |
-	BranchStep |
+	BlockFragment |
+	BranchFragment |
 	{OccurrenceFragment} occurrence=Occurrence OptTemperature |
 	UntilFragment;
 
@@ -456,9 +456,9 @@ UntilFragment:
 /**
  * A block step.
  */
-BlockStep:
+BlockFragment:
 	('taking' {DeadlineStep} 'at' 'most' units=TimeUnits |
-	'loop' {LoopStep} bound=MaybeLoopBound) ('as' name=ID)? ':' body=Subsequence;
+	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? ':' body=Subsequence;
 
 //
 // Loop bounds
@@ -484,9 +484,9 @@ LoopBound:
 /**
  * A branching construct.
  */
-BranchStep:
-	('parallel' {InterleaveStep} |
-	('alt' | 'alternative') {AlternativeStep} OptTemperature) ':' BEGIN branches+=Branch (branches+=Branch)+ END;
+BranchFragment:
+	('parallel' {ParFragment} |
+	('alt' | 'alternative') {AltFragment} OptTemperature) ':' BEGIN branches+=Branch (branches+=Branch)+ END;
 
 Branch:
 	guard=Guard ':' body=Subsequence;

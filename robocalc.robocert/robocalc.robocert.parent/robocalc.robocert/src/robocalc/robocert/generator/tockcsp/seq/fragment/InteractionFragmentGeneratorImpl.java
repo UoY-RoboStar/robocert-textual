@@ -21,9 +21,9 @@ import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.Branch;
-import robocalc.robocert.model.robocert.BranchStep;
+import robocalc.robocert.model.robocert.BranchFragment;
 import robocalc.robocert.model.robocert.DeadlineStep;
-import robocalc.robocert.model.robocert.LoopStep;
+import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.UntilFragment;
@@ -62,16 +62,16 @@ public record InteractionFragmentGeneratorImpl(
 		if (f instanceof OccurrenceFragment a) {
 			return ls.getExprBindings(a);
 		}
-		if (f instanceof BranchStep b) {
+		if (f instanceof BranchFragment b) {
 			return branchBindings(b);
 		}
-		if (f instanceof LoopStep l) {
+		if (f instanceof LoopFragment l) {
 			return ls.getExprBindings(l.getBound());
 		}
 		return Stream.empty();
 	}
 
-	private Stream<Binding> branchBindings(BranchStep it) {
+	private Stream<Binding> branchBindings(BranchFragment it) {
 		return it.getBranches().stream().flatMap(this::branchBindings);
 	}
 
@@ -85,13 +85,13 @@ public record InteractionFragmentGeneratorImpl(
 		if (f instanceof OccurrenceFragment a) {
 			return ag.generate(a, ctx);
 		}
-		if (f instanceof BranchStep b) {
+		if (f instanceof BranchFragment b) {
 			return bg.generate(b, ctx);
 		}
 		if (f instanceof DeadlineStep d) {
 			return dg.generate(d, ctx);
 		}
-		if (f instanceof LoopStep l) {
+		if (f instanceof LoopFragment l) {
 			return lg.generate(l, ctx);
 		}
 		if (f instanceof UntilFragment u) {

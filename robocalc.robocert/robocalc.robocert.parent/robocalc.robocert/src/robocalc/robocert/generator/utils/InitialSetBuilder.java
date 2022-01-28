@@ -14,8 +14,8 @@
 package robocalc.robocert.generator.utils;
 
 import java.util.stream.Stream;
-import robocalc.robocert.model.robocert.BlockStep;
-import robocalc.robocert.model.robocert.BranchStep;
+import robocalc.robocert.model.robocert.BlockFragment;
+import robocalc.robocert.model.robocert.BranchFragment;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.Message;
@@ -57,15 +57,15 @@ public class InitialSetBuilder {
 
     // Recurse down the subsequences of combined fragments, assuming any well-formedness issues
     // have already been dealt with.
-    if (fragment instanceof BlockStep b)
+    if (fragment instanceof BlockFragment b)
       return initialSet(b.getBody());
-    if (fragment instanceof BranchStep b)
+    if (fragment instanceof BranchFragment b)
       return branchInitialSet(b);
 
     throw new IllegalArgumentException("can't get initial set for fragment %s".formatted(fragment));
   }
 
-  private Stream<Message> branchInitialSet(BranchStep b) {
+  private Stream<Message> branchInitialSet(BranchFragment b) {
     return b.getBranches().parallelStream().flatMap((x) -> initialSet(x.getBody()));
   }
 

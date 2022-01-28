@@ -526,9 +526,14 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BlockStep" abstract="true" eSuperTypes="#//InteractionFragment #//OptionallyNamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="CombinedFragment" abstract="true" eSuperTypes="#//InteractionFragment #//OptionallyNamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Step that contains exactly one body.&#xD;&#xA;&#xD;&#xA;Often, but not always, these will be (what UML would call) combined&#xD;&#xA;fragments.&#xD;&#xA;&#xD;&#xA;Block steps can optionally have a name, which allows breaking."/>
+      <details key="documentation" value="Abstract class for combined fragments."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BlockFragment" abstract="true" eSuperTypes="#//CombinedFragment">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Combined fragment that contains exactly one body."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
         containment="true">
@@ -537,7 +542,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="#//BlockStep">
+  <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="#//BlockFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Step imposing a termination deadline on a block."/>
     </eAnnotations>
@@ -548,7 +553,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UntilFragment" eSuperTypes="#//BlockStep">
+  <eClassifiers xsi:type="ecore:EClass" name="UntilFragment" eSuperTypes="#//BlockFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An interaction fragment blocking the diagram until any occurrence happens on the block.&#xD;&#xA;&#xD;&#xA;This is an extension to UML."/>
     </eAnnotations>
@@ -559,9 +564,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopStep" eSuperTypes="#//BlockStep">
+  <eClassifiers xsi:type="ecore:EClass" name="LoopFragment" eSuperTypes="#//BlockFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A step containing one or more sequence elements in loop."/>
+      <details key="documentation" value="A fragment containing one or more sequence elements in loop."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
         containment="true">
@@ -619,20 +624,20 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BranchStep" abstract="true" eSuperTypes="#//InteractionFragment">
+  <eClassifiers xsi:type="ecore:EClass" name="BranchFragment" abstract="true" eSuperTypes="#//CombinedFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Abstract step containing two or more branches."/>
+      <details key="documentation" value="Abstract fragment containing two or more branches."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="branches" lowerBound="2"
-        upperBound="-1" eType="#//Branch" containment="true" eOpposite="#//Branch/parent">
+        upperBound="-1" eType="#//Branch" containment="true" eOpposite="#//Branch/fragment">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The branches available in this step."/>
+        <details key="documentation" value="The branches available in this fragment."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AlternativeStep" eSuperTypes="#//BranchStep">
+  <eClassifiers xsi:type="ecore:EClass" name="AltFragment" eSuperTypes="#//BranchFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An alternative choice step."/>
+      <details key="documentation" value="An alternative choice fragment."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
         eType="#//Temperature">
@@ -641,14 +646,14 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InterleaveStep" eSuperTypes="#//BranchStep">
+  <eClassifiers xsi:type="ecore:EClass" name="ParFragment" eSuperTypes="#//BranchFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An interleaving composition step."/>
+      <details key="documentation" value="An interleaving composition fragment."/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Branch">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A potentially-guarded subsequence used in a BranchStep."/>
+      <details key="documentation" value="A potentially-guarded subsequence used in a BranchFragment."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="1" eType="#//Guard"
         containment="true" eOpposite="#//Guard/parent">
@@ -662,10 +667,10 @@
         <details key="documentation" value="The body of this branch."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//BranchStep" eOpposite="#//BranchStep/branches">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fragment" lowerBound="1"
+        eType="#//BranchFragment" eOpposite="#//BranchFragment/branches">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The parent step containing this branch (along with others)."/>
+        <details key="documentation" value="The fragment containing this branch (along with others)."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -694,7 +699,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ElseGuard" eSuperTypes="#//Guard">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A guard that is true if all other guards in the BranchStep are false.&#xD;&#xA;&#xD;&#xA;It is ill-formed to have multiple ElseGuards in a step, or to have both an&#xD;&#xA;ElseGuard and an EmptyGuard in a step."/>
+      <details key="documentation" value="A guard that is true if all other guards in the BranchFragment are false.&#xD;&#xA;&#xD;&#xA;It is ill-formed to have multiple ElseGuards in a step, or to have both an&#xD;&#xA;ElseGuard and an EmptyGuard in a step."/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Occurrence" abstract="true">

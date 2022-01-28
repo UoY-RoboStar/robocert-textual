@@ -66,7 +66,7 @@ public class SubsequenceImplCustomTest {
 		final var seq = rf.createSequence();
 		final var top = rf.createSubsequence();
 		seq.setBody(top);
-		final var loop = rf.createLoopStep();
+		final var loop = rf.createLoopFragment();
 		loop.setBody(body);
 		top.getFragments().add(loop);
 

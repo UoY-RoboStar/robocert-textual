@@ -126,14 +126,14 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//ActionStep/action"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//ActionStep/temperature"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="RoboCert.ecore#//BlockStep">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//BlockStep/body"/>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//BlockFragment">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//BlockFragment/body"/>
     </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//DeadlineStep">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//DeadlineStep/units"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//LoopStep">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//LoopStep/bound"/>
+    <genClasses ecoreClass="RoboCert.ecore#//LoopFragment">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//LoopFragment/bound"/>
     </genClasses>
     <genClasses image="false" ecoreClass="RoboCert.ecore#//LoopBound"/>
     <genClasses ecoreClass="RoboCert.ecore#//InfiniteLoopBound"/>
@@ -147,13 +147,13 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//RangeLoopBound/lowerTimes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//RangeLoopBound/upperTimes"/>
     </genClasses>
-    <genClasses image="false" ecoreClass="RoboCert.ecore#//BranchStep">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//BranchStep/branches"/>
+    <genClasses image="false" ecoreClass="RoboCert.ecore#//BranchFragment">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//BranchFragment/branches"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//AlternativeStep">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//AlternativeStep/temperature"/>
+    <genClasses ecoreClass="RoboCert.ecore#//AltFragment">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//AltFragment/temperature"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//InterleaveStep"/>
+    <genClasses ecoreClass="RoboCert.ecore#//ParFragment"/>
     <genClasses image="false" ecoreClass="RoboCert.ecore#//SequenceAction">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceAction/step"/>
     </genClasses>

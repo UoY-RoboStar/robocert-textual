@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.BranchGenerator;
-import robocalc.robocert.model.robocert.AlternativeStep;
-import robocalc.robocert.model.robocert.BranchStep;
-import robocalc.robocert.model.robocert.InterleaveStep;
+import robocalc.robocert.model.robocert.AltFragment;
+import robocalc.robocert.model.robocert.BranchFragment;
+import robocalc.robocert.model.robocert.ParFragment;
 import robocalc.robocert.model.robocert.Temperature;
 
 /**
@@ -54,11 +54,11 @@ public record BranchFragmentGenerator(CSPStructureGenerator csp,
    * @param ctx context of the lifeline for which we are generating CSP-M.
    * @return the generated CSP-M process.
    */
-  public CharSequence generate(BranchStep b, LifelineContext ctx) {
+  public CharSequence generate(BranchFragment b, LifelineContext ctx) {
     return csp.commented(comment(b), csp.tuple(body(b, ctx)));
   }
 
-  private CharSequence body(BranchStep b, LifelineContext ctx) {
+  private CharSequence body(BranchFragment b, LifelineContext ctx) {
     return b.getBranches().parallelStream().map(x -> csp.tuple(bg.generate(x, ctx)))
         .collect(Collectors.joining(operator(b)));
   }
@@ -69,11 +69,11 @@ public record BranchFragmentGenerator(CSPStructureGenerator csp,
    * @param b the step to generate.
    * @return the comment.
    */
-  private CharSequence comment(BranchStep b) {
-    if (b instanceof InterleaveStep) {
+  private CharSequence comment(BranchFragment b) {
+    if (b instanceof ParFragment) {
       return "interleave";
     }
-    if (b instanceof AlternativeStep a) {
+    if (b instanceof AltFragment a) {
       return "alternative (%s)".formatted(a.getTemperature());
     }
     // This will result in an exception later anyway.
@@ -86,11 +86,11 @@ public record BranchFragmentGenerator(CSPStructureGenerator csp,
    * @param b the step to generate.
    * @return the corresponding CSP-M.
    */
-  private CharSequence operator(BranchStep b) {
-    if (b instanceof InterleaveStep) {
+  private CharSequence operator(BranchFragment b) {
+    if (b instanceof ParFragment) {
       return INTERLEAVE;
     }
-    if (b instanceof AlternativeStep a) {
+    if (b instanceof AltFragment a) {
       return altOperator(a.getTemperature());
     }
     throw new IllegalArgumentException("unsupported branch operator: %s".formatted(b));
