@@ -596,12 +596,18 @@ class MessageOccurrence extends Occurrence {
 	val Message[1] message;
 }
 
+@genmodel(documentation="Base class of occurrences on exactly one lifeline.")
+abstract class LifelineOccurrence extends Occurrence {
+	@genmodel(documentation="The actor on which this occurrence is occurring.")
+	ref Actor[1] actor;	
+}
+
 @genmodel(documentation="Represents a deadlock event in a sequence.")
-class FinalAction extends Occurrence {
+class DeadlockOccurrence extends LifelineOccurrence {
 }
 
 @genmodel(documentation="Represents a wait for some amount of time units.")
-class WaitAction extends Occurrence {
+class WaitOccurrence extends LifelineOccurrence {
 	@genmodel(documentation="The number of units to wait.")
 	val CertExpr[1] units;
 	

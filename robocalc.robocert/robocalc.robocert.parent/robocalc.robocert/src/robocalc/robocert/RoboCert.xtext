@@ -415,10 +415,19 @@ Subsequence:
 	BEGIN ('nothing' {Subsequence} | (fragments+=InteractionFragment)+) END;
 
 /**
- * A subsequence with only one item in it, and no blocking.
+ * A subsequence with only one item in it, and no indentation.
  */
 SingletonSubsequence returns Subsequence:
 	fragments+=InteractionFragment
+;
+
+/**
+ * A subsequence with nothing in it, no indentation, and just the word 'end'.
+ * This is used only to construct 'anything until end' in an UntilAction,
+ * because 'anything until nothing' would look strange.
+ */
+EndSubsequence returns Subsequence:
+	'end' {Subsequence}
 ;
 
 //
@@ -438,7 +447,7 @@ InteractionFragment:
  */
 UntilFragment:
 	(('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet | 'block' {UntilFragment} intraMessages=EmptySet)
-	'until' (body=SingletonSubsequence | ':' body=Subsequence);
+	'until' (body=SingletonSubsequence | ':' body=Subsequence | body=EndSubsequence);
 
 
 //
@@ -491,12 +500,15 @@ Guard:
 // OCCURRENCES
 //
 /**
- * An action in a sequence diagram.
+ * An occurrence in a sequence diagram.
  */
 Occurrence:
 	{MessageOccurrence} message=Message |
-	'after' {WaitAction} units=TimeUnits |
-	'end' {FinalAction};
+	LifelineOccurrence;
+
+LifelineOccurrence:
+	('after' {WaitOccurrence} units=TimeUnits |
+	'deadlock' {DeadlockOccurrence}) 'on' actor=[Actor|QualifiedName];
 
 //
 // MESSAGES

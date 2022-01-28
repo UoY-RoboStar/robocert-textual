@@ -719,12 +719,23 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FinalAction" eSuperTypes="#//Occurrence">
+  <eClassifiers xsi:type="ecore:EClass" name="LifelineOccurrence" abstract="true"
+      eSuperTypes="#//Occurrence">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="Base class of occurrences on exactly one lifeline."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actor" lowerBound="1" eType="#//Actor">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The actor on which this occurrence is occurring."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DeadlockOccurrence" eSuperTypes="#//LifelineOccurrence">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Represents a deadlock event in a sequence."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WaitAction" eSuperTypes="#//Occurrence">
+  <eClassifiers xsi:type="ecore:EClass" name="WaitOccurrence" eSuperTypes="#//LifelineOccurrence">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Represents a wait for some amount of time units."/>
     </eAnnotations>
