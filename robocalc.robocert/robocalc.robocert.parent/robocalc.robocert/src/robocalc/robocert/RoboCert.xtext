@@ -477,7 +477,7 @@ LoopBound:
  */
 BranchStep:
 	('parallel' {InterleaveStep} |
-	'choice' {AlternativeStep} OptTemperature) ':' BEGIN branches+=Branch (branches+=Branch)+ END;
+	('alt' | 'alternative') {AlternativeStep} OptTemperature) ':' BEGIN branches+=Branch (branches+=Branch)+ END;
 
 Branch:
 	guard=Guard ':' body=Subsequence;
