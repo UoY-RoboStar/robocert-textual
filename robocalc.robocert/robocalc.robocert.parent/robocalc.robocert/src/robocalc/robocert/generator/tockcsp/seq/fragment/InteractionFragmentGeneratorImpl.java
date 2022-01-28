@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.seq.step;
+package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import java.util.stream.Stream;
 
@@ -37,9 +37,9 @@ import robocalc.robocert.model.robocert.UntilFragment;
  */
 public record InteractionFragmentGeneratorImpl(
 		OccurrenceFragmentGenerator ag,
-		BranchStepGenerator bg,
-		DeadlineStepGenerator dg,
-		LoopStepGenerator lg,
+		BranchFragmentGenerator bg,
+		DeadlineFragmentGenerator dg,
+		LoopFragmentGenerator lg,
 		UntilFragmentGenerator ug,
 		LoadStoreGenerator ls) implements
 		InteractionFragmentGenerator {

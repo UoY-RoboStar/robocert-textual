@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.seq.step;
+package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 import java.util.stream.Collectors;
@@ -23,12 +23,12 @@ import robocalc.robocert.model.robocert.InterleaveStep;
 import robocalc.robocert.model.robocert.Temperature;
 
 /**
- * Generator for branch steps.
+ * Generator for branch fragments.
  *
  * @author Matt Windsor
  */
-public record BranchStepGenerator(CSPStructureGenerator csp,
-                                  BranchGenerator bg) {
+public record BranchFragmentGenerator(CSPStructureGenerator csp,
+                                      BranchGenerator bg) {
 
   /**
    * The CSP-M external choice operator.
@@ -44,7 +44,7 @@ public record BranchStepGenerator(CSPStructureGenerator csp,
   private static final String INTERLEAVE = "|||";
 
   @Inject
-  public BranchStepGenerator {
+  public BranchFragmentGenerator {
   }
 
   /**

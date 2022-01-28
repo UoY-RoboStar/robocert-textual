@@ -11,13 +11,13 @@ import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom;
 import circus.robocalc.robochart.RoboChartFactory;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
-import robocalc.robocert.generator.tockcsp.seq.action.OccurrenceGeneratorImpl;
+import robocalc.robocert.generator.tockcsp.seq.occurrence.OccurrenceGeneratorImpl;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
 import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl;
-import robocalc.robocert.generator.tockcsp.seq.step.InteractionFragmentGeneratorImpl;
+import robocalc.robocert.generator.tockcsp.seq.fragment.InteractionFragmentGeneratorImpl;
 import robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom;
 
 /** 

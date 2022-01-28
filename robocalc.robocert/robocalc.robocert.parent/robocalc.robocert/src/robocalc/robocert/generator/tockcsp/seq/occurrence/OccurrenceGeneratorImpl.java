@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ******************************************************************************/
-package robocalc.robocert.generator.tockcsp.seq.action;
+package robocalc.robocert.generator.tockcsp.seq.occurrence;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;

@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.seq.step;
+package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 
@@ -27,16 +27,15 @@ import robocalc.robocert.model.robocert.RangeLoopBound;
 
 /**
  * Generates CSP-M for loops.
- *
- * Most of this CSP is calls into either the CSP-M or RoboCert standard
- * libraries.
+ * <p>
+ * Most of this CSP is calls into either the CSP-M or RoboCert standard libraries.
  *
  * @author Matt Windsor
  */
-public class LoopStepGenerator {
-	private CSPStructureGenerator csp;
-	private ExpressionGenerator eg;
-	private SubsequenceGenerator sg;
+public record LoopFragmentGenerator(
+		CSPStructureGenerator csp,
+		ExpressionGenerator eg,
+		SubsequenceGenerator sg) {
 
 	/**
 	 * Constructs a CSP-M loop generator.
@@ -46,10 +45,7 @@ public class LoopStepGenerator {
 	 * @param sg  a subsequence generator.
 	 */
 	@Inject
-	public LoopStepGenerator(CSPStructureGenerator csp, ExpressionGenerator eg, SubsequenceGenerator sg) {
-		this.csp = csp;
-		this.eg = eg;
-		this.sg = sg;
+	public LoopFragmentGenerator {
 	}
 
 	/**
@@ -57,7 +53,6 @@ public class LoopStepGenerator {
 	 *
 	 * @param l   the loop action to generate.
 	 * @param ctx the context for the lifeline on which the step sits.
-	 *
 	 * @return the generated CSP.
 	 */
 	public CharSequence generate(LoopStep l, LifelineContext ctx) {
@@ -68,19 +63,23 @@ public class LoopStepGenerator {
 	 * Expands to the appropriate stock process for a loop bound.
 	 *
 	 * @param b the loop bound.
-	 *
-	 * @return the parametric process to be instantiated with the process-to-loop to
-	 *         yield the appropriate loop.
+	 * @return the parametric process to be instantiated with the process-to-loop to yield the
+	 * appropriate loop.
 	 */
 	private CharSequence bound(LoopBound b) {
-		if (b instanceof InfiniteLoopBound)
+		if (b instanceof InfiniteLoopBound) {
 			return "loop";
-		if (b instanceof LowerLoopBound l)
+		}
+		if (b instanceof LowerLoopBound l) {
 			return csp.function("loop_at_least", eg.generate(l.getLowerTimes()));
-		if (b instanceof DefiniteLoopBound d)
+		}
+		if (b instanceof DefiniteLoopBound d) {
 			return csp.function("loop_exactly", eg.generate(d.getTimes()));
-		if (b instanceof RangeLoopBound r)
-			return csp.function("loop_between", eg.generate(r.getLowerTimes()), eg.generate(r.getUpperTimes()));
+		}
+		if (b instanceof RangeLoopBound r) {
+			return csp.function("loop_between", eg.generate(r.getLowerTimes()),
+					eg.generate(r.getUpperTimes()));
+		}
 		throw new IllegalArgumentException("unsupported loop bound: %s".formatted(b));
 	}
 }

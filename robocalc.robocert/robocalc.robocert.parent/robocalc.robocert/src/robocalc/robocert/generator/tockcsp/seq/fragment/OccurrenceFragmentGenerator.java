@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.seq.step;
+package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 

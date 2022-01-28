@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.seq.step;
+package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 
@@ -25,7 +25,7 @@ import robocalc.robocert.model.robocert.DeadlineStep;
  *
  * @author Matt Windsor
  */
-public class DeadlineStepGenerator {
+public class DeadlineFragmentGenerator {
 	private CSPStructureGenerator csp;
 	private ExpressionGenerator eg;
 	private SubsequenceGenerator sg;
@@ -38,7 +38,7 @@ public class DeadlineStepGenerator {
 	 * @param sg  a subsequence generator.
 	 */
 	@Inject
-	public DeadlineStepGenerator(CSPStructureGenerator csp, ExpressionGenerator eg, SubsequenceGenerator sg) {
+	public DeadlineFragmentGenerator(CSPStructureGenerator csp, ExpressionGenerator eg, SubsequenceGenerator sg) {
 		this.csp = csp;
 		this.eg = eg;
 		this.sg = sg;
