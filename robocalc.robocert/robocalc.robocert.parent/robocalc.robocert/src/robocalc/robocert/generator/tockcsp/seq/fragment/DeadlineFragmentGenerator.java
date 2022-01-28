@@ -25,10 +25,10 @@ import robocalc.robocert.model.robocert.DeadlineStep;
  *
  * @author Matt Windsor
  */
-public class DeadlineFragmentGenerator {
-	private CSPStructureGenerator csp;
-	private ExpressionGenerator eg;
-	private SubsequenceGenerator sg;
+public record DeadlineFragmentGenerator(
+		CSPStructureGenerator csp,
+		ExpressionGenerator eg,
+		SubsequenceGenerator sg) {
 
 	/**
 	 * Constructs a CSP-M deadline generator.
@@ -38,20 +38,16 @@ public class DeadlineFragmentGenerator {
 	 * @param sg  a subsequence generator.
 	 */
 	@Inject
-	public DeadlineFragmentGenerator(CSPStructureGenerator csp, ExpressionGenerator eg, SubsequenceGenerator sg) {
-		this.csp = csp;
-		this.eg = eg;
-		this.sg = sg;
+	public DeadlineFragmentGenerator {
 	}
 
 	/**
 	 * Generates CSP-M for a deadline step.
-	 *
+	 * <p>
 	 * At the mathematical level, this becomes the 'deadline' tock-CSP operator.
 	 *
 	 * @param d   deadline step to generate.
 	 * @param ctx context of the lifeline for which we are generating CSP-M.
-	 *
 	 * @return the generated CSP.
 	 */
 	public CharSequence generate(DeadlineStep d, LifelineContext ctx) {
