@@ -12,21 +12,18 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq.fragment;
 
-import java.util.stream.Stream;
-
 import com.google.inject.Inject;
-
-import robocalc.robocert.generator.intf.seq.LifelineContext;
+import java.util.stream.Stream;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
+import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.model.robocert.Binding;
+import robocalc.robocert.model.robocert.BlockFragment;
 import robocalc.robocert.model.robocert.Branch;
 import robocalc.robocert.model.robocert.BranchFragment;
-import robocalc.robocert.model.robocert.DeadlineStep;
+import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
-import robocalc.robocert.model.robocert.InteractionFragment;
-import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
  * Generator for sequence steps.
@@ -37,10 +34,8 @@ import robocalc.robocert.model.robocert.UntilFragment;
  */
 public record InteractionFragmentGeneratorImpl(
 		OccurrenceFragmentGenerator ag,
-		BranchFragmentGenerator bg,
-		DeadlineFragmentGenerator dg,
-		LoopFragmentGenerator lg,
-		UntilFragmentGenerator ug,
+		BlockFragmentGenerator blockGen,
+		BranchFragmentGenerator branchGen,
 		LoadStoreGenerator ls) implements
 		InteractionFragmentGenerator {
 
@@ -86,16 +81,10 @@ public record InteractionFragmentGeneratorImpl(
 			return ag.generate(a, ctx);
 		}
 		if (f instanceof BranchFragment b) {
-			return bg.generate(b, ctx);
+			return branchGen.generate(b, ctx);
 		}
-		if (f instanceof DeadlineStep d) {
-			return dg.generate(d, ctx);
-		}
-		if (f instanceof LoopFragment l) {
-			return lg.generate(l, ctx);
-		}
-		if (f instanceof UntilFragment u) {
-			return ug.generate(u, ctx);
+		if (f instanceof BlockFragment b) {
+			return blockGen.generate(b, ctx);
 		}
 		throw new IllegalArgumentException("unsupported fragment type: %s".formatted(f));
 	}

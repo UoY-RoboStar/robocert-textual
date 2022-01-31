@@ -458,6 +458,7 @@ UntilFragment:
  */
 BlockFragment:
 	('taking' {DeadlineStep} 'at' 'most' units=TimeUnits |
+	('opt' | 'optional') {OptFragment} OptTemperature |
 	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? ':' body=Subsequence;
 
 //

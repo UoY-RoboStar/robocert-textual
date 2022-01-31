@@ -542,6 +542,17 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OptFragment" eSuperTypes="#//BlockFragment">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="An optional fragment."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
+        eType="#//Temperature">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The temperature of this fragment.&#xD;&#xA;&#xD;&#xA;Cold means 'implementation decides whether this fragment is live';&#xD;&#xA;hot means 'implementation must be prepared to engage in both live and dead behaviours'."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DeadlineStep" eSuperTypes="#//BlockFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Step imposing a termination deadline on a block."/>

@@ -448,13 +448,22 @@ abstract class CombinedFragment extends InteractionFragment, OptionallyNamedElem
 }
 
 //
-// Block steps
+// Block fragments
 //
 
 @genmodel(documentation="Combined fragment that contains exactly one body.")
 abstract class BlockFragment extends CombinedFragment {
 	@genmodel(documentation="The body of the block.")
 	val Subsequence[1] body;
+}
+
+@genmodel(documentation="An optional fragment.")
+class OptFragment extends BlockFragment {
+	@genmodel(documentation="The temperature of this fragment.
+
+Cold means 'implementation decides whether this fragment is live';
+hot means 'implementation must be prepared to engage in both live and dead behaviours'.")
+	attr Temperature[1] temperature;
 }
 
 @genmodel(documentation="Step imposing a termination deadline on a block.")

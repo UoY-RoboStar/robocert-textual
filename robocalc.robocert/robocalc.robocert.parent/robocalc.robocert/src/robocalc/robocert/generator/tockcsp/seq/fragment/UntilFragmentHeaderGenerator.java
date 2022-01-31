@@ -24,9 +24,11 @@ import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
- * Generates CSP-M for {@code UntilFragment}s.
+ * Generates CSP-M for the header part of {@code UntilFragment}s.
+ *
+ * @author Matt Windsor
  */
-public record UntilFragmentGenerator(
+public record UntilFragmentHeaderGenerator(
     CSPStructureGenerator csp,
     InitialSetBuilder initialSetBuilder,
     MessageSetGenerator messageSetGen,
@@ -35,20 +37,8 @@ public record UntilFragmentGenerator(
  {
 
   @Inject
-  public UntilFragmentGenerator {
+  public UntilFragmentHeaderGenerator {
   }
-
-  /**
-   * Generates CSP-M for a fragment.
-   *
-   * @param fragment the fragment to generate.
-   * @param ctx the lifeline context for generation.
-   * @return the generated CSP-M for the fragment.
-   */
-  public CharSequence generate(UntilFragment fragment, LifelineContext ctx) {
-    final var body = subsequenceGen.generate(fragment.getBody(), ctx);
-		return csp.function(untilFunction(fragment), body);
-}
 
   /**
    * Generates CSP-M for an until-lifting function.
@@ -56,7 +46,7 @@ public record UntilFragmentGenerator(
    * @param fragment the fragment being lifted.
    * @return the generated CSP-M.
    */
-  private CharSequence untilFunction(UntilFragment fragment) {
+  public CharSequence generate(UntilFragment fragment) {
     return csp.function(UNTIL_PROC, intraMessageSet(fragment), initialSet(fragment.getBody()));
   }
 

@@ -1,5 +1,5 @@
 -- *************************************************************************
--- Copyright (c) 2021 University of York and others
+-- Copyright (c) 2021, 2022 University of York and others
 --
 -- This program and the accompanying materials are made available under the
 -- terms of the Eclipse Public License 2.0 which is available at
@@ -17,6 +17,8 @@
    It is intended to be auto-included into the output of the RoboCert CSP
    generator, and expects the RoboChart 'core_timed_defs' to be open. -}
 
+-- This is the version of robocert_seq_defs.csp last updated on: 2022-01-31
+
 {-
  - Memory
  -}
@@ -24,13 +26,21 @@
 -- Memory operations.
 datatype MemOp = get | set
 
+
 {-
- - Actions
+ - Occurrences
  -}
 
--- Combinator for allowing an action to be put off, perhaps indefinitely.
+-- Combinator for allowing an occurrence to be put off, perhaps indefinitely.
 Cold(A) = A |~| tock -> Cold(A)
 
+
+{-
+ - Block fragments
+ -
+ - Every block fragment gets translated to the form F(Body), where F is one of the functions below,
+ - possibly partially applied.
+ -}
 
 Timed(OneStep) {
   -- Semantics of an until fragment.
@@ -45,28 +55,34 @@ Timed(OneStep) {
   -- This, coupled with making the generator always emit, seems to be the least
   -- worst solution for now (2021-09-09).
   Until(intraMessages__, initial__)(P__) = TCHAOS(diff(intraMessages__, initial__)) /\ P__
-}
 
-{-
- - Loops
- -}
+  -- Semantics of a cold optionality fragment.
+  OptCold(P__) = P__ |~| SKIP
+
+  -- Semantics of a hot optionality fragment.
+  OptHot(P__) = P__ [] SKIP
+
+  -- Semantics of an upper-bounded duration fragment.
+  -- TODO(@MattWindsor91): lower bounds
+  DurationUp(ub__)(P__) = EndBy(P__, ub__)
+}
 
 -- Use the standard FDR loop function for infinite loops.
 external loop
 
 -- Loops P exactly bnd times.
 loop_exactly(bnd)(P) =
-        let L(x) =
-                if x <= 0 then SKIP else P; L(x-1)
-        within L(bnd)
+  let L(x) =
+    if x <= 0 then SKIP else P; L(x-1)
+  within L(bnd)
 
 -- Loops P between lb and ub times.
 loop_between(lb, ub)(P) =
-        let L(x) =
-                if x <= 0 then SKIP else SKIP |~| P; L(x-1)
-        within loop_exactly(lb)(P); L(ub - lb)
+  let L(x) =
+    if x <= 0 then SKIP else SKIP |~| P; L(x-1)
+  within loop_exactly(lb)(P); L(ub - lb)
 		
 -- Loops P at least lb times.
 loop_at_least(lb)(P) =
-        let L = SKIP |~| P; L
-        within loop_exactly(lb)(P); L
+  let L = SKIP |~| P; L
+  within loop_exactly(lb)(P); L

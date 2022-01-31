@@ -14,57 +14,44 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.intf.seq.LifelineContext;
-import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.DeadlineStep;
 
 /**
- * Generates CSP-M for deadlines.
+ * Generates CSP-M for the header part of {@link DeadlineStep}s.
  *
  * @author Matt Windsor
  */
-public record DeadlineFragmentGenerator(
+public record DurationFragmentHeaderGenerator(
 		CSPStructureGenerator csp,
-		ExpressionGenerator eg,
-		SubsequenceGenerator sg) {
+		ExpressionGenerator expressionGen) {
 
 	/**
 	 * Constructs a CSP-M deadline generator.
 	 *
 	 * @param csp a CSP structure generator.
-	 * @param eg  an expression generator.
-	 * @param sg  a subsequence generator.
+	 * @param expressionGen an expression generator.
 	 */
 	@Inject
-	public DeadlineFragmentGenerator {
+	public DurationFragmentHeaderGenerator {
 	}
 
 	/**
-	 * Generates CSP-M for a deadline step.
+	 * Generates CSP-M for the header of a deadline fragment.
 	 * <p>
 	 * At the mathematical level, this becomes the 'deadline' tock-CSP operator.
 	 *
-	 * @param d   deadline step to generate.
-	 * @param ctx context of the lifeline for which we are generating CSP-M.
+	 * @param d   duration fragment for which we are generating a header.
 	 * @return the generated CSP.
 	 */
-	public CharSequence generate(DeadlineStep d, LifelineContext ctx) {
+	public CharSequence generate(DeadlineStep d) {
 		// TODO(@MattWindsor91): lower bounds?
-		return csp.function(DEADLINE_PROC, body(d, ctx), units(d));
-	}
-
-	private CharSequence body(DeadlineStep d, LifelineContext ctx) {
-		return csp.tuple(sg.generate(d.getBody(), ctx));
-	}
-
-	private String units(DeadlineStep d) {
-		return "{- time units -} " + eg.generate(d.getUnits());
+		return csp.function(DURATION_UP_PROC, expressionGen.generate(d.getUnits()));
 	}
 
 	/**
-	 * Name of the process that implements the tick-tock deadline operator.
+	 * Name of the process that implements the upper-bound-only duration header.
 	 */
-	public static final String DEADLINE_PROC = "EndBy"; // in core_timed
+	public static final String DURATION_UP_PROC = "DurationUp"; // in robocert_seq_defs
 }

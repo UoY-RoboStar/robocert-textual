@@ -14,25 +14,23 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.DefiniteLoopBound;
 import robocalc.robocert.model.robocert.InfiniteLoopBound;
-import robocalc.robocert.model.robocert.LoopBound;
 import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.LowerLoopBound;
 import robocalc.robocert.model.robocert.RangeLoopBound;
 
 /**
- * Generates CSP-M for loops.
+ * Generates CSP-M for the header part of {@link LoopFragment}s.
  * <p>
  * Most of this CSP is calls into either the CSP-M or RoboCert standard libraries.
  *
  * @author Matt Windsor
  */
-public record LoopFragmentGenerator(
+public record LoopFragmentHeaderGenerator(
 		CSPStructureGenerator csp,
 		ExpressionGenerator eg,
 		SubsequenceGenerator sg) {
@@ -45,28 +43,17 @@ public record LoopFragmentGenerator(
 	 * @param sg  a subsequence generator.
 	 */
 	@Inject
-	public LoopFragmentGenerator {
+	public LoopFragmentHeaderGenerator {
 	}
 
 	/**
-	 * Generates CSP for a loop action.
+	 * Generates CSP for a loop fragment header.
 	 *
-	 * @param l   the loop action to generate.
-	 * @param ctx the context for the lifeline on which the step sits.
+	 * @param fragment the loop fragment for which we are generating a header.
 	 * @return the generated CSP.
 	 */
-	public CharSequence generate(LoopFragment l, LifelineContext ctx) {
-		return csp.function(bound(l.getBound()), sg.generate(l.getBody(), ctx));
-	}
-
-	/**
-	 * Expands to the appropriate stock process for a loop bound.
-	 *
-	 * @param b the loop bound.
-	 * @return the parametric process to be instantiated with the process-to-loop to yield the
-	 * appropriate loop.
-	 */
-	private CharSequence bound(LoopBound b) {
+	public CharSequence generate(LoopFragment fragment) {
+		final var b = fragment.getBound();
 		if (b instanceof InfiniteLoopBound) {
 			return "loop";
 		}
