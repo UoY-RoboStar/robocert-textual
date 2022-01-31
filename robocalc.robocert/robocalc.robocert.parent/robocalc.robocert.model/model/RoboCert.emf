@@ -466,10 +466,10 @@ hot means 'implementation must be prepared to engage in both live and dead behav
 	attr Temperature[1] temperature;
 }
 
-@genmodel(documentation="Step imposing a termination deadline on a block.")
-class DeadlineStep extends BlockFragment {
-	@genmodel(documentation="Deadline, in time units after the start of the block.")
-	val CertExpr[1] units;
+@genmodel(documentation="Fragment imposing a duration constraint on a block.")
+class DurationFragment extends BlockFragment {
+	@genmodel(documentation="Upper bound, in time units after the start of the block.")
+	val CertExpr[1] upperBound;
 }
 
 @genmodel(documentation="An interaction fragment blocking the diagram until any occurrence happens on the block.

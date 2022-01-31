@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.DeadlineStep;
+import robocalc.robocert.model.robocert.DurationFragment;
 
 /**
  * Generates CSP-M for the header part of {@link DeadlineStep}s.
@@ -45,9 +45,9 @@ public record DurationFragmentHeaderGenerator(
 	 * @param d   duration fragment for which we are generating a header.
 	 * @return the generated CSP.
 	 */
-	public CharSequence generate(DeadlineStep d) {
+	public CharSequence generate(DurationFragment d) {
 		// TODO(@MattWindsor91): lower bounds?
-		return csp.function(DURATION_UP_PROC, expressionGen.generate(d.getUnits()));
+		return csp.function(DURATION_UP_PROC, expressionGen.generate(d.getUpperBound()));
 	}
 
 	/**

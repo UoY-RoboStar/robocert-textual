@@ -18,7 +18,7 @@ import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.BlockFragment;
-import robocalc.robocert.model.robocert.DeadlineStep;
+import robocalc.robocert.model.robocert.DurationFragment;
 import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.OptFragment;
 import robocalc.robocert.model.robocert.UntilFragment;
@@ -54,7 +54,7 @@ public record BlockFragmentGenerator
   }
 
   private CharSequence generateHeader(BlockFragment fragment) {
-    if (fragment instanceof DeadlineStep d) {
+    if (fragment instanceof DurationFragment d) {
       return durationHeaderGen.generate(d);
     }
     if (fragment instanceof LoopFragment l) {
