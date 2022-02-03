@@ -44,7 +44,7 @@ public class CSPRefinementPropertyGenerator {
 	 * @return CSP-M for the given property.
 	 */
 	public CharSequence generateProperty(CSPRefinementProperty it) {
-		var refine = generateRefinement(it);
+		final var refine = generateRefinement(it);
 		if (it.getType() == CSPRefinementOperator.EQUALS) {
 			return String.join("\n", refine, generateRefinement(invert(it)));
 		}
@@ -59,7 +59,7 @@ public class CSPRefinementPropertyGenerator {
 	 * @return an inverted copy of the given property.
 	 */
 	private CSPRefinementProperty invert(CSPRefinementProperty p) {
-		var inv = EcoreUtil.copy(p);
+		final var inv = EcoreUtil.copy(p);
 		inv.setRhs(p.getLhs());
 		inv.setLhs(p.getRhs());
 		return inv;
@@ -78,7 +78,7 @@ public class CSPRefinementPropertyGenerator {
 	private CharSequence generateRefinement(CSPRefinementProperty p) {
 		// Currently, both models supported by RoboCert become the trace model
 		// at the FDR level (through model shifting), hence the hardcoded "T".
-		var mdl = p.getModel();
+		final var mdl = p.getModel();
 		return csp.assertion(p.isNegated(),
 				liftTauPriority(mdl, csp.refine(psg.generate(p.getRhs(), mdl), psg.generate(p.getLhs(), mdl), "T")));
 	}

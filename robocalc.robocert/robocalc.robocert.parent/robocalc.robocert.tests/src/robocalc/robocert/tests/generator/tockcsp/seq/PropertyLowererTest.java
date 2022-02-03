@@ -54,15 +54,14 @@ class PropertyLowererTest {
 	@Inject
 	private PropertyLowerer spl;
 
-	private SequenceGroup group;
 	private Sequence sequence;
 	private Target target;
 
 	@BeforeEach
 	void setUp() {
 		target = makeTarget();
-		group = makeGroup(target);
-		sequence = makeSequence(target, group);
+		final SequenceGroup group = makeGroup(target);
+		sequence = makeSequence(group);
 	}
 
 	/**
@@ -71,6 +70,16 @@ class PropertyLowererTest {
 	@Test
 	void testLower_Traces_Holds() {
 		final var prop = property(SequencePropertyType.HOLDS, CSPModel.TRACES);
+		assertLower(prop, target, sequence, prop.getModel());
+	}
+
+	/**
+	 * Tests that lowering a traces does-not-hold property produces the expected refinement.
+	 */
+	@Test
+	void testLower_Traces_DoesNotHold() {
+		final var prop = property(SequencePropertyType.HOLDS, CSPModel.TRACES);
+		prop.setNegated(true);
 		assertLower(prop, target, sequence, prop.getModel());
 	}
 
@@ -111,6 +120,8 @@ class PropertyLowererTest {
 		assertEquals(m, model);
 
 		assertEquals(CSPRefinementOperator.REFINES, it.getType());
+
+		assertEquals(p.isNegated(), it.isNegated());
 	}
 
 	private Process stripTargetGroupSource(Process s) {
@@ -127,7 +138,7 @@ class PropertyLowererTest {
 		return p;
 	}
 
-	private Sequence makeSequence(Target t, SequenceGroup group) {
+	private Sequence makeSequence(SequenceGroup group) {
 		final var s = rf.createSequence();
 		s.setName("seq");
 		s.setGroup(group);

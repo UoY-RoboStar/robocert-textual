@@ -13,6 +13,7 @@
 package robocalc.robocert.generator.tockcsp.seq;
 
 import com.google.inject.Inject;
+import java.util.stream.Stream;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
