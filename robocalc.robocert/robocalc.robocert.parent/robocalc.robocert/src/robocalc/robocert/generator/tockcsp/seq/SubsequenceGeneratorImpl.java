@@ -40,7 +40,10 @@ public record SubsequenceGeneratorImpl(
 
 	@Override
 	public CharSequence generate(Subsequence s, LifelineContext ctx) {
-		return csp.seq(s.getFragments().parallelStream().map(x -> fragGen.generate(x, ctx))
+		final var main = csp.seq(s.getFragments().parallelStream().map(x -> fragGen.generate(x, ctx))
 				.toArray(CharSequence[]::new));
+
+		// @MattWindsor91 2022-02-03: this to quickfix timing issues in empty subsequences, mainly
+		return csp.seq(main, "SKIP_ANYTIME");
 	}
 }

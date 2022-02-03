@@ -45,7 +45,7 @@ Cold(A) = A |~| tock -> Cold(A)
 Timed(OneStep) {
   -- Semantics of an until fragment.
   Until(intraMessages__, initial__)(P__) =
-    TCHAOS(diff(intraMessages__, initial__)) /\ (SKIP_ANYTIME; P__)
+    TCHAOS(diff(intraMessages__, initial__)) /\ P__
 
   -- Semantics of a cold optionality fragment.
   OptCold(P__) = P__ |~| SKIP

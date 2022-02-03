@@ -44,15 +44,15 @@ class SubsequenceGeneratorTest {
 	private SubsequenceGenerator sg;
 
 	/**
-	 * Tests that the empty subsequence becomes the CSP-M 'SKIP'.
+	 * Tests that the empty subsequence becomes the CSP-M 'SKIP_ANYTIME'.
 	 */
 	@Test
 	void testGenerateEmpty() {
-		assertThat(rc.createSubsequence(), generates("SKIP"));
+		assertThat(rc.createSubsequence(), generates("SKIP_ANYTIME"));
 	}
 	
 	private Matcher<Subsequence> generates(String expected) {
-		var ctx = new LifelineContext(rc.createTargetActor(), 0);
+		final var ctx = new LifelineContext(rc.createTargetActor(), 0);
 		return generatesCSP(expected, s -> sg.generate(s, ctx));
 	}
 }
