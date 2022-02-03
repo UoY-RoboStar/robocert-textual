@@ -44,11 +44,11 @@ class SubsequenceGeneratorTest {
 	private SubsequenceGenerator sg;
 
 	/**
-	 * Tests that the empty subsequence becomes the CSP-M 'SKIP_ANYTIME'.
+	 * Tests that the empty subsequence becomes the CSP-M 'SKIP'.
 	 */
 	@Test
 	void testGenerateEmpty() {
-		assertThat(rc.createSubsequence(), generates("SKIP_ANYTIME"));
+		assertThat(rc.createSubsequence(), generates("SKIP"));
 	}
 	
 	private Matcher<Subsequence> generates(String expected) {

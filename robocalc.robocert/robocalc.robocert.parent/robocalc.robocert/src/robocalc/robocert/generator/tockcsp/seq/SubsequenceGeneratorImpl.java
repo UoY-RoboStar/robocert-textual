@@ -41,10 +41,12 @@ public record SubsequenceGeneratorImpl(
 
 	@Override
 	public CharSequence generate(Subsequence s, LifelineContext ctx) {
-		final var main = csp.seq(s.getFragments().parallelStream().map(x -> fragGen.generate(x, ctx))
-				.toArray(CharSequence[]::new));
+		final var fragments = s.getFragments().parallelStream().map(x -> fragGen.generate(x, ctx));
 
-		// @MattWindsor91 2022-02-03: this to quickfix timing issues in empty subsequences, mainly
-		return csp.seq(main, "SKIP_ANYTIME");
+		// @MattWindsor91 2022-02-03: I've tried concatenating SKIP_ANYTIME here unconditionally, to
+		// try to make it possible to have empty subsequences as duration and until fragment bodies and
+		// get the right semantics, but placing it at either end of all subsequences interacts poorly
+		// with durations nested into loops and other such fragments.
+		return csp.seq(fragments.toArray(CharSequence[]::new));
 	}
 }
