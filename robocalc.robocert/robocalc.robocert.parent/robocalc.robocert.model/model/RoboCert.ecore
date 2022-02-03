@@ -557,8 +557,14 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Fragment imposing a duration constraint on a block."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="upperBound" lowerBound="1"
-        eType="#//CertExpr" containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerBound" eType="#//CertExpr"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Lower bound, in time units after the start of the block."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="upperBound" eType="#//CertExpr"
+        containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Upper bound, in time units after the start of the block."/>
       </eAnnotations>

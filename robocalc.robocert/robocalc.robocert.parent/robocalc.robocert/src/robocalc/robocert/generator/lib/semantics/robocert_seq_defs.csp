@@ -53,9 +53,14 @@ Timed(OneStep) {
   -- Semantics of a hot optionality fragment.
   OptHot(P__) = P__ [] SKIP
 
+  -- Semantics of a lower-bounded duration fragment.
+  DurationLB(lb__)(P__) = P__ ||| Cold(WAIT(lb__))
+
   -- Semantics of an upper-bounded duration fragment.
-  -- TODO(@MattWindsor91): lower bounds
-  DurationUp(ub__)(P__) = EndBy(P__, ub__)
+  DurationUB(ub__)(P__) = EndBy(P__, ub__)
+
+  -- Semantics of a both-bounded duration fragment.
+  Duration(lb__, ub__)(P__) = DurationUB(ub__)(DurationLB(lb__)(P__))
 }
 
 -- Use the standard FDR loop function for infinite loops.

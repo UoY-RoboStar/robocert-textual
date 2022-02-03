@@ -468,8 +468,11 @@ hot means 'implementation must be prepared to engage in both live and dead behav
 
 @genmodel(documentation="Fragment imposing a duration constraint on a block.")
 class DurationFragment extends BlockFragment {
+	@genmodel(documentation="Lower bound, in time units after the start of the block.")
+	val CertExpr[0..1] lowerBound;
+
 	@genmodel(documentation="Upper bound, in time units after the start of the block.")
-	val CertExpr[1] upperBound;
+	val CertExpr[0..1] upperBound;
 }
 
 @genmodel(documentation="An interaction fragment blocking the diagram until any occurrence happens on the block.

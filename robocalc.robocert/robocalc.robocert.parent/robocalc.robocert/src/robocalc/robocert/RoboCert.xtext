@@ -457,9 +457,14 @@ UntilFragment:
  * A block step.
  */
 BlockFragment:
-	('taking' {DurationFragment} 'at' 'most' upperBound=TimeUnits |
+	(DurationFragment |
 	('opt' | 'optional') {OptFragment} OptTemperature |
 	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? ':' body=Subsequence;
+
+DurationFragment:
+	'taking'
+	('at' 'least' lowerBound = TimeUnits ('and' 'at' 'most' upperBound = TimeUnits)? |
+	'at' 'most' upperBound = TimeUnits);
 
 //
 // Loop bounds
