@@ -93,11 +93,6 @@ public class SequenceGenerator {
 	}
 
 	private CharSequence generateLifelineBody(Sequence s, LifelineContext ctx) {
-		// TODO(@MattWindsor91): push through line
-
-		// TODO(@MattWindsor91): elide TCHAOS if not necessary
-		var chaos = csp.function("TCHAOS", ctx.alphaCSP(csp));
-		// The strange joining here is an attempt to get the newlines right.
-		return String.join("", sg.generate(s.getBody(), ctx), "; -- end of defined steps\n", chaos);
+		return sg.generate(s.getBody(), ctx);
 	}
 }
