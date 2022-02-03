@@ -17,7 +17,7 @@
    It is intended to be auto-included into the output of the RoboCert CSP
    generator, and expects the RoboChart 'core_timed_defs' to be open. -}
 
--- This is the version of robocert_seq_defs.csp last updated on: 2022-01-31
+-- This is the version of robocert_seq_defs.csp last updated on: 2022-02-03
 
 {-
  - Memory
@@ -44,17 +44,8 @@ Cold(A) = A |~| tock -> Cold(A)
 
 Timed(OneStep) {
   -- Semantics of an until fragment.
-  --
-  -- TODO(@MattWindsor91): the precise tick-tock semantics of gaps is currently
-  -- unstable, as it is unclear as to whether gaps should:
-  --
-  -- 1) always be emitted vs only emitted when active;
-  -- 2) permit timestop;
-  -- 3) implicitly make P cold.
-  --
-  -- This, coupled with making the generator always emit, seems to be the least
-  -- worst solution for now (2021-09-09).
-  Until(intraMessages__, initial__)(P__) = TCHAOS(diff(intraMessages__, initial__)) /\ P__
+  Until(intraMessages__, initial__)(P__) =
+    TCHAOS(diff(intraMessages__, initial__)) /\ (SKIP_ANYTIME; P__)
 
   -- Semantics of a cold optionality fragment.
   OptCold(P__) = P__ |~| SKIP
