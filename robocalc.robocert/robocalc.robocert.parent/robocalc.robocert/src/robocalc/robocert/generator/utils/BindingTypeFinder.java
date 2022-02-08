@@ -17,7 +17,7 @@ import circus.robocalc.robochart.Type;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.MessageTopic;
-import robocalc.robocert.model.robocert.WildcardArgument;
+import robocalc.robocert.model.robocert.WildcardValueSpecification;
 
 /**
  * Finds the RoboChart type of bindings by traversing the object graph back to where they were
@@ -40,7 +40,7 @@ public class BindingTypeFinder {
 	public Type getType(Binding b) {
 		final var parent = b.eContainer();
 
-		if (parent instanceof WildcardArgument arg) {
+		if (parent instanceof WildcardValueSpecification arg) {
 			return typeFromWildcardArgument(arg);
 		}
 
@@ -49,20 +49,20 @@ public class BindingTypeFinder {
 		throw new UnsupportedOperationException("Unsupported binding container: " + parent);
 	}
 
-	private Type typeFromWildcardArgument(WildcardArgument arg) {
+	private Type typeFromWildcardArgument(WildcardValueSpecification arg) {
 		final var parent = arg.eContainer();
 
 		if (parent instanceof Message spec) {
 			return typeFromMessage(spec, arg);
 		}
 
-		// If WildcardArguments can ever come from things other than message
+		// If WildcardValueSpecifications can ever come from things other than message
 		// specs, add code for them here.
 
-		throw new UnsupportedOperationException("Unsupported wildcard argument container: " + parent);
+		throw new UnsupportedOperationException("Unsupported wildcard value specification container: " + parent);
 	}
 
-	private Type typeFromMessage(Message spec, WildcardArgument arg) {
+	private Type typeFromMessage(Message spec, WildcardValueSpecification arg) {
 		final var i = spec.getArguments().indexOf(arg);
 		return spec.getTopic().getParamTypes().get(i);
 	}

@@ -18,7 +18,7 @@ import robocalc.robocert.model.robocert.CertPackage;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.MessageOccurrence;
-import robocalc.robocert.model.robocert.ExpressionArgument;
+import robocalc.robocert.model.robocert.ExpressionValueSpecification;
 import robocalc.robocert.model.robocert.CertExpr;
 import static org.junit.jupiter.api.Assertions.*;
 import org.eclipse.xtext.testing.util.ParseHelper;
@@ -125,7 +125,7 @@ sequence group X for M:
 		final var occ = oocc.get().getOccurrence();
 		if (occ instanceof MessageOccurrence m) {
 			final var arg = m.getMessage().getArguments().get(0);
-			if (arg instanceof ExpressionArgument e) {
+			if (arg instanceof ExpressionValueSpecification e) {
 				return e.getExpr();
 			}
 		}

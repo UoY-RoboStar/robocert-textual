@@ -750,7 +750,7 @@
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
-        eType="#//Argument" containment="true">
+        eType="#//ValueSpecification" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The argument list for the message."/>
       </eAnnotations>
@@ -865,14 +865,14 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Argument" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="ValueSpecification" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Argument pattern."/>
+      <details key="documentation" value="A value specification."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ExpressionArgument" eSuperTypes="#//Argument">
+  <eClassifiers xsi:type="ecore:EClass" name="ExpressionValueSpecification" eSuperTypes="#//ValueSpecification">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Argument pattern specifying an expression."/>
+      <details key="documentation" value="Value specified by an expression."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//CertExpr"
         containment="true">
@@ -881,9 +881,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WildcardArgument" eSuperTypes="#//Argument">
+  <eClassifiers xsi:type="ecore:EClass" name="WildcardValueSpecification" eSuperTypes="#//ValueSpecification">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Argument pattern accepting any value."/>
+      <details key="documentation" value="Value left unconstrained (except by type), and possibly bound."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="binding" eType="#//Binding"
         containment="true">

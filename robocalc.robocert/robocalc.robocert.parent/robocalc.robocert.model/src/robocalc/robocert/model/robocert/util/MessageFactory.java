@@ -12,11 +12,11 @@ import com.google.inject.Inject;
 import circus.robocalc.robochart.Event;
 import circus.robocalc.robochart.OperationSig;
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.Argument;
 import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.ValueSpecification;
 
 /**
  * High-level factory for message-related objects.
@@ -35,7 +35,7 @@ public class MessageFactory {
 	 *
 	 * @return the specification.
 	 */
-	public Message spec(MessageTopic topic, Edge edge, Argument ...args) {
+	public Message spec(MessageTopic topic, Edge edge, ValueSpecification...args) {
 		return spec(topic, edge, Arrays.asList(args));
 	}
 
@@ -48,7 +48,7 @@ public class MessageFactory {
 	 *
 	 * @return the specification.
 	 */
-	public Message spec(MessageTopic topic, Edge edge, Collection<? extends Argument> args) {
+	public Message spec(MessageTopic topic, Edge edge, Collection<? extends ValueSpecification> args) {
 		final var it = rc.createMessage();
 		it.setTopic(topic);
 		it.setEdge(edge);

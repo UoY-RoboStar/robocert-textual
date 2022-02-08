@@ -534,7 +534,7 @@ LifelineOccurrence:
  * A message specification.
  */
 Message:
-	topic=MessageTopic ('(' (arguments+=Argument (',' arguments+=Argument)*)? ')')? edge=Edge;
+	topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')? edge=Edge;
 
 /**
  * An edge.
@@ -631,14 +631,14 @@ ExtensionalMessageSet:
 	messages+=Message;
 
 //
-// Arguments
+// Value specifications
 //
 /**
- * An argument pattern.
+ * A value specification.
  */
-Argument:
-	{ExpressionArgument} expr=CertExpr |
-	{WildcardArgument} ('any' | 'anything') (binding=Binding)?;
+ValueSpecification:
+	{ExpressionValueSpecification} expr=CertExpr |
+	{WildcardValueSpecification} ('any' | 'anything') (binding=Binding)?;
 
 //
 // ACTORS

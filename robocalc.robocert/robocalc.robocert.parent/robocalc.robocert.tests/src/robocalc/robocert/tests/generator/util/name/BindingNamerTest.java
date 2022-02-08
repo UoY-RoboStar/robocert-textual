@@ -26,6 +26,7 @@ import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.util.MessageFactory;
+import robocalc.robocert.model.robocert.util.ValueSpecificationFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -44,6 +45,8 @@ class BindingNamerTest {
 	private RoboCertFactory rcf;
 	@Inject
 	private BindingNamer bx;
+	@Inject
+	private ValueSpecificationFactory vf;
 
 	/**
 	 * Tests that getting the unambiguous name of a binding with no parent returns
@@ -62,7 +65,7 @@ class BindingNamerTest {
 	 */
 	@Test
 	public void testGetUnambiguousName_RootSubsequence() {
-		final var w = msf.boundArg("test");
+		final var w = vf.bound(vf.binding("test"));
 		final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), EdgeDirection.INBOUND, w);
 		final var occ = rcf.createMessageOccurrence();
 		occ.setMessage(aspec);

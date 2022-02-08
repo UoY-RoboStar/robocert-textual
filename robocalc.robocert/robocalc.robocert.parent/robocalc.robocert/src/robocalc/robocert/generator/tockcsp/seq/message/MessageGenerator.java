@@ -23,7 +23,7 @@ import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ArgumentGenerator;
 import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.Message;
-import robocalc.robocert.model.robocert.WildcardArgument;
+import robocalc.robocert.model.robocert.WildcardValueSpecification;
 
 /**
  * Generates CSP for various aspects of message specs.
@@ -117,14 +117,14 @@ public record MessageGenerator(CSPStructureGenerator csp,
 	}
 
 	// TODO(@MattWindsor91): reimplement filler, simplifications
-	private List<Pair<Long, WildcardArgument>> wildcards(Message it) {
+	private List<Pair<Long, WildcardValueSpecification>> wildcards(Message it) {
 		// Indexes must be positions in the whole argument list, not just binding ones
 		// so we can't move 'indexed' later in the chain.
 
 		//noinspection UnstableApiUsage
 		return Streams
 				.mapWithIndex(it.getArguments().stream(),
-						(v, k) -> v instanceof WildcardArgument w ? Pair.of(k, w) : null)
+						(v, k) -> v instanceof WildcardValueSpecification w ? Pair.of(k, w) : null)
 				.filter(Objects::nonNull).toList();
 	}
 

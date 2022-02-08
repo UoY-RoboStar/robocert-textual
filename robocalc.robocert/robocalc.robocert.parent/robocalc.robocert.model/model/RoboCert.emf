@@ -623,7 +623,7 @@ class Message {
 	val MessageTopic[1]#message topic;
 	
 	@genmodel(documentation="The argument list for the message.")
-	val Argument[*] arguments;
+	val ValueSpecification[*] arguments;
 	
 	@genmodel(documentation="The pair of actors participating in this message.")
 	val Edge[1]#spec edge;
@@ -719,18 +719,18 @@ class OperationTopic extends MessageTopic {
 // Message arguments
 //
 
-@genmodel(documentation="Argument pattern.")
-abstract class Argument {
+@genmodel(documentation="A value specification.")
+abstract class ValueSpecification {
 }
 
-@genmodel(documentation="Argument pattern specifying an expression.")
-class ExpressionArgument extends Argument {
+@genmodel(documentation="Value specified by an expression.")
+class ExpressionValueSpecification extends ValueSpecification {
 	@genmodel(documentation="The expression in question.")
 	val CertExpr[1] expr;
 }
 
-@genmodel(documentation="Argument pattern accepting any value.")
-class WildcardArgument extends Argument {
+@genmodel(documentation="Value left unconstrained (except by type), and possibly bound.")
+class WildcardValueSpecification extends ValueSpecification {
 	@genmodel(documentation="An optional binding point to receive the value.")
 	val Binding[0..1] binding;
 }

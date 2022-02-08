@@ -26,8 +26,7 @@ import robocalc.robocert.model.robocert.RoboCertFactory;
  *
  * @author Matt Windsor
  */
-public class EdgeFactory {
-	private RoboCertFactory rf;
+public record EdgeFactory(RoboCertFactory rf) {
 
 	/**
 	 * Constructs an edge factory.
@@ -35,19 +34,17 @@ public class EdgeFactory {
 	 * @param rf the underlying metamodel factory.
 	 */
 	@Inject
-	public EdgeFactory(RoboCertFactory rf) {
-		this.rf = rf;
+	public EdgeFactory {
 	}
 
 	/**
 	 * Constructs an implicit edge.
 	 *
 	 * @param d the direction of the edge.
-	 *
 	 * @return the edge.
 	 */
 	public ImplicitEdge edge(EdgeDirection d) {
-		var it = rf.createImplicitEdge();
+		final var it = rf.createImplicitEdge();
 		it.setDirection(d);
 		return it;
 	}
@@ -56,23 +53,21 @@ public class EdgeFactory {
 	 * Constructs an explicit edge.
 	 *
 	 * @param from the from-actor of the edge.
-	 * @param to the to-actor of the edge.
-	 *
+	 * @param to   the to-actor of the edge.
 	 * @return the edge.
 	 */
 	public ExplicitEdge edge(Actor from, Actor to) {
-		var it = rf.createExplicitEdge();
+		final var it = rf.createExplicitEdge();
 		it.setFrom(from);
 		it.setTo(to);
 		return it;
 	}
 
 	/**
-	 * Constructs an explicit edge whose from- and to-actors are the resolved
-	 * actors from the incoming edge.
+	 * Constructs an explicit edge whose from- and to-actors are the resolved actors from the incoming
+	 * edge.
 	 *
 	 * @param e the edge to resolve.
-	 *
 	 * @return the resolved, explicit, edge.
 	 */
 	public ExplicitEdge resolvedEdge(Edge e) {

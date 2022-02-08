@@ -27,6 +27,7 @@ import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.util.EdgeFactory;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.model.robocert.util.SetFactory;
+import robocalc.robocert.model.robocert.util.ValueSpecificationFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -48,6 +49,9 @@ public class MessageSetGeneratorTest {
 	@Inject
 	private SetFactory sf;
 
+	@Inject
+	private ValueSpecificationFactory vf;
+
 	/**
 	 * Tests set generation of an empty extensional message set.
 	 */
@@ -63,7 +67,7 @@ public class MessageSetGeneratorTest {
 	 */
 	@Test
 	void generateSimpleSingletonExtensional() {
-		final var spec = mf.spec(mf.eventTopic(msf.intEvent()), ef.edge(EdgeDirection.OUTBOUND), msf.intArg(42));
+		final var spec = mf.spec(mf.eventTopic(msf.intEvent()), ef.edge(EdgeDirection.OUTBOUND), vf.integer(42));
 		final var e = sf.singleton(spec);
 		msf.setupAsGap(e);
 		assertThat(e, generatesCSP("{| test::event.out.42 |}", msg::generate));

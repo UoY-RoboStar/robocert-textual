@@ -23,7 +23,7 @@ import robocalc.robocert.generator.tockcsp.core.BindingGenerator;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.OperationTopic;
-import robocalc.robocert.model.robocert.WildcardArgument;
+import robocalc.robocert.model.robocert.WildcardValueSpecification;
 
 /**
  * Generates CSP for message topics.
@@ -68,12 +68,12 @@ public record TopicGenerator(BindingGenerator bg,
 	 *             to expand into a comprehension.
 	 * @return CSP-M for the set comprehension, less any set delimiters.
 	 */
-	public CharSequence generateRanges(MessageTopic t, Stream<Pair<Long, WildcardArgument>> args) {
+	public CharSequence generateRanges(MessageTopic t, Stream<Pair<Long, WildcardValueSpecification>> args) {
 		return args.map(p -> generateRange(t, p.getValue(), p.getKey()))
 				.collect(Collectors.joining(", "));
 	}
 
-	private CharSequence generateRange(MessageTopic t, WildcardArgument arg, long index) {
+	private CharSequence generateRange(MessageTopic t, WildcardValueSpecification arg, long index) {
 		final var name = bg.generateArgumentName(arg.getBinding(), index);
 		final var ty = tg.compileType(paramTypeAt(t, index));
 		return "%s <- %s".formatted(name, ty);

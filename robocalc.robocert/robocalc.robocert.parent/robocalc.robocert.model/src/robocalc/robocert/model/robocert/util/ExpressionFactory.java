@@ -36,7 +36,7 @@ public class ExpressionFactory {
 	 * @return a RoboCert lifting of the given truth value.
 	 */
 	public BoolExpr bool(boolean truth) {
-		var x = rc.createBoolExpr();
+		final var x = rc.createBoolExpr();
 		x.setTruth(truth);
 		return x;
 	}
@@ -49,7 +49,7 @@ public class ExpressionFactory {
 	 * @return a RoboCert lifting of the given integer value.
 	 */
 	public IntExpr integer(int value) {
-		var result = rc.createIntExpr();
+		final var result = rc.createIntExpr();
 		result.setValue(value);
 		return result;
 	}
@@ -63,17 +63,17 @@ public class ExpressionFactory {
 	 * @return the constant expression.
 	 */
 	public ConstExpr constant(String name) {
-		var k = rchart.createVariable();
+		final var k = rchart.createVariable();
 		k.setName(name);
 		
-		var result = rc.createConstExpr();
+		final var result = rc.createConstExpr();
 		result.setConstant(k);
 		
 		return result;
 	}
 	
 	/**
-	 * Creates a {@link Binding} with a dummy {@link Binding} which, in
+	 * Creates a {@link BindingExpr} with a dummy binding which, in
 	 * turn, has the given name.
 	 *
 	 * @param name the name of the variable.
@@ -81,10 +81,10 @@ public class ExpressionFactory {
 	 * @return the constant expression.
 	 */
 	public BindingExpr binding(String name) {
-		var k = rc.createBinding();
+		final var k = rc.createBinding();
 		k.setName(name);
 		
-		var result = rc.createBindingExpr();
+		final var result = rc.createBindingExpr();
 		result.setSource(k);
 		
 		return result;
@@ -100,7 +100,7 @@ public class ExpressionFactory {
 	 * @return the given relational expression.
 	 */
 	public LogicalExpr logic(LogicalOperator op, CertExpr lhs, CertExpr rhs) {
-		var result = rc.createLogicalExpr();
+		final var result = rc.createLogicalExpr();
 		result.setOperator(op);
 		result.setLhs(lhs);
 		result.setRhs(rhs);
@@ -117,7 +117,7 @@ public class ExpressionFactory {
 	 * @return the given relational expression.
 	 */
 	public RelationExpr rel(RelationOperator op, CertExpr lhs, CertExpr rhs) {
-		var result = rc.createRelationExpr();
+		final var result = rc.createRelationExpr();
 		result.setOperator(op);
 		result.setLhs(lhs);
 		result.setRhs(rhs);
@@ -132,7 +132,7 @@ public class ExpressionFactory {
 	 * @return the minus expression.
 	 */
 	public MinusExpr minus(CertExpr e) {
-		var result = rc.createMinusExpr();
+		final var result = rc.createMinusExpr();
 		result.setExpr(e);
 		return result;
 	}
