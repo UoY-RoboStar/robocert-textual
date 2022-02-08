@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 University of York and others
+ * Copyright (c) 2021, 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,49 +12,52 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 
+import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
-import robocalc.robocert.model.robocert.Branch;
+import robocalc.robocert.model.robocert.BranchFragment;
 import robocalc.robocert.model.robocert.ElseGuard;
 import robocalc.robocert.model.robocert.EmptyGuard;
 import robocalc.robocert.model.robocert.ExprGuard;
 import robocalc.robocert.model.robocert.Guard;
+import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
- * Generates branches and guards.
+ * Generates CSP-M for interaction operands and guards.
  *
  * @author Matt Windsor
  */
-public record BranchGenerator(ExpressionGenerator eg,
-															SubsequenceGenerator sg) {
+public record InteractionOperandGenerator(ExpressionGenerator eg,
+																					SubsequenceGenerator sg) {
 
 	/**
-	 * Constructs a branch generator.
+	 * Constructs an interaction operand generator.
 	 *
 	 * @param eg an expression generator.
 	 * @param sg a subsequence generator.
 	 */
 	@Inject
-	public BranchGenerator {
+	public InteractionOperandGenerator {
 	}
 
 	/**
-	 * Generates CSP-M for a branch.
+	 * Generates CSP-M for an interaction operand.
 	 *
-	 * @param b   branch for which we are generating CSP-M.
+	 * @param b   operand for which we are generating CSP-M.
 	 * @param ctx context of the lifeline for which we are generating CSP-M.
 	 * @return the generated CSP-M.
 	 */
-	public CharSequence generate(Branch b, LifelineContext ctx) {
+	public CharSequence generate(InteractionOperand b, LifelineContext ctx) {
 		// No whitespace because the empty guard should be a no-op on the body.
-		return String.join("", guard(b.getGuard()), sg.generate(b.getBody(), ctx));
+		return String.join("", guard(b.getGuard()), sg.generate(b.getFragments(), ctx));
 	}
 
 	private CharSequence guard(Guard g) {
@@ -80,6 +83,8 @@ public record BranchGenerator(ExpressionGenerator eg,
 	}
 
 	private Stream<Guard> neighbourGuards(ElseGuard l) {
-		return l.getParent().getFragment().getBranches().stream().map(Branch::getGuard);
+		final var branchFrag = EcoreUtil2.getContainerOfType(l, BranchFragment.class);
+		// NOTE(@MattWindsor91): this doesn't filter out ElseGuards, check whether this is a problem?
+		return Optional.ofNullable(branchFrag).stream().flatMap((f) -> f.getBranches().stream().map(InteractionOperand::getGuard));
 	}
 }

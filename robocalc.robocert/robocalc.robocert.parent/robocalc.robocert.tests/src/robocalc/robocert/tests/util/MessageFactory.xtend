@@ -58,9 +58,10 @@ class MessageFactory {
 	}
 
 	def private arrowParent() {
+		val parent = seq
 		rcert.createMessageOccurrence => [
 			fragment = rcert.createOccurrenceFragment => [
-				parent = sseq
+				parent.fragments.add(it)
 			]
 		]
 	}
@@ -96,10 +97,12 @@ class MessageFactory {
 	 * @param g  the set to hoist.
 	 */
 	def setupAsGap(MessageSet g) {
+		val parent = seq
+		
 		rcert.createUntilFragment => [
 			intraMessages = g
-			parent = sseq
-		]		
+			parent.fragments.add(it)
+		]
 	}
 
 	def Argument intArg(int v) {
@@ -152,13 +155,6 @@ class MessageFactory {
 
 	private def intType() {
 		rc.createPrimitiveType => [name = "int"]
-	}
-
-	private def sseq() {
-		val s = seq
-		rcert.createSubsequence => [
-			s.body = it
-		]
 	}
 
 	private def seq() {

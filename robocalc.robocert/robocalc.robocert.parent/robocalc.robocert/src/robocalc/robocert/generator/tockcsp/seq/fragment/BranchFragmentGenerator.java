@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 import java.util.stream.Collectors;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.seq.BranchGenerator;
+import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
 import robocalc.robocert.model.robocert.AltFragment;
 import robocalc.robocert.model.robocert.BranchFragment;
 import robocalc.robocert.model.robocert.ParFragment;
@@ -28,7 +28,7 @@ import robocalc.robocert.model.robocert.Temperature;
  * @author Matt Windsor
  */
 public record BranchFragmentGenerator(CSPStructureGenerator csp,
-                                      BranchGenerator bg) {
+                                      InteractionOperandGenerator bg) {
 
   /**
    * The CSP-M external choice operator.

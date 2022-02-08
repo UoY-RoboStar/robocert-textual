@@ -19,7 +19,7 @@ import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.generator.utils.InitialSetBuilder;
-import robocalc.robocert.model.robocert.Subsequence;
+import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
@@ -63,16 +63,16 @@ public record UntilFragmentHeaderGenerator(
   }
 
   /**
-   * Generates the initial message set for a subsequence.
+   * Generates the initial message set for an interaction operand.
    * <p>
    * This is to avoid the possibility of both the until-fragment and its enclosed subsequence
    * offering the same CSP events.
    *
-   * @param sseq the action for which we are generating CSP.
+   * @param op the operand for which we are generating CSP.
    * @return the generated CSP sequence.
    */
-  private CharSequence initialSet(Subsequence sseq) {
-    return MessageGen.generateBulkCSPEventSet(initialSetBuilder.initialSet(sseq).toList());
+  private CharSequence initialSet(InteractionOperand op) {
+    return MessageGen.generateBulkCSPEventSet(initialSetBuilder.initialSet(op).toList());
   }
 
   /**

@@ -13,12 +13,12 @@
 package robocalc.robocert.generator.tockcsp.seq;
 
 import com.google.inject.Inject;
-import java.util.stream.Stream;
+import java.util.List;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.Subsequence;
+import robocalc.robocert.model.robocert.InteractionFragment;
 
 /**
  * A generator that emits CSP for sequences and subsequences.
@@ -28,6 +28,7 @@ import robocalc.robocert.model.robocert.Subsequence;
 public record SubsequenceGeneratorImpl(
 		CSPStructureGenerator csp,
 		InteractionFragmentGenerator fragGen) implements SubsequenceGenerator {
+	// TODO(@MattWindsor91): it should be the *fragment* generator that has an interface, surely?
 
 	/**
 	 * Constructs a subsequence generator.
@@ -40,8 +41,8 @@ public record SubsequenceGeneratorImpl(
 	}
 
 	@Override
-	public CharSequence generate(Subsequence s, LifelineContext ctx) {
-		final var fragments = s.getFragments().parallelStream().map(x -> fragGen.generate(x, ctx));
+	public CharSequence generate(List<InteractionFragment> s, LifelineContext ctx) {
+		final var fragments = s.parallelStream().map(x -> fragGen.generate(x, ctx));
 
 		// @MattWindsor91 2022-02-03: I've tried concatenating SKIP_ANYTIME here unconditionally, to
 		// try to make it possible to have empty subsequences as duration and until fragment bodies and

@@ -15,6 +15,7 @@ package robocalc.robocert.tests.generator.tockcsp.seq;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
+import java.util.List;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.hamcrest.Matcher;
@@ -25,8 +26,8 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
+import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -48,10 +49,10 @@ class SubsequenceGeneratorTest {
 	 */
 	@Test
 	void testGenerateEmpty() {
-		assertThat(rc.createSubsequence(), generates("SKIP"));
+		assertThat(List.of(), generates("SKIP"));
 	}
 	
-	private Matcher<Subsequence> generates(String expected) {
+	private Matcher<List<InteractionFragment>> generates(String expected) {
 		final var ctx = new LifelineContext(rc.createTargetActor(), 0);
 		return generatesCSP(expected, s -> sg.generate(s, ctx));
 	}

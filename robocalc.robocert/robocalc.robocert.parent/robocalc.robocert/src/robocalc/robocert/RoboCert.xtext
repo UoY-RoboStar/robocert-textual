@@ -403,7 +403,7 @@ fragment ActorList *:
  */
 Sequence:
 	// should match 'for X and Y', 'for X, Y and Z' and 'for X, Y, and Z' etc.
-	'sequence' name=ID 'for' lifelines+=[Actor|QualifiedName] (',' lifelines+=[Actor|QualifiedName])* (',' | ','? 'and') lifelines+=[Actor|QualifiedName] ':' body=Subsequence;
+	'sequence' name=ID 'for' lifelines+=[Actor|QualifiedName] (',' lifelines+=[Actor|QualifiedName])* (',' | ','? 'and') lifelines+=[Actor|QualifiedName] ':' Subsequence;
 
 /**
  * A subsequence.
@@ -411,23 +411,43 @@ Sequence:
  * Subsequences can either be empty ('nothing'), or a nonzero sequence of
  * steps ('x then y then...').
  */
-Subsequence:
-	BEGIN ('nothing' {Subsequence} | (fragments+=InteractionFragment)+) END;
+fragment Subsequence *:
+	BEGIN ('nothing' | (fragments+=InteractionFragment)+) END;
 
 /**
- * A subsequence with only one item in it, and no indentation.
+ * An interaction operand that may or may not be guarded.
  */
-SingletonSubsequence returns Subsequence:
-	fragments+=InteractionFragment
+InteractionOperand:
+	BEGIN GuardedInteractionOperand END | guard=ImplicitEmptyGuard Subsequence
 ;
 
 /**
- * A subsequence with nothing in it, no indentation, and just the word 'end'.
- * This is used only to construct 'anything until end' in an UntilAction,
- * because 'anything until nothing' would look strange.
+ * A guarded interaction operand.
  */
-EndSubsequence returns Subsequence:
-	'end' {Subsequence}
+GuardedInteractionOperand returns InteractionOperand:
+	guard=Guard ':' Subsequence;
+
+
+/**
+ * An interaction operand with no guard and one item.
+ */
+SingletonInteractionOperand returns InteractionOperand:
+	guard=ImplicitEmptyGuard fragments+=InteractionFragment
+;
+
+/**
+ * An explicit guard.
+ */
+Guard:
+	'always' {EmptyGuard} |
+	'otherwise' {ElseGuard} |
+	'when' {ExprGuard} expr=CertExpr;
+
+/**
+ * Consumes nothing and instantly returns an empty guard.
+ */
+ImplicitEmptyGuard returns EmptyGuard:
+	{EmptyGuard}
 ;
 
 //
@@ -447,8 +467,7 @@ InteractionFragment:
  */
 UntilFragment:
 	(('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet | 'block' {UntilFragment} intraMessages=EmptySet)
-	'until' (body=SingletonSubsequence | ':' body=Subsequence | body=EndSubsequence);
-
+	'until' (body=SingletonInteractionOperand | ':' body=InteractionOperand);
 
 //
 // Block steps
@@ -459,7 +478,7 @@ UntilFragment:
 BlockFragment:
 	(DurationFragment |
 	('opt' | 'optional') {OptFragment} OptTemperature |
-	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? ':' body=Subsequence;
+	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? ':' body=InteractionOperand;
 
 DurationFragment:
 	'taking'
@@ -491,16 +510,8 @@ LoopBound:
  * A branching construct.
  */
 BranchFragment:
-	('parallel' {ParFragment} |
-	('alt' | 'alternative') {AltFragment} OptTemperature) ':' BEGIN branches+=Branch (branches+=Branch)+ END;
-
-Branch:
-	guard=Guard ':' body=Subsequence;
-
-Guard:
-	'always' {EmptyGuard} |
-	'otherwise' {ElseGuard} |
-	'when' {ExprGuard} expr=CertExpr;
+	(('par' | 'parallel') {ParFragment} |
+	('alt' | 'alternative') {AltFragment} OptTemperature) ':' BEGIN branches+=GuardedInteractionOperand (branches+=GuardedInteractionOperand)+ END;
 
 //
 // OCCURRENCES

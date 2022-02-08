@@ -29,10 +29,9 @@ class RoboCertParsingTest {
 		final var result = Assertions.assertDoesNotThrow(() -> parseHelper.parse("""
 target M: module Mod
 sequence group S for M:
-	use target as T
-	use world as W
+	use target as T, world as W
 	sequence Test for T and W:
-		anything until end
+		anything until deadlock on T
 """));
 		Assertions.assertNotNull(result);
 		final var errors = result.eResource().getErrors();

@@ -15,8 +15,8 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
-import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
 import robocalc.robocert.model.robocert.BlockFragment;
 import robocalc.robocert.model.robocert.DurationFragment;
 import robocalc.robocert.model.robocert.LoopFragment;
@@ -32,7 +32,7 @@ import robocalc.robocert.model.robocert.UntilFragment;
  */
 public record BlockFragmentGenerator
     (CSPStructureGenerator csp,
-     SubsequenceGenerator subseqGen,
+     InteractionOperandGenerator operandGen,
      DurationFragmentHeaderGenerator durationHeaderGen,
      LoopFragmentHeaderGenerator loopHeaderGen,
      OptFragmentHeaderGenerator optHeaderGen,
@@ -71,6 +71,6 @@ public record BlockFragmentGenerator
   }
 
   private CharSequence generateBody(BlockFragment fragment, LifelineContext ctx) {
-    return csp.tuple(subseqGen.generate(fragment.getBody(), ctx));
+    return csp.tuple(operandGen.generate(fragment.getBody(), ctx));
   }
 }

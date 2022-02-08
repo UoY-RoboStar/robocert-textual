@@ -468,10 +468,10 @@
         <details key="documentation" value="The group to which this sequence belongs."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
+        eType="#//InteractionFragment" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The top-level subsequence of the sequence diagram."/>
+        <details key="documentation" value="The fragments of the sequence diagram."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lifelines" lowerBound="2"
@@ -481,33 +481,10 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Subsequence">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A contiguous ordered list of interaction fragments."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
-        eType="#//InteractionFragment" containment="true" eOpposite="#//InteractionFragment/parent">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The interaction fragments contained within the subsequence."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" eType="#//Sequence"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The parent sequence."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="InteractionFragment" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A single interaction fragment in a subsequence."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//Subsequence" eOpposite="#//Subsequence/fragments">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The parent subsequence of this step."/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OccurrenceFragment" eSuperTypes="#//InteractionFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -535,7 +512,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Combined fragment that contains exactly one body."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//InteractionOperand"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The body of the block."/>
@@ -646,7 +623,7 @@
       <details key="documentation" value="Abstract fragment containing two or more branches."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="branches" lowerBound="2"
-        upperBound="-1" eType="#//Branch" containment="true" eOpposite="#//Branch/fragment">
+        upperBound="-1" eType="#//InteractionOperand" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The branches available in this fragment."/>
       </eAnnotations>
@@ -668,35 +645,29 @@
       <details key="documentation" value="An interleaving composition fragment."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Branch">
+  <eClassifiers xsi:type="ecore:EClass" name="InteractionOperand">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A potentially-guarded subsequence used in a BranchFragment."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="1" eType="#//Guard"
         containment="true" eOpposite="#//Guard/parent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The guard for this branch."/>
+        <details key="documentation" value="The guard for this operand."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="body" lowerBound="1" eType="#//Subsequence"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
+        eType="#//InteractionFragment" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The body of this branch."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fragment" lowerBound="1"
-        eType="#//BranchFragment" eOpposite="#//BranchFragment/branches">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The fragment containing this branch (along with others)."/>
+        <details key="documentation" value="The fragments in this operand."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guard" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A condition placed on a Branch."/>
+      <details key="documentation" value="A condition placed on an InteractionOperand."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
-        eType="#//Branch" eOpposite="#//Branch/guard">
+        eType="#//InteractionOperand" eOpposite="#//InteractionOperand/guard">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The parent branch of this guard."/>
       </eAnnotations>

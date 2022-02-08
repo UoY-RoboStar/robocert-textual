@@ -68,10 +68,8 @@ class BindingNamerTest {
 		occ.setMessage(aspec);
 		final var fragment = rcf.createOccurrenceFragment();
 		fragment.setOccurrence(occ);
-		final var ssq = rcf.createSubsequence();
-		ssq.getFragments().add(fragment);
 		final var sq = rcf.createSequence();
-		sq.setBody(ssq);
+		sq.getFragments().add(fragment);
 
 		assertUnambiguousNameEqual("fragment0_occurrence_message_argument0", w.getBinding());
 	}

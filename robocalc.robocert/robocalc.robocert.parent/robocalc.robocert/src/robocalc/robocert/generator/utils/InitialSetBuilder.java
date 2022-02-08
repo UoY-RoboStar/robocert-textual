@@ -16,12 +16,12 @@ package robocalc.robocert.generator.utils;
 import java.util.stream.Stream;
 import robocalc.robocert.model.robocert.BlockFragment;
 import robocalc.robocert.model.robocert.BranchFragment;
+import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
 import robocalc.robocert.model.robocert.Occurrence;
-import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
@@ -29,17 +29,17 @@ import robocalc.robocert.model.robocert.UntilFragment;
  */
 public class InitialSetBuilder {
   /**
-   * Gets the initial message set for a subsequence, as a stream of message sets to be united.
+   * Gets the initial set for an interaction operand, as a stream of message sets to be united.
    *
    * This is empty if the subsequence is empty or an occurrence other than a message, the singleton
    * set containing the message if it is a message occurrence, and will currently throw in any
    * other situation.  More scenarios will be specified in future.
    *
-   * @param sseq the subsequence.
+   * @param op the operand.
    * @return the messages that the subsequence can initially offer.
    */
-  public Stream<Message> initialSet(Subsequence sseq) {
-    return sseq.getFragments().stream().limit(1).flatMap(this::fragmentInitialSet).distinct();
+  public Stream<Message> initialSet(InteractionOperand op) {
+    return op.getFragments().stream().limit(1).flatMap(this::fragmentInitialSet).distinct();
   }
 
   private Stream<Message> fragmentInitialSet(InteractionFragment fragment) {
@@ -66,7 +66,7 @@ public class InitialSetBuilder {
   }
 
   private Stream<Message> branchInitialSet(BranchFragment b) {
-    return b.getBranches().parallelStream().flatMap((x) -> initialSet(x.getBody()));
+    return b.getBranches().parallelStream().flatMap(this::initialSet);
   }
 
   private Stream<Message> occurrenceInitialSet(Occurrence occ) {

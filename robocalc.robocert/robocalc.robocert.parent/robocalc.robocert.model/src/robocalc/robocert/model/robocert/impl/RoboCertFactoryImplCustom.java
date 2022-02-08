@@ -11,7 +11,6 @@ import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RefMessageSet;
 import robocalc.robocert.model.robocert.SequenceGroup;
-import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
 import robocalc.robocert.model.robocert.World;
@@ -81,11 +80,6 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   @Override
   public SequenceGroup createSequenceGroup() {
     return new SequenceGroupImplCustom();
-  }
-
-  @Override
-  public Subsequence createSubsequence() {
-    return new SubsequenceImplCustom();
   }
 
   @Override

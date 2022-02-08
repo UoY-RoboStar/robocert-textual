@@ -26,7 +26,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.seq.fragment.DurationFragmentHeaderGenerator;
 import robocalc.robocert.model.robocert.DurationFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Subsequence;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
@@ -55,7 +54,7 @@ class DurationFragmentHeaderGeneratorTest {
 
   @BeforeEach
   void setUp() {
-    final Subsequence inner = factory.createSubsequence();
+    final var inner = factory.createInteractionOperand();
     fragment = factory.createDurationFragment();
     fragment.setBody(inner);
 

@@ -13,8 +13,9 @@
 package robocalc.robocert.tests;
 
 import java.util.stream.Collectors;
+import org.eclipse.emf.common.util.EList;
 import robocalc.robocert.model.robocert.CertPackage;
-import robocalc.robocert.model.robocert.Subsequence;
+import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.ExpressionArgument;
@@ -88,12 +89,12 @@ sequence group X for M:
 	 * 
 	 * @return the unlifted subsequence.
 	 */
-	public Subsequence unliftSubsequence(CertPackage it) {
+	public EList<InteractionFragment> unliftSubsequence(CertPackage it) {
 		final var grp = StreamHelpers.firstOfClass(it.getGroups().stream(), SequenceGroup.class);
 		if (grp.isEmpty()) {
 			throw new IllegalArgumentException("package does not contain a sequence group");
 		}
-		return grp.get().getSequences().get(0).getBody();
+		return grp.get().getSequences().get(0).getFragments();
 	}
 
 	/**
@@ -117,7 +118,7 @@ sequence group X for M:
 	 */
 	public CertExpr unliftExpr(CertPackage it) {
 		final var sseq = unliftSubsequence(it);
-		final var oocc = StreamHelpers.firstOfClass(sseq.getFragments().stream(), OccurrenceFragment.class);
+		final var oocc = StreamHelpers.firstOfClass(sseq.stream(), OccurrenceFragment.class);
 		if (oocc.isEmpty()) {
 			throw new IllegalArgumentException("subsequence does not contain an occurrence fragment");
 		}

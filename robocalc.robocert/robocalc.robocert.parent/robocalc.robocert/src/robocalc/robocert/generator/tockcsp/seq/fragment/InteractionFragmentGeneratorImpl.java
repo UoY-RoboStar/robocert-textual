@@ -19,9 +19,9 @@ import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.BlockFragment;
-import robocalc.robocert.model.robocert.Branch;
 import robocalc.robocert.model.robocert.BranchFragment;
 import robocalc.robocert.model.robocert.InteractionFragment;
+import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
 
@@ -60,17 +60,21 @@ public record InteractionFragmentGeneratorImpl(
 		if (f instanceof BranchFragment b) {
 			return branchBindings(b);
 		}
+		// Note that LoopFragments are a form of BlockFragment.
 		if (f instanceof LoopFragment l) {
-			return ls.getExprBindings(l.getBound());
+			return Stream.concat(ls.getExprBindings(l.getBound()), operandBindings(l.getBody()));
+		}
+		if (f instanceof BlockFragment b) {
+			return operandBindings(b.getBody());
 		}
 		return Stream.empty();
 	}
 
 	private Stream<Binding> branchBindings(BranchFragment it) {
-		return it.getBranches().stream().flatMap(this::branchBindings);
+		return it.getBranches().stream().flatMap(this::operandBindings);
 	}
 
-	private Stream<Binding> branchBindings(Branch x) {
+	private Stream<Binding> operandBindings(InteractionOperand x) {
 		return ls.getExprBindings(x.getGuard());
 	}
 

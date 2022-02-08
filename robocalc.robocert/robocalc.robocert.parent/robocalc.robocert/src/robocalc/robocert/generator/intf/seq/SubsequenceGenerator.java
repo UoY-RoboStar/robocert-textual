@@ -12,7 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.generator.intf.seq;
 
-import robocalc.robocert.model.robocert.Subsequence;
+import java.util.List;
+import robocalc.robocert.model.robocert.InteractionFragment;
 
 /**
  * A generator for subsequences.
@@ -32,5 +33,5 @@ public interface SubsequenceGenerator {
 	 * 
 	 * @return the generated code.
 	 */
-	public CharSequence generate(Subsequence s, LifelineContext ctx);
+	public CharSequence generate(List<InteractionFragment> s, LifelineContext ctx);
 }

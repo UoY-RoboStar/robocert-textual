@@ -63,16 +63,16 @@ public class SequenceGenerator {
 	public CharSequence generate(Sequence s) {
 		// TODO(@MattWindsor91): work out whether the memory is shared between
 		// lifelines, or unique to each.
-		var inner = generateWithoutMemory(s);
+		final var inner = generateWithoutMemory(s);
 		return mf.hasMemory(s) ? mg.lift(s, inner) : csp.tuple(inner);
 	}
 
 	private CharSequence generateWithoutMemory(Sequence s) {
-		var lines = lcf.createContexts(s);
+		final var lines = lcf.createContexts(s);
 		// Technically, we don't really need a let-within here if we only have
 		// one process, but it simplifies some of the rest of the generator to
 		// not special-case that.
-		var body = csp.iterAlphaParallel(lines.size(), LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
+		final var body = csp.iterAlphaParallel(lines.size(), LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
 		return lg.let(alphas(s, lines), procs(s, lines)).within(body);
 	}
 
@@ -86,6 +86,7 @@ public class SequenceGenerator {
 	}
 
 	private CharSequence defs(List<LifelineContext> lines, BiFunction<LifelineContext, CSPStructureGenerator, CharSequence> lhs, Function<LifelineContext, CharSequence> rhs) {
+		//noinspection UnstableApiUsage
 		return Streams
 				.mapWithIndex(lines.stream(),
 						(x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x)))
@@ -93,6 +94,6 @@ public class SequenceGenerator {
 	}
 
 	private CharSequence generateLifelineBody(Sequence s, LifelineContext ctx) {
-		return sg.generate(s.getBody(), ctx);
+		return sg.generate(s.getFragments(), ctx);
 	}
 }

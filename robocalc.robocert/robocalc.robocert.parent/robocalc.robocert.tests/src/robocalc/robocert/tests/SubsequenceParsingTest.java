@@ -14,6 +14,8 @@ package robocalc.robocert.tests;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -22,8 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Subsequence;
+import robocalc.robocert.model.robocert.InteractionFragment;
 
 /**
  * Tests the parsing of RoboCert subsequences.
@@ -35,19 +36,15 @@ import robocalc.robocert.model.robocert.Subsequence;
 public class SubsequenceParsingTest {
 	@Inject
 	private ParseTestHelper pt;
-	@Inject
-	private RoboCertFactory rc;
-	
-
 	/**
 	 * Tests whether parsing empty subsequences works.
 	 */
 	@Test
 	void testParseEmpty() {
-		assertParse(rc.createSubsequence(), "nothing");
+		assertParse(new BasicEList<>(), "nothing");
 	}
 	
-	private void assertParse(Subsequence expected, String input) {
+	private void assertParse(EList<InteractionFragment> expected, String input) {
 		var result = pt.parse(pt.liftSubsequence(input));
 		// can't use normal equality here
 		assertTrue(EcoreUtil2.equals(expected, pt.unliftSubsequence(result)));

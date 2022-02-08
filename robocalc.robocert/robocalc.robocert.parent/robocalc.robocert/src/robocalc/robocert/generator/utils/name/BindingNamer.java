@@ -37,21 +37,15 @@ public class BindingNamer {
 		// Approach: just take the relative URI of the binding within its
 		// notation container (or some unambiguous portion thereof), and
 		// sanitise it into a format that'll work with RoboCert's backends.
-		var root = rootOfUnambiguousName(b);
+		final var root = rootOfUnambiguousName(b);
 		return root == null ? b.getName() : constructUnambiguousName(root, b);
 	}
 
 	private EObject rootOfUnambiguousName(Binding b) {
 		// Is this binding inside a sequence diagram?
-		var seq = EcoreUtil2.getContainerOfType(b, Sequence.class);
-		if (seq != null) {
-			// Redundant to include the step from sequence to body in the name.
-			return seq.getBody();
-		}
-		
+		return EcoreUtil2.getContainerOfType(b, Sequence.class);
+
 		// If bindings can appear in other places in future, they go here.
-		
-		return null;
 	}
 	
 	private String constructUnambiguousName(EObject from, Binding b) {
