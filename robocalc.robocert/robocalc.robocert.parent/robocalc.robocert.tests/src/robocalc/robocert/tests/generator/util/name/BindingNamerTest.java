@@ -14,13 +14,11 @@ package robocalc.robocert.tests.generator.util.name;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.google.inject.Inject;
-
 import robocalc.robocert.generator.utils.name.BindingNamer;
 import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.EdgeDirection;
@@ -37,47 +35,42 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class BindingNamerTest {
-	@Inject
-	private MessageFactory mf;
-	@Inject
-	private robocalc.robocert.tests.util.MessageFactory msf;
-	@Inject
-	private RoboCertFactory rcf;
-	@Inject
-	private BindingNamer bx;
-	@Inject
-	private ValueSpecificationFactory vf;
+  @Inject private MessageFactory mf;
+  @Inject private robocalc.robocert.tests.util.MessageFactory msf;
+  @Inject private RoboCertFactory rcf;
+  @Inject private BindingNamer bx;
+  @Inject private ValueSpecificationFactory vf;
 
-	/**
-	 * Tests that getting the unambiguous name of a binding with no parent returns
-	 * the name of that binding alone.
-	 */
-	@Test
-	public void testGetUnambiguousName_NoParent() {
-		final var b = rcf.createBinding();
-		b.setName("test");
-		assertUnambiguousNameEqual("test", b);
-	}
+  /**
+   * Tests that getting the unambiguous name of a binding with no parent returns the name of that
+   * binding alone.
+   */
+  @Test
+  public void testGetUnambiguousName_NoParent() {
+    final var b = rcf.createBinding();
+    b.setName("test");
+    assertUnambiguousNameEqual("test", b);
+  }
 
-	/**
-	 * Tests that getting the unambiguous name of a binding inside the root
-	 * subsequence of a sequence diagram gets the expected name.
-	 */
-	@Test
-	public void testGetUnambiguousName_RootSubsequence() {
-		final var w = vf.bound(vf.binding("test"));
-		final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), EdgeDirection.INBOUND, w);
-		final var occ = rcf.createMessageOccurrence();
-		occ.setMessage(aspec);
-		final var fragment = rcf.createOccurrenceFragment();
-		fragment.setOccurrence(occ);
-		final var sq = rcf.createSequence();
-		sq.getFragments().add(fragment);
+  /**
+   * Tests that getting the unambiguous name of a binding inside the root subsequence of a sequence
+   * diagram gets the expected name.
+   */
+  @Test
+  public void testGetUnambiguousName_RootSubsequence() {
+    final var w = vf.bound(vf.binding("test"));
+    final var aspec = msf.arrowSpec(mf.eventTopic(msf.intEvent()), EdgeDirection.INBOUND, w);
+    final var occ = rcf.createMessageOccurrence();
+    occ.setMessage(aspec);
+    final var fragment = rcf.createOccurrenceFragment();
+    fragment.setOccurrence(occ);
+    final var sq = rcf.createInteraction();
+    sq.getFragments().add(fragment);
 
-		assertUnambiguousNameEqual("fragment0_occurrence_message_argument0", w.getBinding());
-	}
+    assertUnambiguousNameEqual("fragment0_occurrence_message_argument0", w.getBinding());
+  }
 
-	private void assertUnambiguousNameEqual(String expected, Binding b) {
-		assertEquals(expected, bx.getUnambiguousName(b));
-	}
+  private void assertUnambiguousNameEqual(String expected, Binding b) {
+    assertEquals(expected, bx.getUnambiguousName(b));
+  }
 }

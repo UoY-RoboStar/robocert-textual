@@ -13,7 +13,6 @@
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import com.google.inject.Inject;
-
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.SpecGroupElementFinder;
@@ -21,9 +20,9 @@ import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
 import robocalc.robocert.generator.tockcsp.ll.TickTockContextGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CSPModel;
+import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.Process;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
-import robocalc.robocert.model.robocert.Sequence;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetGroupSource;
 
@@ -53,7 +52,7 @@ public class ProcessGenerator {
 	 * @return CSP-M for the generated process.
 	 */
 	public CharSequence generate(Process p, CSPModel m) {
-		var inner = generateInner(p);
+		final var inner = generateInner(p);
 		return m == CSPModel.TICK_TOCK ? tt.liftTickTock(p, inner) : inner;
 	}
 
@@ -62,7 +61,7 @@ public class ProcessGenerator {
 
 		if (p instanceof ProcessCSPFragment c)
 			return c.getName();
-		if (p instanceof Sequence s)
+		if (p instanceof Interaction s)
 			return sl.getFullCSPName(s);
 		if (p instanceof TargetGroupSource g)
 			return sl.getFullCSPName(g.getTargetGroup(), SpecGroupParametricField.TARGET);

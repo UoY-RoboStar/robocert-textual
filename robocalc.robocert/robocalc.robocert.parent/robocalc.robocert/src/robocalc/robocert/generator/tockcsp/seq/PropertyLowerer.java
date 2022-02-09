@@ -63,7 +63,7 @@ public class PropertyLowerer {
    *     target of t.
    */
   private Process getSequenceWhenTypeElseTarget(SequenceProperty it, SequencePropertyType t) {
-    return it.getType() == t ? it.getSequence() : target(it);
+    return it.getType() == t ? it.getInteraction() : target(it);
   }
 
   /**
@@ -74,7 +74,7 @@ public class PropertyLowerer {
     // This can't just be a reference to the original target, as it needs
     // to have the instantiation applied.
     final var tgs = rf.createTargetGroupSource();
-    tgs.setTargetGroup(it.getSequence().getGroup());
+    tgs.setTargetGroup(it.getInteraction().getGroup());
     return tgs;
   }
 }

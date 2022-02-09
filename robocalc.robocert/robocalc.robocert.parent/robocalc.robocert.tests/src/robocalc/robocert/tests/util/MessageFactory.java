@@ -19,117 +19,110 @@ import circus.robocalc.robochart.RoboChartFactory;
 import circus.robocalc.robochart.TypeRef;
 import com.google.inject.Inject;
 import robocalc.robocert.model.robocert.EdgeDirection;
+import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.MessageSet;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Sequence;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.ValueSpecification;
 import robocalc.robocert.model.robocert.util.EdgeFactory;
 
-/**
- * Provides ways of creating dummy message specifications.
- */
+/** Provides ways of creating dummy message specifications. */
 public class MessageFactory {
-	// TODO(@MattWindsor91): lots of old terminology here, eg 'gap' for 'intraMessages'.
-	
-	// TODO(@MattWindsor91): reduce overlap with model MessageFactory;
-	// the idea is that that will receive non-dummy factory operations.
-	
-	@Inject EdgeFactory ef;
-	@Inject robocalc.robocert.model.robocert.util.MessageFactory mf;
-	@Inject RoboChartFactory rc;
-	@Inject RoboCertFactory rcert;
+  // TODO(@MattWindsor91): lots of old terminology here, eg 'gap' for 'intraMessages'.
 
-	/**
-	 * Creates an arrow message spec with the given topic, direction, and
-	 * arguments, with a fake sequence-group context.
-	 * 
-	 * @param t     the desired topic.
-	 * @param dir   the desired direction.
-	 * @param args  the desired arguments.
-	 * 
-	 * @return a constructed arrow message spec.
-	 */
-	public Message arrowSpec(MessageTopic t, EdgeDirection dir, ValueSpecification... args) {
-		final var s = mf.spec(t, ef.edge(dir), args);
-		arrowParent().setMessage(s);
-		return s;
-	}
+  // TODO(@MattWindsor91): reduce overlap with model MessageFactory;
+  // the idea is that that will receive non-dummy factory operations.
 
-	private MessageOccurrence arrowParent() {
-		final var fragment = rcert.createOccurrenceFragment();
-		final var mo = rcert.createMessageOccurrence();
-		mo.setFragment(fragment);
-		seq().getFragments().add(fragment);
+  @Inject EdgeFactory ef;
+  @Inject robocalc.robocert.model.robocert.util.MessageFactory mf;
+  @Inject RoboChartFactory rc;
+  @Inject RoboCertFactory rcert;
 
-		return mo;
-	}
+  /**
+   * Creates an arrow message spec with the given topic, direction, and arguments, with a fake
+   * sequence-group context.
+   *
+   * @param t the desired topic.
+   * @param dir the desired direction.
+   * @param args the desired arguments.
+   * @return a constructed arrow message spec.
+   */
+  public Message arrowSpec(MessageTopic t, EdgeDirection dir, ValueSpecification... args) {
+    final var s = mf.spec(t, ef.edge(dir), args);
+    arrowParent().setMessage(s);
+    return s;
+  }
 
-	/**
-	 * Hoists the given set into being the gap set for an UntilFragment that
-	 * is attached to the test subsequence.
-	 * 
-	 * Acts in-place.
-	 * 
-	 * @param g  the set to hoist.
-	 */
-	public void setupAsGap(MessageSet g) {
-		final var it = rcert.createUntilFragment();
-		it.setIntraMessages(g);
-		seq().getFragments().add(it);
-	}
+  private MessageOccurrence arrowParent() {
+    final var fragment = rcert.createOccurrenceFragment();
+    final var mo = rcert.createMessageOccurrence();
+    mo.setFragment(fragment);
+    seq().getFragments().add(fragment);
 
-	public Event intEvent() {
-		final var it = rc.createEvent();
-		it.setName("event");
-		it.setType(intTypeRef());
-		return it;
-	}
+    return mo;
+  }
 
-	private TypeRef intTypeRef() {
-		final var it = rc.createTypeRef();
-		it.setRef(intType());
-		return it;
-	}
+  /**
+   * Hoists the given set into being the gap set for an UntilFragment that is attached to the test
+   * subsequence.
+   *
+   * <p>Acts in-place.
+   *
+   * @param g the set to hoist.
+   */
+  public void setupAsGap(MessageSet g) {
+    final var it = rcert.createUntilFragment();
+    it.setIntraMessages(g);
+    seq().getFragments().add(it);
+  }
 
-	private PrimitiveType intType() {
-		final var it = rc.createPrimitiveType();
-		it.setName("int");
-		return it;
-	}
+  public Event intEvent() {
+    final var it = rc.createEvent();
+    it.setName("event");
+    it.setType(intTypeRef());
+    return it;
+  }
 
-	private Sequence seq() {
-		final var it = rcert.createSequence();
-		it.setGroup(group());
-		return it;
-	}
+  private TypeRef intTypeRef() {
+    final var it = rc.createTypeRef();
+    it.setRef(intType());
+    return it;
+  }
 
-	private SequenceGroup group() {
-		final var it = rcert.createSequenceGroup();
-		it.setTarget(target());
-		it.getActors().addAll(mf.systemActors());
-		return it;
-	}
+  private PrimitiveType intType() {
+    final var it = rc.createPrimitiveType();
+    it.setName("int");
+    return it;
+  }
 
-	/**
-	 * @return a mock target.
-	 */
-	public ModuleTarget target() {
-		final var it = rcert.createModuleTarget();
-		it.setModule(rcModule());
-		return it;
-	}
+  private Interaction seq() {
+    final var it = rcert.createInteraction();
+    it.setGroup(group());
+    return it;
+  }
 
-	/**
-	 * @return a mock RoboChart module.
-	 */
-	public RCModule rcModule() {
-		final var it = rc.createRCModule();
-		it.setName("test");
-		return it;
-	}
+  private SequenceGroup group() {
+    final var it = rcert.createSequenceGroup();
+    it.setTarget(target());
+    it.getActors().addAll(mf.systemActors());
+    return it;
+  }
+
+  /** @return a mock target. */
+  public ModuleTarget target() {
+    final var it = rcert.createModuleTarget();
+    it.setModule(rcModule());
+    return it;
+  }
+
+  /** @return a mock RoboChart module. */
+  public RCModule rcModule() {
+    final var it = rc.createRCModule();
+    it.setName("test");
+    return it;
+  }
 }

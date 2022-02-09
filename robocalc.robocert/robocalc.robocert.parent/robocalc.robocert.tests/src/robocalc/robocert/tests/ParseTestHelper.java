@@ -94,7 +94,7 @@ sequence group X for M:
 		if (grp.isEmpty()) {
 			throw new IllegalArgumentException("package does not contain a sequence group");
 		}
-		return grp.get().getSequences().get(0).getFragments();
+		return grp.get().getInteractions().get(0).getFragments();
 	}
 
 	/**

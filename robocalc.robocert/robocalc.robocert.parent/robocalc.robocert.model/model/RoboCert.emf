@@ -368,12 +368,10 @@ class SequenceGroup extends SpecGroup {
 	@genmodel(documentation="Any message sets named on the sequence group.")
 	!ordered val NamedMessageSet[*]#group messageSets;
 	
-	@genmodel(documentation="The sequences inside this sequence group.")
-	!ordered val Sequence[*]#group sequences;
+	@genmodel(documentation="The interactions inside this sequence group.")
+	!ordered val Interaction[*]#group interactions;
 	
-	@genmodel(documentation="The actors participating in this sequence.
-
-These correspond to UML lifelines.")
+	@genmodel(documentation="The actors available in this sequence group.")
 	!ordered val Actor[2..*]#group actors;
 
 	
@@ -392,10 +390,10 @@ These correspond to UML lifelines.")
 	derived volatile transient readonly ref World[0..1] world;
 }
 
-@genmodel(documentation="A sequence diagram.")
-class Sequence extends robochart.NamedElement, Process {
+@genmodel(documentation="An interaction spawning a sequence diagram.")
+class Interaction extends robochart.NamedElement, Process {
 	@genmodel(documentation="The group to which this sequence belongs.")
-	ref SequenceGroup[1]#sequences group;
+	ref SequenceGroup[1]#interactions group;
 	@genmodel(documentation="The fragments of the sequence diagram.")
 	ordered val InteractionFragment[*] fragments;
 	@genmodel(documentation="The set of group actors forming lifelines in this diagram.
@@ -852,8 +850,8 @@ and also ill-formed for the same component to form multiple actors.")
 
 @genmodel(documentation="A property of a sequence.")
 class SequenceProperty extends Property {
-	@genmodel(documentation="Sequence to which this assertion refers.")
-	ref Sequence[1] sequence;
+	@genmodel(documentation="Interaction to which this assertion refers.")
+	ref Interaction[1] interaction;
 
 	@genmodel(documentation="Type of assertion.")
 	attr SequencePropertyType[1] type;

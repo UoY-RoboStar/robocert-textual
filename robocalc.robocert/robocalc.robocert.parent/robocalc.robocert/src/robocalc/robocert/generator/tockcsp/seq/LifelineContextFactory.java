@@ -12,50 +12,46 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq;
 
+import com.google.common.collect.Streams;
 import java.util.List;
 import java.util.stream.Stream;
-
-import com.google.common.collect.Streams;
-
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.Sequence;
 
 /**
- * Creates, from a sequence, a series of lifeline contexts for use in
- * generating individual lifelines.
- * 
+ * Creates, from a sequence, a series of lifeline contexts for use in generating individual
+ * lifelines.
+ *
  * @author Matt Windsor
  */
 public class LifelineContextFactory {
-	/**
-	 * Creates contexts for each semantics-visible lifeline in the given
-	 * sequence.
-	 * 
-	 * Not all lifelines are visible; any that form a context do not appear in
-	 * the semantics as they are considered to be the CSP environment.
-	 * 
-	 * @param s the sequence for which we are creating contexts.
-	 *
-	 * @return the list of contexts.
-	 */
-	public List<LifelineContext> createContexts(Sequence s) {
-		//noinspection UnstableApiUsage
-		return Streams.mapWithIndex(actorsVisibleInSemantics(s), this::createContext).toList();
-	}
-	
-	private Stream<Actor> actorsVisibleInSemantics(Sequence s) {
-		return s.getLifelines().parallelStream().filter(this::actorVisibleInSemantics);
-	}
-	
-	private boolean actorVisibleInSemantics(Actor a) {
-		// This may change in future.
-		return !(a instanceof World);
-	}
-	
-	private LifelineContext createContext(Actor a, long index) {
-		// This will expand in future.
-		return new LifelineContext(a, index);
-	}
+  /**
+   * Creates contexts for each semantics-visible lifeline in the given sequence.
+   *
+   * <p>Not all lifelines are visible; any that form a context do not appear in the semantics as
+   * they are considered to be the CSP environment.
+   *
+   * @param s the sequence for which we are creating contexts.
+   * @return the list of contexts.
+   */
+  public List<LifelineContext> createContexts(Interaction s) {
+    //noinspection UnstableApiUsage
+    return Streams.mapWithIndex(actorsVisibleInSemantics(s), this::createContext).toList();
+  }
+
+  private Stream<Actor> actorsVisibleInSemantics(Interaction s) {
+    return s.getLifelines().parallelStream().filter(this::actorVisibleInSemantics);
+  }
+
+  private boolean actorVisibleInSemantics(Actor a) {
+    // This may change in future.
+    return !(a instanceof World);
+  }
+
+  private LifelineContext createContext(Actor a, long index) {
+    // This will expand in future.
+    return new LifelineContext(a, index);
+  }
 }

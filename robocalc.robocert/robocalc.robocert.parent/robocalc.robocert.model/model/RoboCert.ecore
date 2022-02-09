@@ -433,16 +433,16 @@
         <details key="documentation" value="Any message sets named on the sequence group."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequences" ordered="false"
-        upperBound="-1" eType="#//Sequence" containment="true" eOpposite="#//Sequence/group">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="interactions" ordered="false"
+        upperBound="-1" eType="#//Interaction" containment="true" eOpposite="#//Interaction/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The sequences inside this sequence group."/>
+        <details key="documentation" value="The interactions inside this sequence group."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="actors" ordered="false"
         lowerBound="2" upperBound="-1" eType="#//Actor" containment="true" eOpposite="#//Actor/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The actors participating in this sequence.&#xD;&#xA;&#xD;&#xA;These correspond to UML lifelines."/>
+        <details key="documentation" value="The actors available in this sequence group."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="targetActor" eType="#//TargetActor"
@@ -458,12 +458,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//Process">
+  <eClassifiers xsi:type="ecore:EClass" name="Interaction" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//Process">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A sequence diagram."/>
+      <details key="documentation" value="An interaction spawning a sequence diagram."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
-        eOpposite="#//SequenceGroup/sequences">
+        eOpposite="#//SequenceGroup/interactions">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The group to which this sequence belongs."/>
       </eAnnotations>
@@ -1030,10 +1030,10 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A property of a sequence."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sequence" lowerBound="1"
-        eType="#//Sequence">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="interaction" lowerBound="1"
+        eType="#//Interaction">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Sequence to which this assertion refers."/>
+        <details key="documentation" value="Interaction to which this assertion refers."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//SequencePropertyType">

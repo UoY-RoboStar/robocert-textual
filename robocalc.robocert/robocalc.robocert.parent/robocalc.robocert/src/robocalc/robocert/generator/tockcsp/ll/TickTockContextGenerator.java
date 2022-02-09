@@ -13,14 +13,13 @@
 package robocalc.robocert.generator.tockcsp.ll;
 
 import com.google.inject.Inject;
-
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CSPContextSource;
 import robocalc.robocert.model.robocert.EventSetCSPFragment;
+import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
-import robocalc.robocert.model.robocert.Sequence;
 import robocalc.robocert.model.robocert.SpecGroup;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetGroupSource;
@@ -71,7 +70,7 @@ public class TickTockContextGenerator {
 			return csp.namespaced(e.getName(), TargetField.TICK_TOCK_CONTEXT.toString());
 
 		// These sources are just wrappers over a target group:
-		if (s instanceof Sequence z)
+		if (s instanceof Interaction z)
 			s = z.getGroup();
 		if (s instanceof TargetGroupSource t)
 			s = t.getTargetGroup();

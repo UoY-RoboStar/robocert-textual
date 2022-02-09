@@ -15,22 +15,20 @@ package robocalc.robocert.tests.generator.tockcsp.seq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import circus.robocalc.robochart.RCModule;
+import circus.robocalc.robochart.RoboChartFactory;
+import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.google.inject.Inject;
-
-import circus.robocalc.robochart.RCModule;
-import circus.robocalc.robochart.RoboChartFactory;
 import robocalc.robocert.generator.tockcsp.seq.PropertyLowerer;
 import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.CSPRefinementOperator;
+import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.Process;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Sequence;
 import robocalc.robocert.model.robocert.SequenceGroup;
 import robocalc.robocert.model.robocert.SequenceProperty;
 import robocalc.robocert.model.robocert.SequencePropertyType;
@@ -54,7 +52,7 @@ class PropertyLowererTest {
 	@Inject
 	private PropertyLowerer spl;
 
-	private Sequence sequence;
+	private Interaction sequence;
 	private Target target;
 
 	@BeforeEach
@@ -132,14 +130,14 @@ class PropertyLowererTest {
 
 	private SequenceProperty property(SequencePropertyType t, CSPModel m) {
 		final var p = rf.createSequenceProperty();
-		p.setSequence(sequence);
+		p.setInteraction(sequence);
 		p.setType(t);
 		p.setModel(m);
 		return p;
 	}
 
-	private Sequence makeSequence(SequenceGroup group) {
-		final var s = rf.createSequence();
+	private Interaction makeSequence(SequenceGroup group) {
+		final var s = rf.createInteraction();
 		s.setName("seq");
 		s.setGroup(group);
 		return s;

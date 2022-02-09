@@ -389,7 +389,7 @@ SequenceGroup:
 	'for' target=[Target|QualifiedName] instantiation=Instantiation
 	':'
 	BEGIN
-	(ActorList | sequences+=Sequence | messageSets+=NamedMessageSet)*
+	(ActorList | interactions+=Interaction | messageSets+=NamedMessageSet)*
 	END;
 
 fragment ActorList *:
@@ -401,7 +401,7 @@ fragment ActorList *:
 /**
  * A sequence diagram.
  */
-Sequence:
+Interaction:
 	// should match 'for X and Y', 'for X, Y and Z' and 'for X, Y, and Z' etc.
 	'sequence' name=ID 'for' lifelines+=[Actor|QualifiedName] (',' lifelines+=[Actor|QualifiedName])* (',' | ','? 'and') lifelines+=[Actor|QualifiedName] ':' Subsequence;
 
@@ -660,7 +660,7 @@ Actor:
  * - SEQUENCE does not hold (in CSP: target does not refine sequence)
  */
 SequenceProperty:
-	sequence=[Sequence|QualifiedName]
+	interaction=[Interaction|QualifiedName]
 	('is' negated?='not' type=IsSequencePropertyType
 	| 'does' negated?='not' type=DoesNotSequencePropertyType
 	| type=DoesSequencePropertyType)
