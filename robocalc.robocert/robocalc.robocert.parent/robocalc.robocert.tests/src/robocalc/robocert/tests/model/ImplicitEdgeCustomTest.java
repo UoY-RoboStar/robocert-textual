@@ -66,7 +66,7 @@ public class ImplicitEdgeCustomTest {
     fragment.setOccurrence(occ);
 
     final var seq = rf.createInteraction();
-    seq.getLifelines().addAll(List.of(module, world));
+    seq.getActors().addAll(List.of(module, world));
     seq.getFragments().add(fragment);
 
     final var sg = rf.createSequenceGroup();

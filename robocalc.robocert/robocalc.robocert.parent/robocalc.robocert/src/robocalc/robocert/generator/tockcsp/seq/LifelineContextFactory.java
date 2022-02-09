@@ -42,7 +42,7 @@ public class LifelineContextFactory {
   }
 
   private Stream<Actor> actorsVisibleInSemantics(Interaction s) {
-    return s.getLifelines().parallelStream().filter(this::actorVisibleInSemantics);
+    return s.getActors().parallelStream().filter(this::actorVisibleInSemantics);
   }
 
   private boolean actorVisibleInSemantics(Actor a) {

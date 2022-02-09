@@ -398,12 +398,18 @@ fragment ActorList *:
 	'use' actors+=Actor (',' actors+=Actor)* (','? 'and' actors+=Actor)?
 ;
 
+fragment ActorRefList *:
+	'use' actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?
+;
+
 /**
  * A sequence diagram.
  */
 Interaction:
-	// should match 'for X and Y', 'for X, Y and Z' and 'for X, Y, and Z' etc.
-	'sequence' name=ID 'for' lifelines+=[Actor|QualifiedName] (',' lifelines+=[Actor|QualifiedName])* (',' | ','? 'and') lifelines+=[Actor|QualifiedName] ':' Subsequence;
+	'sequence' name=ID ':' BEGIN
+	(ActorRefList)*
+	Subsequence
+	END;
 
 /**
  * A subsequence.
@@ -412,20 +418,20 @@ Interaction:
  * steps ('x then y then...').
  */
 fragment Subsequence *:
-	BEGIN ('nothing' | (fragments+=InteractionFragment)+) END;
+	'nothing' | (fragments+=InteractionFragment)+;
 
 /**
  * An interaction operand that may or may not be guarded.
  */
 InteractionOperand:
-	BEGIN GuardedInteractionOperand END | guard=ImplicitEmptyGuard Subsequence
+	GuardedInteractionOperand | guard=ImplicitEmptyGuard Subsequence
 ;
 
 /**
  * A guarded interaction operand.
  */
 GuardedInteractionOperand returns InteractionOperand:
-	guard=Guard ':' Subsequence;
+	guard=Guard ':' BEGIN Subsequence END;
 
 
 /**
@@ -462,23 +468,27 @@ InteractionFragment:
 	{OccurrenceFragment} occurrence=Occurrence OptTemperature |
 	UntilFragment;
 
+fragment BlockFragmentTail *:
+	':' BEGIN body=InteractionOperand END
+;
+
 /**
  * An until-fragment.
  */
 UntilFragment:
 	(('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet | 'block' {UntilFragment} intraMessages=EmptySet)
-	'until' (body=SingletonInteractionOperand | ':' body=InteractionOperand);
+	'until' (body=SingletonInteractionOperand | BlockFragmentTail);
 
 //
-// Block steps
+// Block fragments
 //
 /**
- * A block step.
+ * A block fragment.
  */
 BlockFragment:
 	(DurationFragment |
 	('opt' | 'optional') {OptFragment} OptTemperature |
-	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? ':' body=InteractionOperand;
+	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? BlockFragmentTail;
 
 DurationFragment:
 	'taking'

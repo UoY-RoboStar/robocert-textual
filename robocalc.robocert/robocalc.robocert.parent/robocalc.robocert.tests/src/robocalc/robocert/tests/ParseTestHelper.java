@@ -79,7 +79,8 @@ public class ParseTestHelper {
 target M: module Mod
 sequence group X for M:
   use target as T, world as W
-  sequence Y for T and W:
+  sequence Y:
+    use T, W
 """;
 
 	/**
