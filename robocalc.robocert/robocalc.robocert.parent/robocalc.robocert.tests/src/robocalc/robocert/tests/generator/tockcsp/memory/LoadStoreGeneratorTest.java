@@ -15,6 +15,8 @@ package robocalc.robocert.tests.generator.tockcsp.memory;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
+import circus.robocalc.robochart.RoboChartFactory;
+import circus.robocalc.robochart.Variable;
 import java.util.List;
 
 import org.eclipse.xtext.testing.InjectWith;
@@ -26,8 +28,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
-import robocalc.robocert.model.robocert.Binding;
-import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -41,7 +41,7 @@ class LoadStoreGeneratorTest {
 	@Inject
 	private LoadStoreGenerator lsg;
 	@Inject
-	private RoboCertFactory rc;
+	private RoboChartFactory rc;
 
 	/**
 	 * Tests that generating a load prefix for an empty binding list yields an empty
@@ -62,8 +62,7 @@ class LoadStoreGeneratorTest {
 		// generator where the binding has no parent sequence. We really need
 		// to fix this as it isn't stable.
 
-		final var b = rc.createBinding();
-		b.setName("foo");
+		final Variable b = var();
 
 		assertThat(List.of(b, b), generatesLoads("Memory::unknown::foo.get?Bnd__foo ->"));
 	}
@@ -87,17 +86,22 @@ class LoadStoreGeneratorTest {
 		// generator where the binding has no parent sequence. We really need
 		// to fix this as it isn't stable.
 
-		final var b = rc.createBinding();
-		b.setName("foo");
+		final Variable b = var();
 
 		assertThat(List.of(b, b), generatesStores("Memory::unknown::foo.set!Bnd__foo ->"));
 	}
 
-	private Matcher<List<Binding>> generatesLoads(String expected) {
+	private Variable var() {
+		final var b = rc.createVariable();
+		b.setName("foo");
+		return b;
+	}
+
+	private Matcher<List<Variable>> generatesLoads(String expected) {
 		return generatesCSP(expected, x -> lsg.generateLoads(x.stream()));
 	}
 
-	private Matcher<List<Binding>> generatesStores(String expected) {
+	private Matcher<List<Variable>> generatesStores(String expected) {
 		return generatesCSP(expected, x -> lsg.generateStores(x.stream()));
 	}
 }

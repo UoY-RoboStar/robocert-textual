@@ -12,12 +12,12 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq.fragment;
 
+import circus.robocalc.robochart.Variable;
 import com.google.inject.Inject;
 import java.util.stream.Stream;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
-import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.BlockFragment;
 import robocalc.robocert.model.robocert.BranchFragment;
 import robocalc.robocert.model.robocert.InteractionFragment;
@@ -26,9 +26,10 @@ import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
 
 /**
- * Generator for sequence steps.
+ * Generator for interaction fragments.
  * <p>
- * This generator mainly just delegates into lower-level generators.
+ * This generator mainly just delegates into lower-level generators, but also handles
+ * variable loads.
  *
  * @author Matt Windsor
  */
@@ -49,38 +50,37 @@ public record InteractionFragmentGeneratorImpl(
 	}
 
 	private String generateLoads(InteractionFragment f) {
-		return ls.generateLoads(controlFlowBindings(f)).toString();
+		return ls.generateLoads(directlyReferencedVariables(f)).toString();
 	}
 
-	private Stream<Binding> controlFlowBindings(InteractionFragment f) {
+	private Stream<Variable> directlyReferencedVariables(InteractionFragment f) {
 		// TODO(@MattWindsor91): make this part of the metamodel?
 		if (f instanceof OccurrenceFragment a) {
-			return ls.getExprBindings(a);
+			return ls.getExprVariables(a);
 		}
 		if (f instanceof BranchFragment b) {
-			return branchBindings(b);
+			return branchVariables(b);
 		}
 		// Note that LoopFragments are a form of BlockFragment.
 		if (f instanceof LoopFragment l) {
-			return Stream.concat(ls.getExprBindings(l.getBound()), operandBindings(l.getBody()));
+			return Stream.concat(ls.getExprVariables(l.getBound()), branchVariables(l.getBody()));
 		}
 		if (f instanceof BlockFragment b) {
-			return operandBindings(b.getBody());
+			return branchVariables(b.getBody());
 		}
 		return Stream.empty();
 	}
 
-	private Stream<Binding> branchBindings(BranchFragment it) {
-		return it.getBranches().stream().flatMap(this::operandBindings);
+	private Stream<Variable> branchVariables(BranchFragment it) {
+		return it.getBranches().stream().flatMap(this::branchVariables);
 	}
 
-	private Stream<Binding> operandBindings(InteractionOperand x) {
-		return ls.getExprBindings(x.getGuard());
+	private Stream<Variable> branchVariables(InteractionOperand x) {
+		return ls.getExprVariables(x.getGuard());
 	}
 
 	private CharSequence generateAfterLoads(InteractionFragment f, LifelineContext ctx) {
-		// Remember to extend this with any non-branch steps added to the
-		// metamodel.
+		// Remember to extend this with any new top-level fragment types added to the metamodel.
 		if (f instanceof OccurrenceFragment a) {
 			return ag.generate(a, ctx);
 		}

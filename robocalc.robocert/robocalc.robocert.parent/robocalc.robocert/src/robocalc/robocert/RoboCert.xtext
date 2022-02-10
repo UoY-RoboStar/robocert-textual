@@ -237,7 +237,6 @@ MinusExpr returns CertExpr:
 PrimaryExpr returns CertExpr:
 	CertLiteral |
 	{ConstExpr} constant=[Variable|QualifiedName] |
-	'@' {BindingExpr} source=[Binding] |
 	'(' CertExpr ')';
 
 CertLiteral returns CertExpr:
@@ -256,12 +255,6 @@ terminal BOOLEAN:
  */
 TimeUnits returns CertExpr:
 	CertExpr 'time'? ('unit' | 'units');
-
-/**
- * A binding (source of a BindingExpr).
- */
-Binding:
-	'as' name=ID;
 
 //
 // MODALITIES
@@ -398,18 +391,31 @@ fragment ActorList *:
 	'use' actors+=Actor (',' actors+=Actor)* (','? 'and' actors+=Actor)?
 ;
 
-fragment ActorRefList *:
-	'use' actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?
-;
-
 /**
  * A sequence diagram.
  */
 Interaction:
 	'sequence' name=ID ':' BEGIN
-	(ActorRefList)*
+	'use' actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?
+	variables=InteractionVars
 	Subsequence
 	END;
+
+/**
+ * An interaction variable list (may be empty).
+ */
+InteractionVars returns VariableList:
+	{VariableList}
+	(modifier=InteractionVarsModifier vars+=Variable (',' vars+=Variable)* (','? 'and' vars+=Variable)?)?
+;
+
+/**
+ * Subset of variable modifiers permitted on an interaction.
+ */
+enum InteractionVarsModifier returns VariableModifier:
+	// Ill-formed to use const here
+	VAR='var'
+;
 
 /**
  * A subsequence.
@@ -648,7 +654,7 @@ ExtensionalMessageSet:
  */
 ValueSpecification:
 	{ExpressionValueSpecification} expr=CertExpr |
-	{WildcardValueSpecification} ('any' | 'anything') (binding=Binding)?;
+	{WildcardValueSpecification} ('any' | 'anything') ('as' destination=[Variable])?;
 
 //
 // ACTORS

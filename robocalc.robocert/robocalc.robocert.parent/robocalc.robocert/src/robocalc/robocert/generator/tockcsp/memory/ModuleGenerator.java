@@ -12,6 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.memory;
 
+import circus.robocalc.robochart.Variable;
+import circus.robocalc.robochart.VariableList;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import circus.robocalc.robochart.generator.csp.untimed.TypeGenerator;
 import com.google.inject.Inject;
@@ -22,10 +24,6 @@ import java.util.stream.Collectors;
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.generator.utils.MemoryFactory.Memory;
-import robocalc.robocert.generator.utils.MemoryFactory.Memory.Slot;
-import robocalc.robocert.generator.utils.name.BindingNamer;
-import robocalc.robocert.model.robocert.Binding;
 import robocalc.robocert.model.robocert.Interaction;
 
 /**
@@ -43,7 +41,7 @@ import robocalc.robocert.model.robocert.Interaction;
  *
  * @author Matt Windsor
  */
-public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp, TypeGenerator typeGen, BindingNamer bindingNamer) {
+public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp, TypeGenerator typeGen) {
 	private static final String MEM_OP_TYPE = "MemOp"; // in robocert_defs
 	private static final String LIFT_PROCESS = "lift";
 	private static final String RUN_PROCESS = "proc";
@@ -54,23 +52,22 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
 		Objects.requireNonNull(gu);
 		Objects.requireNonNull(csp);
 		Objects.requireNonNull(typeGen);
-		Objects.requireNonNull(bindingNamer);
 	}
 
 	/**
 	 * Generates the module for a memory.
 	 *
-	 * @param it  the memory to generate.
+	 * @param mem  the memory to generate.
 	 *
 	 * @return  a CSP-M module containing the memory definition (channels,
 	 *          process, and so on).
 	 */
-	public CharSequence generate(Memory it) {
-		return csp.moduleWithPrivate(name(it), generatePrivateBody(it), generatePublicBody(it));
+	public CharSequence generate(VariableList mem) {
+		return csp.moduleWithPrivate(name(mem), generatePrivateBody(mem), generatePublicBody(mem));
 	}
 
-	private String name(Memory it) {
-		final var parent = it.parent();
+	private String name(VariableList it) {
+		final var parent = EcoreUtil2.getContainerOfType(it, Interaction.class);
 		if (parent == null) {
 			return "MISSING_INTERACTION";
 		}
@@ -90,18 +87,18 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
 	}
 
 	/**
-	 * Gets a reference to the memory channel of binding b.
+	 * Gets a reference to the memory channel of variable v.
 	 *
 	 * This reference is relative to the parametric sequence group body, so
 	 * it assumes that we can traverse backwards through the binding to its
 	 * sequence.
 	 *
-	 * @param b  the binding for which we want a memory channel.
+	 * @param v  the binding for which we want a memory channel.
 	 *
 	 * @return  the partially-specified CSP-M memory channel.
 	 */
-	public CharSequence generateChannelRef(Binding b) {
-		return csp.namespaced(generateMemoryModuleRef(getSequence(b)), bindingNamer.getUnambiguousName(b));
+	public CharSequence generateChannelRef(Variable v) {
+		return csp.namespaced(generateMemoryModuleRef(getSequence(v)), v.getName());
 	}
 
 	private CharSequence generateMemoryModuleRef(Interaction it) {
@@ -112,11 +109,12 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
 		return Optional.ofNullable(it).map(Interaction::getName).orElse("unknown");
 	}
 
-	private Interaction getSequence(Binding b) {
-		return EcoreUtil2.getContainerOfType(b, Interaction.class);
+	private Interaction getSequence(Variable v) {
+		// TODO(@MattWindsor91): eventually this should be anything that can hold the parent variable.
+		return EcoreUtil2.getContainerOfType(v, Interaction.class);
 	}
 
-	private CharSequence generatePublicBody(Memory it) {
+	private CharSequence generatePublicBody(VariableList it) {
 		return """
 -- Get/set channels
 %s
@@ -134,32 +132,32 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
 	 * the definition process is a series of hidden in/out channels, one per
 	 * memory slot.  This method generates their CSP-M definitions.
 	 */
-	private CharSequence generateChannelDefinitions(Memory it) {
-		return it.slots().stream().map(this::generateChannelDefinition).collect(Collectors.joining("\n"));
+	private CharSequence generateChannelDefinitions(VariableList it) {
+		return it.getVars().stream().map(this::generateChannelDefinition).collect(Collectors.joining("\n"));
 	}
 
-	private CharSequence generateChannelDefinition(Memory.Slot it) {
-		return "channel %s {- %s -} : %s.%s".formatted(it.unambiguousName(), it.binding().getName(), MEM_OP_TYPE, typeGen.compileType(it.type()));
+	private CharSequence generateChannelDefinition(Variable it) {
+		return "channel %s : %s.%s".formatted(it.getName(),MEM_OP_TYPE, typeGen.compileType(it.getType()));
 	}
 
-	private CharSequence generatePrivateBody(Memory it) {
+	private CharSequence generatePrivateBody(VariableList it) {
 		return String.join("\n\n", generateSyncSet(it), generateProcess(it));
 	}
 
-	private CharSequence generateSyncSet(Memory it) {
-		return csp.definition(SYNC_SET, csp.enumeratedSet(mapOverSlots(it, Slot::unambiguousName)));
+	private CharSequence generateSyncSet(VariableList it) {
+		return csp.definition(SYNC_SET, csp.enumeratedSet(mapOverVariables(it, Variable::getName)));
 	}
 
-	private CharSequence generateProcess(Memory it) {
+	private CharSequence generateProcess(VariableList it) {
 		return csp.definition(generateProcessHeader(it), generateProcessBody(it));
 	}
 
-	private CharSequence generateProcessHeader(Memory it) {
+	private CharSequence generateProcessHeader(VariableList it) {
 		return generateRun(it, this::generateHeaderName);
 	}
 
-	private CharSequence generateInitialRun(Memory it) {
-		return generateRun(it, (x) -> gu.typeDefaultValue(x.type()));
+	private CharSequence generateInitialRun(VariableList it) {
+		return generateRun(it, x -> gu.typeDefaultValue(x.getType()));
 	}
 
 	/**
@@ -171,41 +169,41 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
 	 *
 	 * @return a header or invocation of the memory's run process, in CSP-M.
 	 */
-	private CharSequence generateRun(Memory it, Function<Memory.Slot, CharSequence> transform) {
-		return csp.function(RUN_PROCESS, mapOverSlots(it, transform));
+	private CharSequence generateRun(VariableList it, Function<Variable, CharSequence> transform) {
+		return csp.function(RUN_PROCESS, mapOverVariables(it, transform));
 	}
 
 	// Note that these are the reverse direction from how they appear to
 	// processes using the memory.  This may seem obvious, but I got it
 	// wrong at first (GitHub issue #80 on robocert-sequences...)
 
-	private CharSequence[] mapOverSlots(Memory it, Function<Slot, CharSequence> transform) {
-		return it.slots().stream().map(transform).toArray(CharSequence[]::new);
+	private CharSequence[] mapOverVariables(VariableList it, Function<Variable, CharSequence> transform) {
+		return it.getVars().stream().map(transform).toArray(CharSequence[]::new);
 	}
 
-	private CharSequence generateHeaderName(Memory.Slot it) {
-		return "Bnd_" + it.unambiguousName();
+	private CharSequence generateHeaderName(Variable it) {
+		return "Bnd_" + it.getName();
 	}
 
-	private CharSequence generateProcessBody(Memory it) {
-		return it.slots().stream().map((s) -> generateSlotEntry(it, s)).collect(Collectors.joining(" [] "));
+	private CharSequence generateProcessBody(VariableList it) {
+		return it.getVars().stream().map(s -> generateVariableBody(it, s)).collect(Collectors.joining(" [] "));
 	}
 
-	private CharSequence generateSlotEntry(Memory m, Slot s) {
+	private CharSequence generateVariableBody(VariableList m, Variable s) {
 		return """
 (
 	%s -> %s
 []
 	%s -> %s
 )
-""".formatted(generateSlotIn(s), generateProcessHeader(m), generateSlotOut(s), generateProcessHeader(m));
+""".formatted(generateVariableIn(s), generateProcessHeader(m), generateVariableOut(s), generateProcessHeader(m));
 	}
 
-	private CharSequence generateSlotIn(Memory.Slot it) {
-		return "%s.set?%s".formatted(it.unambiguousName(), generateHeaderName(it));
+	private CharSequence generateVariableIn(Variable it) {
+		return "%s.set?%s".formatted(it.getName(), generateHeaderName(it));
 	}
 
-	private CharSequence generateSlotOut(Memory.Slot it) {
-		return "%s.get!%s".formatted(it.unambiguousName(), generateHeaderName(it));
+	private CharSequence generateVariableOut(Variable it) {
+		return "%s.get!%s".formatted(it.getName(), generateHeaderName(it));
 	}
 }

@@ -1,11 +1,10 @@
 package robocalc.robocert.generator.tockcsp.core;
 
+import circus.robocalc.robochart.Variable;
 import com.google.inject.Inject;
-
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.generator.utils.VariableExtensions;
 import robocalc.robocert.model.robocert.BinaryExpr;
-import robocalc.robocert.model.robocert.BindingExpr;
 import robocalc.robocert.model.robocert.BoolExpr;
 import robocalc.robocert.model.robocert.CertExpr;
 import robocalc.robocert.model.robocert.ConstExpr;
@@ -30,7 +29,7 @@ import robocalc.robocert.model.robocert.RelationOperator;
  */
 public class ExpressionGenerator {
 	@Inject
-	private BindingGenerator bg;
+	private TemporaryVariableGenerator bg;
 	@Inject
 	private VariableExtensions vx;
 	@Inject
@@ -48,17 +47,23 @@ public class ExpressionGenerator {
 		// couldn't get the UI to load under preview mode.
 		if (it instanceof BinaryExpr b)
 			return generateBinary(b);
-		if (it instanceof BindingExpr n && n.getSource() != null)
-			return bg.generateExpressionName(n.getSource());
 		if (it instanceof BoolExpr b)
 			return Boolean.toString(b.isTruth());
 		if (it instanceof ConstExpr k)
-			return vx.constantId(k.getConstant());
+			return generateVariable(k.getConstant());
 		if (it instanceof IntExpr i)
 			return Integer.toString(i.getValue());
 		if (it instanceof MinusExpr m)
 			return "-(" + generate(m.getExpr()) + ")";
 		return ush.unsupported(it, "expression", "0");
+	}
+
+	private CharSequence generateVariable(Variable v) {
+		// in RoboCert, variables are either RoboChart constants or spec-level bindings.
+		return switch (v.getModifier()) {
+			case CONST -> vx.constantId(v);
+			case VAR -> bg.generateExpressionName(v);
+		};
 	}
 
 	private CharSequence generateBinary(BinaryExpr it) {

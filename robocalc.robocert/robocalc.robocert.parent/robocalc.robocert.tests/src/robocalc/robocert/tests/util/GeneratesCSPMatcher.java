@@ -12,83 +12,81 @@
  ********************************************************************************/
 package robocalc.robocert.tests.util;
 
+import com.google.common.base.Strings;
 import java.util.function.Function;
-
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.google.common.base.Strings;
-
 /**
- * Matcher that checks the generator output for a particular object produces
- * CSP-M that normalises to a given form.
- * 
+ * Matcher that checks the generator output for a particular object produces CSP-M that normalises
+ * to a given form.
+ *
  * @author Matt Windsor
  */
 public class GeneratesCSPMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
-	private String expected;
-	private Function<T, CharSequence> generator;
-	
-	/**
-	 * @param <T> type of EObject being generated.
-	 * @param expected the expected value modulo light normalisation.
-	 * @param generator the generator to test.
-	 * @return the matcher.
-	 */
-	public static <T> GeneratesCSPMatcher<T> generatesCSP(String expected, Function<T, CharSequence> generator) {
-		return new GeneratesCSPMatcher<T>(expected, generator);
-	}
-	
-	/**
-	 * Constructs a generates-CSP matcher.
-	 *
-	 * @param expected the expected value modulo light normalisation.
-	 * @param generator the generator to test.
-	 */
-	public GeneratesCSPMatcher(String expected, Function<T, CharSequence> generator) {
-		super();
-		this.expected = tidy(expected);		
-		this.generator = generator;
-	}
+  private final String expected;
+  private final Function<T, CharSequence> generator;
 
-	@Override
-	public void describeTo(Description description) {
-		description.appendText("CSP-M equivalent to: ");
-		description.appendText(expected);
-	}
+  /**
+   * Constructs a generates-CSP matcher.
+   *
+   * @param expected the expected value modulo light normalisation.
+   * @param generator the generator to test.
+   */
+  public GeneratesCSPMatcher(String expected, Function<T, CharSequence> generator) {
+    super();
+    this.expected = tidy(expected);
+    this.generator = generator;
+  }
 
-	@Override
-	protected boolean matchesSafely(T item, Description mismatchDescription) {	
-		var result = generator.apply(item).toString();
-		if (Strings.isNullOrEmpty(result) && !Strings.isNullOrEmpty(expected)) {
-			mismatchDescription.appendText("empty generation");
-			return false;
-		}
-		result = tidy(result);
-		if (result.equals(expected))
-			return true;
-		
-		var prefix = Strings.commonPrefix(result, expected);
-		var suffix = Strings.commonSuffix(result, expected);
-		var different = result.substring(prefix.length(), result.length() - suffix.length());
-		
-		mismatchDescription.appendText("got CSP-M ([[ ]] = difference): ");
-		mismatchDescription.appendText(prefix);
-		mismatchDescription.appendText("[[");
-		mismatchDescription.appendText(different);
-		mismatchDescription.appendText("]]");
-		mismatchDescription.appendText(suffix);
-		
-		return false;
-	}
-	
-	private static String tidy(String it) {
-		// Compress whitespace
-		var tidied = it.strip().replaceAll("\\s+", " ");
-		// Remove inner whitespace in delimiters
-		tidied = tidied.replaceAll("\\( +", "(").replaceAll(" +\\)", ")");
-		tidied = tidied.replaceAll("\\{ +", "{").replaceAll(" +\\}", "}");
-		tidied = tidied.replaceAll("\\{\\| +", "{|").replaceAll(" +\\|\\}", "|}");
-		return tidied;
-	}
+  /**
+   * @param <T> type of EObject being generated.
+   * @param expected the expected value modulo light normalisation.
+   * @param generator the generator to test.
+   * @return the matcher.
+   */
+  public static <T> GeneratesCSPMatcher<T> generatesCSP(
+      String expected, Function<T, CharSequence> generator) {
+    return new GeneratesCSPMatcher<>(expected, generator);
+  }
+
+  private static String tidy(String it) {
+    // Compress whitespace
+    var tidied = it.strip().replaceAll("\\s+", " ");
+    // Remove inner whitespace in delimiters
+    tidied = tidied.replaceAll("\\( +", "(").replaceAll(" +\\)", ")");
+    tidied = tidied.replaceAll("\\{ +", "{").replaceAll(" +}", "}");
+    tidied = tidied.replaceAll("\\{\\| +", "{|").replaceAll(" +\\|}", "|}");
+    return tidied;
+  }
+
+  @Override
+  public void describeTo(Description description) {
+    description.appendText("CSP-M equivalent to: ");
+    description.appendText(expected);
+  }
+
+  @Override
+  protected boolean matchesSafely(T item, Description mismatchDescription) {
+    var result = generator.apply(item).toString();
+    if (Strings.isNullOrEmpty(result) && !Strings.isNullOrEmpty(expected)) {
+      mismatchDescription.appendText("empty generation");
+      return false;
+    }
+    result = tidy(result);
+    if (result.equals(expected)) return true;
+
+    final var prefix = Strings.commonPrefix(result, expected);
+    final var suffix = Strings.commonSuffix(result, expected);
+    final var different = result.substring(prefix.length(), result.length() - suffix.length());
+
+    mismatchDescription.appendText("got CSP-M ([[ ]] = difference): ");
+    mismatchDescription.appendText(prefix);
+    mismatchDescription.appendText("[[");
+    mismatchDescription.appendText(different);
+    mismatchDescription.appendText("]]");
+    mismatchDescription.appendText(suffix);
+
+    return false;
+  }
 }

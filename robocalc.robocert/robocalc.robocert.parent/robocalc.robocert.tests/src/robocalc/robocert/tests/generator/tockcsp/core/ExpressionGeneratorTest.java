@@ -15,19 +15,18 @@ package robocalc.robocert.tests.generator.tockcsp.core;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
+import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.google.inject.Inject;
-
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.model.robocert.CertExpr;
 import robocalc.robocert.model.robocert.LogicalOperator;
 import robocalc.robocert.model.robocert.RelationOperator;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
+import robocalc.robocert.tests.util.DummyVariableFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
@@ -38,10 +37,9 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class ExpressionGeneratorTest {
-	@Inject
-	private ExpressionFactory ef;
-	@Inject
-	private ExpressionGenerator eg;
+  @Inject private ExpressionFactory ef;
+	@Inject private ExpressionGenerator eg;
+	@Inject private DummyVariableFactory vf;
 
 	/**
 	 * Tests that generating the Boolean literals works properly.
@@ -71,7 +69,7 @@ class ExpressionGeneratorTest {
 	void testGenerateMinusExprs() {
 		assertThat(ef.minus(ef.integer(1)), generates("-(1)"));
 		assertThat(ef.minus(ef.minus(ef.integer(42))), generates("-(-(42))"));
-		assertThat(ef.minus(ef.constant("x")), generates("-(const_x)"));
+		assertThat(ef.minus(ef.var(vf.constant("x"))), generates("-(const_x)"));
 	}
 
 	/**
@@ -80,7 +78,7 @@ class ExpressionGeneratorTest {
 	@Test
 	void testGenerateLogicalExprs() {
 		assertThat(ef.logic(LogicalOperator.AND, ef.bool(true), ef.bool(false)), generates("(true) and (false)"));
-		assertThat(ef.logic(LogicalOperator.OR, ef.binding("x"), ef.constant("y")), generates("(Bnd__x) or (const_y)"));
+		assertThat(ef.logic(LogicalOperator.OR, ef.var(vf.mem("x")), ef.var(vf.constant("y"))), generates("(Bnd__x) or (const_y)"));
 	}
 
 	/**
@@ -95,7 +93,6 @@ class ExpressionGeneratorTest {
 	 * Shortcut for building the Hamcrest matcher for expressions.
 	 *
 	 * @param expected the expected output.
-	 * @param input    the input expression.
 	 *
 	 * @return the matcher.
 	 */

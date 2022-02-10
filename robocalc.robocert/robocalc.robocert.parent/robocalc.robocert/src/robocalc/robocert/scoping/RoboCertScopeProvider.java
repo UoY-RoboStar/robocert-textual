@@ -13,18 +13,19 @@
  ********************************************************************************/
 package robocalc.robocert.scoping;
 
+import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.CONST_ASSIGNMENT__CONSTANTS;
+import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.CONST_EXPR__CONSTANT;
+import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.EVENT_TOPIC__EVENT;
+import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.OPERATION_TOPIC__OPERATION;
+
+import com.google.inject.Inject;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
-
-import com.google.inject.Inject;
-
-import robocalc.robocert.generator.utils.EObjectExtensions;
+import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.ConstExpr;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.OperationTopic;
-import robocalc.robocert.model.robocert.ConstAssignment;
-import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.*;
 
 /**
  * This class contains custom scoping description.
@@ -33,14 +34,13 @@ import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.*;
  * on how and when to use it.
  */
 public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
-	@Inject private EObjectExtensions ex;
-	@Inject private ConstantScopeExtensions cx;
+	@Inject private VariableScopeProvider vsp;
 	@Inject private TopicScopeProvider tx;
 
 	
 	@Override
 	public IScope getScope(EObject context, EReference reference) {
-		var scope = tryGetScope(context, reference);
+		final var scope = tryGetScope(context, reference);
 		return scope == null ? super.getScope(context, reference) : scope;
 	}
 	
@@ -59,17 +59,9 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 		if (context instanceof OperationTopic o && reference == OPERATION_TOPIC__OPERATION)
 			return tx.getOperationScope(o);
 		if (context instanceof ConstAssignment k && reference == CONST_ASSIGNMENT__CONSTANTS)
-			return cx.constAssignmentScope(k);
+			return vsp.constAssignmentScope(k);
 		if (context instanceof ConstExpr x && reference == CONST_EXPR__CONSTANT)
-			return constScope(x);
+			return vsp.exprScope(x);
 		return null;
-	}
-
-	private IScope constScope(ConstExpr x) {
-		var target = ex.getTargetOfParentGroup(x);
-		if (target == null) {
-			return null;
-		} 
-		return cx.targetScope(target);
 	}
 }

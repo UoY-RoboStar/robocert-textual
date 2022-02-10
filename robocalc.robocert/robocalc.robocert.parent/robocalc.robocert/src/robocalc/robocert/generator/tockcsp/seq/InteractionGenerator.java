@@ -24,7 +24,6 @@ import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
-import robocalc.robocert.generator.utils.MemoryFactory;
 import robocalc.robocert.model.robocert.Interaction;
 
 /**
@@ -36,7 +35,6 @@ public class InteractionGenerator {
   @Inject private LetGenerator lg;
   @Inject private MessageSetGenerator msg;
   @Inject private CSPStructureGenerator csp;
-  @Inject private MemoryFactory mf;
   @Inject private SubsequenceGenerator sg;
   @Inject private ModuleGenerator mg;
   @Inject private LifelineContextFactory lcf;
@@ -53,7 +51,16 @@ public class InteractionGenerator {
     // TODO(@MattWindsor91): work out whether the memory is shared between
     // lifelines, or unique to each.
     final var inner = generateWithoutMemory(s);
-    return mf.hasMemory(s) ? mg.lift(s, inner) : csp.tuple(inner);
+    return elideMemory(s) ? csp.tuple(inner) : mg.lift(s, inner);
+  }
+
+  /**
+   * Can we safely get away with not emitting a memory?
+   * @param s the interaction for which we are generating CSP-M.
+   * @return true if, and only if, there is no need to emit a memory for this interaction.
+   */
+  private boolean elideMemory(Interaction s) {
+    return s.getVariables().getVars().isEmpty();
   }
 
   private CharSequence generateWithoutMemory(Interaction s) {

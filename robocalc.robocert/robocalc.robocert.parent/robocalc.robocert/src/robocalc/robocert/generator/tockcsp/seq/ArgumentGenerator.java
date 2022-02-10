@@ -15,14 +15,14 @@ package robocalc.robocert.generator.tockcsp.seq;
 import com.google.inject.Inject;
 import robocalc.robocert.model.robocert.ExpressionValueSpecification;
 import robocalc.robocert.model.robocert.ValueSpecification;
-import robocalc.robocert.generator.tockcsp.core.BindingGenerator;
+import robocalc.robocert.generator.tockcsp.core.TemporaryVariableGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.model.robocert.WildcardValueSpecification;
 
 /**
  * Generates fragments of CSP prefixes and event sets relating to value specifications.
  */
-public record ArgumentGenerator (BindingGenerator bindingGen, ExpressionGenerator exprGen) {
+public record ArgumentGenerator (TemporaryVariableGenerator bindingGen, ExpressionGenerator exprGen) {
 	// TODO(@MattWindsor91): use CSPStructureGenerator
 
 	/**
@@ -52,7 +52,7 @@ public record ArgumentGenerator (BindingGenerator bindingGen, ExpressionGenerato
 			the introduced variable is then used to store the input to memory.
 			Otherwise, the input is a wildcard.
 			*/
-			return "?" + bindingGen.generateInputName(w.getBinding());
+			return "?" + bindingGen.generateInputName(w.getDestination());
 		}
 		throw new IllegalArgumentException("unsupported value spec in prefix position: %s".formatted(it));
 	}
@@ -72,7 +72,7 @@ public record ArgumentGenerator (BindingGenerator bindingGen, ExpressionGenerato
 		}
 		if (it instanceof WildcardValueSpecification w) {
 			// This expands to a reference to an argument in the enclosing set comprehension.
-			return "." + bindingGen.generateArgumentName(w.getBinding(), index);
+			return "." + bindingGen.generateArgumentName(w.getDestination(), index);
 		}
 		throw new IllegalArgumentException("unsupported value spec in set position: %s".formatted(it));
 	}

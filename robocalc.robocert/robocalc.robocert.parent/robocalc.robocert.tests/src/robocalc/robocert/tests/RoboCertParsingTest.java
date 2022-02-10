@@ -30,7 +30,9 @@ class RoboCertParsingTest {
 target M: module Mod
 sequence group S for M:
 	use target as T, world as W
-	sequence Test for T and W:
+	sequence Test:
+		use T and W
+		var x: real
 		anything until deadlock on T
 """));
 		Assertions.assertNotNull(result);

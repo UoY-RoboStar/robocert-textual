@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.xtext.xbase.lib.Pair;
-import robocalc.robocert.generator.tockcsp.core.BindingGenerator;
+import robocalc.robocert.generator.tockcsp.core.TemporaryVariableGenerator;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.OperationTopic;
@@ -30,7 +30,7 @@ import robocalc.robocert.model.robocert.WildcardValueSpecification;
  *
  * @author Matt Windsor
  */
-public record TopicGenerator(BindingGenerator bg,
+public record TopicGenerator(TemporaryVariableGenerator bg,
 														 TypeGenerator tg) {
 
 	@Inject
@@ -74,7 +74,7 @@ public record TopicGenerator(BindingGenerator bg,
 	}
 
 	private CharSequence generateRange(MessageTopic t, WildcardValueSpecification arg, long index) {
-		final var name = bg.generateArgumentName(arg.getBinding(), index);
+		final var name = bg.generateArgumentName(arg.getDestination(), index);
 		final var ty = tg.compileType(paramTypeAt(t, index));
 		return "%s <- %s".formatted(name, ty);
 	}

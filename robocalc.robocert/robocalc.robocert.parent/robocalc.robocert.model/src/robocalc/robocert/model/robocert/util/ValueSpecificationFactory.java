@@ -14,7 +14,9 @@
 package robocalc.robocert.model.robocert.util;
 
 import com.google.inject.Inject;
-import robocalc.robocert.model.robocert.Binding;
+
+import circus.robocalc.robochart.RoboChartFactory;
+import circus.robocalc.robochart.Variable;
 import robocalc.robocert.model.robocert.ExpressionValueSpecification;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.WildcardValueSpecification;
@@ -24,7 +26,7 @@ import robocalc.robocert.model.robocert.WildcardValueSpecification;
  *
  * @author Matt Windsor
  */
-public record ValueSpecificationFactory(ExpressionFactory exprFactory, RoboCertFactory rcertFactory) {
+public record ValueSpecificationFactory(ExpressionFactory exprFactory, RoboChartFactory rchartFactory, RoboCertFactory rcertFactory) {
 
   /**
    * Constructs a value specification factory.
@@ -62,9 +64,9 @@ public record ValueSpecificationFactory(ExpressionFactory exprFactory, RoboCertF
    *
    * @return  a bound value specification.
    */
-  public WildcardValueSpecification bound(Binding bnd) {
+  public WildcardValueSpecification bound(Variable bnd) {
     final var spec = rcertFactory.createWildcardValueSpecification();
-    spec.setBinding(bnd);
+    spec.setDestination(bnd);
     return spec;
   }
 
@@ -75,9 +77,10 @@ public record ValueSpecificationFactory(ExpressionFactory exprFactory, RoboCertF
    *
    * @return the binding.
    */
-  public Binding binding(String name) {
-    final var bnd = rcertFactory.createBinding();
+  public Variable binding(String name) {
+    final var bnd = rchartFactory.createVariable();
     bnd.setName(name);
+    bnd.setType(rchartFactory.createAnyType());
     return bnd;
   }
 }

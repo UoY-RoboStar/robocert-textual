@@ -22,7 +22,6 @@ import robocalc.robocert.generator.tockcsp.core.SpecGroupGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
-import robocalc.robocert.generator.utils.MemoryFactory;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SequenceGroup;
 
@@ -35,7 +34,6 @@ public class SequenceGroupGenerator extends SpecGroupGenerator<SequenceGroup> {
   @Inject private CSPStructureGenerator csp;
   @Inject private InteractionGenerator sg;
   @Inject private MessageSetGenerator msg;
-  @Inject private MemoryFactory mf;
   @Inject private ModuleGenerator mg;
 
   @Override
@@ -55,7 +53,9 @@ public class SequenceGroupGenerator extends SpecGroupGenerator<SequenceGroup> {
   }
 
   private Stream<CharSequence> memModule(EList<Interaction> sequences) {
-    return mf.buildMemories(sequences.stream())
+    return sequences.stream()
+        .map(Interaction::getVariables)
+        .filter(x -> !x.getVars().isEmpty())
         .map(mg::generate)
         .collect(collectToModule(SpecGroupParametricField.MEMORY_MODULE));
   }

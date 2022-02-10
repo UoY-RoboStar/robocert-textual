@@ -12,45 +12,48 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.core;
 
-import robocalc.robocert.model.robocert.Binding;
+import circus.robocalc.robochart.Variable;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
- * Generates CSP-M for handling various aspects of event value bindings.
+ * Generates CSP-M for handling temporary copies of variables.
  *
  * @author Matt Windsor
  */
-public class BindingGenerator {
+public class TemporaryVariableGenerator {
 	/**
-	 * Generates CSP-M for the name of a binding in an expression.
+	 * Generates CSP-M for the name of a temporary copy of a variable in an expression.
 	 *
-	 * The binding must have a name (and this must be checked somewhere).
+	 * The variable must have a name (and this must be checked somewhere).
 	 *
-	 * @param it the binding for which we are generating.
+	 * @param b the binding for which we are generating.
 	 *
 	 * @return the generated CSP-M name for the binding in the expression.
 	 */
-	public CharSequence generateExpressionName(Binding b) {
-		var name = tryGetName(b);
-		if (name == null)
-			throw new NullPointerException("Tried to use a nameless binding as an expression");
+	public CharSequence generateExpressionName(Variable b) {
+		Objects.requireNonNull(b, "Tried to use a null variable as an expression");
+
+		final var name = b.getName();
+		Objects.requireNonNull(name, "Tried to use a nameless variable as an expression");
+
 		return mangle(name);
 	}
 
 	/**
-	 * Generates CSP-M for the name of a binding in input position.
+	 * Generates CSP-M for the name of a variable binding in input position.
 	 *
-	 * If the binding exists, its name will be used for the variable; if not, we use
+	 * If the variable is non-null, its name will be used for the variable; if not, we use
 	 * '_' (the CSP-M wildcard bind).
 	 *
-	 * @param it the binding for which we are generating (may be null).
+	 * @param b the binding for which we are generating (may be null).
 	 *
 	 * @return the generated CSP-M name for the binding.
 	 */
-	public CharSequence generateInputName(Binding b) {
+	public CharSequence generateInputName(Variable b) {
 		// The order here is such that an unnamed binding will become
 		// _, not Bnd___.
-		var name = tryGetName(b);
-		return name == null ? "_" : mangle(name);
+		return Optional.ofNullable(tryGetName(b)).map(this::mangle).orElse("_");
 	}
 
 	/**
@@ -64,10 +67,10 @@ public class BindingGenerator {
 	 *
 	 * @return the generated CSP-M name for the binding in the argument.
 	 */
-	public CharSequence generateArgumentName(Binding b, long index) {
+	public CharSequence generateArgumentName(Variable b, long index) {
 		// The order here is such that an unnamed binding at position 42 will
 		// become Bnd__42, not 42; it is different from the input case.
-		var name = tryGetName(b);
+		final var name = tryGetName(b);
 		return mangle(name == null ? Long.toString(index) : name);
 	}
 
@@ -84,7 +87,7 @@ public class BindingGenerator {
 		return "Bnd__" + name;
 	}
 
-	private String tryGetName(Binding b) {
+	private String tryGetName(Variable b) {
 		return b == null ? null : b.getName();
 	}
 }

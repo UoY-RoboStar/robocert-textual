@@ -85,6 +85,6 @@ public record InteractionOperandGenerator(ExpressionGenerator eg,
 	private Stream<Guard> neighbourGuards(ElseGuard l) {
 		final var branchFrag = EcoreUtil2.getContainerOfType(l, BranchFragment.class);
 		// NOTE(@MattWindsor91): this doesn't filter out ElseGuards, check whether this is a problem?
-		return Optional.ofNullable(branchFrag).stream().flatMap((f) -> f.getBranches().stream().map(InteractionOperand::getGuard));
+		return Optional.ofNullable(branchFrag).stream().flatMap(f -> f.getBranches().stream().map(InteractionOperand::getGuard));
 	}
 }

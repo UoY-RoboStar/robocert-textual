@@ -14,6 +14,8 @@ package robocalc.robocert.tests.generator.tockcsp.core;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import circus.robocalc.robochart.RoboChartFactory;
+import circus.robocalc.robochart.Variable;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
@@ -21,9 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.core.BindingGenerator;
-import robocalc.robocert.model.robocert.Binding;
-import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.generator.tockcsp.core.TemporaryVariableGenerator;
 import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
@@ -32,11 +32,11 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
-class BindingGeneratorTest {
+class TemporaryVariableGeneratorTest {
 	@Inject
-	private RoboCertFactory rc;
+	private RoboChartFactory rc;
 	@Inject
-	private BindingGenerator bg;
+	private TemporaryVariableGenerator bg;
 
 	//
 	// Input
@@ -86,13 +86,14 @@ class BindingGeneratorTest {
 	// Test helpers
 	//
 
-	private CharSequence generateArgumentName(Binding b) {
+	private CharSequence generateArgumentName(Variable b) {
 		return bg.generateArgumentName(b, 0);
 	}
 
-	private Binding binding(String n) {
-		final var result = rc.createBinding();
+	private Variable binding(String n) {
+		final var result = rc.createVariable();
 		result.setName(n);
+		result.setType(rc.createAnyType());
 		return result;
 	}
 }
