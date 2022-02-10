@@ -69,7 +69,7 @@ public record VariableScopeProvider(
   }
 
   private Stream<Variable> specMemVariables(Specification x) {
-    return x.getVariables().getVars().stream();
+    return Optional.ofNullable(x.getVariables()).stream().flatMap(y -> y.getVars().stream());
   }
 
   /**

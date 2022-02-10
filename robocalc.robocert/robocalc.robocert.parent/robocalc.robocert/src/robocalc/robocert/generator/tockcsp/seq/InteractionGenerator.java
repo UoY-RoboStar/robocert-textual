@@ -12,6 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq;
 
+import circus.robocalc.robochart.VariableList;
 import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 import java.util.List;
@@ -60,7 +61,8 @@ public class InteractionGenerator {
    * @return true if, and only if, there is no need to emit a memory for this interaction.
    */
   private boolean elideMemory(Interaction s) {
-    return s.getVariables().getVars().isEmpty();
+    final var variables = s.getVariables();
+    return variables == null || variables.getVars().isEmpty();
   }
 
   private CharSequence generateWithoutMemory(Interaction s) {

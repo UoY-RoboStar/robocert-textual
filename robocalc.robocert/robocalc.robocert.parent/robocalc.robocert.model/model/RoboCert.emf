@@ -77,7 +77,7 @@ abstract class SpecGroup extends Group, CSPContextSource {
 @genmodel(documentation="A specification (which lives in some form of SpecGroup).")
 abstract class Specification extends robochart.NamedElement, Process {
 	@genmodel(documentation="The variables available for receiving arguments.")
-	val robochart.VariableList[1] variables;
+	val robochart.VariableList[0..1] variables;
 }
 
 

@@ -321,7 +321,7 @@ fragment ActorList *:
 Interaction:
 	'sequence' name=ID ':' BEGIN
 	'use' actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?
-	variables=InteractionVars
+	(variables=InteractionVars)?
 	Subsequence
 	END;
 
@@ -330,7 +330,7 @@ Interaction:
  */
 InteractionVars returns VariableList:
 	{VariableList}
-	(modifier=InteractionVarsModifier vars+=Variable (',' vars+=Variable)* (','? 'and' vars+=Variable)?)?
+	modifier=InteractionVarsModifier vars+=Variable (',' vars+=Variable)* (','? 'and' vars+=Variable)?
 ;
 
 /**

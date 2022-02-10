@@ -55,7 +55,7 @@ public class SequenceGroupGenerator extends SpecGroupGenerator<SequenceGroup> {
   private Stream<CharSequence> memModule(EList<Interaction> sequences) {
     return sequences.stream()
         .map(Interaction::getVariables)
-        .filter(x -> !x.getVars().isEmpty())
+        .filter(x -> x != null && !x.getVars().isEmpty())
         .map(mg::generate)
         .collect(collectToModule(SpecGroupParametricField.MEMORY_MODULE));
   }
