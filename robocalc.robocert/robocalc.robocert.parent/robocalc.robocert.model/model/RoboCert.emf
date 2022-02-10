@@ -110,9 +110,6 @@ abstract class Target extends Process, robochart.NamedElement {
 
 	// TODO(@MattWindsor91): move parameterisation here?
 
-	@genmodel(documentation="Any components accessible from this target.")
-	derived volatile transient readonly ref robochart.ConnectionNode[*] components;
-
 	@genmodel(documentation="Any elements inside the context of this target.")
 	derived volatile transient readonly ref robochart.NamedElement[*] contextElements;
 
@@ -120,18 +117,60 @@ abstract class Target extends Process, robochart.NamedElement {
 	derived volatile transient readonly ref robochart.NamedElement[1] element;	
 }
 
+//
+// Component targets
+//
+
+@genmodel(documentation="A target referring to the behaviour of a component.")
+abstract class ComponentTarget extends Target {
+}
+
 @genmodel(documentation="A target referring to a RoboChart module.
 
 Such a target has the robotic platform as its context and its element is the module.")
-class ModuleTarget extends Target {
+class ModuleTarget extends ComponentTarget {
 	@genmodel(documentation="The module referred to by this target.")
 	ref robochart.RCModule[1] module;
 }
 
 @genmodel(documentation="A target referring to a RoboChart controller.")
-class ControllerTarget extends Target {
+class ControllerTarget extends ComponentTarget {
 	@genmodel(documentation="The controller referred to by this target.")
-	ref robochart.Controller[1] controller;
+	ref robochart.ControllerDef[1] controller;
+}
+
+@genmodel(documentation="A target referring to a RoboChart state machine.")
+class StateMachineTarget extends ComponentTarget {
+	@genmodel(documentation="The state machine referred to by this target.")
+	ref robochart.StateMachineDef[1] stm;
+}
+
+@genmodel(documentation="A target referring to a RoboChart operation.")
+class OperationTarget extends ComponentTarget {
+	@genmodel(documentation="The operation referred to by this target.")
+	ref robochart.OperationDef[1] operation;
+}
+
+//
+// Collection targets
+//
+
+@genmodel(documentation="A target that contains a collection of elements.")
+abstract class CollectionTarget extends Target {
+	@genmodel(documentation="Any components accessible from this target.")
+	derived volatile transient readonly ref robochart.ConnectionNode[*] components;	
+}
+
+@genmodel(documentation="A target referring to the contents of a RoboChart module.")
+class InModuleTarget extends CollectionTarget {
+	@genmodel(documentation="The module referred to by this target.")
+	ref robochart.RCModule[1] module;
+}
+
+@genmodel(documentation="A target referring to the contents of a RoboChart controller.")
+class InControllerTarget extends CollectionTarget {
+	@genmodel(documentation="The controller referred to by this target.")
+	ref robochart.ControllerDef[1] controller;
 }
 
 @genmodel(documentation="Uses the target of a specification group as a process source.

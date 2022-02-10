@@ -91,13 +91,6 @@
         <details key="documentation" value="The group to which this target belongs."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="components" upperBound="-1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//ConnectionNode"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Any components accessible from this target."/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="contextElements" upperBound="-1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement"
         changeable="false" volatile="true" transient="true" derived="true">
@@ -113,7 +106,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ModuleTarget" eSuperTypes="#//Target">
+  <eClassifiers xsi:type="ecore:EClass" name="ComponentTarget" abstract="true" eSuperTypes="#//Target">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A target referring to the behaviour of a component."/>
+    </eAnnotations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModuleTarget" eSuperTypes="#//ComponentTarget">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A target referring to a RoboChart module.&#xD;&#xA;&#xD;&#xA;Such a target has the robotic platform as its context and its element is the module."/>
     </eAnnotations>
@@ -124,12 +122,67 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ControllerTarget" eSuperTypes="#//Target">
+  <eClassifiers xsi:type="ecore:EClass" name="ControllerTarget" eSuperTypes="#//ComponentTarget">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A target referring to a RoboChart controller."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="controller" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Controller">
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//ControllerDef">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The controller referred to by this target."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachineTarget" eSuperTypes="#//ComponentTarget">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A target referring to a RoboChart state machine."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stm" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//StateMachineDef">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The state machine referred to by this target."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OperationTarget" eSuperTypes="#//ComponentTarget">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A target referring to a RoboChart operation."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="operation" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationDef">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The operation referred to by this target."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CollectionTarget" abstract="true" eSuperTypes="#//Target">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A target that contains a collection of elements."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="components" upperBound="-1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//ConnectionNode"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Any components accessible from this target."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InModuleTarget" eSuperTypes="#//CollectionTarget">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A target referring to the contents of a RoboChart module."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="module" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//RCModule">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The module referred to by this target."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InControllerTarget" eSuperTypes="#//CollectionTarget">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A target referring to the contents of a RoboChart controller."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="controller" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//ControllerDef">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The controller referred to by this target."/>
       </eAnnotations>

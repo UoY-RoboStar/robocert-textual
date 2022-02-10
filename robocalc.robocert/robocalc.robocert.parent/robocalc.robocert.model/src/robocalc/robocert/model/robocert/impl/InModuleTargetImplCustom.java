@@ -13,24 +13,36 @@
 package robocalc.robocert.model.robocert.impl;
 
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
+import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
+import circus.robocalc.robochart.RoboticPlatform;
 import robocalc.robocert.model.robocert.util.DefinitionHelper;
 
 /**
- * Adds derived operation definitions to {@link ModuleTargetImpl}.
+ * Adds derived operation definitions to {@link InModuleTargetImpl}.
  *
  * @author Matt Windsor
  */
-class ModuleTargetImplCustom extends ModuleTargetImpl {
+class InModuleTargetImplCustom extends InModuleTargetImpl {
 	@Override
 	public NamedElement basicGetElement() {
 		return getModule();
 	}
 
+	@Override
+	public EList<ConnectionNode> getComponents() {
+		return nodes().filter(x -> !(x instanceof RoboticPlatform)).collect(Collectors.toCollection(BasicEList::new));
+	}
+
+	private Stream<ConnectionNode> nodes() {
+		return getModule().getNodes().stream();
+	}
+	
 	@Override
 	public EList<NamedElement> getContextElements() {
 		return new DefinitionHelper().platform(getModule()).stream().collect(Collectors.toCollection(BasicEList::new));
@@ -41,6 +53,6 @@ class ModuleTargetImplCustom extends ModuleTargetImpl {
 	 */
 	@Override
 	public String toString() {
-		return "module " + getModule().getName();
+		return "components of module " + getModule().getName();
 	}
 }

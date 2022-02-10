@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
+import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.Target;
 
 /**
@@ -37,7 +38,10 @@ public abstract class TargetImplCustomTest<T extends Target> {
 	 */
 	@Test
 	void testComponents() {
-		testListsEquivalent(expectedComponents(), example.getComponents());
+		// TODO(@MattWindsor91): this wrapper is a quickfix, consider replacing.
+		if (example instanceof CollectionTarget t) {
+			testListsEquivalent(expectedComponents(), t.getComponents());
+		}
 	}	
 	
 	/**
@@ -51,8 +55,8 @@ public abstract class TargetImplCustomTest<T extends Target> {
 
 	@Test
 	void testElement() {
-		var expected = expectedElement();
-		var actual = example.getElement();
+		final var expected = expectedElement();
+		final var actual = example.getElement();
 		
 		assertThat(expected, is(notNullValue()));
 		assertThat(expected, is(structurallyEqualTo(actual)));

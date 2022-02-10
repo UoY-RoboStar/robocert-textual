@@ -17,6 +17,7 @@ import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 
+import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.ComponentActor;
 import robocalc.robocert.model.robocert.RoboCertPackage;
 
@@ -41,11 +42,14 @@ public class ActorValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check
 	public void checkComponentMemberOfTarget(ComponentActor c) {
-		var target = c.getGroup().getTarget();
-		var node = c.getNode();
+		final var target = c.getGroup().getTarget();
+		final var node = c.getNode();
 
-		if (!target.getComponents().stream().anyMatch(x -> EcoreUtil.equals(node, x)))
-			error("Component must be a member of the target", RoboCertPackage.Literals.COMPONENT_ACTOR__NODE,
-					NOT_A_COMPONENT);
+		if (target instanceof CollectionTarget ct) {
+			if (ct.getComponents().stream().noneMatch(x -> EcoreUtil.equals(node, x)))
+				error("Component must be a member of the target", RoboCertPackage.Literals.COMPONENT_ACTOR__NODE,
+						 NOT_A_COMPONENT);
+		}
+		// TODO(@MattWindsor91): error here
 	}
 }

@@ -6,6 +6,7 @@ import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
 import robocalc.robocert.model.robocert.ImplicitEdge;
+import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTopic;
@@ -66,6 +67,13 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   public ModuleTarget createModuleTarget() {
     return new ModuleTargetImplCustom();
   }
+  
+  @Override
+  public InModuleTarget createInModuleTarget() {
+    return new InModuleTargetImplCustom();
+  }
+  
+  // TODO(@MattWindsor91): other targets
 
   @Override
   public OperationTopic createOperationTopic() {
