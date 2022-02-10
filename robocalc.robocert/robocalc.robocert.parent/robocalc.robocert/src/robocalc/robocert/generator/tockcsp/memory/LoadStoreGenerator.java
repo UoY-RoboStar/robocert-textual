@@ -1,5 +1,6 @@
 package robocalc.robocert.generator.tockcsp.memory;
 
+import circus.robocalc.robochart.RefExp;
 import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.VariableModifier;
 import com.google.inject.Inject;
@@ -8,7 +9,6 @@ import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.tockcsp.core.TemporaryVariableGenerator;
-import robocalc.robocert.model.robocert.ConstExpr;
 
 /**
  * Generates loads and stores between local storage and the memory module.
@@ -67,9 +67,12 @@ public class LoadStoreGenerator {
    * @return all non-constant variables referenced in expressions within it.
    */
   public Stream<Variable> getExprVariables(EObject it) {
-    return EcoreUtil2.eAllOfType(it, ConstExpr.class).stream()
-        .map(ConstExpr::getConstant)
-        .filter(x -> x.getModifier() == VariableModifier.VAR);
+    return EcoreUtil2.eAllOfType(it, RefExp.class).stream()
+        .mapMulti((r, p) -> {
+          if (r.getRef() instanceof Variable v && v.getModifier() == VariableModifier.VAR) {
+            p.accept(v);
+          }
+        });
   }
 
   private CharSequence generatePrefix(

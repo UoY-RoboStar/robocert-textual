@@ -24,7 +24,7 @@ import "platform:/resource/circus.robocalc.robochart/model/robochart.ecore";
  *
  * - With the exception of utility classes, the metamodel is structured based
  *   on how things are (or should be) structured in the RoboCert reference
- *   manual, as well as in the Sirius diagrams..
+ *   manual, as well as in the Sirius diagrams.
  * - The Sirius diagrams in `representations.aird` are probably a more
  *   approachable introduction to what is going on here.
  */
@@ -196,7 +196,7 @@ class Instantiation {
 	val ConstAssignment[*] assignments;
 
 	@genmodel(documentation="Gets any available instantiation for the constant in this instantiation.")	
-	derived readonly transient volatile op CertExpr[0..1] getConstant(robochart.Variable constant); 
+	derived readonly transient volatile op robochart.Expression[0..1] getConstant(robochart.Variable constant); 
 }
 
 @genmodel(documentation="Assigns a value to one or more constants.")
@@ -205,7 +205,7 @@ class ConstAssignment {
 	ref robochart.Variable[+] constants;
 	
 	@genmodel(documentation="The expression containing the new value of the constant(s).")
-	val CertExpr[1] value;
+	val robochart.Expression[1] value;
 	
 	@genmodel(documentation="Checks whether this assignment maps the given constant.")
 	derived readonly transient volatile op boolean[1] hasConstant(robochart.Variable constant);
@@ -270,116 +270,6 @@ enum CorePropertyType {
 }
 
 // TODO(@MattWindsor91): binary types
-
-//
-// EXPRESSIONS
-//
-// Generally, operator expressions are grouped into equivalence classes based
-// on similar semantic function and wellformedness conditions; for instance,
-// the relational operators are all in the same class.  This differs from
-// RoboChart, so it might change later.
-//
-
-@genmodel(documentation="A RoboCert expression.")
-abstract class CertExpr {
-}
-
-//
-// Literals
-//
-
-@genmodel(documentation="A RoboCert Boolean literal.")
-class BoolExpr extends CertExpr {
-	@genmodel(documentation="The truth value of the expression.")
-	attr boolean[1] truth;
-}
-
-@genmodel(documentation="A RoboCert integer literal.")
-class IntExpr extends CertExpr {
-	@genmodel(documentation="The value of the expression.")
-	attr int[1] value;
-}
-
-//
-// Unary operations
-//
-
-@genmodel(documentation="An expression that inverts the sign of another (arithmetic) expression.")
-class MinusExpr extends CertExpr {
-	// NOTE(@MattWindsor91): if there is ever a compelling reason to add more
-	// arithmetic unary operators, this should generalise to fit all of them.
-
-	@genmodel(documentation="The expression to modify.")
-	val CertExpr[1] expr; 
-}
-
-//
-// Binary operations
-//
-
-@genmodel(documentation="A binary expression.")
-abstract class BinaryExpr extends CertExpr {
-	// NOTE(@MattWindsor91): I've tried making this and other classes have
-	// a generic binary superclass, but ran into problems with Xtext being
-	// unable to deal with the resulting type erasure.
-
-	@genmodel(documentation="The left-hand side.")
-	val CertExpr[1] lhs;
-	
-	@genmodel(documentation="The right-hand side.")
-	val CertExpr[1] rhs;	
-}
-
-@genmodel(documentation="A logical binary expression.")
-class LogicalExpr extends BinaryExpr {	
-	@genmodel(documentation="The operator.")
-	attr LogicalOperator[1] operator;
-}
-
-@genmodel(documentation="A logical operator.")
-enum LogicalOperator {
-	@genmodel(documentation="Logical conjunction.")
-	AND;
-	@genmodel(documentation="Logical disjunction.")
-	OR;
-}
-
-@genmodel(documentation="A relational binary expression.")
-class RelationExpr extends BinaryExpr {
-	// TODO(@MattWindsor91): consider splitting </<=/>=/> and ==/!=, as
-	// they have different wellformedness conditions (eg, the former requires
-	// arithmetic types).
-	
-	@genmodel(documentation="The operator.")
-	attr RelationOperator[1] operator;
-}
-
-@genmodel(documentation="A relational operator.")
-enum RelationOperator {
-	@genmodel(documentation="Greater than.")
-	GT;
-	@genmodel(documentation="Greater than or equal.")
-	GE;
-	@genmodel(documentation="Equal.")
-	EQ;
-	@genmodel(documentation="Not equal.")
-	NE;
-	@genmodel(documentation="Greater than or equal.")
-	LE;
-	@genmodel(documentation="Less than.")
-	LT;
-}
-
-//
-// Variables
-//
-
-// TODO(@MattWindsor91): 
-@genmodel(documentation="A reference to a variable in the model.")
-class ConstExpr extends CertExpr {
-	@genmodel(documentation="The variable being referenced.")
-	ref robochart.Variable[1] constant;
-}
 
 //
 // MODALITIES
@@ -493,10 +383,10 @@ hot means 'implementation must be prepared to engage in both live and dead behav
 @genmodel(documentation="Fragment imposing a duration constraint on a block.")
 class DurationFragment extends BlockFragment {
 	@genmodel(documentation="Lower bound, in time units after the start of the block.")
-	val CertExpr[0..1] lowerBound;
+	val robochart.Expression[0..1] lowerBound;
 
 	@genmodel(documentation="Upper bound, in time units after the start of the block.")
-	val CertExpr[0..1] upperBound;
+	val robochart.Expression[0..1] upperBound;
 }
 
 @genmodel(documentation="An interaction fragment blocking the diagram until any occurrence happens on the block.
@@ -534,7 +424,7 @@ class DefiniteLoopBound extends LoopBound {
 	@genmodel(documentation="The number of times the loop must execute, unless prematurely broken.
 
 Evaluated once only.")
- 	val CertExpr[1] times;
+ 	val robochart.Expression[1] times;
 }
 
 @genmodel(documentation="A loop bound that executes a nondeterministic number of times that is at least a lower bound.
@@ -544,7 +434,7 @@ class LowerLoopBound extends LoopBound {
 	@genmodel(documentation="Lower number of times the loop must execute, unless prematurely broken.
 
 Evaluated once only.")
- 	val CertExpr[1] lowerTimes;
+ 	val robochart.Expression[1] lowerTimes;
 }
 
 @genmodel(documentation="A loop bound that executes a nondeterministic number of times between two bounds.
@@ -554,11 +444,11 @@ class RangeLoopBound extends LoopBound {
 	@genmodel(documentation="Lower number of times the loop must execute, unless prematurely broken.
 
 Evaluated once only.")
-	val CertExpr[1] lowerTimes;
+	val robochart.Expression[1] lowerTimes;
 	@genmodel(documentation="The upper number of times the loop must execute.
 
 Evaluated once only.")
-	val CertExpr[1] upperTimes;
+	val robochart.Expression[1] upperTimes;
 }
 
 //
@@ -602,7 +492,7 @@ class EmptyGuard extends Guard {
 
 @genmodel(documentation="A guard that is dependent on the truth value of an expression.")
 class ExprGuard extends Guard {
-	val CertExpr[1] expr;
+	val robochart.Expression[1] expr;
 }
 
 @genmodel(documentation="A guard that is true if all other guards in the BranchFragment are false.
@@ -643,7 +533,7 @@ class DeadlockOccurrence extends LifelineOccurrence {
 @genmodel(documentation="Represents a wait for some amount of time units.")
 class WaitOccurrence extends LifelineOccurrence {
 	@genmodel(documentation="The number of units to wait.")
-	val CertExpr[1] units;
+	val robochart.Expression[1] units;
 	
 	// TODO(@MattWindsor91): nondeterministic waits
 }
@@ -761,7 +651,7 @@ abstract class ValueSpecification {
 @genmodel(documentation="Value specified by an expression.")
 class ExpressionValueSpecification extends ValueSpecification {
 	@genmodel(documentation="The expression in question.")
-	val CertExpr[1] expr;
+	val robochart.Expression[1] expr;
 }
 
 @genmodel(documentation="Value left unconstrained (except by type), and possibly bound.")

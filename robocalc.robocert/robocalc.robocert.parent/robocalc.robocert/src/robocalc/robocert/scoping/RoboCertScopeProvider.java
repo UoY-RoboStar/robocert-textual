@@ -14,19 +14,18 @@
 package robocalc.robocert.scoping;
 
 import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.CONST_ASSIGNMENT__CONSTANTS;
-import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.CONST_EXPR__CONSTANT;
 import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.EVENT_TOPIC__EVENT;
 import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.OPERATION_TOPIC__OPERATION;
 
 import circus.robocalc.robochart.RoboChartPackage.Literals;
 import circus.robocalc.robochart.TypeRef;
+import circus.robocalc.robochart.RefExp;
 import circus.robocalc.robochart.textual.scoping.RoboChartScopeProvider;
 import com.google.inject.Inject;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.ConstExpr;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.OperationTopic;
 
@@ -64,7 +63,7 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 			return tx.getOperationScope(o);
 		if (context instanceof ConstAssignment k && reference == CONST_ASSIGNMENT__CONSTANTS)
 			return vsp.constAssignmentScope(k);
-		if (context instanceof ConstExpr x && reference == CONST_EXPR__CONSTANT)
+		if (context instanceof RefExp x && reference == Literals.REF_EXP__REF)
 			return vsp.exprScope(x);
 
 		// We delegate the following to RoboChart's scope provider:

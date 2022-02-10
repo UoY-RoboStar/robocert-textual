@@ -203,7 +203,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Specifies a (partial) instantiation of targets in a group."/>
     </eAnnotations>
-    <eOperations name="getConstant" eType="#//CertExpr">
+    <eOperations name="getConstant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Gets any available instantiation for the constant in this instantiation."/>
       </eAnnotations>
@@ -238,7 +238,7 @@
         <details key="documentation" value="The constant(s) being assigned."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="#//CertExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The expression containing the new value of the constant(s)."/>
@@ -320,142 +320,6 @@
         <details key="documentation" value="Termination."/>
       </eAnnotations>
     </eLiterals>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CertExpr" abstract="true">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A RoboCert expression."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BoolExpr" eSuperTypes="#//CertExpr">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A RoboCert Boolean literal."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="truth" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The truth value of the expression."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IntExpr" eSuperTypes="#//CertExpr">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A RoboCert integer literal."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The value of the expression."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MinusExpr" eSuperTypes="#//CertExpr">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An expression that inverts the sign of another (arithmetic) expression."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//CertExpr"
-        containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The expression to modify."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BinaryExpr" abstract="true" eSuperTypes="#//CertExpr">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A binary expression."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" lowerBound="1" eType="#//CertExpr"
-        containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The left-hand side."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" eType="#//CertExpr"
-        containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The right-hand side."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LogicalExpr" eSuperTypes="#//BinaryExpr">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A logical binary expression."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" lowerBound="1"
-        eType="#//LogicalOperator">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The operator."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="LogicalOperator">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A logical operator."/>
-    </eAnnotations>
-    <eLiterals name="AND">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Logical conjunction."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="OR" value="1">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Logical disjunction."/>
-      </eAnnotations>
-    </eLiterals>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RelationExpr" eSuperTypes="#//BinaryExpr">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A relational binary expression."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" lowerBound="1"
-        eType="#//RelationOperator">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The operator."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="RelationOperator">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A relational operator."/>
-    </eAnnotations>
-    <eLiterals name="GT">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Greater than."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="GE" value="1">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Greater than or equal."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="EQ" value="2">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Equal."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="NE" value="3">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Not equal."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="LE" value="4">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Greater than or equal."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="LT" value="5">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Less than."/>
-      </eAnnotations>
-    </eLiterals>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ConstExpr" eSuperTypes="#//CertExpr">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A reference to a variable in the model."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constant" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The variable being referenced."/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="Temperature">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -583,13 +447,13 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Fragment imposing a duration constraint on a block."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerBound" eType="#//CertExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerBound" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Lower bound, in time units after the start of the block."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="upperBound" eType="#//CertExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="upperBound" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Upper bound, in time units after the start of the block."/>
@@ -632,7 +496,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A loop bound that executes a specific number of times.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(times)."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="#//CertExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
@@ -644,7 +508,8 @@
       <details key="documentation" value="A loop bound that executes a nondeterministic number of times that is at least a lower bound.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(lowerTimes, *)."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="#//CertExpr" containment="true">
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+        containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Lower number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
       </eAnnotations>
@@ -655,13 +520,15 @@
       <details key="documentation" value="A loop bound that executes a nondeterministic number of times between two bounds.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(lowerTimes, upperTimes)."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="#//CertExpr" containment="true">
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+        containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="Lower number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="upperTimes" lowerBound="1"
-        eType="#//CertExpr" containment="true">
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+        containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The upper number of times the loop must execute.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
       </eAnnotations>
@@ -731,7 +598,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A guard that is dependent on the truth value of an expression."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//CertExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ElseGuard" eSuperTypes="#//Guard">
@@ -781,7 +648,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Represents a wait for some amount of time units."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="#//CertExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The number of units to wait."/>
@@ -923,7 +790,7 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Value specified by an expression."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="#//CertExpr"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="expr" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The expression in question."/>

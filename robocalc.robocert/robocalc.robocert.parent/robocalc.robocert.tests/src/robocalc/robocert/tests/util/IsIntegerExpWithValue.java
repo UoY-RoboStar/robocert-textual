@@ -12,17 +12,17 @@
  ******************************************************************************/
 package robocalc.robocert.tests.util;
 
+import circus.robocalc.robochart.Expression;
+import circus.robocalc.robochart.IntegerExp;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import robocalc.robocert.model.robocert.CertExpr;
-import robocalc.robocert.model.robocert.IntExpr;
 
 /**
- * Checks that an expression is an {@link IntExpr} with a particular value.
+ * Checks that an expression is an {@link IntegerExp} with a particular value.
  *
  * @author Matt Windsor
  */
-public class IsIntExprWithValue extends TypeSafeDiagnosingMatcher<CertExpr> {
+public class IsIntegerExpWithValue extends TypeSafeDiagnosingMatcher<Expression> {
 
   private final int expected;
 
@@ -31,7 +31,7 @@ public class IsIntExprWithValue extends TypeSafeDiagnosingMatcher<CertExpr> {
    *
    * @param expected the expected value.
    */
-  public IsIntExprWithValue(int expected) {
+  public IsIntegerExpWithValue(int expected) {
     this.expected = expected;
   }
 
@@ -41,8 +41,8 @@ public class IsIntExprWithValue extends TypeSafeDiagnosingMatcher<CertExpr> {
    * @param expected the expected value.
    * @return a matcher that requires integer expressions and
    */
-  public static IsIntExprWithValue intExprWithValue(int expected) {
-    return new IsIntExprWithValue(expected);
+  public static IsIntegerExpWithValue intExprWithValue(int expected) {
+    return new IsIntegerExpWithValue(expected);
   }
 
   @Override
@@ -51,8 +51,8 @@ public class IsIntExprWithValue extends TypeSafeDiagnosingMatcher<CertExpr> {
   }
 
   @Override
-  protected boolean matchesSafely(CertExpr expr, Description description) {
-    if (expr instanceof IntExpr ix) {
+  protected boolean matchesSafely(Expression expr, Description description) {
+    if (expr instanceof IntegerExp ix) {
       final var actual = ix.getValue();
       if (expected == actual) {
         return true;

@@ -58,7 +58,7 @@ ModuleTarget:
 	name=ID ':' 'module' module=[RCModule|QualifiedName];
 
 ControllerTarget:
-	name=ID ':' 'controller' controller=[Controller|QualifiedName];
+	name=ID ':' 'controller' controller=[ControllerDef|QualifiedName];
 
 /**
  * A target override in a sequence diagram.
@@ -73,7 +73,7 @@ Instantiation:
  * with an optional trailing (potentially Oxford-style) 'and'.
  */
 ConstAssignment:
-	ConstName (',' ConstName)* (','? 'and' ConstName)? AssignWords value=CertExpr;
+	ConstName (',' ConstName)* (','? 'and' ConstName)? AssignWords value=Expression;
 
 /**
  * Adds a constant to the constants list.
@@ -174,87 +174,11 @@ enum DoesCorePropertyType returns CorePropertyType:
 	// Remember to add these to Verb also.
 	TERMINATION='terminate';
 
-//
-// EXPRESSIONS
-//
-// The expression grammar is left-factored.
-//
-/**
- * An expression.
- * 
- * Ideally this shouldn't stray too far from the RoboChart language (and maybe
- * one day it'll merge back into it).
- */
-CertExpr:
-	LogicalAndExpr;
-
-// AND and OR are separated out because a) they are in C, and b) this forces a
-// predictable precedence over them.
-LogicalAndExpr returns CertExpr:
-	LogicalOrExpr ({LogicalExpr.lhs=current} operator=LogicalAndOperator rhs=LogicalOrExpr)*;
-
-LogicalOrExpr returns CertExpr:
-	RelationExpr ({LogicalExpr.lhs=current} operator=LogicalOrOperator rhs=RelationExpr)*;
-
-// Justification for these symbols:
-//
-// These are the operators used in RoboChart, and also dodge a conflict in the
-// grammar where using eg 'and' conflicts with the use of 'and' elsewhere to
-// structure higher-level parts of the grammar.
-/**
- * Accepted symbols for logical AND.
- */
-enum LogicalAndOperator returns LogicalOperator:
-	AND='/\\';
-
-/**
- * Accepted symbols for logical OR.
- */
-enum LogicalOrOperator returns LogicalOperator:
-	OR='\\/';
-
-RelationExpr returns CertExpr:
-	MinusExpr ({RelationExpr.lhs=current} operator=RelationOperator rhs=MinusExpr)*;
-
-/**
- * A relation operator.
- * 
- * Unlike most things in RoboCert, we let these be C-style operators since we
- * assume practitioners will likely be able to understand them...?
- */
-enum RelationOperator:
-	LT='<' |
-	LE='<=' |
-	EQ='==' |
-	NE='!=' |
-	GE='>=' |
-	GT='>';
-
-MinusExpr returns CertExpr:
-	{MinusExpr} '-' expr=MinusExpr |
-	PrimaryExpr;
-
-PrimaryExpr returns CertExpr:
-	CertLiteral |
-	{ConstExpr} constant=[Variable|QualifiedName] |
-	'(' CertExpr ')';
-
-CertLiteral returns CertExpr:
-	{BoolExpr} (truth?='true' | 'false') |
-	{IntExpr} value=INT;
-
-/**
- * Workaround to let the BoolExpr production work properly.
- */
-@Override
-terminal BOOLEAN:
-	'yes';
-
 /**
  * A time unit expression.
  */
-TimeUnits returns CertExpr:
-	CertExpr 'time'? ('unit' | 'units');
+TimeUnits returns Expression:
+	Expression 'time'? ('unit' | 'units');
 
 //
 // MODALITIES
@@ -453,7 +377,7 @@ SingletonInteractionOperand returns InteractionOperand:
 Guard:
 	'always' {EmptyGuard} |
 	'otherwise' {ElseGuard} |
-	'when' {ExprGuard} expr=CertExpr;
+	'when' {ExprGuard} expr=Expression;
 
 /**
  * Consumes nothing and instantly returns an empty guard.
@@ -515,9 +439,9 @@ MaybeLoopBound returns LoopBound:
  */
 LoopBound:
 	'forever' {InfiniteLoopBound} |
-	'exactly' {DefiniteLoopBound} times=CertExpr 'times' |
-	'at' 'least' {LowerLoopBound} lowerTimes=CertExpr 'times' |
-	'between' {RangeLoopBound} lowerTimes=CertExpr 'and' upperTimes=CertExpr 'times';
+	'exactly' {DefiniteLoopBound} times=Expression 'times' |
+	'at' 'least' {LowerLoopBound} lowerTimes=Expression 'times' |
+	'between' {RangeLoopBound} lowerTimes=Expression 'and' upperTimes=Expression 'times';
 
 //
 // Branch steps
@@ -653,7 +577,7 @@ ExtensionalMessageSet:
  * A value specification.
  */
 ValueSpecification:
-	{ExpressionValueSpecification} expr=CertExpr |
+	{ExpressionValueSpecification} expr=Expression |
 	{WildcardValueSpecification} ('any' | 'anything') ('as' destination=[Variable])?;
 
 //

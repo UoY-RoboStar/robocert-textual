@@ -13,6 +13,7 @@
 
 package robocalc.robocert.scoping;
 
+import circus.robocalc.robochart.RefExp;
 import circus.robocalc.robochart.Variable;
 import com.google.inject.Inject;
 import java.util.List;
@@ -27,7 +28,6 @@ import org.eclipse.xtext.scoping.Scopes;
 import robocalc.robocert.generator.utils.EObjectExtensions;
 import robocalc.robocert.generator.utils.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.ConstExpr;
 import robocalc.robocert.model.robocert.SpecGroup;
 import robocalc.robocert.model.robocert.Specification;
 
@@ -54,7 +54,7 @@ public record VariableScopeProvider(
    * @param expr the variable expression.
    * @return the scope, which contains constants shadowed by memory variables.
    */
-  public IScope exprScope(ConstExpr expr) {
+  public IScope exprScope(RefExp expr) {
     return Scopes.scopeFor(memVariables(expr), constScope(expr));
   }
 
@@ -64,7 +64,7 @@ public record VariableScopeProvider(
    * @param expr the variable expression.
    * @return the scope, which contains memory variables.
    */
-  private List<Variable> memVariables(ConstExpr expr) {
+  private List<Variable> memVariables(RefExp expr) {
     return getParent(expr, Specification.class).stream().flatMap(this::specMemVariables).toList();
   }
 
@@ -81,7 +81,7 @@ public record VariableScopeProvider(
    * @param expr the constant expression.
    * @return the scope, which contains constant variables.
    */
-  private IScope constScope(ConstExpr expr) {
+  private IScope constScope(RefExp expr) {
     return unifiedScope(constants(expr));
   }
 

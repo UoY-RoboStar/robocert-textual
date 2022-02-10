@@ -12,12 +12,12 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq.fragment;
 
+import circus.robocalc.robochart.Expression;
 import com.google.inject.Inject;
 
 import java.util.Objects;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.CertExpr;
 import robocalc.robocert.model.robocert.DurationFragment;
 
 /**
@@ -60,19 +60,19 @@ public record DurationFragmentHeaderGenerator(
 		return ub == null ? generateLowerBound(lb) : generateBothBounds(lb, ub);
 	}
 
-	private CharSequence generateLowerBound(CertExpr lb) {
+	private CharSequence generateLowerBound(Expression lb) {
 		Objects.requireNonNull(lb);
 
 		return csp.function(DURATION_LB_PROC, expressionGen.generate(lb));
 	}
 
-	private CharSequence generateUpperBound(CertExpr ub) {
+	private CharSequence generateUpperBound(Expression ub) {
 		Objects.requireNonNull(ub);
 
 		return csp.function(DURATION_UB_PROC, expressionGen.generate(ub));
 	}
 
-	private CharSequence generateBothBounds(CertExpr lb, CertExpr ub) {
+	private CharSequence generateBothBounds(Expression lb, Expression ub) {
 		Objects.requireNonNull(lb);
 		Objects.requireNonNull(ub);
 

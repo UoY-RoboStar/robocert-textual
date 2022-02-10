@@ -1,103 +1,133 @@
 package robocalc.robocert.model.robocert.util;
 
-import circus.robocalc.robochart.Variable;
+import circus.robocalc.robochart.And;
+import circus.robocalc.robochart.BinaryExpression;
+import circus.robocalc.robochart.BooleanExp;
+import circus.robocalc.robochart.Different;
+import circus.robocalc.robochart.Expression;
+import circus.robocalc.robochart.IntegerExp;
+import circus.robocalc.robochart.InverseExp;
+import circus.robocalc.robochart.LessOrEqual;
+import circus.robocalc.robochart.NamedExpression;
+import circus.robocalc.robochart.Neg;
+import circus.robocalc.robochart.Or;
+import circus.robocalc.robochart.RefExp;
+import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
-import robocalc.robocert.model.robocert.BoolExpr;
-import robocalc.robocert.model.robocert.CertExpr;
-import robocalc.robocert.model.robocert.ConstExpr;
-import robocalc.robocert.model.robocert.IntExpr;
-import robocalc.robocert.model.robocert.LogicalExpr;
-import robocalc.robocert.model.robocert.LogicalOperator;
-import robocalc.robocert.model.robocert.MinusExpr;
-import robocalc.robocert.model.robocert.RelationExpr;
-import robocalc.robocert.model.robocert.RelationOperator;
-import robocalc.robocert.model.robocert.RoboCertFactory;
+import java.util.function.Supplier;
 
 /**
- * Helper factory that uses a {@link RoboCertFactory} to produce specific types of expression.
+ * Helper factory that uses a {@link RoboChartFactory} to produce specific types of expression.
  *
  * @author Matt Windsor
  */
 public class ExpressionFactory {
-  @Inject private RoboCertFactory rc;
+  @Inject private RoboChartFactory rc;
 
   /**
-   * Creates a {@link BoolExpr} with the given truth value.
+   * Creates a {@link BooleanExp} with the given truth value.
    *
    * @param truth the truth value.
    * @return a RoboCert lifting of the given truth value.
    */
-  public BoolExpr bool(boolean truth) {
-    final var x = rc.createBoolExpr();
-    x.setTruth(truth);
+  public BooleanExp bool(boolean truth) {
+    final var x = rc.createBooleanExp();
+    x.setValue(truth ? "true" : "false");
     return x;
   }
 
   /**
-   * Creates a {@link IntExpr} with the given value.
+   * Creates a {@link IntegerExp} with the given value.
    *
    * @param value the value.
    * @return a RoboCert lifting of the given integer value.
    */
-  public IntExpr integer(int value) {
-    final var result = rc.createIntExpr();
+  public IntegerExp integer(int value) {
+    final var result = rc.createIntegerExp();
     result.setValue(value);
     return result;
   }
 
   /**
-   * Creates a {@link ConstExpr} with a given variable.
+   * Creates a {@link RefExp} with a given named expression (eg a variable).
    *
-   * @param v the variable.
-   * @return the variable expression.
+   * @param v the named expression.
+   * @return the reference expression.
    */
-  public ConstExpr var(Variable v) {
-    final var result = rc.createConstExpr();
-    result.setConstant(v);
+  public RefExp ref(NamedExpression v) {
+    final var result = rc.createRefExp();
+    result.setRef(v);
     return result;
   }
 
   /**
-   * Creates a {@link LogicalExpr} with the given operator and operands.
+   * Creates an 'and' expression with the given operands.
    *
-   * @param op the operator.
    * @param lhs the left operand.
    * @param rhs the right operand.
-   * @return the given relational expression.
+   * @return the given binary expression.
    */
-  public LogicalExpr logic(LogicalOperator op, CertExpr lhs, CertExpr rhs) {
-    final var result = rc.createLogicalExpr();
-    result.setOperator(op);
-    result.setLhs(lhs);
-    result.setRhs(rhs);
-    return result;
+  public And and(Expression lhs, Expression rhs) {
+    return binary(rc::createAnd, lhs, rhs);
   }
 
   /**
-   * Creates a {@link RelationExpr} with the given operator and operands.
+   * Creates an 'or' expression with the given operands.
    *
-   * @param op the operator.
    * @param lhs the left operand.
    * @param rhs the right operand.
-   * @return the given relational expression.
+   * @return the given binary expression.
    */
-  public RelationExpr rel(RelationOperator op, CertExpr lhs, CertExpr rhs) {
-    final var result = rc.createRelationExpr();
-    result.setOperator(op);
-    result.setLhs(lhs);
-    result.setRhs(rhs);
+  public Or or(Expression lhs, Expression rhs) {
+    return binary(rc::createOr, lhs, rhs);
+  }
+
+  /**
+   * Creates a '!=' expression with the given operands.
+   *
+   * @param lhs the left operand.
+   * @param rhs the right operand.
+   * @return the given binary expression.
+   */
+  public Different diff(Expression lhs, Expression rhs) {
+    return binary(rc::createDifferent, lhs, rhs);
+  }
+
+  /**
+   * Creates a '<=' expression with the given operands.
+   *
+   * @param lhs the left operand.
+   * @param rhs the right operand.
+   * @return the given binary expression.
+   */
+  public LessOrEqual le(Expression lhs, Expression rhs) {
+    return binary(rc::createLessOrEqual, lhs, rhs);
+  }
+
+  /**
+   * Creates a binary expression with the given operands.
+   *
+   * @param ctor the constructor function.
+   * @param lhs the left operand.
+   * @param rhs the right operand.
+   * @return the given binary expression.
+   */
+  private <T extends BinaryExpression> T binary(Supplier<T> ctor, Expression lhs, Expression rhs) {
+    final var result = ctor.get();
+    result.setLeft(lhs);
+    result.setRight(rhs);
     return result;
   }
 
   /**
-   * Creates a {@link MinusExpr} with the given operand.
+   * Creates an {@link InverseExp} with the given operand.
    *
    * @param e the operand.
-   * @return the minus expression.
+   * @return the inverse expression.
    */
-  public MinusExpr minus(CertExpr e) {
-    final var result = rc.createMinusExpr();
-    result.setExpr(e);
+  public Neg neg(Expression e) {
+    final var result = rc.createNeg();
+    result.setExp(e);
     return result;
   }
 }

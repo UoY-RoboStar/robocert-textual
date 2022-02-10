@@ -15,7 +15,7 @@ package robocalc.robocert.tests.model;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static robocalc.robocert.tests.util.IsIntExprWithValue.intExprWithValue;
+import static robocalc.robocert.tests.util.IsIntegerExpWithValue.intExprWithValue;
 
 import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
