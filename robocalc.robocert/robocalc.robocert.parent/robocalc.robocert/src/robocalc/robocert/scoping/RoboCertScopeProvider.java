@@ -18,6 +18,9 @@ import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.CONST_EX
 import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.EVENT_TOPIC__EVENT;
 import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.OPERATION_TOPIC__OPERATION;
 
+import circus.robocalc.robochart.RoboChartPackage.Literals;
+import circus.robocalc.robochart.TypeRef;
+import circus.robocalc.robochart.textual.scoping.RoboChartScopeProvider;
 import com.google.inject.Inject;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -36,6 +39,7 @@ import robocalc.robocert.model.robocert.OperationTopic;
 public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	@Inject private VariableScopeProvider vsp;
 	@Inject private TopicScopeProvider tx;
+	@Inject private RoboChartScopeProvider rchart;
 
 	
 	@Override
@@ -62,6 +66,13 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 			return vsp.constAssignmentScope(k);
 		if (context instanceof ConstExpr x && reference == CONST_EXPR__CONSTANT)
 			return vsp.exprScope(x);
+
+		// We delegate the following to RoboChart's scope provider:
+		if (context instanceof TypeRef x && reference == Literals.TYPE_REF__REF)
+			return rchart.getScope(x, reference);
+
+		// Fallback to normal scope resolution.
 		return null;
 	}
+
 }

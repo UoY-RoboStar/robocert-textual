@@ -3,7 +3,12 @@
  */
 package robocalc.robocert;
 
+import circus.robocalc.robochart.textual.scoping.RoboChartImportURIGlobalScopeProvider;
+import circus.robocalc.robochart.textual.scoping.RoboChartImportedNamespaceAwareLocalScopeProvider;
+import com.google.inject.Binder;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
+import org.eclipse.xtext.scoping.IGlobalScopeProvider;
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import robocalc.robocert.generator.RoboCertOutputConfigurationProvider;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter;
@@ -23,6 +28,7 @@ import robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom;
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
+@SuppressWarnings("unused")
 public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	public Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
 		return RoboCertOutputConfigurationProvider.class;
@@ -51,6 +57,22 @@ public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	@Override
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
 		return RoboCertValueConverterService.class;
+	}
+
+	//
+	// These next two serve to put the core RoboChart toolkits into the global scope.
+	//
+
+	@Override
+	public Class<? extends IGlobalScopeProvider> bindIGlobalScopeProvider() {
+		return RoboChartImportURIGlobalScopeProvider.class;
+	}
+
+	@Override
+	public void configureIScopeProviderDelegate(Binder binder) {
+		binder.bind(org.eclipse.xtext.scoping.IScopeProvider.class)
+				.annotatedWith(com.google.inject.name.Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
+				.to(RoboChartImportedNamespaceAwareLocalScopeProvider.class);
 	}
 
 	/**
