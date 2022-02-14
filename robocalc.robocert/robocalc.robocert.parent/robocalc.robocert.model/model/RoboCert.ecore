@@ -977,7 +977,7 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//SpecGroup">
+  <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//SpecGroup #//Process">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group of raw CSP-M declarations.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
     </eAnnotations>
@@ -1005,7 +1005,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NamedCSPFragment" eSuperTypes="#//CSPFragment ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="NamedCSPFragment" abstract="true" eSuperTypes="#//CSPFragment ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment of CSP-M that has a name.&#xD;&#xA;&#xD;&#xA;These are used to bind CSP-M to names that are referred-to elsewhere."/>
     </eAnnotations>
@@ -1015,7 +1015,7 @@
       <details key="documentation" value="A fragment of CSP-M that is bound to an event set."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//NamedCSPFragment #//Process">
+  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//NamedCSPFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment of CSP-M that is bound to a process."/>
     </eAnnotations>

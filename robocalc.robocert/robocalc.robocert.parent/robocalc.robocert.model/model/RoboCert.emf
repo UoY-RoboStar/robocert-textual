@@ -833,7 +833,7 @@ abstract class CSPFragment {
 @genmodel(documentation="A fragment of CSP-M that has a name.
 
 These are used to bind CSP-M to names that are referred-to elsewhere.")
-class NamedCSPFragment extends CSPFragment, robochart.NamedElement {
+abstract class NamedCSPFragment extends CSPFragment, robochart.NamedElement {
 }
 
 @genmodel(documentation="A fragment of CSP-M that is bound to an event set.")
