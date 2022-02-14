@@ -522,8 +522,10 @@ class MessageOccurrence extends Occurrence {
 
 @genmodel(documentation="Base class of occurrences on exactly one lifeline.")
 abstract class LifelineOccurrence extends Occurrence {
-	@genmodel(documentation="The actor on which this occurrence is occurring.")
-	ref Actor[1] actor;	
+	@genmodel(documentation="The actor on which this occurrence is occurring.
+
+May be empty if we are inside a construct that synchronises lifetimes, eg. an UntilFragment.")
+	ref Actor[0..1] actor;	
 }
 
 @genmodel(documentation="Represents a deadlock event in a sequence.")
