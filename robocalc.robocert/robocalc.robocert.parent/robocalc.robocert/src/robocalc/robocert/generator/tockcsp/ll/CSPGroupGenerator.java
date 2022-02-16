@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.core.GroupGenerator;
+import robocalc.robocert.model.robocert.CSPFragment;
 import robocalc.robocert.model.robocert.CSPGroup;
 
 /**
@@ -27,12 +28,10 @@ import robocalc.robocert.model.robocert.CSPGroup;
 public class CSPGroupGenerator extends GroupGenerator<CSPGroup> {
 	// TODO(@MattWindsor91): part-merge with sequence group generation?
 	// TODO(@MattWindsor91): allow modularisation?
-	@Inject
-	private CSPFragmentGenerator cg;
 
 	@Override
 	protected Stream<CharSequence> generateBodyElements(CSPGroup group) {
-		return group.getFragments().stream().map(cg::generate);
+		return group.getFragments().stream().map(CSPFragment::getContents);
 	}
 
 	@Override

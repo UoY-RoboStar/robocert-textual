@@ -16,8 +16,8 @@ package robocalc.robocert.generator.tockcsp.ll.csp;
 import java.util.Objects;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.TickTockContextGenerator;
-import robocalc.robocert.model.robocert.CSPContextSource;
 import robocalc.robocert.model.robocert.CSPModel;
+import robocalc.robocert.model.robocert.Target;
 
 /**
  * Holds information about a CSP refinement.
@@ -27,7 +27,7 @@ import robocalc.robocert.model.robocert.CSPModel;
  *
  * @author Matt Windsor
  */
-public record CSPRefinement(boolean isNegated, CharSequence lhs, CharSequence rhs, CSPContextSource context, CSPModel model) {
+public record CSPRefinement(boolean isNegated, CharSequence lhs, CharSequence rhs, Target context, CSPModel model) {
   public CSPRefinement {
     Objects.requireNonNull(lhs);
     Objects.requireNonNull(rhs);

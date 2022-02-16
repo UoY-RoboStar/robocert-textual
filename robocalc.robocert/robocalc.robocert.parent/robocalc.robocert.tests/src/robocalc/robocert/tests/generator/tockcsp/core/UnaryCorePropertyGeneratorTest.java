@@ -25,13 +25,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.core.CorePropertyGenerator;
 import robocalc.robocert.model.robocert.CorePropertyType;
 import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.ProcessCSPFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
- * Tests the {@link CorePropertyGenerator} on a few properties concerning a {@link
- * ProcessCSPFragment}.
+ * Tests the {@link CorePropertyGenerator} on a few properties concerning a {@link ModuleTarget}.
  *
  * @author Matt Windsor
  */
@@ -53,10 +51,10 @@ class CorePropertyGeneratorTest {
     source.setName("bar");
     source.setModule(mod);
 
-		final var pkg = rc.createCertPackage();
-		pkg.setName("baz");
-		source.setGroup(pkg);
-	}
+    final var pkg = rc.createCertPackage();
+    pkg.setName("baz");
+    source.setGroup(pkg);
+  }
 
   /** Tests the generation of determinism assertions. */
   @Test
@@ -75,7 +73,8 @@ class CorePropertyGeneratorTest {
   @Test
   void testTimelockFree() {
     assertGeneratesBody(
-        "RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= Targets::bar::Closed", CorePropertyType.TIMELOCK_FREE);
+        "RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= Targets::bar::Closed",
+        CorePropertyType.TIMELOCK_FREE);
   }
 
   /**

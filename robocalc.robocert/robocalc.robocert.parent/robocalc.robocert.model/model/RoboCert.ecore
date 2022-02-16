@@ -47,7 +47,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SpecGroup" abstract="true" eSuperTypes="#//Group #//CSPContextSource">
+  <eClassifiers xsi:type="ecore:EClass" name="SpecGroup" abstract="true" eSuperTypes="#//Group">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group containing specifications.&#xD;&#xA;&#xD;&#xA;Specification groups are context sources by virtue of having a target."/>
     </eAnnotations>
@@ -75,7 +75,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement #//CSPContextSource">
+  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A specification target.&#xD;&#xA;&#xD;&#xA;Targets combine several things: a RoboChart element;&#xD;&#xA;a process representing the element from a refinement perspective;&#xD;&#xA;information about the upstream ('context') elements connected to this target;&#xD;&#xA;and information about the downstream elements connected to it."/>
     </eAnnotations>
@@ -978,7 +978,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment of CSP-M.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
     </eAnnotations>
@@ -988,31 +988,6 @@
         <details key="documentation" value="The raw contents of the CSP fragment."/>
       </eAnnotations>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NamedCSPFragment" abstract="true" eSuperTypes="#//CSPFragment ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that has a name.&#xD;&#xA;&#xD;&#xA;These are used to bind CSP-M to names that are referred-to elsewhere."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventSetCSPFragment" eSuperTypes="#//NamedCSPFragment #//CSPContextSource">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that is bound to an event set."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ProcessCSPFragment" eSuperTypes="#//NamedCSPFragment">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that is bound to a process."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="events" eType="#//CSPContextSource">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The source of the context used for tick-tock model shifting.&#xD;&#xA;&#xD;&#xA;We cannot, and do not, check to make sure that this accurately represents&#xD;&#xA;the process's actual event universe."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InlineCSPFragment" eSuperTypes="#//CSPFragment #//OptionallyNamedElement">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M that is not bound to anything.&#xD;&#xA;&#xD;&#xA;Such fragments can be named, but don't need to be, and nothing in the semantics&#xD;&#xA;will depend on such a name existing."/>
-    </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPProperty" eSuperTypes="#//Property #//CSPFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -1033,10 +1008,5 @@
         <details key="documentation" value="Traces refinement model (with prioritisation)."/>
       </eAnnotations>
     </eLiterals>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPContextSource" abstract="true">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Abstract class of anything that can be interpreted as a tick-tock context.&#xD;&#xA;&#xD;&#xA;This is predominantly a marker, and doesn't hold any state of its own."/>
-    </eAnnotations>
   </eClassifiers>
 </ecore:EPackage>

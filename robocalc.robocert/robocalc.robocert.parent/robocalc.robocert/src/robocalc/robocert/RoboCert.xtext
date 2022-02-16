@@ -116,7 +116,7 @@ Assertion:
  * Top-level disjunction of properties.
  */
 Property:
-	CoreProperty | "csp" {CSPProperty} contents=(CSP_CODE|SHORT_CODE) | SequenceProperty;
+	CoreProperty | "csp" {CSPProperty} contents=INTERPOLATE | SequenceProperty;
 
 /**
  * Core properties with only one argument.
@@ -204,25 +204,14 @@ FullCSPGroup returns CSPGroup:
 //
 /**
  * A CSP fragment.
- * 
- * CSP fragments can be event-set-bound, process-bound, or inline.
  */
 CSPFragment:
-	('event' 'set' {EventSetCSPFragment} name=ID
-	| 'process' {ProcessCSPFragment} name=ID ('(' 'events' 'in' events=[CSPContextSource|QualifiedName] ')')?
-	| 'inline' {InlineCSPFragment} name=ID?)
-	contents=(CSP_CODE | SHORT_CODE);
+	'csp' contents=INTERPOLATE;
 
 /**
- * The raw CSP code.
+ * Interpolation of low-level languages.
  */
-terminal CSP_CODE:
-	'csp-begin'->'csp-end';
-
-/**
- * Abbreviated form of csp-begin/csp-end.
- */
-terminal SHORT_CODE:
+terminal INTERPOLATE:
 	'<$'->'$>';
 
 //

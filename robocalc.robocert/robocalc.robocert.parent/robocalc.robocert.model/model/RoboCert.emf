@@ -70,7 +70,7 @@ abstract class Group extends OptionallyNamedElement {
 @genmodel(documentation="A group containing specifications.
 
 Specification groups are context sources by virtue of having a target.")
-abstract class SpecGroup extends Group, CSPContextSource {
+abstract class SpecGroup extends Group {
 	@genmodel(documentation="The target of this group.")
 	ref Target[1] target;
 	@genmodel(documentation="The instantiation in effect in this group.")
@@ -94,7 +94,7 @@ Targets combine several things: a RoboChart element;
 a process representing the element from a refinement perspective;
 information about the upstream ('context') elements connected to this target;
 and information about the downstream elements connected to it.")
-abstract class Target extends robochart.NamedElement, CSPContextSource {
+abstract class Target extends robochart.NamedElement {
 	// TODO(@MattWindsor91): make these OptionallyNamedElements, with the
 	// name of the underlying element being the default name.
 
@@ -806,48 +806,14 @@ class CSPGroup extends SpecGroup {
 	val CSPFragment[*]#group fragments;
 }
 
-//
-// CSP fragments
-//
-
 @genmodel(documentation="A fragment of CSP-M.
 
 We generally interpret CSP-M as tock-CSP and implicitly generate it into a
 timed section, but this can be overridden.")
-abstract class CSPFragment {
+class CSPFragment {
 	@genmodel(documentation="The raw contents of the CSP fragment.")
 	attr String[1] contents;
 }
-
-@genmodel(documentation="A fragment of CSP-M that has a name.
-
-These are used to bind CSP-M to names that are referred-to elsewhere.")
-abstract class NamedCSPFragment extends CSPFragment, robochart.NamedElement {
-}
-
-@genmodel(documentation="A fragment of CSP-M that is bound to an event set.")
-class EventSetCSPFragment extends NamedCSPFragment, CSPContextSource {
-}
-
-@genmodel(documentation="A fragment of CSP-M that is bound to a process.")
-class ProcessCSPFragment extends NamedCSPFragment {
-	@genmodel(documentation="The source of the context used for tick-tock model shifting.
-
-We cannot, and do not, check to make sure that this accurately represents
-the process's actual event universe.")
-	ref CSPContextSource[0..1] events;
-}
-
-@genmodel(documentation="A fragment of CSP-M that is not bound to anything.
-
-Such fragments can be named, but don't need to be, and nothing in the semantics
-will depend on such a name existing.")
-class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
-}
-
-//
-// CSP properties
-//
 
 @genmodel(documentation="A property whose body is a CSP fragment.")
 class CSPProperty extends Property, CSPFragment {
@@ -860,14 +826,4 @@ enum CSPModel {
 	
 	@genmodel(documentation="Traces refinement model (with prioritisation).")
 	TRACES;
-}
-
-//
-// CSP sources
-//
-
-@genmodel(documentation="Abstract class of anything that can be interpreted as a tick-tock context.
-
-This is predominantly a marker, and doesn't hold any state of its own.")
-abstract class CSPContextSource {
 }
