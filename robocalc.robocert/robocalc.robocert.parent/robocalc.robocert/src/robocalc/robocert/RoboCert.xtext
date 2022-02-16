@@ -116,7 +116,7 @@ Assertion:
  * Top-level disjunction of properties.
  */
 Property:
-	CoreProperty | CSPRefinementProperty | SequenceProperty;
+	CoreProperty | "csp" {CSPProperty} contents=(CSP_CODE|SHORT_CODE) | SequenceProperty;
 
 /**
  * Core properties with only one argument.
@@ -228,30 +228,6 @@ terminal SHORT_CODE:
 //
 // CSP properties
 //
-/**
- * A RoboCert CSP refinement property.
- */
-CSPRefinementProperty:
-	lhs=[Process|QualifiedName]
-	('does' negated?='not' type=DoesNotCSPRefinementOperator
-	| type=DoesCSPRefinementOperator)
-	rhs=[Process|QualifiedName]
-	InCSPModelSpec?;
-
-/**
- * Sequence property types that agree with 'does not'.
- */
-enum DoesNotCSPRefinementOperator returns CSPRefinementOperator:
-	REFINES='refine'
-	| EQUALS='equal';
-
-/**
- * Sequence property that agree without a prefix (eg, the opposite of
- * 'does not' sequence property types).
- */
-enum DoesCSPRefinementOperator returns CSPRefinementOperator:
-	REFINES='refines'
-	| EQUALS='equals';
 
 /**
  * Explicitly specifying the CSP model of a property.

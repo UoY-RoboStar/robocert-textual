@@ -859,28 +859,8 @@ class InlineCSPFragment extends CSPFragment, OptionallyNamedElement {
 // CSP properties
 //
 
-@genmodel(documentation="A property that requires a low-level CSP refinement relation.")
-class CSPRefinementProperty extends Property {
-	@genmodel(documentation="Left-hand side of the refinement.")
-	ref Process[1] lhs;
-
-	@genmodel(documentation="Left-hand side of the refinement.")
-	ref Process[1] rhs;
-
-	@genmodel(documentation="Type of assertion.")
-	attr CSPRefinementOperator[1] type;
-	
-	@genmodel(documentation="Model under which this assertion should be checked under CSP.")
-	attr CSPModel[1] model = "TICK_TOCK";	
-}
-
-@genmodel(documentation="A tock-CSP refinement operator.")
-enum CSPRefinementOperator {
-	@genmodel(documentation="LHS refines RHS.")
-	REFINES;
-
-	@genmodel(documentation="LHS refines RHS and RHS refines LHS.")
-	EQUALS;
+@genmodel(documentation="A property whose body is a CSP fragment.")
+class CSPProperty extends Property, CSPFragment {
 }
 
 @genmodel(documentation="A tock-CSP refinement model.")

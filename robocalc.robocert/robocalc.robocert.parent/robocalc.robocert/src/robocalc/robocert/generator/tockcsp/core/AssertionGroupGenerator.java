@@ -16,11 +16,10 @@ import java.util.stream.Stream;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.ll.CSPRefinementPropertyGenerator;
-import robocalc.robocert.generator.tockcsp.seq.PropertyLowerer;
+import robocalc.robocert.generator.tockcsp.seq.PropertyGenerator;
 import robocalc.robocert.model.robocert.Assertion;
 import robocalc.robocert.model.robocert.AssertionGroup;
-import robocalc.robocert.model.robocert.CSPRefinementProperty;
+import robocalc.robocert.model.robocert.CSPProperty;
 import robocalc.robocert.model.robocert.CoreProperty;
 import robocalc.robocert.model.robocert.Property;
 import robocalc.robocert.model.robocert.SequenceProperty;
@@ -32,9 +31,7 @@ import robocalc.robocert.model.robocert.SequenceProperty;
  */
 public class AssertionGroupGenerator extends GroupGenerator<AssertionGroup> {
 	@Inject
-	private CSPRefinementPropertyGenerator cg;
-	@Inject
-	private PropertyLowerer spl;
+	private PropertyGenerator spl;
 	@Inject
 	private CorePropertyGenerator ug;
 
@@ -79,10 +76,10 @@ public class AssertionGroupGenerator extends GroupGenerator<AssertionGroup> {
 	private CharSequence generateProperty(Property p) {
 		// Remember to add new properties as time goes by.
 		// TODO(@MattWindsor91): dependency-inject these, somehow
-		if (p instanceof CSPRefinementProperty c)
-			return cg.generateProperty(c);
+		if (p instanceof CSPProperty c)
+			return "assert%s %s".formatted(c.isNegated() ? " not" : "", c.getContents());
 		if (p instanceof SequenceProperty s)
-			return cg.generateProperty(spl.lower(s));
+			return spl.generate(s);
 		if (p instanceof CoreProperty u)
 			return ug.generate(u);
 		throw new IllegalArgumentException("Unsupported assertion property type: %s (missing match arm?)".formatted(p));

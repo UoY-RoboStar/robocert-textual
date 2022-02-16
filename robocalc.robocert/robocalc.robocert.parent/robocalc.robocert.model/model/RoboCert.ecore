@@ -1025,46 +1025,10 @@
       <details key="documentation" value="A fragment of CSP-M that is not bound to anything.&#xD;&#xA;&#xD;&#xA;Such fragments can be named, but don't need to be, and nothing in the semantics&#xD;&#xA;will depend on such a name existing."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPRefinementProperty" eSuperTypes="#//Property">
+  <eClassifiers xsi:type="ecore:EClass" name="CSPProperty" eSuperTypes="#//Property #//CSPFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A property that requires a low-level CSP refinement relation."/>
+      <details key="documentation" value="A property whose body is a CSP fragment."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lhs" lowerBound="1" eType="#//Process">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Left-hand side of the refinement."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" eType="#//Process">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Left-hand side of the refinement."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//CSPRefinementOperator">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Type of assertion."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="model" lowerBound="1" eType="#//CSPModel"
-        defaultValueLiteral="TICK_TOCK">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Model under which this assertion should be checked under CSP."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="CSPRefinementOperator">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A tock-CSP refinement operator."/>
-    </eAnnotations>
-    <eLiterals name="REFINES">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="LHS refines RHS."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="EQUALS" value="1">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="LHS refines RHS and RHS refines LHS."/>
-      </eAnnotations>
-    </eLiterals>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
