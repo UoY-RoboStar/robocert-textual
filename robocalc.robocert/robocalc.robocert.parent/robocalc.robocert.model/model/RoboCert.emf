@@ -78,7 +78,7 @@ abstract class SpecGroup extends Group, CSPContextSource {
 }
 
 @genmodel(documentation="A specification (which lives in some form of SpecGroup).")
-abstract class Specification extends robochart.NamedElement, Process {
+abstract class Specification extends robochart.NamedElement {
 	@genmodel(documentation="The variables available for receiving arguments.")
 	val robochart.VariableList[0..1] variables;
 }
@@ -94,7 +94,7 @@ Targets combine several things: a RoboChart element;
 a process representing the element from a refinement perspective;
 information about the upstream ('context') elements connected to this target;
 and information about the downstream elements connected to it.")
-abstract class Target extends Process, robochart.NamedElement {
+abstract class Target extends robochart.NamedElement, CSPContextSource {
 	// TODO(@MattWindsor91): make these OptionallyNamedElements, with the
 	// name of the underlying element being the default name.
 
@@ -830,7 +830,7 @@ class EventSetCSPFragment extends NamedCSPFragment, CSPContextSource {
 }
 
 @genmodel(documentation="A fragment of CSP-M that is bound to a process.")
-class ProcessCSPFragment extends NamedCSPFragment, Process {
+class ProcessCSPFragment extends NamedCSPFragment {
 	@genmodel(documentation="The source of the context used for tick-tock model shifting.
 
 We cannot, and do not, check to make sure that this accurately represents
@@ -870,13 +870,4 @@ enum CSPModel {
 
 This is predominantly a marker, and doesn't hold any state of its own.")
 abstract class CSPContextSource {
-}
-
-@genmodel(documentation="Abstract class of anything that can be interpreted as a CSP process.
-
-All CSP process sources have an underlying tick-tock context source, even if
-it is just the empty set.
-
-This is predominantly a marker, and doesn't hold any state of its own.")
-abstract class Process extends CSPContextSource {
 }

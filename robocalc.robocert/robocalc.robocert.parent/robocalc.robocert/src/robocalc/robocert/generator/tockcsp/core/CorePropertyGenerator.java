@@ -14,10 +14,9 @@
 package robocalc.robocert.generator.tockcsp.core;
 
 import com.google.inject.Inject;
-
+import java.util.Objects;
+import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.ll.csp.ProcessGenerator;
-import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.CoreProperty;
 import robocalc.robocert.model.robocert.CorePropertyType;
 
@@ -27,12 +26,12 @@ import robocalc.robocert.model.robocert.CorePropertyType;
  *
  * @author Matt Windsor
  */
-public class CorePropertyGenerator {
+public record CorePropertyGenerator(TargetGenerator targetGen, CSPStructureGenerator csp) {
 	@Inject
-	private ProcessGenerator cpg;
-
-	@Inject
-	private CSPStructureGenerator csp;
+	public CorePropertyGenerator {
+		Objects.requireNonNull(targetGen);
+		Objects.requireNonNull(csp);
+	}
 
 	/**
 	 * Generates CSP-M for a core property.
@@ -42,18 +41,20 @@ public class CorePropertyGenerator {
 	 * @return generated CSP-M for a core property.
 	 */
 	public CharSequence generate(CoreProperty p) {
-		var t = p.getType();
-		var neg = p.isNegated();
+		final var t = p.getType();
+		final var neg = p.isNegated();
 
 		// Most properties have a straightforward encoding into tock-CSP,
 		// as they translate directly into CSP-M assertions with negation
 		// handled with 'assert/assert not'. Any exceptions go here:
 
-		// All of the below are properties on the process itself.
+		// All of the below are properties on the target itself.
 		// If we add clock reachability (for instance), it isn't a property on
 		// the process, and it'll go before this bit.
 		// Similar situation for properties that require the tick-tock model.
-		var proc = cpg.generate(p.getSubject(), CSPModel.TRACES);
+
+		// TODO(@MattWindsor91): assertion?
+		final var proc = targetGen.getFullCSPName(p.getSubject(), TargetField.CLOSED);
 
 		if (t == CorePropertyType.TERMINATION)
 			return neg ? generateNontermination(proc) : generateTermination(proc);
@@ -73,11 +74,11 @@ public class CorePropertyGenerator {
 	private CharSequence generateTermination(CharSequence proc) {
 		// A termination check has two components:
 		// 1) the process must deadlock and timelock;
-		var deadlocks = csp.assertion(true, generateSimple(proc, CorePropertyType.DEADLOCK_FREE));
+		final var deadlocks = csp.assertion(true, generateSimple(proc, CorePropertyType.DEADLOCK_FREE));
 		// 2) adding a perpetually-live event must remove the deadlock, eg the
 		// deadlock was a SKIP.
-		var rproc = "%s; RUN({r__})".formatted(proc);
-		var rescuable = csp.assertion(false, generateSimple(rproc, CorePropertyType.DEADLOCK_FREE));
+		final var rproc = "%s; RUN({r__})".formatted(proc);
+		final var rescuable = csp.assertion(false, generateSimple(rproc, CorePropertyType.DEADLOCK_FREE));
 		return String.join("\n", "-- termination", deadlocks, rescuable);
 	}
 
@@ -122,7 +123,7 @@ public class CorePropertyGenerator {
 	 *         'assert' or 'assert not').
 	 */
 	private CharSequence generateTimedDeadlockFreedom(CharSequence proc) {
-		var pproc = csp.function("prioritise", "%s[[tock<-tock,tock<-tock']]".formatted(proc),
+		final var pproc = csp.function("prioritise", "%s[[tock<-tock,tock<-tock']]".formatted(proc),
 				"<diff(Events,{tock',tock}),{tock}>");
 		return csp.tauPrioritiseTock("%s\\{tock} :[divergence free [FD]]".formatted(pproc));
 	}
