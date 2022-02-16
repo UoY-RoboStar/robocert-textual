@@ -36,9 +36,9 @@ abstract public class SpecGroupGenerator<T extends SpecGroup> extends GroupGener
 	@Inject
 	private CSPStructureGenerator csp;
 	@Inject
-	private TargetGenerator tg;
+	private TargetBodyGenerator tg;
 	@Inject
-	private TargetGroupGenerator tgg;
+	private TargetGenerator tgg;
 
 	/**
 	 * Generates the body elements of the open definition.

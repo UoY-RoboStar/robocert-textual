@@ -14,7 +14,7 @@ package robocalc.robocert.generator.tockcsp.ll;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.core.TargetField;
-import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
+import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CSPContextSource;
 import robocalc.robocert.model.robocert.EventSetCSPFragment;
@@ -40,7 +40,7 @@ public class TickTockContextGenerator {
 	@Inject
 	private UnsupportedSubclassHandler ush;
 	@Inject
-	private TargetGroupGenerator tg;
+	private TargetGenerator tg;
 
 	/**
 	 * Lifts the given process body into the tick-tock context of p.

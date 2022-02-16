@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.SpecGroupElementFinder;
-import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
+import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
 import robocalc.robocert.generator.tockcsp.ll.TickTockContextGenerator;
 import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CSPModel;
@@ -34,7 +34,7 @@ import robocalc.robocert.model.robocert.TargetGroupSource;
  */
 public class ProcessGenerator {
 	@Inject
-	private TargetGroupGenerator tg;
+	private TargetGenerator tg;
 	@Inject
 	private TickTockContextGenerator tt;
 	@Inject

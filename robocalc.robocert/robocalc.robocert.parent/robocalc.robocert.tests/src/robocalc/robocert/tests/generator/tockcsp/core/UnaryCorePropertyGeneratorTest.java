@@ -53,29 +53,29 @@ class CorePropertyGeneratorTest {
     source.setName("bar");
     source.setModule(mod);
 
-		final var grp = rc.createTargetGroup();
-		grp.setName("baz");
-		source.setGroup(grp);
+		final var pkg = rc.createCertPackage();
+		pkg.setName("baz");
+		source.setGroup(pkg);
 	}
 
   /** Tests the generation of determinism assertions. */
   @Test
   void testDeterminism() {
-    assertGeneratesBody("baz::bar::Closed :[deterministic]", CorePropertyType.DETERMINISM);
+    assertGeneratesBody("Targets::bar::Closed :[deterministic]", CorePropertyType.DETERMINISM);
   }
 
   /** Tests the generation of timed deadlock freedom assertions. */
   @Test
   void testDeadlockFree() {
     assertGeneratesBody(
-        "prioritise( baz::bar::Closed[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
+        "prioritise( Targets::bar::Closed[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
         CorePropertyType.DEADLOCK_FREE);
   }
 
   @Test
   void testTimelockFree() {
     assertGeneratesBody(
-        "RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= baz::bar::Closed", CorePropertyType.TIMELOCK_FREE);
+        "RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= Targets::bar::Closed", CorePropertyType.TIMELOCK_FREE);
   }
 
   /**

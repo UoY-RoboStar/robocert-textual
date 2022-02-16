@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 import com.google.inject.Inject;
 
 import robocalc.robocert.generator.intf.core.TargetField;
-import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
+import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.MessageSetOptimiser;
 import robocalc.robocert.model.robocert.BinaryMessageSet;
@@ -39,7 +39,7 @@ import robocalc.robocert.model.robocert.UniverseMessageSet;
  * @author Matt Windsor
  */
 public record MessageSetGenerator(CSPStructureGenerator csp,
-																	TargetGroupGenerator tgg,
+																	TargetGenerator tgg,
 																	MessageSetOptimiser mso,
 																	MessageGenerator msg) {
 	// TODO(@MattWindsor91): split named set functionality out of this.

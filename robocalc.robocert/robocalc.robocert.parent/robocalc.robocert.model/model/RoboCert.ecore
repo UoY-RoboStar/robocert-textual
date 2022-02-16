@@ -23,6 +23,12 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A RoboCert package."/>
     </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
+        eType="#//Target" containment="true" eOpposite="#//Target/group">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Targets considered in this package."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"
         eType="#//Group" containment="true" eOpposite="#//Group/parent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -69,25 +75,14 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="TargetGroup" eSuperTypes="#//Group">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Group containing one or more specification targets."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
-        eType="#//Target" containment="true" eOpposite="#//Target/group">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Targets contained in this group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="#//Process ../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A specification target.&#xD;&#xA;&#xD;&#xA;Targets combine several things: a RoboChart element;&#xD;&#xA;a process representing the element from a refinement perspective;&#xD;&#xA;information about the upstream ('context') elements connected to this target;&#xD;&#xA;and information about the downstream elements connected to it."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//TargetGroup"
-        eOpposite="#//TargetGroup/targets">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//CertPackage"
+        eOpposite="#//CertPackage/targets">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The group to which this target belongs."/>
+        <details key="documentation" value="The package to which this target belongs."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="contextElements" upperBound="-1"

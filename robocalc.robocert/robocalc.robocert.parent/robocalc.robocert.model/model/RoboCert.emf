@@ -51,6 +51,9 @@ abstract class OptionallyNamedElement {
 
 @genmodel(documentation="A RoboCert package.")
 class CertPackage extends robochart.BasicPackage {
+	@genmodel(documentation="Targets considered in this package.")
+	val Target[*]#group targets;
+
 	@genmodel(documentation="Any groups in this package.
 
 Groups form an ordered list because they can lexically depend on things
@@ -85,12 +88,6 @@ abstract class Specification extends robochart.NamedElement, Process {
 // TARGETS
 //
 
-@genmodel(documentation="Group containing one or more specification targets.")
-class TargetGroup extends Group {
-	@genmodel(documentation="Targets contained in this group.")
-	val Target[*]#group targets;
-}
-
 @genmodel(documentation="A specification target.
 
 Targets combine several things: a RoboChart element;
@@ -101,8 +98,8 @@ abstract class Target extends Process, robochart.NamedElement {
 	// TODO(@MattWindsor91): make these OptionallyNamedElements, with the
 	// name of the underlying element being the default name.
 
-	@genmodel(documentation="The group to which this target belongs.")
-	ref TargetGroup[1]#targets group;
+	@genmodel(documentation="The package to which this target belongs.")
+	ref CertPackage[1]#targets group;
 	
 	//
 	// Derived properties

@@ -12,43 +12,51 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp;
 
+import com.google.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.stream.Collectors;
-
-import com.google.inject.Inject;
-
 import robocalc.robocert.generator.tockcsp.core.AssertionGroupGenerator;
 import robocalc.robocert.generator.tockcsp.core.ImportGenerator;
-import robocalc.robocert.generator.tockcsp.core.TargetGroupGenerator;
+import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPGroupGenerator;
 import robocalc.robocert.generator.tockcsp.seq.SequenceGroupGenerator;
-import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.AssertionGroup;
 import robocalc.robocert.model.robocert.CSPGroup;
 import robocalc.robocert.model.robocert.CertPackage;
 import robocalc.robocert.model.robocert.Group;
 import robocalc.robocert.model.robocert.SequenceGroup;
-import robocalc.robocert.model.robocert.TargetGroup;
 
 /**
  * Generates CSP-M for {@link CertPackage}s.
  *
  * @author Matt Windsor
  */
-public class CertPackageGenerator {
+public record CertPackageGenerator (
+	AssertionGroupGenerator ag,
+	CSPGroupGenerator cg,
+	SequenceGroupGenerator sg,
+	TargetGenerator tg,
+	ImportGenerator ig
+) {
+
+	/**
+	 * Constructs a CertPackage generator.
+	 * @param ag the assertion group generator.
+	 * @param cg the CSP group generator.
+	 * @param sg the sequence group generator.
+	 * @param tg the target generator.
+	 * @param ig the import generator.
+	 */
 	@Inject
-	private AssertionGroupGenerator ag;
-	@Inject
-	private CSPGroupGenerator cg;
-	@Inject
-	private SequenceGroupGenerator sg;
-	@Inject
-	private TargetGroupGenerator tg;
-	@Inject
-	private ImportGenerator ig;
-	@Inject
-	private UnsupportedSubclassHandler ush;
+	public CertPackageGenerator {
+		Objects.requireNonNull(ag);
+		Objects.requireNonNull(cg);
+		Objects.requireNonNull(sg);
+		Objects.requireNonNull(tg);
+		Objects.requireNonNull(ig);
+	}
 
 	/**
 	 * @return generated CSP for all elements.
@@ -56,7 +64,11 @@ public class CertPackageGenerator {
 	 * @param pkg the package being generated.
 	 */
 	public CharSequence generate(CertPackage pkg) {
-		return String.join("\n\n", generateHeader(), ig.generate(pkg.eResource()), generateGroups(pkg));
+		final var header = generateHeader();
+		final var imports = ig.generate(pkg.eResource());
+		final var targets = tg.generate(pkg.getTargets());
+		final var groups = generateGroups(pkg);
+		return String.join("\n\n", header, imports, targets, groups);
 	}
 
 	/**
@@ -95,10 +107,8 @@ public class CertPackageGenerator {
 			return cg.generate(c);
 		if (it instanceof SequenceGroup s)
 			return sg.generate(s);
-		if (it instanceof TargetGroup t)
-			return tg.generate(t);
 
-		return ush.unsupported(it, "group", "");
+		throw new IllegalArgumentException("unsupported group: %s".formatted(it));
 	}
 
 }
