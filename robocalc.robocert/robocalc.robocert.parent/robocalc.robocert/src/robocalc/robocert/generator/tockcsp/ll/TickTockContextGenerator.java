@@ -15,14 +15,12 @@ package robocalc.robocert.generator.tockcsp.ll;
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
-import robocalc.robocert.generator.utils.UnsupportedSubclassHandler;
 import robocalc.robocert.model.robocert.CSPContextSource;
 import robocalc.robocert.model.robocert.EventSetCSPFragment;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
 import robocalc.robocert.model.robocert.SpecGroup;
 import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.TargetGroupSource;
 
 /**
  * Generates the appropriate tick-tock 'context' (minimal covering set of all
@@ -37,8 +35,6 @@ import robocalc.robocert.model.robocert.TargetGroupSource;
 public class TickTockContextGenerator {
 	@Inject
 	private CSPStructureGenerator csp;
-	@Inject
-	private UnsupportedSubclassHandler ush;
 	@Inject
 	private TargetGenerator tg;
 
@@ -72,14 +68,12 @@ public class TickTockContextGenerator {
 		// These sources are just wrappers over a target group:
 		if (s instanceof Interaction z)
 			s = z.getGroup();
-		if (s instanceof TargetGroupSource t)
-			s = t.getTargetGroup();
 		// The fallthrough here is intentional:
 		if (s instanceof SpecGroup g)
 			s = g.getTarget();
 		if (s instanceof Target t)
 			return tg.getFullCSPName(t, TargetField.TICK_TOCK_CONTEXT);
 
-		return ush.unsupported(s, "CSP context source", "{}");
+		throw new IllegalArgumentException("unsupported CSP context source: %s".formatted(s));
 	}
 }

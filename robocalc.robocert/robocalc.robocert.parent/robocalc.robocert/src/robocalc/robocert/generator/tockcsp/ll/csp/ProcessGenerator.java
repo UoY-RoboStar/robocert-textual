@@ -13,7 +13,6 @@
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import com.google.inject.Inject;
-import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.SpecGroupElementFinder;
 import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
@@ -24,7 +23,6 @@ import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.Process;
 import robocalc.robocert.model.robocert.ProcessCSPFragment;
 import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.TargetGroupSource;
 
 /**
  * Generates CSP-M that interprets {@link Process}es as references to the
@@ -63,8 +61,6 @@ public class ProcessGenerator {
 			return c.getName();
 		if (p instanceof Interaction s)
 			return sl.getFullCSPName(s);
-		if (p instanceof TargetGroupSource g)
-			return sl.getFullCSPName(g.getTargetGroup(), SpecGroupParametricField.TARGET);
 		if (p instanceof Target t)
 			return tg.getFullCSPName(t, TargetField.CLOSED);
 
