@@ -170,16 +170,6 @@ class InControllerTarget extends CollectionTarget {
 	ref robochart.ControllerDef[1] controller;
 }
 
-@genmodel(documentation="Uses the target of a specification group as a process source.
-
-This includes any instantiation for the target parameters.")
-class TargetGroupSource extends Process {
-	// TODO(@MattWindsor91): this is not a good workaround for the issue of
-	// needing to take these things as process sources.
-	@genmodel(documentation="The group whose target we are referencing.")
-	ref SpecGroup[1] targetGroup;
-}
-
 //
 // Instantiations
 //
