@@ -245,12 +245,12 @@ abstract class Property {
 @genmodel(documentation="A core property.")
 class CoreProperty extends Property {
 	// TODO(@MattWindsor91): it may one day be the case that core properties
-	// should accept things other than CSP process sources, eg if we track
+	// should accept things other than targets, eg if we track
 	// those properties in other backends, or if we add clock initialised
 	// properties.
 
 	@genmodel(documentation="The subject of the property.")
-	ref Process[1] subject;
+	ref Target[1] subject;
 	
 	@genmodel(documentation="The specific type of property being investigated.")
 	attr CorePropertyType[1] type;
