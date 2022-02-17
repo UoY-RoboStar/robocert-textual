@@ -27,7 +27,7 @@ import robocalc.robocert.generator.tockcsp.seq.PropertyGenerator;
 import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.SequenceGroup;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.SequenceProperty;
 import robocalc.robocert.model.robocert.SequencePropertyType;
 import robocalc.robocert.model.robocert.Target;
@@ -51,7 +51,7 @@ class PropertyGeneratorTest {
   @BeforeEach
   void setUp() {
     final var target = makeTarget();
-    final SequenceGroup group = makeGroup(target);
+    final SpecificationGroup group = makeGroup(target);
     sequence = makeSequence(group);
   }
 
@@ -111,15 +111,15 @@ class PropertyGeneratorTest {
     return p;
   }
 
-  private Interaction makeSequence(SequenceGroup group) {
+  private Interaction makeSequence(SpecificationGroup group) {
     final var s = rf.createInteraction();
     s.setName("seq");
     s.setGroup(group);
     return s;
   }
 
-  private SequenceGroup makeGroup(Target t) {
-    final var g = rf.createSequenceGroup();
+  private SpecificationGroup makeGroup(Target t) {
+    final var g = rf.createSpecificationGroup();
     g.getActors().addAll(mf.systemActors());
     g.setTarget(t);
 		g.setName("grp");

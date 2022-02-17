@@ -23,10 +23,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.testing.util.ParseHelper;
 import robocalc.robocert.model.robocert.CertPackage;
 import robocalc.robocert.model.robocert.ExpressionValueSpecification;
+import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
-import robocalc.robocert.model.robocert.SequenceGroup;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /** 
@@ -39,8 +40,8 @@ public class ParseTestHelper {
 	 */
 	private static final String PREFIX = """
 target M: module Mod
-sequence group X for M:
-  use target as T, world as W
+specification group X for M:
+  actors = {target as T, world as W}
   sequence Y:
     use T, W
 """;
@@ -93,11 +94,14 @@ sequence group X for M:
 	 * @return the unlifted subsequence.
 	 */
 	public EList<InteractionFragment> unliftSubsequence(CertPackage it) {
-		final var grp = StreamHelpers.firstOfClass(it.getGroups().stream(), SequenceGroup.class);
+		final var grp = StreamHelpers.firstOfClass(it.getGroups().stream(), SpecificationGroup.class);
 		if (grp.isEmpty()) {
-			throw new IllegalArgumentException("package does not contain a sequence group");
+			throw new IllegalArgumentException("package does not contain a specification group");
 		}
-		return grp.get().getInteractions().get(0).getFragments();
+		if (grp.get().getSpecifications().get(0) instanceof Interaction i) {
+			return i.getFragments();
+		}
+		throw new IllegalArgumentException("package group does not contain an interaction");
 	}
 
 	/**

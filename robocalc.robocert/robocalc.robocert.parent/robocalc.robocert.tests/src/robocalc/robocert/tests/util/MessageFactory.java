@@ -26,7 +26,7 @@ import robocalc.robocert.model.robocert.MessageSet;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.SequenceGroup;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.ValueSpecification;
 import robocalc.robocert.model.robocert.util.EdgeFactory;
 
@@ -105,8 +105,8 @@ public class MessageFactory {
     return it;
   }
 
-  private SequenceGroup group() {
-    final var it = rcert.createSequenceGroup();
+  private SpecificationGroup group() {
+    final var it = rcert.createSpecificationGroup();
     it.setTarget(target());
     it.getActors().addAll(mf.systemActors());
     return it;

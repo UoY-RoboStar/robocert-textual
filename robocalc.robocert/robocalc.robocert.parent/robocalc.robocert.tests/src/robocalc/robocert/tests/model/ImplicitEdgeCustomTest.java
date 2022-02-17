@@ -69,10 +69,10 @@ public class ImplicitEdgeCustomTest {
     seq.getActors().addAll(List.of(module, world));
     seq.getFragments().add(fragment);
 
-    final var sg = rf.createSequenceGroup();
+    final var sg = rf.createSpecificationGroup();
     sg.setTarget(msf.target());
     sg.getActors().addAll(List.of(module, world));
-    sg.getInteractions().add(seq);
+    sg.getSpecifications().add(seq);
   }
 
   /** Tests that the resolved-from for an implicit edge is correct. */

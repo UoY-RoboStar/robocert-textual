@@ -28,7 +28,7 @@ import org.eclipse.xtext.scoping.Scopes;
 import robocalc.robocert.generator.utils.EObjectExtensions;
 import robocalc.robocert.generator.utils.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.SpecGroup;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.Specification;
 
 /**
@@ -98,10 +98,10 @@ public record VariableScopeProvider(
 
   private List<Variable> constants(EObject obj) {
     // constScope and constAssignmentScope have the same effective body.
-    return getParent(obj, SpecGroup.class).stream().flatMap(this::specGroupConstants).toList();
+    return getParent(obj, SpecificationGroup.class).stream().flatMap(this::specGroupConstants).toList();
   }
 
-  private Stream<Variable> specGroupConstants(SpecGroup group) {
+  private Stream<Variable> specGroupConstants(SpecificationGroup group) {
     return tpResolver.parameterisation(group.getTarget());
   }
 

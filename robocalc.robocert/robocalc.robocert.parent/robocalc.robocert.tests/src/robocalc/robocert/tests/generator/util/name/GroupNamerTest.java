@@ -12,81 +12,76 @@
  ********************************************************************************/
 package robocalc.robocert.tests.generator.util.name;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.google.inject.Inject;
 import java.util.List;
-
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.google.inject.Inject;
-
 import robocalc.robocert.generator.utils.name.GroupNamer;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**
  * Tests {@link GroupNamer}.
- * 
+ *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class GroupNamerTest {
-	@Inject
-	private GroupNamer gn;
-	@Inject
-	private RoboCertFactory rf;
+  @Inject private GroupNamer gn;
+  @Inject private RoboCertFactory rf;
 
-	/**
-	 * Tests that getting/synthesising the name of a group that already has
-	 * a valid name is the identity.
-	 */
-	@Test
-	void testGetOrSynthesiseName_namedGroup() {
-		var grp = rf.createSequenceGroup();
-		grp.setName("test");
-		assertEquals("test", gn.getOrSynthesiseName(grp));
-	}
-	
-	/**
-	 * Tests that getting/synthesising the name of a group that already has
-	 * a valid name does some collision avoidance..
-	 */
-	@Test
-	void testGetOrSynthesiseName_namedGroupCollision() {
-		var grp = rf.createSequenceGroup();
-		grp.setName(GroupNamer.PREFIX + "0_pkg");
-		assertEquals(GroupNamer.PREFIX + "A_0_pkg", gn.getOrSynthesiseName(grp));
-	}
+  /**
+   * Tests that getting/synthesising the name of a group that already has a valid name is the
+   * identity.
+   */
+  @Test
+  void testGetOrSynthesiseName_namedGroup() {
+    final var grp = rf.createSpecificationGroup();
+    grp.setName("test");
+    assertEquals("test", gn.getOrSynthesiseName(grp));
+  }
 
-	/**
-	 * Tests that synthesising the name of a group without either a name or a
-	 * parent package returns the synthesised name prefix alone.
-	 */
-	@Test
-	void testGetOrSynthesiseName_unnamedGroupNoPackage() {
-		var grp = rf.createSequenceGroup();
-		assertEquals(GroupNamer.PREFIX, gn.getOrSynthesiseName(grp));
-	}
-	
-	/**
-	 * Tests that synthesising the name of a group with a parent package but
-	 * no name takes into account the package and the group's location in it.
-	 */
-	@Test
-	void testGetOrSynthesiseName_unnamedGroupInPackage() {
-		var pkg = rf.createCertPackage();
-		// Not easy to test filename based naming here.
-		pkg.setName("pkg");
-		
-		var grp1 = rf.createSequenceGroup();
-		var grp2 = rf.createCSPGroup();
-		pkg.getGroups().addAll(List.of(grp1, grp2));
-		
-		assertEquals(GroupNamer.PREFIX + "0_pkg", gn.getOrSynthesiseName(grp1));
-		assertEquals(GroupNamer.PREFIX + "1_pkg", gn.getOrSynthesiseName(grp2));
-	}
+  /**
+   * Tests that getting/synthesising the name of a group that already has a valid name does some
+   * collision avoidance..
+   */
+  @Test
+  void testGetOrSynthesiseName_namedGroupCollision() {
+    final var grp = rf.createSpecificationGroup();
+    grp.setName(GroupNamer.PREFIX + "0_pkg");
+    assertEquals(GroupNamer.PREFIX + "A_0_pkg", gn.getOrSynthesiseName(grp));
+  }
+
+  /**
+   * Tests that synthesising the name of a group without either a name or a parent package returns
+   * the synthesised name prefix alone.
+   */
+  @Test
+  void testGetOrSynthesiseName_unnamedGroupNoPackage() {
+    final var grp = rf.createSpecificationGroup();
+    assertEquals(GroupNamer.PREFIX, gn.getOrSynthesiseName(grp));
+  }
+
+  /**
+   * Tests that synthesising the name of a group with a parent package but no name takes into
+   * account the package and the group's location in it.
+   */
+  @Test
+  void testGetOrSynthesiseName_unnamedGroupInPackage() {
+    final var pkg = rf.createCertPackage();
+    // Not easy to test filename based naming here.
+    pkg.setName("pkg");
+
+    final var grp1 = rf.createSpecificationGroup();
+    final var grp2 = rf.createAssertionGroup();
+    pkg.getGroups().addAll(List.of(grp1, grp2));
+
+    assertEquals(GroupNamer.PREFIX + "0_pkg", gn.getOrSynthesiseName(grp1));
+    assertEquals(GroupNamer.PREFIX + "1_pkg", gn.getOrSynthesiseName(grp2));
+  }
 }

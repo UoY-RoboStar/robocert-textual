@@ -11,7 +11,7 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import robocalc.robocert.model.robocert.Target
-import robocalc.robocert.model.robocert.SequenceGroup
+import robocalc.robocert.model.robocert.SpecificationGroup
 
 /**
  * General extensions for EObjects.
@@ -38,6 +38,6 @@ class EObjectExtensions {
 	 * @return  the underlying target (can be null).
 	 */
 	def Target getTargetOfParentGroup(EObject it) {
-		EcoreUtil2.getContainerOfType(it, SequenceGroup)?.target
+		EcoreUtil2.getContainerOfType(it, SpecificationGroup)?.target
 	}
 }

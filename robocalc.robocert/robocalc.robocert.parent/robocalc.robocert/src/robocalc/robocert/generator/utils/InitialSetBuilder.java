@@ -51,7 +51,7 @@ public class InitialSetBuilder {
     // (The problem is that we can't enumerate the initial set of an UntilFragment, because it
     // could be the universe.  We might be able to relax this restriction eventually by making
     // the InitialSetBuilder return an optimised MessageSet, but this might be tricky to make work
-    // as we don't have a parent SequenceGroup ready.)
+    // as we don't have a parent SpecificationGroup ready.)
     if (fragment instanceof UntilFragment)
       throw new IllegalArgumentException("can't (yet) nest UntilFragments");
 

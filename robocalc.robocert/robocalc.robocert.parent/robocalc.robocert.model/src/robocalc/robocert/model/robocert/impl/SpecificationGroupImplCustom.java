@@ -13,27 +13,27 @@
 package robocalc.robocert.model.robocert.impl;
 
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.TargetActor;
+import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
- * Adds derived operation definitions to {@link SequenceGroupImpl}.
+ * Adds derived operation definitions to {@link SpecificationGroupImpl}.
  *
  * @author Matt Windsor
  */
-public class SequenceGroupImplCustom extends SequenceGroupImpl {
-	@Override
-	public TargetActor basicGetTargetActor() {
-		return getFirstActor(TargetActor.class);
-	}
+public class SpecificationGroupImplCustom extends SpecificationGroupImpl {
+  @Override
+  public TargetActor basicGetTargetActor() {
+    return getFirstActor(TargetActor.class);
+  }
 
-	@Override
-	public World basicGetWorld() {
-		return getFirstActor(World.class);
-	}
+  @Override
+  public World basicGetWorld() {
+    return getFirstActor(World.class);
+  }
 
-	private <T extends Actor> T getFirstActor(Class<T> clazz) {
-		return StreamHelpers.filter(getActors().parallelStream(), clazz).findFirst().orElse(null);
-	}
+  private <T extends Actor> T getFirstActor(Class<T> clazz) {
+    return StreamHelpers.filter(getActors().parallelStream(), clazz).findFirst().orElse(null);
+  }
 }

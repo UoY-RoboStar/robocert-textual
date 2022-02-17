@@ -54,6 +54,9 @@ class CertPackage extends robochart.BasicPackage {
 	@genmodel(documentation="Targets considered in this package.")
 	val Target[*]#group targets;
 
+	@genmodel(documentation="Any raw CSP to include inside this package.")
+	val CSPFragment[0..1] preambleCSP;
+
 	@genmodel(documentation="Any groups in this package.
 
 Groups form an ordered list because they can lexically depend on things
@@ -67,18 +70,44 @@ abstract class Group extends OptionallyNamedElement {
 	ref CertPackage[1]#groups parent;
 }
 
-@genmodel(documentation="A group containing specifications.
-
-Specification groups are context sources by virtue of having a target.")
-abstract class SpecGroup extends Group {
+@genmodel(documentation="A group containing specifications.")
+class SpecificationGroup extends Group {
 	@genmodel(documentation="The target of this group.")
 	ref Target[1] target;
 	@genmodel(documentation="The instantiation in effect in this group.")
 	val Instantiation[1]#group instantiation;
+
+	@genmodel(documentation="Any message sets named on the sequence group.")
+	!ordered val NamedMessageSet[*]#group messageSets;
+	
+	@genmodel(documentation="The actors available in this sequence group.")
+	!ordered val Actor[2..*]#group actors;
+
+	@genmodel(documentation="The specifications inside this sequence group.
+
+Ordered because some may be order-sensitive, eg CSP.")
+	ordered val Specification[*]#group specifications;
+	
+	//
+	// Derived properties
+	//
+
+	// NOTE(@MattWindsor91): these derivations have to be on the *group*, not
+	// the sequences.  This is because implicit edges in message sets rely on
+	// these existing.
+
+	@genmodel(documentation="Shortcut for getting the target actor of the group, if any.")
+	derived volatile transient readonly ref TargetActor[0..1] targetActor;
+	
+	@genmodel(documentation="Shortcut for getting the world of the group, if any.")
+	derived volatile transient readonly ref World[0..1] world;
 }
 
 @genmodel(documentation="A specification (which lives in some form of SpecGroup).")
 abstract class Specification extends robochart.NamedElement {
+	@genmodel(documentation="The parent group.")
+	ref SpecificationGroup[1]#specifications group;
+
 	@genmodel(documentation="The variables available for receiving arguments.")
 	val robochart.VariableList[0..1] variables;
 }
@@ -177,7 +206,7 @@ class InControllerTarget extends CollectionTarget {
 @genmodel(documentation="Specifies a (partial) instantiation of targets in a group.")
 class Instantiation {
 	@genmodel(documentation="The parent group of this instantiation.")
-	ref SpecGroup[1]#instantiation group;
+	ref SpecificationGroup[1]#instantiation group;
 
 	@genmodel(documentation="Any constant assignments.")
 	val ConstAssignment[*] assignments;
@@ -275,38 +304,8 @@ enum Temperature {
 // SEQUENCES
 ///////////////////////////////////////////////////////////////////////////////
 
-@genmodel(documentation="A collection of sequence diagrams.")
-class SequenceGroup extends SpecGroup {
-	@genmodel(documentation="Any message sets named on the sequence group.")
-	!ordered val NamedMessageSet[*]#group messageSets;
-	
-	@genmodel(documentation="The interactions inside this sequence group.")
-	!ordered val Interaction[*]#group interactions;
-	
-	@genmodel(documentation="The actors available in this sequence group.")
-	!ordered val Actor[2..*]#group actors;
-
-	
-	//
-	// Derived properties
-	//
-
-	// NOTE(@MattWindsor91): these derivations have to be on the *group*, not
-	// the sequences.  This is because implicit edges in message sets rely on
-	// these existing.
-
-	@genmodel(documentation="Shortcut for getting the target actor of the group, if any.")
-	derived volatile transient readonly ref TargetActor[0..1] targetActor;
-	
-	@genmodel(documentation="Shortcut for getting the world of the group, if any.")
-	derived volatile transient readonly ref World[0..1] world;
-}
-
 @genmodel(documentation="An interaction spawning a sequence diagram.")
-class Interaction extends Specification {
-	@genmodel(documentation="The group to which this sequence belongs.")
-	ref SequenceGroup[1]#interactions group;
-	
+class Interaction extends Specification {	
 	@genmodel(documentation="The set of group actors forming lifelines/gates in this diagram.
 
 The order determines that in which lifelines are shown in the graphical notation.")
@@ -656,7 +655,7 @@ class WildcardValueSpecification extends ValueSpecification {
 @genmodel(documentation="A defined and named message set.")
 class NamedMessageSet extends robochart.NamedElement {
 	@genmodel(documentation="The sequence group on which this message set is defined.")
-	ref SequenceGroup#messageSets group;
+	ref SpecificationGroup#messageSets group;
 
 	@genmodel(documentation="The inner message set.")
 	val MessageSet[1] set;
@@ -734,12 +733,12 @@ enum BinarySetOperator {
 Actors have names, for use in lifelines and ExplicitEdges.")
 abstract class Actor extends robochart.NamedElement {
 	// NOTE(@MattWindsor91): it would have been more idiomatic to have Actors
-	// belong to Sequences rather than SequenceGroups, but MessageSets would
+	// belong to Sequences rather than SpecificationGroups, but MessageSets would
 	// need either a complex setup to pick up Actors _or_ would need defining
 	// within Sequences.
 
 	@genmodel(documentation="The sequence group to which these actors belong.")
-	ref SequenceGroup[1]#actors group;
+	ref SpecificationGroup[1]#actors group;
 }
 
 @genmodel(documentation="Actor that stands for the current target.")
@@ -794,29 +793,20 @@ enum SequencePropertyType {
 // CSP
 //
 
-@genmodel(documentation="A group of raw CSP-M declarations.
-
-We generally interpret CSP-M as tock-CSP and implicitly generate it into a
-timed section, but this can be overridden.")
-class CSPGroup extends SpecGroup {
-	@genmodel(documentation="If true, the group should be generated outside of a timed section.")
-	attr boolean[1] untimed;
-	
-	@genmodel(documentation="The fragments contained in this group.")
-	val CSPFragment[*]#group fragments;
-}
-
-@genmodel(documentation="A fragment of CSP-M.
-
-We generally interpret CSP-M as tock-CSP and implicitly generate it into a
-timed section, but this can be overridden.")
-class CSPFragment {
+@genmodel(documentation="A fragment of CSP-M.")
+class CSPFragment extends Property {
 	@genmodel(documentation="The raw contents of the CSP fragment.")
 	attr String[1] contents;
 }
 
-@genmodel(documentation="A property whose body is a CSP fragment.")
-class CSPProperty extends Property, CSPFragment {
+@genmodel(documentation="A CSP fragment in property position.")
+class CSPProperty extends Property {
+	val CSPFragment[1] csp;
+}
+
+@genmodel(documentation="A CSP fragment in specification position.")
+class CSPSpecification extends Specification {
+	val CSPFragment[1] csp;
 }
 
 @genmodel(documentation="A tock-CSP refinement model.")

@@ -1,3 +1,15 @@
+/********************************************************************************
+ * Copyright (c) 2021, 2022 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
 import robocalc.robocert.model.robocert.BinaryMessageSet;
@@ -11,7 +23,7 @@ import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RefMessageSet;
-import robocalc.robocert.model.robocert.SequenceGroup;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
 import robocalc.robocert.model.robocert.World;
@@ -67,12 +79,12 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   public ModuleTarget createModuleTarget() {
     return new ModuleTargetImplCustom();
   }
-  
+
   @Override
   public InModuleTarget createInModuleTarget() {
     return new InModuleTargetImplCustom();
   }
-  
+
   // TODO(@MattWindsor91): other targets
 
   @Override
@@ -86,8 +98,8 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   }
 
   @Override
-  public SequenceGroup createSequenceGroup() {
-    return new SequenceGroupImplCustom();
+  public SpecificationGroup createSpecificationGroup() {
+    return new SpecificationGroupImplCustom();
   }
 
   @Override

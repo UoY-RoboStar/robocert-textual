@@ -21,7 +21,7 @@ import robocalc.robocert.model.robocert.ComponentActor;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.RoboCertPackage;
-import robocalc.robocert.model.robocert.SequenceGroup;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.TargetActor;
 
 /**
@@ -52,7 +52,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 	 * @param g the sequence group to check.
 	 */
 	@Check
-	public void checkModuleTargetActorCounts(SequenceGroup g) {
+	public void checkModuleTargetActorCounts(SpecificationGroup g) {
 		// TODO(@MattWindsor91): module target -> component target
 		if (hasNonModuleTarget(g))
 			return;
@@ -75,7 +75,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 	 * @param g the sequence group to check.
 	 */
 	@Check
-	public void checkActorCounts(SequenceGroup g) {
+	public void checkActorCounts(SpecificationGroup g) {
 		if (hasNonModuleTarget(g) && hasActors(g, TargetActor.class))
 			actorError("Only module groups can have module actors", SMA_NEEDS_SYSTEM);
 
@@ -84,7 +84,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 	}
 
 	private void actorError(String string, String code) {
-		error(string, RoboCertPackage.Literals.SEQUENCE_GROUP__ACTORS, code);
+		error(string, RoboCertPackage.Literals.SPECIFICATION_GROUP__ACTORS, code);
 	}
 
 	//
@@ -93,15 +93,15 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 
 	// TODO(@MattWindsor91): I think these are used/useful/duplicated elsewhere?
 
-	private boolean hasNonModuleTarget(SequenceGroup g) {
+	private boolean hasNonModuleTarget(SpecificationGroup g) {
 		return !(g.getTarget() instanceof ModuleTarget);
 	}
 
-	private boolean hasActors(SequenceGroup g, Class<? extends Actor> clazz) {
+	private boolean hasActors(SpecificationGroup g, Class<? extends Actor> clazz) {
 		return g.getActors().parallelStream().anyMatch(clazz::isInstance);
 	}
 
-	private long countActors(SequenceGroup g, Class<? extends Actor> clazz) {
+	private long countActors(SpecificationGroup g, Class<? extends Actor> clazz) {
 		return g.getActors().parallelStream().filter(clazz::isInstance).count();
 	}
 }

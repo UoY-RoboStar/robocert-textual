@@ -29,6 +29,12 @@
         <details key="documentation" value="Targets considered in this package."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preambleCSP" eType="#//CSPFragment"
+        containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Any raw CSP to include inside this package."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"
         eType="#//Group" containment="true" eOpposite="#//Group/parent">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -47,9 +53,9 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SpecGroup" abstract="true" eSuperTypes="#//Group">
+  <eClassifiers xsi:type="ecore:EClass" name="SpecificationGroup" eSuperTypes="#//Group">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A group containing specifications.&#xD;&#xA;&#xD;&#xA;Specification groups are context sources by virtue of having a target."/>
+      <details key="documentation" value="A group containing specifications."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target">
@@ -63,11 +69,47 @@
         <details key="documentation" value="The instantiation in effect in this group."/>
       </eAnnotations>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messageSets" ordered="false"
+        upperBound="-1" eType="#//NamedMessageSet" containment="true" eOpposite="#//NamedMessageSet/group">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Any message sets named on the sequence group."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actors" ordered="false"
+        lowerBound="2" upperBound="-1" eType="#//Actor" containment="true" eOpposite="#//Actor/group">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The actors available in this sequence group."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specifications" upperBound="-1"
+        eType="#//Specification" containment="true" eOpposite="#//Specification/group">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The specifications inside this sequence group.&#xD;&#xA;&#xD;&#xA;Ordered because some may be order-sensitive, eg CSP."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetActor" eType="#//TargetActor"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Shortcut for getting the target actor of the group, if any."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="world" eType="#//World"
+        changeable="false" volatile="true" transient="true" derived="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Shortcut for getting the world of the group, if any."/>
+      </eAnnotations>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Specification" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A specification (which lives in some form of SpecGroup)."/>
     </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecificationGroup"
+        eOpposite="#//SpecificationGroup/specifications">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent group."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variables" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//VariableList"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -192,8 +234,8 @@
       </eAnnotations>
       <eParameters name="constant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecGroup"
-        eOpposite="#//SpecGroup/instantiation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecificationGroup"
+        eOpposite="#//SpecificationGroup/instantiation">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The parent group of this instantiation."/>
       </eAnnotations>
@@ -319,51 +361,10 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceGroup" eSuperTypes="#//SpecGroup">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A collection of sequence diagrams."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="messageSets" ordered="false"
-        upperBound="-1" eType="#//NamedMessageSet" containment="true" eOpposite="#//NamedMessageSet/group">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Any message sets named on the sequence group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="interactions" ordered="false"
-        upperBound="-1" eType="#//Interaction" containment="true" eOpposite="#//Interaction/group">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The interactions inside this sequence group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="actors" ordered="false"
-        lowerBound="2" upperBound="-1" eType="#//Actor" containment="true" eOpposite="#//Actor/group">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The actors available in this sequence group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targetActor" eType="#//TargetActor"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the target actor of the group, if any."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="world" eType="#//World"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the world of the group, if any."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Interaction" eSuperTypes="#//Specification">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An interaction spawning a sequence diagram."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
-        eOpposite="#//SequenceGroup/interactions">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The group to which this sequence belongs."/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="actors" lowerBound="2"
         upperBound="-1" eType="#//Actor">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -794,8 +795,8 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A defined and named message set."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//SequenceGroup"
-        eOpposite="#//SequenceGroup/messageSets">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//SpecificationGroup"
+        eOpposite="#//SpecificationGroup/messageSets">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The sequence group on which this message set is defined."/>
       </eAnnotations>
@@ -897,8 +898,8 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An actor in a sequence.&#xD;&#xA;&#xD;&#xA;Actors have names, for use in lifelines and ExplicitEdges."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SequenceGroup"
-        eOpposite="#//SequenceGroup/actors">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecificationGroup"
+        eOpposite="#//SpecificationGroup/actors">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The sequence group to which these actors belong."/>
       </eAnnotations>
@@ -961,26 +962,9 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//SpecGroup">
+  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" eSuperTypes="#//Property">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A group of raw CSP-M declarations.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="untimed" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="If true, the group should be generated outside of a timed section."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="fragments" upperBound="-1"
-        eType="#//CSPFragment" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The fragments contained in this group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M.&#xD;&#xA;&#xD;&#xA;We generally interpret CSP-M as tock-CSP and implicitly generate it into a&#xD;&#xA;timed section, but this can be overridden."/>
+      <details key="documentation" value="A fragment of CSP-M."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -989,10 +973,19 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPProperty" eSuperTypes="#//Property #//CSPFragment">
+  <eClassifiers xsi:type="ecore:EClass" name="CSPProperty" eSuperTypes="#//Property">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A property whose body is a CSP fragment."/>
+      <details key="documentation" value="A CSP fragment in property position."/>
     </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="csp" lowerBound="1" eType="#//CSPFragment"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CSPSpecification" eSuperTypes="#//Specification">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A CSP fragment in specification position."/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="csp" lowerBound="1" eType="#//CSPFragment"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="CSPModel">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

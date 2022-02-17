@@ -117,12 +117,12 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference RoboCert.ecore#//CoreProperty/subject"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RoboCert.ecore#//CoreProperty/type"/>
     </genClasses>
-    <genClasses ecoreClass="RoboCert.ecore#//SequenceGroup">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceGroup/messageSets"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceGroup/interactions"/>
-      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceGroup/actors"/>
-      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceGroup/targetActor"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SequenceGroup/world"/>
+    <genClasses ecoreClass="RoboCert.ecore#//SpecificationGroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SpecificationGroup/messageSets"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SpecificationGroup/interactions"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SpecificationGroup/actors"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//SpecificationGroup/targetActor"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RoboCert.ecore#//SpecificationGroup/world"/>
     </genClasses>
     <genClasses ecoreClass="RoboCert.ecore#//Interaction">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference RoboCert.ecore#//Interaction/group"/>

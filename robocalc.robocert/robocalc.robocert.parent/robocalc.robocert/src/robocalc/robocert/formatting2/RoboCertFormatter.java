@@ -7,7 +7,7 @@ import circus.robocalc.robochart.textual.formatting2.RoboChartFormatter;
 import org.eclipse.xtext.formatting2.IFormattableDocument;
 import robocalc.robocert.model.robocert.CertPackage;
 import robocalc.robocert.model.robocert.Group;
-import robocalc.robocert.model.robocert.SequenceGroup;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 
 @SuppressWarnings("unused")
 public class RoboCertFormatter extends RoboChartFormatter {
@@ -20,15 +20,15 @@ public class RoboCertFormatter extends RoboChartFormatter {
     }
   }
 
-  protected void format(SequenceGroup group, IFormattableDocument doc) {
+  protected void format(SpecificationGroup group, IFormattableDocument doc) {
     // TODO: format HiddenRegions around keywords, attributes, cross references, etc.
-    for (var seq : group.getInteractions()) {
+    for (var seq : group.getSpecifications()) {
       doc.format(seq);
     }
   }
 
   // TODO: implement for Instantiation, ConstAssignment, AssertionGroup, Assertion, LogicalExpr,
-  // RelationExpr, MinusExpr, CSPGroup, SequenceGroup, Sequence, Subsequence, ActionStep,
+  // RelationExpr, MinusExpr, CSPGroup, SpecificationGroup, Sequence, Subsequence, ActionStep,
   // DeadlineStep, LoopFragment, BlockFragment, DefiniteLoopBound, LowerLoopBound, RangeLoopBound,
   // BranchFragment, Branch, ExprGuard, MessageOccurrence, WaitAction, Message, NamedMessageSet,
   // BinaryMessageSet, ExtensionalMessageSet, ExpressionArgument, WildcardArgument

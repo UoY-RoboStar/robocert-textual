@@ -104,7 +104,7 @@ public abstract class GroupGenerator<T extends Group> {
 		if (!isInModule(group))
 			return body;
 
-		var name = gn.getOrSynthesiseName(group);
+		final var name = gn.getOrSynthesiseName(group);
 		return privBody.isEmpty() ? csp.module(name, body) : csp.moduleWithPrivate(name, privBody, body);
 	}
 

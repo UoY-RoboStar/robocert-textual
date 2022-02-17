@@ -15,7 +15,7 @@ package robocalc.robocert.generator.tockcsp.seq;
 import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.intf.core.TargetField;
-import robocalc.robocert.generator.tockcsp.core.SpecGroupElementFinder;
+import robocalc.robocert.generator.tockcsp.core.SpecificationGroupElementFinder;
 import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
 import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.TickTockContextGenerator;
@@ -31,7 +31,7 @@ public record PropertyGenerator(
   CSPStructureGenerator csp,
   RoboCertFactory rf,
   TargetGenerator tg,
-  SpecGroupElementFinder sf
+  SpecificationGroupElementFinder sf
 ) {
 
   @Inject
