@@ -39,13 +39,7 @@ public class AssertionGroupGenerator extends GroupGenerator<AssertionGroup> {
 	protected Stream<CharSequence> generateBodyElements(AssertionGroup group) {
 		return group.getAssertions().stream().map(this::generateAssertion);
 	}
-	
-	@Override
-	protected boolean isTimed(AssertionGroup group) {
-		// Assertions can't, to the best of our knowledge, be timed.
-		return false;
-	}
-	
+
 	@Override
 	protected boolean isInModule(AssertionGroup group) {
 		// There is no reason to put assertions in modules; in fact, it might

@@ -30,8 +30,8 @@ public abstract class GroupGenerator<T extends Group> {
 	 * @return CSP-M for the group.
 	 */
 	public CharSequence generate(T group) {
-		var body = csp.innerJoin(generateBodyElements(group));
-		var priv = csp.innerJoin(generatePrivateElements(group));
+		final var body = csp.innerJoin(generateBodyElements(group));
+		final var priv = csp.innerJoin(generatePrivateElements(group));
 		return String.join("\n", generateHeader(group), liftBody(group, body, priv), generateFooter(group));
 	}
 
@@ -76,15 +76,6 @@ public abstract class GroupGenerator<T extends Group> {
 	//
 
 	/**
-	 * Gets whether the group body should be placed in a timed section.
-	 *
-	 * @param group the group in question.
-	 *
-	 * @return true if the group should be lifted, false otherwise.
-	 */
-	protected abstract boolean isTimed(T group);
-
-	/**
 	 * Gets whether the group body should be placed in a module.
 	 *
 	 * The module is given the same name as the group.
@@ -100,7 +91,6 @@ public abstract class GroupGenerator<T extends Group> {
 	//
 
 	private CharSequence liftBody(T group, CharSequence body, CharSequence privBody) {
-		body = csp.timedIf(isTimed(group), body);
 		if (!isInModule(group))
 			return body;
 

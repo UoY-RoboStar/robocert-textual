@@ -53,12 +53,6 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   }
 
   @Override
-  protected boolean isTimed(SpecificationGroup group) {
-    // Only *some* of a spec group's elements need to be timed.
-    return false;
-  }
-
-  @Override
   protected boolean isInModule(SpecificationGroup group) {
     // Spec groups always generate a module.
     return true;
