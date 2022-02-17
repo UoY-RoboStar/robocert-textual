@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.DefiniteLoopBound;
 import robocalc.robocert.model.robocert.InfiniteLoopBound;
 import robocalc.robocert.model.robocert.LoopFragment;

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.TargetExtensions;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;

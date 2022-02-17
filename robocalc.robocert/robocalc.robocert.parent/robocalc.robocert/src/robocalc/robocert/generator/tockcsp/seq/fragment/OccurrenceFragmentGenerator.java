@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.model.robocert.OccurrenceFragment;

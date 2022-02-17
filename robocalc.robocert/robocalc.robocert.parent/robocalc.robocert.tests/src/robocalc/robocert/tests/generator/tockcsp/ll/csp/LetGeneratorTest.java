@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 

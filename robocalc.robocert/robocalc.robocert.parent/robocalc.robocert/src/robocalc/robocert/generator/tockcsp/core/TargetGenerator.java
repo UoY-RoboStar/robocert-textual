@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 import robocalc.robocert.generator.intf.core.TargetField;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Target;
 
 /**

@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.intf.core.TargetField;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;

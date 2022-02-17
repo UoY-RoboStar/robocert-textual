@@ -1,5 +1,5 @@
-/********************************************************************************
- * Copyright (c) 2021, 2022 University of York and others
+/*******************************************************************************
+ * Copyright (c) 2021-2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,9 +8,9 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Matt Windsor - initial definition
- ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.ll;
+ *   $author - initial definition
+ ******************************************************************************/
+package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.core.TargetField;

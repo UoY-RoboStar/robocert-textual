@@ -14,8 +14,7 @@
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import java.util.Objects;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.ll.TickTockContextGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.Target;
 

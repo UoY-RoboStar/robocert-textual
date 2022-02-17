@@ -22,7 +22,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.MessageSetOptimiser;
 import robocalc.robocert.model.robocert.BinaryMessageSet;
 import robocalc.robocert.model.robocert.BinarySetOperator;

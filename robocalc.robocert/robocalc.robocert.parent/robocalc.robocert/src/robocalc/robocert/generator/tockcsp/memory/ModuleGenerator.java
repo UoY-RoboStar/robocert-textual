@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Interaction;
 
 /**

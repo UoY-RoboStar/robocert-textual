@@ -3,7 +3,7 @@ package robocalc.robocert.generator.tockcsp.core;
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.name.GroupNamer;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SpecificationGroup;

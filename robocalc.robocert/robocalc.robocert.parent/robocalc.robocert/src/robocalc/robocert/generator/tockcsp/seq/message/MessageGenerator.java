@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.eclipse.xtext.xbase.lib.Pair;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ArgumentGenerator;
 import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.Message;

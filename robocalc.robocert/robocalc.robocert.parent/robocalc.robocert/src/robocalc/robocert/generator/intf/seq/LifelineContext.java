@@ -12,7 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.generator.intf.seq;
 
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Actor;
 
 /**

@@ -10,7 +10,7 @@
  * Contributors:
  *   Matt Windsor - initial definition
  ********************************************************************************/
-package robocalc.robocert.generator.tockcsp.ll
+package robocalc.robocert.generator.tockcsp.ll.csp
 
 import java.util.stream.Stream
 import java.util.stream.Collectors

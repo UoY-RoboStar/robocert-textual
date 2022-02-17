@@ -14,7 +14,7 @@
 package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
-import robocalc.robocert.generator.tockcsp.ll.CSPStructureGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.OptFragment;
 import robocalc.robocert.model.robocert.Temperature;
 
