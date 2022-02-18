@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 import org.eclipse.emf.ecore.resource.Resource;
 import robocalc.robocert.generator.utils.PackageFinder;
 import robocalc.robocert.model.robocert.CertPackage;
-import robocalc.robocert.model.robocert.Target;
 
 /**
  * A generator that expands out imports for a top-level resource.
@@ -97,15 +96,7 @@ public record ImportGenerator(PathSet ps,
   }
 
   private Stream<String> targetImports(CertPackage p) {
-    return targetElements(p).flatMap(this::elementImports);
-  }
-
-  private Stream<NamedElement> targetElements(CertPackage p) {
-    // We used to pick up only targets referenced in a SpecGroup here for efficiency, but
-    // this means that the definitions of the targets themselves break - for perhaps obvious
-    // reasons.  If we want to optimise out unused targets, we'll need to optimise out their
-    // definitions entirely (and then make sure they can't be used by other files?).
-    return p.getTargets().stream().map(Target::getElement);
+    return elementImports(p.getTarget().getElement());
   }
 
   private Stream<String> elementImports(NamedElement elt) {

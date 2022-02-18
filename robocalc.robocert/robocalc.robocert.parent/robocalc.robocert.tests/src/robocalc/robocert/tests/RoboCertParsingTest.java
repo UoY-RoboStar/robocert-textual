@@ -27,8 +27,8 @@ class RoboCertParsingTest {
 	@Test
 	void loadModel() {
 		final var result = Assertions.assertDoesNotThrow(() -> parseHelper.parse("""
-target M: module Mod
-specification group S for M:
+target module Mod
+specification group S:
 	actors = {target as T, world as W}
 	sequence Test:
 		use T and W

@@ -12,14 +12,12 @@
  ******************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq.message;
 
+import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import com.google.inject.Inject;
-
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
@@ -30,7 +28,6 @@ import robocalc.robocert.model.robocert.ExtensionalMessageSet;
 import robocalc.robocert.model.robocert.MessageSet;
 import robocalc.robocert.model.robocert.NamedMessageSet;
 import robocalc.robocert.model.robocert.RefMessageSet;
-import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
 
 /**
@@ -43,6 +40,15 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 																	MessageSetOptimiser mso,
 																	MessageGenerator msg) {
 	// TODO(@MattWindsor91): split named set functionality out of this.
+
+	/**
+	 * The name of the message set module exposed by RoboCert.
+	 */
+	public static final CharSequence MODULE_NAME = "MsgSets";
+	/**
+	 * The name of the universe set exposed by RoboCert in the message set module.
+	 */
+	public static final CharSequence UNIVERSE_NAME = "Universe";
 
 	/**
 	 * Constructs a message set generator.
@@ -66,7 +72,7 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 	 * @return generated, optimised CSP for the message set.
 	 */
 	public CharSequence optimiseAndGenerate(MessageSet m, Consumer<MessageSet> registrar) {
-		var opt = mso.optimise(m);
+		final var opt = mso.optimise(m);
 		registrar.accept(opt);
 		return generate(opt);
 	}
@@ -107,35 +113,24 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 	 * Generates the named set module for a sequence group.
 	 *
 	 * @param sets the message sets to expose in the module.
-	 * @param tgt  the sequence group's target.
 	 * @return generated CSP for the named message set group.
 	 */
-	public CharSequence generateNamedSets(List<NamedMessageSet> sets, Target tgt) {
-		var stdSets = Stream.of(universeDef(tgt));
-		var userSets = sets.stream().filter(Objects::nonNull)
+	public CharSequence generateNamedSets(List<NamedMessageSet> sets) {
+		final var stdSets = Stream.of(universeDef());
+		final var userSets = sets.stream().filter(Objects::nonNull)
 				.map(x -> csp.definition(x.getName(), generateNamedSet(x)));
-		var allSets = Stream.concat(stdSets, userSets);
+		final var allSets = Stream.concat(stdSets, userSets);
 
 		return csp.module(MODULE_NAME, allSets.collect(Collectors.joining("\n")));
 	}
 
-	private CharSequence universeDef(Target tgt) {
-		return csp.definition(UNIVERSE_NAME, tgg.getFullCSPName(tgt, TargetField.UNIVERSE));
+	private CharSequence universeDef() {
+		return csp.definition(UNIVERSE_NAME, tgg.getFullCSPName(TargetField.UNIVERSE));
 	}
 
 	private CharSequence generateNamedSet(NamedMessageSet it) {
 		return optimiseAndGenerate(it.getSet(), it::setSet);
 	}
-
-	/**
-	 * The name of the message set module exposed by RoboCert.
-	 */
-	public static final CharSequence MODULE_NAME = "MsgSets";
-
-	/**
-	 * The name of the universe set exposed by RoboCert in the message set module.
-	 */
-	public static final CharSequence UNIVERSE_NAME = "Universe";
 
 	public CharSequence qualifiedUniverseName() {
 		return csp.namespaced(MODULE_NAME, UNIVERSE_NAME);

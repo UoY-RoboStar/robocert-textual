@@ -48,32 +48,31 @@ class CorePropertyGeneratorTest {
     mod.setName("foo");
 
     source = rc.createModuleTarget();
-    source.setName("bar");
     source.setModule(mod);
 
     final var pkg = rc.createCertPackage();
     pkg.setName("baz");
-    source.setGroup(pkg);
+    source.setTop(pkg);
   }
 
   /** Tests the generation of determinism assertions. */
   @Test
   void testDeterminism() {
-    assertGeneratesBody("Targets::bar::Closed :[deterministic]", CorePropertyType.DETERMINISM);
+    assertGeneratesBody("Target::Closed :[deterministic]", CorePropertyType.DETERMINISM);
   }
 
   /** Tests the generation of timed deadlock freedom assertions. */
   @Test
   void testDeadlockFree() {
     assertGeneratesBody(
-        "prioritise( Targets::bar::Closed[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
+        "prioritise( Target::Closed[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
         CorePropertyType.DEADLOCK_FREE);
   }
 
   @Test
   void testTimelockFree() {
     assertGeneratesBody(
-        "RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= Targets::bar::Closed",
+        "RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= Target::Closed",
         CorePropertyType.TIMELOCK_FREE);
   }
 

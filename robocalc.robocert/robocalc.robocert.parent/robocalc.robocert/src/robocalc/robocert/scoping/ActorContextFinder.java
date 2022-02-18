@@ -62,7 +62,7 @@ public record ActorContextFinder(DefinitionHelper dh) {
 			return Optional.of(contextsOfNode(c.getNode()));
 		}
 		if (a instanceof World x) {
-			return Optional.of(contextsOfTargetWorld(x.getGroup().getTarget()));
+			return Optional.of(contextsOfTargetWorld(x.getGroup().getParent().getTarget()));
 		}
 
 		// See API note above.

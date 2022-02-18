@@ -42,7 +42,7 @@ public class ActorValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check
 	public void checkComponentMemberOfTarget(ComponentActor c) {
-		final var target = c.getGroup().getTarget();
+		final var target = c.getGroup().getParent().getTarget();
 		final var node = c.getNode();
 
 		if (target instanceof CollectionTarget ct) {

@@ -51,8 +51,8 @@ abstract class OptionallyNamedElement {
 
 @genmodel(documentation="A RoboCert package.")
 class CertPackage extends robochart.BasicPackage {
-	@genmodel(documentation="Targets considered in this package.")
-	val Target[*]#group targets;
+	@genmodel(documentation="Target of this package.")
+	val Target[1]#top target;
 
 	@genmodel(documentation="Any raw CSP to include inside this package.")
 	val CSPFragment[0..1] preambleCSP;
@@ -72,8 +72,6 @@ abstract class Group extends OptionallyNamedElement {
 
 @genmodel(documentation="A group containing specifications.")
 class SpecificationGroup extends Group {
-	@genmodel(documentation="The target of this group.")
-	ref Target[1] target;
 	@genmodel(documentation="The instantiation in effect in this group.")
 	val Instantiation[1]#group instantiation;
 
@@ -123,12 +121,9 @@ Targets combine several things: a RoboChart element;
 a process representing the element from a refinement perspective;
 information about the upstream ('context') elements connected to this target;
 and information about the downstream elements connected to it.")
-abstract class Target extends robochart.NamedElement {
-	// TODO(@MattWindsor91): make these OptionallyNamedElements, with the
-	// name of the underlying element being the default name.
-
+abstract class Target {
 	@genmodel(documentation="The package to which this target belongs.")
-	ref CertPackage[1]#targets group;
+	ref CertPackage[1]#target top;
 	
 	//
 	// Derived properties

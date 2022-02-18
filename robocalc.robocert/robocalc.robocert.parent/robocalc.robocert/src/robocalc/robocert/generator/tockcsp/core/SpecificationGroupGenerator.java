@@ -130,14 +130,14 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     // NOTE(@MattWindsor91): as far as I know, this needn't be timed
     return csp.definition(
         SpecGroupParametricField.TARGET.toString(),
-        targetDefBody(it.getTarget(), it.getInstantiation()));
+        targetDefBody(getTarget(it), it.getInstantiation()));
   }
 
-  private CharSequence targetDefBody(Target t, Instantiation inst) {
+	private CharSequence targetDefBody(Target t, Instantiation inst) {
     // We're accessing the open form of the target here, filling in
     // the group's own instantiation.
     return csp.function(
-        tgg.getFullCSPName(t, TargetField.OPEN), tg.generateRefParams(t, null, inst, true));
+        tgg.getFullCSPName(TargetField.OPEN), tg.generateRefParams(t, null, inst, true));
   }
 
   /**
@@ -156,7 +156,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   }
 
   private CharSequence[] openSigParams(SpecificationGroup it, Instantiation outerInst) {
-    return tg.generateRefParams(it.getTarget(), it.getInstantiation(), outerInst, false);
+    return tg.generateRefParams(getTarget(it), it.getInstantiation(), outerInst, false);
   }
 
   @Override
@@ -167,7 +167,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
 	@Override
 	protected Stream<CharSequence> generatePrivateElements(SpecificationGroup group) {
-		return Stream.of(msg.generateNamedSets(group.getMessageSets(), group.getTarget()));
+		return Stream.of(msg.generateNamedSets(group.getMessageSets()));
 	}
 
 	protected Stream<CharSequence> specificationElements(SpecificationGroup it) {
@@ -220,5 +220,9 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 		return Stream.of(mod)
 				.filter(x -> !x.isEmpty())
 				.map(x -> csp.module(name, csp.timedIf(isTimed, x)));
+	}
+
+	private Target getTarget(SpecificationGroup it) {
+		return it.getParent().getTarget();
 	}
 }

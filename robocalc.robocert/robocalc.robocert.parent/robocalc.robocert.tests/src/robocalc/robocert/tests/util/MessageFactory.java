@@ -107,8 +107,12 @@ public class MessageFactory {
 
   private SpecificationGroup group() {
     final var it = rcert.createSpecificationGroup();
-    it.setTarget(target());
     it.getActors().addAll(mf.systemActors());
+
+    final var pkg = rcert.createCertPackage();
+    pkg.getGroups().add(it);
+    pkg.setTarget(target());
+
     return it;
   }
 

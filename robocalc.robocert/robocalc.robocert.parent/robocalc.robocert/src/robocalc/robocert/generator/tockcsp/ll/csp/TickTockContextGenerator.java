@@ -15,7 +15,6 @@ package robocalc.robocert.generator.tockcsp.ll.csp;
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
-import robocalc.robocert.model.robocert.Target;
 
 /**
  * Generates the appropriate tick-tock 'context' (minimal covering set of all events in a process)
@@ -33,22 +32,20 @@ public class TickTockContextGenerator {
   /**
    * Lifts the given process body into the tick-tock context of a target.
    *
-   * @param t the target to use for lifting.
    * @param inner the body to lift.
    * @return the lifted body.
    */
-  public CharSequence liftTickTock(Target t, CharSequence inner) {
+  public CharSequence liftTickTock(CharSequence inner) {
     // This should line up with how the RoboChart standard library implements model shifting.
-    return csp.function(csp.namespaced(generateRef(t), "TT"), inner);
+    return csp.function(csp.namespaced(generateRef(), "TT"), inner);
   }
 
   /**
    * Generates a reference to a tick-tock context for the given target.
    *
-   * @param t the source of the tick-tock context.
    * @return CSP-M referring to the tick-tock context.
    */
-  public CharSequence generateRef(Target t) {
-    return tg.getFullCSPName(t, TargetField.TICK_TOCK_CONTEXT);
+  public CharSequence generateRef() {
+    return tg.getFullCSPName(TargetField.TICK_TOCK_CONTEXT);
   }
 }

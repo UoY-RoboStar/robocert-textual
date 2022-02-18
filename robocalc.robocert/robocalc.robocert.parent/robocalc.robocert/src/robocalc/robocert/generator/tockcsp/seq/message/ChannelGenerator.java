@@ -21,6 +21,7 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.TargetExtensions;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
+import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.Edge;
 import robocalc.robocert.model.robocert.EdgeDirection;
@@ -80,7 +81,7 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 	}
 
 	private CharSequence worldNamespace(World c) {
-		final var tgt = c.getGroup().getTarget();
+		final var tgt = getTarget(c);
 		// This effectively flips system contexts to take the *from*-actor,
 		// as the module must be the only other actor available in a system
 		// diagram.
@@ -92,14 +93,14 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 	}
 
 	private CharSequence targetNamespace(TargetActor s) {
-		if (s.getGroup().getTarget() instanceof ModuleTarget t) {
+		if (getTarget(s) instanceof ModuleTarget t) {
 			return t.getModule().getName();
 		}
 		throw new IllegalArgumentException("can't get target namespace when actor is %s".formatted(s));
 	}
 
 	private CharSequence componentNamespace(ComponentActor k) {
-		final var targetFragments = tx.namePath(k.getGroup().getTarget());
+		final var targetFragments = tx.namePath(getTarget(k));
 		final var componentFragments = Stream.of(gu.connectionNodeName(k.getNode()));
 		final var fragments = Stream.concat(targetFragments, componentFragments).toArray(String[]::new);
 		return csp.namespaced(fragments);
@@ -122,5 +123,9 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 			return EdgeDirection.OUTBOUND;
 		}
 		return EdgeDirection.INBOUND;
+	}
+
+	private Target getTarget(Actor a) {
+		return a.getGroup().getParent().getTarget();
 	}
 }

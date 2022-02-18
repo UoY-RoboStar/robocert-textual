@@ -64,11 +64,7 @@ public record PropertyGenerator(
    * @return the lowered refinement.
    */
   public CSPRefinement lower(SequenceProperty p) {
-    return new CSPRefinement(p.isNegated(), lhs(p), rhs(p), getTarget(p), p.getModel());
-  }
-
-  private Target getTarget(SequenceProperty p) {
-    return p.getInteraction().getGroup().getTarget();
+    return new CSPRefinement(p.isNegated(), lhs(p), rhs(p), p.getModel());
   }
 
   /**
@@ -102,14 +98,14 @@ public record PropertyGenerator(
    *     target of t.
    */
   private CharSequence sequenceWhenTypeElseTarget(SequenceProperty it, SequencePropertyType t) {
-    return it.getType() == t ? sequenceRef(it) : targetRef(it);
+    return it.getType() == t ? sequenceRef(it) : targetRef();
   }
 
   private CharSequence sequenceRef(SequenceProperty it) {
     return sf.getFullCSPName(it.getInteraction());
   }
 
-  private CharSequence targetRef(SequenceProperty it) {
-    return tg.getFullCSPName(getTarget(it), TargetField.CLOSED);
+  private CharSequence targetRef() {
+    return tg.getFullCSPName(TargetField.CLOSED);
   }
 }

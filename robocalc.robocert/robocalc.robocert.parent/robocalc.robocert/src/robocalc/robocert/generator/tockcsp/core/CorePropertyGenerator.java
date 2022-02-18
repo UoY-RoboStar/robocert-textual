@@ -54,7 +54,7 @@ public record CorePropertyGenerator(TargetGenerator targetGen, CSPStructureGener
 		// Similar situation for properties that require the tick-tock model.
 
 		// TODO(@MattWindsor91): assertion?
-		final var proc = targetGen.getFullCSPName(p.getSubject(), TargetField.CLOSED);
+		final var proc = targetGen.getFullCSPName(TargetField.CLOSED);
 
 		if (t == CorePropertyType.TERMINATION)
 			return neg ? generateNontermination(proc) : generateTermination(proc);

@@ -94,7 +94,7 @@ public class SequenceGroupValidator extends AbstractDeclarativeValidator {
 	// TODO(@MattWindsor91): I think these are used/useful/duplicated elsewhere?
 
 	private boolean hasNonModuleTarget(SpecificationGroup g) {
-		return !(g.getTarget() instanceof ModuleTarget);
+		return !(g.getParent().getTarget() instanceof ModuleTarget);
 	}
 
 	private boolean hasActors(SpecificationGroup g, Class<? extends Actor> clazz) {

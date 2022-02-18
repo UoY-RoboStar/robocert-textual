@@ -13,8 +13,6 @@
 package robocalc.robocert.generator.tockcsp.core;
 
 import com.google.inject.Inject;
-import java.util.List;
-import java.util.stream.Collectors;
 import robocalc.robocert.generator.intf.core.TargetField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Target;
@@ -27,28 +25,20 @@ import robocalc.robocert.model.robocert.Target;
 public class TargetGenerator {
   // TODO(@MattWindsor91): split reference resolution out of this.
 
-  /** Module inside the translation of a CertPackage containing all targets. */
-  private static final String TARGET_MODULE = "Targets";
+  /** Module inside the translation of a CertPackage containing the (uninstantiated) target. */
+  private static final String TARGET_MODULE = "Target";
 
   @Inject private CSPStructureGenerator csp;
   @Inject private TargetBodyGenerator tg;
 
-  // TODO(@MattWindsor91): separate this and TargetGroupGenerator.
-
   /**
-   * Generates CSP-M for a list of {@link Target}s.
+   * Generates CSP-M for a {@link Target}.
    *
-   * @param targets the targets for which we are generating a target module
+   * @param t the target for which we are generating a module.
    * @return a target module definition for this target list
    */
-  public CharSequence generate(List<Target> targets) {
-    return csp.module(
-        TARGET_MODULE,
-        targets.stream().map(this::targetDefinition).collect(Collectors.joining("\n\n")));
-  }
-
-  private CharSequence targetDefinition(Target t) {
-    return csp.module(t.getName(), moduleBody(t));
+  public CharSequence generate(Target t) {
+    return csp.module(TARGET_MODULE, moduleBody(t));
   }
 
   private CharSequence moduleBody(Target t) {
@@ -106,13 +96,12 @@ public class TargetGenerator {
   }
 
   /**
-   * Gets the full namespaced name of the given field of the given target.
+   * Gets the full namespaced name of the given field of a target.
    *
-   * @param t the target whose field is to be referenced.
    * @param f the field to reference.
    * @return the name of the field from the perspective of code outside the target group.
    */
-  public CharSequence getFullCSPName(Target t, TargetField f) {
-    return csp.namespaced(TARGET_MODULE, t.getName(), f.toString());
+  public CharSequence getFullCSPName(TargetField f) {
+    return csp.namespaced(TARGET_MODULE, f.toString());
   }
 }

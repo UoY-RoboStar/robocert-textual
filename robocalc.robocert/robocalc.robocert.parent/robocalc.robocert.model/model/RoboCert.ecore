@@ -23,10 +23,10 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A RoboCert package."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1"
-        eType="#//Target" containment="true" eOpposite="#//Target/group">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="#//Target" containment="true" eOpposite="#//Target/top">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Targets considered in this package."/>
+        <details key="documentation" value="Target of this package."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="preambleCSP" eType="#//CSPFragment"
@@ -57,14 +57,8 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group containing specifications."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
-        eType="#//Target">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The target of this group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
-        eType="#//Instantiation" containment="true" eOpposite="#//Instantiation/group">
+        eType="#//Instantiation" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The instantiation in effect in this group."/>
       </eAnnotations>
@@ -117,12 +111,12 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true" eSuperTypes="../../circus.robocalc.robochart/model/robochart.ecore#//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="Target" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A specification target.&#xD;&#xA;&#xD;&#xA;Targets combine several things: a RoboChart element;&#xD;&#xA;a process representing the element from a refinement perspective;&#xD;&#xA;information about the upstream ('context') elements connected to this target;&#xD;&#xA;and information about the downstream elements connected to it."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//CertPackage"
-        eOpposite="#//CertPackage/targets">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="top" lowerBound="1" eType="#//CertPackage"
+        eOpposite="#//CertPackage/target">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The package to which this target belongs."/>
       </eAnnotations>
@@ -234,12 +228,6 @@
       </eAnnotations>
       <eParameters name="constant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecificationGroup"
-        eOpposite="#//SpecificationGroup/instantiation">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The parent group of this instantiation."/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignments" upperBound="-1"
         eType="#//ConstAssignment" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -291,6 +279,12 @@
         eType="#//Property" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The root property of the assertion."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
+        eType="#//Instantiation" containment="true">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The instantiation for this assertion.&#xD;&#xA;&#xD;&#xA;For properties against specifications, this merges on top of any instantiation applied on the specification group."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

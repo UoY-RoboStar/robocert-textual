@@ -27,18 +27,22 @@ import robocalc.robocert.generator.tockcsp.seq.PropertyGenerator;
 import robocalc.robocert.model.robocert.CSPModel;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.SequenceProperty;
 import robocalc.robocert.model.robocert.SequencePropertyType;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
-/** Tests sequence property lowering. */
+/**
+ * Tests sequence property lowering.
+ *
+ * @author Matt Windsor
+ */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class PropertyGeneratorTest {
-  private static final String TARGET_CSP = "Targets::mod::Closed";
+  private static final String TARGET_CSP = "Target::Closed";
   private static final String SEQUENCE_CSP = "grp::Closed::Seqs::seq";
 
   @Inject private MessageFactory mf;
@@ -121,15 +125,19 @@ class PropertyGeneratorTest {
   private SpecificationGroup makeGroup(Target t) {
     final var g = rf.createSpecificationGroup();
     g.getActors().addAll(mf.systemActors());
-    g.setTarget(t);
-		g.setName("grp");
+    g.setName("grp");
+
+    // TODO(@MattWindsor91): unite all of these disparate harnesses!!
+    final var pkg = rf.createCertPackage();
+    pkg.setTarget(t);
+    g.setParent(pkg);
+
     return g;
   }
 
   private Target makeTarget() {
     final var t = rf.createModuleTarget();
     t.setModule(module());
-		t.setName("mod");
     return t;
   }
 
