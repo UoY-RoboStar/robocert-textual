@@ -15,11 +15,9 @@ package robocalc.robocert.tests.generator.tockcsp.core;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
-import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.core.CorePropertyGenerator;
@@ -37,23 +35,7 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class CorePropertyGeneratorTest {
   @Inject private RoboCertFactory rc;
-  @Inject private RoboChartFactory rchart;
   @Inject private CorePropertyGenerator gen;
-
-  private ModuleTarget source;
-
-  @BeforeEach
-  void setUp() {
-    final var mod = rchart.createRCModule();
-    mod.setName("foo");
-
-    source = rc.createModuleTarget();
-    source.setModule(mod);
-
-    final var pkg = rc.createCertPackage();
-    pkg.setName("baz");
-    source.setTop(pkg);
-  }
 
   /** Tests the generation of determinism assertions. */
   @Test
@@ -91,7 +73,6 @@ class CorePropertyGeneratorTest {
   private void assertGenerates(String expected, CorePropertyType type, boolean isNegated) {
     final var p = rc.createCoreProperty();
     p.setNegated(isNegated);
-    p.setSubject(source);
     p.setType(type);
     assertThat(p, generatesCSP(expected, gen::generate));
   }

@@ -144,7 +144,7 @@ Property:
  * Core properties with only one argument.
  */
 CoreProperty:
-	subject=[Target|QualifiedName]
+	'target'
 	('is' (negated?='not')? type=IsCorePropertyType |
 	type=VerbCorePropertyType |
 	'does' (negated?='not')? type=DoesCorePropertyType);

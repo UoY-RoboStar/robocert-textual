@@ -58,7 +58,7 @@
       <details key="documentation" value="A group containing specifications."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
-        eType="#//Instantiation" containment="true">
+        eType="#//Instantiation" containment="true" eOpposite="#//Instantiation/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The instantiation in effect in this group."/>
       </eAnnotations>
@@ -228,6 +228,12 @@
       </eAnnotations>
       <eParameters name="constant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
     </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecificationGroup"
+        eOpposite="#//SpecificationGroup/instantiation">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The parent group of this instantiation."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignments" upperBound="-1"
         eType="#//ConstAssignment" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -281,12 +287,6 @@
         <details key="documentation" value="The root property of the assertion."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" lowerBound="1"
-        eType="#//Instantiation" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The instantiation for this assertion.&#xD;&#xA;&#xD;&#xA;For properties against specifications, this merges on top of any instantiation applied on the specification group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Property" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -301,14 +301,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CoreProperty" eSuperTypes="#//Property">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A core property."/>
+      <details key="documentation" value="A core property on the target of the package."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subject" lowerBound="1"
-        eType="#//Target">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The subject of the property."/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//CorePropertyType">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The specific type of property being investigated."/>
