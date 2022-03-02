@@ -950,7 +950,7 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment" eSuperTypes="#//Property">
+  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment of CSP-M."/>
     </eAnnotations>

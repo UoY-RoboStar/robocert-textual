@@ -18,7 +18,7 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
  */
 CertPackage:
 	target=Target
-	(preambleCSP=CSPFragment)?
+	('csp' preambleCSP=CSPFragment)?
 	(groups+=(SpecificationGroup | AssertionGroup))*;
 
 //
@@ -96,7 +96,7 @@ SpecificationGroup:
  * A specification.
  */
 Specification:
-	Interaction | {CSPSpecification} csp=CSPFragment
+	Interaction | CSPSpecification
 ;
 
 //
@@ -138,7 +138,7 @@ Assertion:
  * Top-level disjunction of properties.
  */
 Property:
-	CoreProperty | {CSPProperty} csp=CSPFragment | SequenceProperty;
+	CoreProperty | 'csp' {CSPProperty} (negated?='negated') csp=CSPFragment | SequenceProperty;
 
 /**
  * Core properties with only one argument.
@@ -216,7 +216,14 @@ terminal INTERPOLATE:
  * A CSP fragment.
  */
 CSPFragment:
-	'csp' contents=INTERPOLATE;
+	contents=INTERPOLATE;
+
+/**
+ * A CSP specification.
+ */
+CSPSpecification:
+	'csp' name=ID ':' csp=CSPFragment
+;
 
 /**
  * Explicitly specifying the CSP model of a property.

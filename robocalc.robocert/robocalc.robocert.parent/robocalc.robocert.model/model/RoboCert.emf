@@ -781,7 +781,7 @@ enum SequencePropertyType {
 //
 
 @genmodel(documentation="A fragment of CSP-M.")
-class CSPFragment extends Property {
+class CSPFragment {
 	@genmodel(documentation="The raw contents of the CSP fragment.")
 	attr String[1] contents;
 }
