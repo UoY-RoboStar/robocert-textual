@@ -515,7 +515,7 @@ ExtensionalMessageSet:
  */
 ValueSpecification:
 	{ExpressionValueSpecification} expr=Expression |
-	{WildcardValueSpecification} ('any' | 'anything') ('as' destination=[Variable])?;
+	{WildcardValueSpecification} ('any' | 'anything') ('into' destination=[Variable])?;
 
 //
 // ACTORS
