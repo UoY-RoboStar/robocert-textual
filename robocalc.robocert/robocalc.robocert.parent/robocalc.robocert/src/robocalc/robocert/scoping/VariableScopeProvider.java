@@ -25,11 +25,10 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
-import robocalc.robocert.generator.utils.EObjectExtensions;
 import robocalc.robocert.generator.utils.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.Specification;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 
 /**
  * Provides scopes for variables.
@@ -38,13 +37,11 @@ import robocalc.robocert.model.robocert.Specification;
  */
 public record VariableScopeProvider(
     TargetParameterResolver tpResolver,
-    EObjectExtensions eObj,
     IQualifiedNameProvider qnp
 ) {
   @Inject
   public VariableScopeProvider {
     Objects.requireNonNull(tpResolver);
-    Objects.requireNonNull(eObj);
     Objects.requireNonNull(qnp);
   }
 

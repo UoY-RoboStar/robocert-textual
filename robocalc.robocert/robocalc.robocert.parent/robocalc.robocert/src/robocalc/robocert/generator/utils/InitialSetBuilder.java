@@ -26,6 +26,8 @@ import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
  * Handles the construction of initial message sets for until-fragments.
+ *
+ * @author Matt Windsor
  */
 public class InitialSetBuilder {
   /**

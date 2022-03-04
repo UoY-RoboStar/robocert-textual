@@ -22,7 +22,7 @@ import robocalc.robocert.model.robocert.Target;
  *
  * @author Matt Windsor
  */
-public class TargetExtensions {
+public class TargetHelper {
 	// TODO(@MattWindsor91): move to metamodel?
 	
 	public Stream<String> namePath(Target t) {

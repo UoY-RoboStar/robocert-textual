@@ -24,7 +24,7 @@ import java.nio.file.Path;
  * 
  * @author Matt Windsor
  */
-public class FilenameExtensions {
+public class FilenameHelper {
 	/**
 	 * Whether the path denotes a RoboChart file.
 	 */

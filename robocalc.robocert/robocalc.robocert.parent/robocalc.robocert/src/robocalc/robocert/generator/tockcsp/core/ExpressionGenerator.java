@@ -16,7 +16,7 @@ import circus.robocalc.robochart.Or;
 import circus.robocalc.robochart.RefExp;
 import circus.robocalc.robochart.Variable;
 import com.google.inject.Inject;
-import robocalc.robocert.generator.utils.VariableExtensions;
+import robocalc.robocert.generator.utils.VariableHelper;
 
 /**
  * The RoboCert expression generator.
@@ -34,7 +34,7 @@ public class ExpressionGenerator {
 	@Inject
 	private TemporaryVariableGenerator bg;
 	@Inject
-	private VariableExtensions vx;
+	private VariableHelper vx;
 
 	/**
 	 * Generates CSP-M for an expression.

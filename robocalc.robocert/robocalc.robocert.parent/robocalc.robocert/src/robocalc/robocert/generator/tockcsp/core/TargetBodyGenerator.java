@@ -18,7 +18,7 @@ import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.stream.Stream;
 import robocalc.robocert.generator.utils.TargetParameterResolver;
-import robocalc.robocert.generator.utils.VariableExtensions;
+import robocalc.robocert.generator.utils.VariableHelper;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.Target;
 
@@ -31,7 +31,7 @@ public class TargetBodyGenerator {
   private static final String ID = "{- id -} 0";
   @Inject private ExpressionGenerator eg;
   @Inject private TargetParameterResolver pr;
-  @Inject private VariableExtensions vx;
+  @Inject private VariableHelper vx;
   @Inject private CTimedGeneratorUtils gu;
 
   /**

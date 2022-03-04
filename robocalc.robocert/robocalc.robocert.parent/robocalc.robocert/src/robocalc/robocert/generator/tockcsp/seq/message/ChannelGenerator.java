@@ -18,7 +18,7 @@ import javax.inject.Inject;
 
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.generator.utils.TargetExtensions;
+import robocalc.robocert.generator.utils.TargetHelper;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
 import robocalc.robocert.model.robocert.Target;
@@ -38,7 +38,7 @@ import robocalc.robocert.model.robocert.TargetActor;
  */
 public record ChannelGenerator(CSPStructureGenerator csp,
 															 CTimedGeneratorUtils gu,
-															 TargetExtensions tx) {
+															 TargetHelper tx) {
 
 	/**
 	 * Constructs a channel generator.

@@ -42,7 +42,7 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import robocalc.robocert.RoboCertStandaloneSetup;
-import robocalc.robocert.generator.utils.FilenameExtensions;
+import robocalc.robocert.generator.utils.FilenameHelper;
 
 /**
  * Command-line interface for the RoboCert generator.
@@ -56,7 +56,7 @@ public class Main {
   @Inject private IResourceValidator validator;
   @Inject private GeneratorDelegate generator;
   @Inject private JavaIoFileSystemAccess fileAccess;
-  @Inject private FilenameExtensions filename;
+  @Inject private FilenameHelper filename;
   @Inject private IOutputConfigurationProvider outputConfigurationProvider;
 
   /**

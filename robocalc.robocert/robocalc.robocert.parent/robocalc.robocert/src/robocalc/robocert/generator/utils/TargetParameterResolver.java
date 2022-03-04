@@ -32,9 +32,9 @@ import robocalc.robocert.model.robocert.Target;
 public class TargetParameterResolver {
 	// TODO(@MattWindsor91): move some of these to the metamodel?
 	@Inject
-	private RCModuleExtensions mx;
+	private RCModuleHelper mx;
 	@Inject
-	private VariableExtensions vx;
+	private VariableHelper vx;
 
 	/**
 	 * Gets the parameterisation for a target.
@@ -65,22 +65,14 @@ public class TargetParameterResolver {
 		if (inst == null)
 			return s;
 
-		var keys = instantiatedKeys(inst);
-		return s.filter(x -> !keys.contains(constantKey(x)));
+		final var keys = instantiatedKeys(inst);
+		// We rely on vx.constantId being a String here;
+		// other CharSequences might not have proper equality.
+		return s.filter(x -> !keys.contains(vx.constantId(x)));
 	}
 
 	private Set<String> instantiatedKeys(Instantiation inst) {
-		return inst.getAssignments().stream().flatMap(x -> x.getConstants().stream()).map(this::constantKey)
+		return inst.getAssignments().stream().flatMap(x -> x.getConstants().stream()).map(vx::constantId)
 				.collect(Collectors.toUnmodifiableSet());
-	}
-
-	/**
-	 * @return a stringification of the given constant so as to be useful for
-	 *         equality testing in the presence of multiple instances of constants
-	 *         with the same name but possibly different contexts.
-	 */
-	private String constantKey(Variable it) {
-		// We toString because CharSequences don't compare equal properly.
-		return vx.constantId(it).toString();
 	}
 }
