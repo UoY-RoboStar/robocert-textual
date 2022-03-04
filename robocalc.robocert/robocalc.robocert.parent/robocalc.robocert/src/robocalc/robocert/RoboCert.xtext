@@ -256,10 +256,11 @@ fragment ActorList *:
  * A sequence diagram.
  */
 Interaction:
-	'sequence' name=ID ':' BEGIN
-	'use' actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?
-	(variables=InteractionVars)?
-	Subsequence
+	'sequence' name=ID
+	BEGIN
+	(variables=InteractionVars)?	
+	(('actor' | 'actors') actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?)+
+	fragments+=InteractionFragment*
 	END;
 
 /**
@@ -285,7 +286,7 @@ enum InteractionVarsModifier returns VariableModifier:
  * steps ('x then y then...').
  */
 fragment Subsequence *:
-	'nothing' | (fragments+=InteractionFragment)+;
+	'nothing' | fragments+=InteractionFragment+;
 
 /**
  * An interaction operand that may or may not be guarded.
@@ -296,25 +297,30 @@ InteractionOperand:
 
 /**
  * A guarded interaction operand.
+ *
+ * If there is a guard, 'nothing' or at most one fragment can nestle alongside
+ * it.
  */
 GuardedInteractionOperand returns InteractionOperand:
-	guard=Guard ':' BEGIN Subsequence END;
+	guard=Guard (=> ('nothing' | fragments+=InteractionFragment) | BEGIN Subsequence END);
 
 
 /**
  * An interaction operand with no guard and one item.
  */
 SingletonInteractionOperand returns InteractionOperand:
-	guard=ImplicitEmptyGuard fragments+=InteractionFragment
+	guard=(ImplicitEmptyGuard | Guard) fragments+=InteractionFragment
 ;
 
 /**
  * An explicit guard.
  */
 Guard:
+	'[' (
 	'always' {EmptyGuard} |
 	'otherwise' {ElseGuard} |
-	'when' {ExprGuard} expr=Expression;
+	{ExprGuard} expr=Expression
+	) ']';
 
 /**
  * Consumes nothing and instantly returns an empty guard.
@@ -382,8 +388,19 @@ LoopBound:
  * A branching construct.
  */
 BranchFragment:
-	(('par' | 'parallel') {ParFragment} |
-	('alt' | 'alternative') {AltFragment} OptTemperature) ':' BEGIN branches+=GuardedInteractionOperand (branches+=GuardedInteractionOperand)+ END;
+	ParFragment | AltFragment;
+
+ParFragment:
+	('par' | 'parallel') {ParFragment}
+		branches+=GuardedInteractionOperand
+		('and' branches+=GuardedInteractionOperand)+
+	'end';
+	
+AltFragment:
+	('alt' | 'alternative') {AltFragment} OptTemperature
+		branches+=GuardedInteractionOperand
+		('else' branches+=GuardedInteractionOperand)+
+	'end';
 
 //
 // OCCURRENCES
@@ -406,7 +423,7 @@ LifelineOccurrence:
  * A message specification.
  */
 Message:
-	from=[Actor|ID] '->' to=[Actor|ID] ':' topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')?;
+	from=[Actor|ID] '->>' to=[Actor|ID] ':' topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')?;
 
 //
 // Message topics
