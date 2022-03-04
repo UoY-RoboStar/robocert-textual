@@ -12,21 +12,18 @@
  ******************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq.message;
 
-import java.util.stream.Stream;
-
-import javax.inject.Inject;
-
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
+import java.util.stream.Stream;
+import javax.inject.Inject;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.TargetHelper;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
-import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.Edge;
-import robocalc.robocert.model.robocert.EdgeDirection;
+import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.ModuleTarget;
+import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetActor;
+import robocalc.robocert.model.robocert.World;
 
 /**
  * Generates CSP-M for message channels.
@@ -107,22 +104,22 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 	}
 
 	/**
-	 * Infers the direction of this edge.
+	 * Infers the channel direction of this message.
 	 *
-	 * @param edge the edge to query.
+	 * @param msg the message to query.
 	 * @return the direction of the edge.
 	 * @throws UnsupportedOperationException if there is no single target.
-	 * @apiNote If the edge is coming from the system module actor, it is outbound.  Otherwise, if it
-	 * is synchronous, it is inbound. Asynchronous edges are not yet properly handled, but they will
+	 * @apiNote If the edge is coming from the target module actor, it is "out".  Otherwise, if it
+	 * is synchronous, it is "in". Asynchronous edges are not yet properly handled, but they will
 	 * be dependent on the context.
 	 */
-	public EdgeDirection getInferredDirection(Edge edge) {
+	public String inferDirection(Message msg) {
 		// TODO(@MattWindsor91): asynchronous edges
 
-		if (edge.getResolvedFrom() instanceof TargetActor) {
-			return EdgeDirection.OUTBOUND;
+		if (msg.getFrom() instanceof TargetActor) {
+			return "out";
 		}
-		return EdgeDirection.INBOUND;
+		return "in";
 	}
 
 	private Target getTarget(Actor a) {

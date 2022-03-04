@@ -113,7 +113,7 @@ specification group X:
 	 *         expression.
 	 */
 	public CharSequence liftExpr(CharSequence expr) {
-		return liftSubsequence("op Z(%s)".formatted(expr));
+		return liftSubsequence("T->W: op Z(%s)".formatted(expr));
 	}
 	
 	/**

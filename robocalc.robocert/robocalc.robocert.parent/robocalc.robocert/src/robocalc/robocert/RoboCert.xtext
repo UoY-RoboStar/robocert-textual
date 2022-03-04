@@ -406,21 +406,7 @@ LifelineOccurrence:
  * A message specification.
  */
 Message:
-	topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')? edge=Edge;
-
-/**
- * An edge.
- */
-Edge:
-	{ImplicitEdge} direction=EdgeDirection? |
-	'from' {ExplicitEdge} from=[Actor|ID] 'to' to=[Actor|ID];
-
-/**
- * The direction of an implicit edge.
- */
-enum EdgeDirection:
-	INBOUND='in' |
-	OUTBOUND='out';
+	from=[Actor|ID] '->' to=[Actor|ID] ':' topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')?;
 
 //
 // Message topics

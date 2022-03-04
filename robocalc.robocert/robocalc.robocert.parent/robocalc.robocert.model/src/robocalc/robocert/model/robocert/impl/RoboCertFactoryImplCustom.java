@@ -15,9 +15,7 @@ package robocalc.robocert.model.robocert.impl;
 import robocalc.robocert.model.robocert.BinaryMessageSet;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.EventTopic;
-import robocalc.robocert.model.robocert.ExplicitEdge;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
-import robocalc.robocert.model.robocert.ImplicitEdge;
 import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.ModuleTarget;
@@ -56,18 +54,8 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   }
 
   @Override
-  public ExplicitEdge createExplicitEdge() {
-    return new ExplicitEdgeImplCustom();
-  }
-
-  @Override
   public ExtensionalMessageSet createExtensionalMessageSet() {
     return new ExtensionalMessageSetImplCustom();
-  }
-
-  @Override
-  public ImplicitEdge createImplicitEdge() {
-    return new ImplicitEdgeImplCustom();
   }
 
   @Override

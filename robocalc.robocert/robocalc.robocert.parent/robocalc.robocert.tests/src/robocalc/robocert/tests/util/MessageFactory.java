@@ -18,7 +18,7 @@ import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
 import circus.robocalc.robochart.TypeRef;
 import com.google.inject.Inject;
-import robocalc.robocert.model.robocert.EdgeDirection;
+import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.MessageOccurrence;
@@ -28,7 +28,6 @@ import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.ValueSpecification;
-import robocalc.robocert.model.robocert.util.EdgeFactory;
 
 /** Provides ways of creating dummy message specifications. */
 public class MessageFactory {
@@ -37,7 +36,6 @@ public class MessageFactory {
   // TODO(@MattWindsor91): reduce overlap with model MessageFactory;
   // the idea is that that will receive non-dummy factory operations.
 
-  @Inject EdgeFactory ef;
   @Inject robocalc.robocert.model.robocert.util.MessageFactory mf;
   @Inject RoboChartFactory rc;
   @Inject RoboCertFactory rcert;
@@ -46,13 +44,14 @@ public class MessageFactory {
    * Creates an arrow message spec with the given topic, direction, and arguments, with a fake
    * sequence-group context.
    *
+   * @param from the from-actor.
+   * @param to the to-actor.
    * @param t the desired topic.
-   * @param dir the desired direction.
    * @param args the desired arguments.
    * @return a constructed arrow message spec.
    */
-  public Message arrowSpec(MessageTopic t, EdgeDirection dir, ValueSpecification... args) {
-    final var s = mf.spec(t, ef.edge(dir), args);
+  public Message arrowSpec(Actor from, Actor to, MessageTopic t, ValueSpecification... args) {
+    final var s = mf.spec(from, to, t, args);
     arrowParent().setMessage(s);
     return s;
   }
@@ -105,7 +104,7 @@ public class MessageFactory {
     return it;
   }
 
-  private SpecificationGroup group() {
+  public SpecificationGroup group() {
     final var it = rcert.createSpecificationGroup();
     it.getActors().addAll(mf.systemActors());
 

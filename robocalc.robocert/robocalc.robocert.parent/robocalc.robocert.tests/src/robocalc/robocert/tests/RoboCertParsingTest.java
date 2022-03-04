@@ -33,7 +33,7 @@ specification group S:
 	sequence Test:
 		use T and W
 		var x: real
-		anything until deadlock on T
+		anything until: deadlock on T
 """));
 		Assertions.assertNotNull(result);
 		final var errors = result.eResource().getErrors();

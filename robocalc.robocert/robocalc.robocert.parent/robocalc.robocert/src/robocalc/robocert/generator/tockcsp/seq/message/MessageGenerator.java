@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 import org.eclipse.xtext.xbase.lib.Pair;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ArgumentGenerator;
-import robocalc.robocert.model.robocert.EdgeDirection;
 import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.WildcardValueSpecification;
 
@@ -135,23 +134,16 @@ public record MessageGenerator(CSPStructureGenerator csp,
 	 * for an event set.
 	 */
 	private CharSequence generateChannel(Message spec) {
-		final var to = spec.getEdge().getResolvedTo();
+		final var to = spec.getTo();
 		final var sb = new StringBuffer(csp.namespaced(ex.namespace(to), tg.generate(spec.getTopic())));
-		direction(spec).ifPresent(x -> sb.append(".").append(generateDirection(x)));
+		direction(spec).ifPresent(x -> sb.append(".").append(x));
 		return sb.toString();
 	}
 
-	private Optional<EdgeDirection> direction(Message spec) {
-		if (tg.hasDirection(spec.getTopic())) {
-			return Optional.of(ex.getInferredDirection(spec.getEdge()));
+	private Optional<String> direction(Message msg) {
+		if (tg.hasDirection(msg.getTopic())) {
+			return Optional.of(ex.inferDirection(msg));
 		}
 		return Optional.empty();
-	}
-
-	private CharSequence generateDirection(EdgeDirection it) {
-		return switch (it) {
-			case INBOUND -> "in";
-			case OUTBOUND -> "out";
-		};
 	}
 }

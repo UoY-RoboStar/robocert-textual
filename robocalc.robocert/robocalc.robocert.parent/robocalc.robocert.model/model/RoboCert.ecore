@@ -643,40 +643,6 @@
         <details key="documentation" value="The argument list for the message."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="edge" lowerBound="1" eType="#//Edge"
-        containment="true" eOpposite="#//Edge/spec">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The pair of actors participating in this message."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Edge" abstract="true">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A pair of actors referenced by a Message.&#xD;&#xA;&#xD;&#xA;There are multiple ways to resolve this pair, and so multiple subclasses of Edge."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="spec" lowerBound="1" eType="#//Message"
-        eOpposite="#//Message/edge">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The parent Message."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resolvedFrom" lowerBound="1"
-        eType="#//Actor" changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The resolved source of the message."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="resolvedTo" lowerBound="1"
-        eType="#//Actor" changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The resolved destination of the message."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ExplicitEdge" eSuperTypes="#//Edge">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An explicit edge."/>
-    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" lowerBound="1" eType="#//Actor">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The source of the message."/>
@@ -687,32 +653,6 @@
         <details key="documentation" value="The destination of the message."/>
       </eAnnotations>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ImplicitEdge" eSuperTypes="#//Edge">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An edge implied by a direction.&#xD;&#xA;&#xD;&#xA;Such edges are only valid when there are two actors in the sequence,&#xD;&#xA;one of the actors is a target, and the other is a world.&#xD;&#xA;They also won't work if the message is not embedded in a sequence group.&#xD;&#xA;"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="direction" lowerBound="1"
-        eType="#//EdgeDirection" defaultValueLiteral="OUTBOUND">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The direction of the pair."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="EdgeDirection">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="The direction of an implicit edge."/>
-    </eAnnotations>
-    <eLiterals name="OUTBOUND">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Heading out from target to world.&#xD;&#xA;&#xD;&#xA;This is the default when no direction is specified, primarily to accommodate&#xD;&#xA;operations where it is the only allowed direction."/>
-      </eAnnotations>
-    </eLiterals>
-    <eLiterals name="INBOUND" value="1">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Heading in from world to target."/>
-      </eAnnotations>
-    </eLiterals>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MessageTopic" abstract="true">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

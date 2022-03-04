@@ -521,67 +521,12 @@ class WaitOccurrence extends LifelineOccurrence {
 class Message {
 	@genmodel(documentation="The topic of the message.")
 	val MessageTopic[1]#message topic;
-	
 	@genmodel(documentation="The argument list for the message.")
 	val ValueSpecification[*] arguments;
-	
-	@genmodel(documentation="The pair of actors participating in this message.")
-	val Edge[1]#spec edge;
-}
-
-//
-// Edges
-//
-
-@genmodel(documentation="A pair of actors referenced by a Message.
-
-There are multiple ways to resolve this pair, and so multiple subclasses of Edge.")
-abstract class Edge {
-	@genmodel(documentation="The parent Message.")
-	ref Message[1]#edge spec;
-
-	//
-	// Derived references
-	//
-	
-	@genmodel(documentation="The resolved source of the message.")
-	derived transient readonly volatile ref Actor[1] resolvedFrom;
-	@genmodel(documentation="The resolved destination of the message.")
-	derived transient readonly volatile ref Actor[1] resolvedTo;
-}
-
-@genmodel(documentation="An explicit edge.")
-class ExplicitEdge extends Edge {
-	// TODO(@MattWindsor91): it is unclear whether these should be allowed
-	// in bidirectional diagrams, as that raises ambiguity at the graphical
-	// notation level.
-
 	@genmodel(documentation="The source of the message.")
 	ref Actor[1] from;
 	@genmodel(documentation="The destination of the message.")
 	ref Actor[1] to;
-}
-
-@genmodel(documentation="An edge implied by a direction.
-
-Such edges are only valid when there are two actors in the sequence,
-one of the actors is a target, and the other is a world.
-They also won't work if the message is not embedded in a sequence group.
-")
-class ImplicitEdge extends Edge {
-	@genmodel(documentation="The direction of the pair.")
-	attr EdgeDirection[1] direction = "OUTBOUND";
-}
-
-@genmodel(documentation="The direction of an implicit edge.")
-enum EdgeDirection {
-	@genmodel(documentation="Heading out from target to world.
-
-This is the default when no direction is specified, primarily to accommodate
-operations where it is the only allowed direction.")
-	OUTBOUND;
-	@genmodel(documentation="Heading in from world to target.")
-	INBOUND;
 }
 
 //
