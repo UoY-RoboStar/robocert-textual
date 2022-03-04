@@ -35,7 +35,6 @@ public record BlockFragmentGenerator
      InteractionOperandGenerator operandGen,
      DurationFragmentHeaderGenerator durationHeaderGen,
      LoopFragmentHeaderGenerator loopHeaderGen,
-     OptFragmentHeaderGenerator optHeaderGen,
      UntilFragmentHeaderGenerator untilHeaderGen
      )
 {
@@ -61,7 +60,7 @@ public record BlockFragmentGenerator
       return loopHeaderGen.generate(l);
     }
     if (fragment instanceof OptFragment l) {
-      return optHeaderGen.generate(l);
+      return "Opt";
     }
     if (fragment instanceof UntilFragment u) {
       return untilHeaderGen.generate(u);

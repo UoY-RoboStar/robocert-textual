@@ -408,12 +408,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An optional fragment."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
-        eType="#//Temperature">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The temperature of this fragment.&#xD;&#xA;&#xD;&#xA;Cold means 'implementation decides whether this fragment is live';&#xD;&#xA;hot means 'implementation must be prepared to engage in both live and dead behaviours'."/>
-      </eAnnotations>
-    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DurationFragment" eSuperTypes="#//BlockFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -519,14 +513,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AltFragment" eSuperTypes="#//BranchFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="An alternative choice fragment."/>
+      <details key="documentation" value="A (provisional) alternative choice fragment."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="temperature" lowerBound="1"
-        eType="#//Temperature">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The temperature of this alternative."/>
-      </eAnnotations>
-    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="XAltFragment" eSuperTypes="#//BranchFragment">
+    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+      <details key="documentation" value="A mandatory alternative choice fragment.&#xD;&#xA;&#xD;&#xA;The concept from this comes from STAIRS (Haugen et al., 2003)."/>
+    </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParFragment" eSuperTypes="#//BranchFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">

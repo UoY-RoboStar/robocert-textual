@@ -20,7 +20,7 @@ import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
 import robocalc.robocert.model.robocert.AltFragment;
 import robocalc.robocert.model.robocert.BranchFragment;
 import robocalc.robocert.model.robocert.ParFragment;
-import robocalc.robocert.model.robocert.Temperature;
+import robocalc.robocert.model.robocert.XAltFragment;
 
 /**
  * Generator for branch fragments.
@@ -71,10 +71,13 @@ public record BranchFragmentGenerator(CSPStructureGenerator csp,
    */
   private CharSequence comment(BranchFragment b) {
     if (b instanceof ParFragment) {
-      return "interleave";
+      return "par";
     }
-    if (b instanceof AltFragment a) {
-      return "alternative (%s)".formatted(a.getTemperature());
+    if (b instanceof AltFragment) {
+      return "alt";
+    }
+    if (b instanceof XAltFragment) {
+      return "xalt";
     }
     // This will result in an exception later anyway.
     return "?";
@@ -90,22 +93,12 @@ public record BranchFragmentGenerator(CSPStructureGenerator csp,
     if (b instanceof ParFragment) {
       return INTERLEAVE;
     }
-    if (b instanceof AltFragment a) {
-      return altOperator(a.getTemperature());
+    if (b instanceof AltFragment) {
+      return INT_CHOICE;
+    }
+    if (b instanceof XAltFragment) {
+      return EXT_CHOICE;
     }
     throw new IllegalArgumentException("unsupported branch operator: %s".formatted(b));
-  }
-
-  /**
-   * Expands to the CSP operator for joining together branches on an alternative branch step.
-   *
-   * @param t the temperature of the alternative step to generate.
-   * @return CSP-M external choice if the step is hot; internal otherwise.
-   */
-  private CharSequence altOperator(Temperature t) {
-    return switch (t) {
-      case COLD -> INT_CHOICE;
-      case HOT -> EXT_CHOICE;
-    };
   }
 }

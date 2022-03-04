@@ -47,11 +47,8 @@ Timed(OneStep) {
   Until(intraMessages__, initial__)(P__) =
     TCHAOS(diff(intraMessages__, initial__)) /\ P__
 
-  -- Semantics of a cold optionality fragment.
-  OptCold(P__) = P__ |~| SKIP
-
-  -- Semantics of a hot optionality fragment.
-  OptHot(P__) = P__ [] SKIP
+  -- Semantics of an optionality fragment.
+  Opt(P__) = P__ |~| SKIP
 
   -- Semantics of a lower-bounded duration fragment.
   DurationLB(lb__)(P__) = P__ ||| Cold(WAIT(lb__))

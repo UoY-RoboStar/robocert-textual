@@ -353,7 +353,7 @@ fragment BlockFragmentTail *:
  */
 BlockFragment:
 	(DurationFragment |
-	('opt' | 'optional') {OptFragment} OptTemperature |
+	('opt' | 'optional') {OptFragment} |
 	('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet 'until' |
 	'block' {UntilFragment} intraMessages=EmptySet |
 	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? BlockFragmentTail;
@@ -388,7 +388,7 @@ LoopBound:
  * A branching construct.
  */
 BranchFragment:
-	ParFragment | AltFragment;
+	ParFragment | AltOrXAltFragment;
 
 ParFragment:
 	('par' | 'parallel') {ParFragment}
@@ -396,8 +396,8 @@ ParFragment:
 		('and' branches+=GuardedInteractionOperand)+
 	'end';
 	
-AltFragment:
-	('alt' | 'alternative') {AltFragment} OptTemperature
+AltOrXAltFragment returns BranchFragment:
+	(('alt' | 'provisional'? 'alternative') {AltFragment} | ('xalt' | 'mandatory' 'alternative') {XAltFragment})
 		branches+=GuardedInteractionOperand
 		('else' branches+=GuardedInteractionOperand)+
 	'end';

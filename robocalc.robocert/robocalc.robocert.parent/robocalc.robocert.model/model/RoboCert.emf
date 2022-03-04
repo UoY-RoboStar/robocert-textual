@@ -346,11 +346,6 @@ abstract class BlockFragment extends CombinedFragment {
 
 @genmodel(documentation="An optional fragment.")
 class OptFragment extends BlockFragment {
-	@genmodel(documentation="The temperature of this fragment.
-
-Cold means 'implementation decides whether this fragment is live';
-hot means 'implementation must be prepared to engage in both live and dead behaviours'.")
-	attr Temperature[1] temperature;
 }
 
 @genmodel(documentation="Fragment imposing a duration constraint on a block.")
@@ -434,10 +429,14 @@ abstract class BranchFragment extends CombinedFragment {
 	val InteractionOperand[2..*]#fragment branches;
 }
 
-@genmodel(documentation="An alternative choice fragment.")
+@genmodel(documentation="A (provisional) alternative choice fragment.")
 class AltFragment extends BranchFragment {
-	@genmodel(documentation="The temperature of this alternative.")
-	attr Temperature[1] temperature;
+}
+
+@genmodel(documentation="A mandatory alternative choice fragment.
+
+The concept from this comes from STAIRS (Haugen et al., 2003).")
+class XAltFragment extends BranchFragment {
 }
 
 @genmodel(documentation="An interleaving composition fragment.")
