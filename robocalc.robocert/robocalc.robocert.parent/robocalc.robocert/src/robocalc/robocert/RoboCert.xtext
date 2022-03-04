@@ -332,19 +332,12 @@ ImplicitEmptyGuard returns EmptyGuard:
 InteractionFragment:
 	BlockFragment |
 	BranchFragment |
-	{OccurrenceFragment} occurrence=Occurrence OptTemperature |
-	UntilFragment;
+	{OccurrenceFragment} occurrence=Occurrence OptTemperature;
 
 fragment BlockFragmentTail *:
-	':' BEGIN body=InteractionOperand END
+	// This allows either an inline singleton operand or a nested block.
+	':' (=> BEGIN body=InteractionOperand END | body=SingletonInteractionOperand)
 ;
-
-/**
- * An until-fragment.
- */
-UntilFragment:
-	(('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet | 'block' {UntilFragment} intraMessages=EmptySet)
-	'until' (body=SingletonInteractionOperand | BlockFragmentTail);
 
 //
 // Block fragments
@@ -355,6 +348,8 @@ UntilFragment:
 BlockFragment:
 	(DurationFragment |
 	('opt' | 'optional') {OptFragment} OptTemperature |
+	('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet 'until' |
+	'block' {UntilFragment} intraMessages=EmptySet |
 	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? BlockFragmentTail;
 
 DurationFragment:
