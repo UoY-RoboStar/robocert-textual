@@ -41,11 +41,11 @@ public class SubsequenceParsingTest {
 	 */
 	@Test
 	void testParseEmpty() {
-		assertParse(new BasicEList<>(), "nothing");
+		assertParse(new BasicEList<>(), "");
 	}
 	
 	private void assertParse(EList<InteractionFragment> expected, String input) {
-		var result = pt.parse(pt.liftSubsequence(input));
+		final var result = pt.parse(pt.liftSubsequence(input));
 		// can't use normal equality here
 		assertTrue(EcoreUtil2.equals(expected, pt.unliftSubsequence(result)));
 	}

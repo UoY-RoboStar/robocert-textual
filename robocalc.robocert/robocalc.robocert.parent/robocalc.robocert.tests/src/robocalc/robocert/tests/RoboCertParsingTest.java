@@ -30,9 +30,9 @@ class RoboCertParsingTest {
 target module Mod
 specification group S:
 	actors = {target as T, world as W}
-	sequence Test:
-		use T and W
+	sequence Test
 		var x: real
+		actors T and W
 		anything until: deadlock on T
 """));
 		Assertions.assertNotNull(result);
