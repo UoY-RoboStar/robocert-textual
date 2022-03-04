@@ -42,8 +42,8 @@ public class ParseTestHelper {
 target module Mod
 specification group X:
   actors = {target as T, world as W}
-  sequence Y:
-    use T, W
+  sequence Y
+    actors T, W
 """;
 	
 	// This class is in Xtend so we can use Xtend templates.
@@ -113,7 +113,7 @@ specification group X:
 	 *         expression.
 	 */
 	public CharSequence liftExpr(CharSequence expr) {
-		return liftSubsequence("T->W: op Z(%s)".formatted(expr));
+		return liftSubsequence("T->>W: op Z(%s)".formatted(expr));
 	}
 	
 	/**

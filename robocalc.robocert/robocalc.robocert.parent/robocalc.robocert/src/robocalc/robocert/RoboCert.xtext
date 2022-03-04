@@ -281,35 +281,32 @@ enum InteractionVarsModifier returns VariableModifier:
 
 /**
  * A subsequence.
- * 
- * Subsequences can either be empty ('nothing'), or a nonzero sequence of
- * steps ('x then y then...').
  */
 fragment Subsequence *:
-	'nothing' | fragments+=InteractionFragment+;
+	BEGIN fragments+=InteractionFragment+ END;
 
 /**
- * An interaction operand that may or may not be guarded.
+ * An interaction operand in block position.
+ *
+ * These can be guarded or not guarded, and have:
+ * - a fully indented subsequence, ended with 'end';
+ * - a single item, which needn't be indented;
+ * - 'nothing'.
  */
-InteractionOperand:
-	GuardedInteractionOperand | guard=ImplicitEmptyGuard Subsequence
+BlockInteractionOperand returns InteractionOperand:
+	guard=(ImplicitEmptyGuard | Guard)
+	((=> Subsequence 'end') | fragments+=InteractionFragment | 'nothing')
 ;
 
 /**
- * A guarded interaction operand.
+ * An interaction operand in branch position.
  *
- * If there is a guard, 'nothing' or at most one fragment can nestle alongside
- * it.
+ * As per BlockInteractionOperand, but these are always guarded, and do not have a trailing 'end'.
+ * (The 'end' comes from the enclosing branch.)
  */
 GuardedInteractionOperand returns InteractionOperand:
-	guard=Guard (=> ('nothing' | fragments+=InteractionFragment) | BEGIN Subsequence END);
-
-
-/**
- * An interaction operand with no guard and one item.
- */
-SingletonInteractionOperand returns InteractionOperand:
-	guard=(ImplicitEmptyGuard | Guard) fragments+=InteractionFragment
+	guard=Guard
+	((=> Subsequence) | fragments+=InteractionFragment | 'nothing')
 ;
 
 /**
@@ -340,11 +337,6 @@ InteractionFragment:
 	BranchFragment |
 	{OccurrenceFragment} occurrence=Occurrence OptTemperature;
 
-fragment BlockFragmentTail *:
-	// This allows either an inline singleton operand or a nested block.
-	':' (=> BEGIN body=InteractionOperand END | body=SingletonInteractionOperand)
-;
-
 //
 // Block fragments
 //
@@ -356,12 +348,13 @@ BlockFragment:
 	('opt' | 'optional') {OptFragment} |
 	('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet 'until' |
 	'block' {UntilFragment} intraMessages=EmptySet |
-	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? BlockFragmentTail;
+	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? body=BlockInteractionOperand;
 
 DurationFragment:
 	'taking'
-	('at' 'least' lowerBound = TimeUnits ('and' 'at' 'most' upperBound = TimeUnits)? |
-	'at' 'most' upperBound = TimeUnits);
+	('at' 'least' lowerBound = TimeUnits ('and' 'at' 'most' upperBound=TimeUnits)? |
+	'at' 'most' upperBound = TimeUnits)
+	'on';
 
 //
 // Loop bounds
