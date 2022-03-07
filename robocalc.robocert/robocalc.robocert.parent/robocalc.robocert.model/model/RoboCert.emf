@@ -705,8 +705,8 @@ class SequenceProperty extends Property {
 	@genmodel(documentation="Type of assertion.")
 	attr SequencePropertyType[1] type;
 	
-	@genmodel(documentation="Model under which this assertion should be checked under CSP.")
-	attr CSPModel[1] model = "TICK_TOCK";	
+	@genmodel(documentation="Semantic model under which this assertion should be checked.")
+	attr SemanticModel[1] model = "TIMED";	
 }
 
 @genmodel(documentation="Type of sequence assertion.")
@@ -716,6 +716,23 @@ enum SequencePropertyType {
 
 	@genmodel(documentation="All behaviours of the sequence are observable on the target.")
 	IS_OBSERVED;
+}
+
+
+@genmodel(documentation="A semantic model for verification.")
+enum SemanticModel {
+	@genmodel(documentation="Timed, liveness-aware model.
+
+Under this model, both permitted and refused behaviour in implementations must conform to specifications.
+This extends to timing: deadlines enforced by the target must correspond to deadlines in the specification, for instance.")
+	TIMED;
+	
+	@genmodel(documentation="Traces model.
+
+This model checks that all traces observable on implementations are allowed by specifications.
+It doesn't investigate liveness properties:
+as a result, the sequence notion of temperature is irrelevant, as is the distinction between alt and xalt.")
+	TRACES;
 }
 
 
@@ -743,11 +760,3 @@ class CSPSpecification extends Specification {
 	val CSPFragment[1] csp;
 }
 
-@genmodel(documentation="A tock-CSP refinement model.")
-enum CSPModel {
-	@genmodel(documentation="Tick-tock refinement model.")
-	TICK_TOCK;
-	
-	@genmodel(documentation="Traces refinement model (with prioritisation).")
-	TRACES;
-}

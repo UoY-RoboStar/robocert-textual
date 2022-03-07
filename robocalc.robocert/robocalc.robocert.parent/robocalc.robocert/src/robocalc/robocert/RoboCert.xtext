@@ -97,6 +97,23 @@ Specification:
 	Interaction | CSPSpecification
 ;
 
+/**
+ * Explicitly specifying the semantic model of a property.
+ * 
+ * TODO(@MattWindsor91): there may need to be more abstract ways of specifying
+ * these models eventually.
+ */
+fragment InSemanticModelSpec *:
+	'in' 'the' model=SemanticModel 'model';
+
+/**
+ * Names of semantic models.
+ */
+enum SemanticModel:
+	TRACES='traces' |
+	TIMED='timed';
+
+
 //
 // ASSERTIONS
 //
@@ -222,22 +239,6 @@ CSPFragment:
 CSPSpecification:
 	'csp' name=ID ':' csp=CSPFragment
 ;
-
-/**
- * Explicitly specifying the CSP model of a property.
- * 
- * TODO(@MattWindsor91): there may need to be more abstract ways of specifying
- * these models eventually.
- */
-fragment InCSPModelSpec *:
-	'in' 'the' model=CSPModel 'model';
-
-/**
- * Names of CSP models.
- */
-enum CSPModel:
-	TRACES='traces' |
-	TICK_TOCK='tick-tock';
 
 ///////////////////////////////////////////////////////////////////////////////
 // SEQUENCES
@@ -530,7 +531,7 @@ SequenceProperty:
 	('is' negated?='not' type=IsSequencePropertyType
 	| 'does' negated?='not' type=DoesNotSequencePropertyType
 	| type=DoesSequencePropertyType)
-	InCSPModelSpec?;
+	InSemanticModelSpec?;
 
 /**
  * Sequence property types that agree with 'is' and 'is not'.

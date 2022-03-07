@@ -14,7 +14,7 @@
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import java.util.Objects;
-import robocalc.robocert.model.robocert.CSPModel;
+import robocalc.robocert.model.robocert.SemanticModel;
 
 /**
  * Holds information about a CSP refinement.
@@ -24,7 +24,7 @@ import robocalc.robocert.model.robocert.CSPModel;
  *
  * @author Matt Windsor
  */
-public record CSPRefinement(boolean isNegated, CharSequence lhs, CharSequence rhs, CSPModel model) {
+public record CSPRefinement(boolean isNegated, CharSequence lhs, CharSequence rhs, SemanticModel model) {
   public CSPRefinement {
     Objects.requireNonNull(lhs);
     Objects.requireNonNull(rhs);
@@ -67,6 +67,6 @@ public record CSPRefinement(boolean isNegated, CharSequence lhs, CharSequence rh
   }
 
   private boolean isTickTock() {
-    return model == CSPModel.TICK_TOCK;
+    return model == SemanticModel.TIMED;
   }
 }

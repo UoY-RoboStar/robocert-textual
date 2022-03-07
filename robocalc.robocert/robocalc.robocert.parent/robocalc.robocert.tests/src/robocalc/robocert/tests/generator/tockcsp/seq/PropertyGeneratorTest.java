@@ -24,7 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.seq.PropertyGenerator;
-import robocalc.robocert.model.robocert.CSPModel;
+import robocalc.robocert.model.robocert.SemanticModel;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceProperty;
@@ -62,14 +62,14 @@ class PropertyGeneratorTest {
   /** Tests that lowering a traces holds property produces the expected refinement. */
   @Test
   void testLower_Traces_Holds() {
-    final var prop = property(SequencePropertyType.HOLDS, CSPModel.TRACES);
+    final var prop = property(SequencePropertyType.HOLDS, SemanticModel.TRACES);
     assertLower(prop, SEQUENCE_CSP, TARGET_CSP, prop.getModel());
   }
 
   /** Tests that lowering a traces does-not-hold property produces the expected refinement. */
   @Test
   void testLower_Traces_DoesNotHold() {
-    final var prop = property(SequencePropertyType.HOLDS, CSPModel.TRACES);
+    final var prop = property(SequencePropertyType.HOLDS, SemanticModel.TRACES);
     prop.setNegated(true);
     assertLower(prop, SEQUENCE_CSP, TARGET_CSP, prop.getModel());
   }
@@ -77,7 +77,7 @@ class PropertyGeneratorTest {
   /** Tests that lowering a tick-tock is-observed property produces the expected refinement. */
   @Test
   void testLower_TickTock_IsObserved() {
-    final var prop = property(SequencePropertyType.IS_OBSERVED, CSPModel.TICK_TOCK);
+    final var prop = property(SequencePropertyType.IS_OBSERVED, SemanticModel.TIMED);
     assertLower(prop, TARGET_CSP, SEQUENCE_CSP, prop.getModel());
   }
 
@@ -90,7 +90,7 @@ class PropertyGeneratorTest {
    * @param r the expected RHS.
    * @param m the expected model.
    */
-  private void assertLower(SequenceProperty p, CharSequence l, CharSequence r, CSPModel m) {
+  private void assertLower(SequenceProperty p, CharSequence l, CharSequence r, SemanticModel m) {
     final var it = spl.lower(p);
     assertNotNull(it);
 
@@ -107,7 +107,7 @@ class PropertyGeneratorTest {
     assertEquals(p.isNegated(), it.isNegated());
   }
 
-  private SequenceProperty property(SequencePropertyType t, CSPModel m) {
+  private SequenceProperty property(SequencePropertyType t, SemanticModel m) {
     final var p = rf.createSequenceProperty();
     p.setInteraction(sequence);
     p.setType(t);
