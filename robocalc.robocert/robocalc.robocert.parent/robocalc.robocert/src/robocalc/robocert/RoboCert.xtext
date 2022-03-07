@@ -260,7 +260,7 @@ Interaction:
 	BEGIN
 	(variables=InteractionVars)?	
 	(('actor' | 'actors') actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?)+
-	fragments+=InteractionFragment*
+	fragments+=InteractionFragment+
 	END;
 
 /**
