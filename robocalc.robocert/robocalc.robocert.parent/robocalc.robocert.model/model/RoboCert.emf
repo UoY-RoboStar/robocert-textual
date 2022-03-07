@@ -72,8 +72,8 @@ abstract class Group extends OptionallyNamedElement {
 
 @genmodel(documentation="A group containing specifications.")
 class SpecificationGroup extends Group {
-	@genmodel(documentation="The instantiation in effect in this group.")
-	val Instantiation[1]#group instantiation;
+	@genmodel(documentation="The instantiation, if any, in effect in this group.")
+	val Instantiation[0..1]#group instantiation;
 
 	@genmodel(documentation="Any message sets named on the sequence group.")
 	!ordered val NamedMessageSet[*]#group messageSets;
@@ -203,8 +203,8 @@ class Instantiation {
 	@genmodel(documentation="The parent group of this instantiation.")
 	ref SpecificationGroup[1]#instantiation group;
 
-	@genmodel(documentation="Any constant assignments.")
-	val ConstAssignment[*] assignments;
+	@genmodel(documentation="The constant assignments in effect at this instantiation.")
+	val ConstAssignment[+] assignments;
 
 	@genmodel(documentation="Gets any available instantiation for the constant in this instantiation.")	
 	derived readonly transient volatile op robochart.Expression[0..1] getConstant(robochart.Variable constant); 
@@ -299,7 +299,7 @@ The order determines that in which lifelines are shown in the graphical notation
 	ordered ref Actor[2..*] actors;
 
 	@genmodel(documentation="The fragments of the sequence diagram.")
-	ordered val InteractionFragment[1..*] fragments;
+	ordered val InteractionFragment[+] fragments;
 }
 
 //

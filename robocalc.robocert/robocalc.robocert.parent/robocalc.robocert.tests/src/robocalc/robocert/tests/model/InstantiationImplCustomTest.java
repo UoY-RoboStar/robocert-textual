@@ -39,14 +39,11 @@ import robocalc.robocert.tests.RoboCertInjectorProvider;
 @InjectWith(RoboCertInjectorProvider.class)
 public class InstantiationImplCustomTest {
 
-  @Inject
-  protected ExpressionFactory xf;
+  @Inject protected ExpressionFactory xf;
 
-  @Inject
-  protected RoboCertFactory rf;
+  @Inject protected RoboCertFactory rf;
 
-  @Inject
-  protected RoboChartFactory cf;
+  @Inject protected RoboChartFactory cf;
 
   @Test
   public void testGetConstant() {
@@ -60,12 +57,12 @@ public class InstantiationImplCustomTest {
     final var inst = rf.createInstantiation();
     final var assts = inst.getAssignments();
 
-    final var asst1 = InstantiationImplCustomTest.this.rf.createConstAssignment();
+    final var asst1 = rf.createConstAssignment();
     asst1.getConstants().addAll(List.of(x1, y2));
     asst1.setValue(xf.integer(42));
     assts.add(asst1);
 
-    final var asst2 = InstantiationImplCustomTest.this.rf.createConstAssignment();
+    final var asst2 = rf.createConstAssignment();
     asst2.getConstants().add(x2);
     asst2.setValue(xf.integer(24));
     assts.add(asst2);

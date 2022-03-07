@@ -43,7 +43,7 @@ ControllerTarget:
  * A target override in a sequence diagram.
  */
 Instantiation:
-	{Instantiation} ('with' BEGIN (assignments+=ConstAssignment)+ END)?;
+	'with' BEGIN (assignments+=ConstAssignment)+ END;
 
 /**
  * A constant assignment.
@@ -85,8 +85,8 @@ terminal END:
  * actors, message sets, and so on.
  */
 SpecificationGroup:
-	'specification' 'group' name=ID?
-	instantiation=Instantiation
+	'specification' 'group' {SpecificationGroup} name=ID?
+	instantiation=Instantiation?
 	':'
 	BEGIN
 	(ActorList | specifications+=Specification | messageSets+=NamedMessageSet)*

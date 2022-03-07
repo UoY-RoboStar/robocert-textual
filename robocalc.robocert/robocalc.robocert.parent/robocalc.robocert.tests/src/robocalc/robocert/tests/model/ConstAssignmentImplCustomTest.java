@@ -67,7 +67,7 @@ class ConstAssignmentImplCustomTest {
   void testHasConstant_Basic() {
     assertThat(asst.hasConstant(x), is(true));
 
-    var y = cf.createVariable();
+    final var y = cf.createVariable();
     y.setName("bar");
     assertThat(asst.hasConstant(y), is(false));
   }
@@ -78,19 +78,18 @@ class ConstAssignmentImplCustomTest {
    */
   @Test
   void testHasConstant_SameNameDifferentParents() {
-    var y = EcoreUtil2.copy(x);
+    final var y = EcoreUtil2.copy(x);
 
     // wire x and y up to different parents
     makeParent(x, "X");
     makeParent(y, "Y");
 
-    final var ca = assignment(x);
-    assertThat(ca.hasConstant(x), is(true));
-    assertThat(ca.hasConstant(y), is(false));
+    assertThat(asst.hasConstant(x), is(true));
+    assertThat(asst.hasConstant(y), is(false));
 
-    ca.getConstants().add(y);
-    assertThat(ca.hasConstant(x), is(true));
-    assertThat(ca.hasConstant(y), is(true));
+    asst.getConstants().add(y);
+    assertThat(asst.hasConstant(x), is(true));
+    assertThat(asst.hasConstant(y), is(true));
   }
 
   private void makeParent(Variable v, String name) {
@@ -102,8 +101,4 @@ class ConstAssignmentImplCustomTest {
     par.getVariableList().add(vars);
   }
 
-  private ConstAssignment assignment(Variable x) {
-
-    return asst;
-  }
 }
