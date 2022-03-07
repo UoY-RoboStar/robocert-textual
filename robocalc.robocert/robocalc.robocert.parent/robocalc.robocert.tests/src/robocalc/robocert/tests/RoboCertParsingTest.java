@@ -27,13 +27,13 @@ class RoboCertParsingTest {
 	@Test
 	void loadModel() {
 		final var result = Assertions.assertDoesNotThrow(() -> parseHelper.parse("""
-target module Mod
-specification group S:
-	actors = {target as T, world as W}
-	sequence Test
-		var x: real
-		actors T and W
-		anything until deadlock on T
+specification group S
+  target = module Mod
+  actors = {target as T, world as W}
+  sequence Test
+    var x: real
+    actors T and W
+    anything until deadlock on T
 """));
 		Assertions.assertNotNull(result);
 		final var errors = result.eResource().getErrors();

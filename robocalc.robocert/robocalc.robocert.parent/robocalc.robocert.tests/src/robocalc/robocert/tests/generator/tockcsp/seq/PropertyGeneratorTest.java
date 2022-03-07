@@ -126,12 +126,7 @@ class PropertyGeneratorTest {
     final var g = rf.createSpecificationGroup();
     g.getActors().addAll(mf.systemActors());
     g.setName("grp");
-
-    // TODO(@MattWindsor91): unite all of these disparate harnesses!!
-    final var pkg = rf.createCertPackage();
-    pkg.setTarget(t);
-    g.setParent(pkg);
-
+    g.setTarget(t);
     return g;
   }
 

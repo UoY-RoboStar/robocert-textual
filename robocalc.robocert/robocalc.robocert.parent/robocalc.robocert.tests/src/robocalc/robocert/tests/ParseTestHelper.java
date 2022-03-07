@@ -39,8 +39,8 @@ public class ParseTestHelper {
 	 * The prefix appended to lifted subsequences.
 	 */
 	private static final String PREFIX = """
-target module Mod
-specification group X:
+specification group X
+  target = module Mod
   actors = {target as T, world as W}
   sequence Y
     actors T, W

@@ -26,6 +26,8 @@ import java.util.stream.Stream;
 import org.eclipse.emf.ecore.resource.Resource;
 import robocalc.robocert.generator.utils.PackageFinder;
 import robocalc.robocert.model.robocert.CertPackage;
+import robocalc.robocert.model.robocert.SpecificationGroup;
+import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
  * A generator that expands out imports for a top-level resource.
@@ -96,7 +98,7 @@ public record ImportGenerator(PathSet ps,
   }
 
   private Stream<String> targetImports(CertPackage p) {
-    return elementImports(p.getTarget().getElement());
+    return specificationGroups(p).flatMap(x -> elementImports(x.getTarget().getElement()));
   }
 
   private Stream<String> elementImports(NamedElement elt) {
@@ -119,6 +121,10 @@ public record ImportGenerator(PathSet ps,
 
   private Stream<RCPackage> rcPackages(Resource r) {
     return pf.packagesInResource(r, RCPackage.class);
+  }
+
+  private Stream<SpecificationGroup> specificationGroups(CertPackage p) {
+    return StreamHelpers.filter(p.getGroups().stream(), SpecificationGroup.class);
   }
 
   private Stream<String> namedImports(BasicPackage p) {

@@ -128,9 +128,9 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
   private CharSequence targetDef(SpecificationGroup it) {
     // NOTE(@MattWindsor91): as far as I know, this needn't be timed
-    return csp.definition(
+		return csp.definition(
         SpecGroupParametricField.TARGET.toString(),
-        targetDefBody(getTarget(it), it.getInstantiation()));
+        targetDefBody(it.getTarget(), it.getInstantiation()));
   }
 
 	private CharSequence targetDefBody(Target t, Instantiation inst) {
@@ -156,7 +156,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   }
 
   private CharSequence[] openSigParams(SpecificationGroup it, Instantiation outerInst) {
-    return tg.generateRefParams(getTarget(it), it.getInstantiation(), outerInst, false);
+		return tg.generateRefParams(it.getTarget(), it.getInstantiation(), outerInst, false);
   }
 
   @Override
@@ -222,7 +222,4 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 				.map(x -> csp.module(name, csp.timedIf(isTimed, x)));
 	}
 
-	private Target getTarget(SpecificationGroup it) {
-		return it.getParent().getTarget();
-	}
 }

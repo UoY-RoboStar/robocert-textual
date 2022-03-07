@@ -63,10 +63,9 @@ public record CertPackageGenerator (
 	public CharSequence generate(CertPackage pkg) {
 		final var header = generateHeader();
 		final var imports = ig.generate(pkg.eResource());
-		final var target = tg.generate(pkg.getTarget());
 		final var preamble = generatePreamble(pkg);
 		final var groups = generateGroups(pkg);
-		return String.join("\n\n", header, imports, target, preamble, groups);
+		return String.join("\n\n", header, imports, preamble, groups);
 	}
 
 	/**

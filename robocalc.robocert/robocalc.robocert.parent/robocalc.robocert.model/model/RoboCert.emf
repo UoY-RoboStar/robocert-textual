@@ -51,9 +51,6 @@ abstract class OptionallyNamedElement {
 
 @genmodel(documentation="A RoboCert package.")
 class CertPackage extends robochart.BasicPackage {
-	@genmodel(documentation="Target of this package.")
-	val Target[1]#top target;
-
 	@genmodel(documentation="Any raw CSP to include inside this package.")
 	val CSPFragment[0..1] preambleCSP;
 
@@ -72,6 +69,9 @@ abstract class Group extends OptionallyNamedElement {
 
 @genmodel(documentation="A group containing specifications.")
 class SpecificationGroup extends Group {
+	@genmodel(documentation="The target of this group.")
+	val Target[1]#group target;
+
 	@genmodel(documentation="The instantiation, if any, in effect in this group.")
 	val Instantiation[0..1]#group instantiation;
 
@@ -122,8 +122,8 @@ a process representing the element from a refinement perspective;
 information about the upstream ('context') elements connected to this target;
 and information about the downstream elements connected to it.")
 abstract class Target {
-	@genmodel(documentation="The package to which this target belongs.")
-	ref CertPackage[1]#target top;
+	@genmodel(documentation="The specification group to which this target belongs.")
+	ref SpecificationGroup[1]#target group;
 	
 	//
 	// Derived properties
@@ -253,8 +253,11 @@ abstract class Property {
 // Core properties
 //
 
-@genmodel(documentation="A core property on the target of the package.")
-class CoreProperty extends Property {	
+@genmodel(documentation="A core property on the target of a specification group.")
+class CoreProperty extends Property {
+	@genmodel(documentation="The specification group whose target is being investigated.")
+	ref SpecificationGroup[1] group;
+
 	@genmodel(documentation="The specific type of property being investigated.")
 	attr CorePropertyType[1] type;
 }

@@ -17,7 +17,6 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
  * A top-level RoboCert package.
  */
 CertPackage:
-	target=Target
 	('csp' preambleCSP=CSPFragment)?
 	(groups+=(SpecificationGroup | AssertionGroup))*;
 
@@ -29,7 +28,7 @@ CertPackage:
  * A target of a sequence diagram.
  */
 Target:
-	'target' (ModuleTarget | ControllerTarget);
+	ModuleTarget | ControllerTarget;
 
 ModuleTarget:
 	'module' module=[RCModule|QualifiedName];
@@ -86,9 +85,8 @@ terminal END:
  */
 SpecificationGroup:
 	'specification' 'group' {SpecificationGroup} name=ID?
-	instantiation=Instantiation?
-	':'
 	BEGIN
+	'target' '=' target=Target instantiation=Instantiation?
 	(ActorList | specifications+=Specification | messageSets+=NamedMessageSet)*
 	END;
 	
@@ -144,7 +142,7 @@ Property:
  * Core properties with only one argument.
  */
 CoreProperty:
-	'target'
+	'target' 'of' group=[SpecificationGroup|QualifiedName]
 	('is' (negated?='not')? type=IsCorePropertyType |
 	type=VerbCorePropertyType |
 	'does' (negated?='not')? type=DoesCorePropertyType);

@@ -99,7 +99,7 @@ public record VariableScopeProvider(
   }
 
   private Stream<Variable> specGroupConstants(SpecificationGroup group) {
-    return tpResolver.parameterisation(group.getParent().getTarget());
+    return tpResolver.parameterisation(group.getTarget());
   }
 
   /**

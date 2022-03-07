@@ -123,6 +123,6 @@ public record ChannelGenerator(CSPStructureGenerator csp,
 	}
 
 	private Target getTarget(Actor a) {
-		return a.getGroup().getParent().getTarget();
+		return a.getGroup().getTarget();
 	}
 }

@@ -23,12 +23,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A RoboCert package."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
-        eType="#//Target" containment="true" eOpposite="#//Target/top">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Target of this package."/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="preambleCSP" eType="#//CSPFragment"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -57,6 +51,12 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group containing specifications."/>
     </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
+        eType="#//Target" containment="true" eOpposite="#//Target/group">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The target of this group."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" eType="#//Instantiation"
         containment="true" eOpposite="#//Instantiation/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -115,10 +115,10 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A specification target.&#xD;&#xA;&#xD;&#xA;Targets combine several things: a RoboChart element;&#xD;&#xA;a process representing the element from a refinement perspective;&#xD;&#xA;information about the upstream ('context') elements connected to this target;&#xD;&#xA;and information about the downstream elements connected to it."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="top" lowerBound="1" eType="#//CertPackage"
-        eOpposite="#//CertPackage/target">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecificationGroup"
+        eOpposite="#//SpecificationGroup/target">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The package to which this target belongs."/>
+        <details key="documentation" value="The specification group to which this target belongs."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="contextElements" upperBound="-1"
@@ -301,8 +301,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CoreProperty" eSuperTypes="#//Property">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A core property on the target of the package."/>
+      <details key="documentation" value="A core property on the target of a specification group."/>
     </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecificationGroup">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The specification group whose target is being investigated."/>
+      </eAnnotations>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//CorePropertyType">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The specific type of property being investigated."/>
