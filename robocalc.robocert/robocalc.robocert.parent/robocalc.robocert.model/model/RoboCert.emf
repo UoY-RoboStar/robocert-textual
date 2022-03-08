@@ -76,7 +76,7 @@ class SpecificationGroup extends Group {
 	!ordered val NamedMessageSet[*]#group messageSets;
 	
 	@genmodel(documentation="The actors available in this sequence group.")
-	!ordered val Actor[2..*]#group actors;
+	!ordered val Actor[0..*]#group actors;
 
 	@genmodel(documentation="The interactions inside this sequence group.")
 	ordered val Interaction[*]#group interactions;
