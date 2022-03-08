@@ -15,6 +15,7 @@ package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import java.util.Objects;
 import robocalc.robocert.model.robocert.SemanticModel;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 
 /**
  * Holds information about a CSP refinement.
@@ -24,8 +25,9 @@ import robocalc.robocert.model.robocert.SemanticModel;
  *
  * @author Matt Windsor
  */
-public record CSPRefinement(boolean isNegated, CharSequence lhs, CharSequence rhs, SemanticModel model) {
+public record CSPRefinement(boolean isNegated, SpecificationGroup group, CharSequence lhs, CharSequence rhs, SemanticModel model) {
   public CSPRefinement {
+    Objects.requireNonNull(group);
     Objects.requireNonNull(lhs);
     Objects.requireNonNull(rhs);
     Objects.requireNonNull(model);
@@ -54,7 +56,7 @@ public record CSPRefinement(boolean isNegated, CharSequence lhs, CharSequence rh
    * @return the possibly-lifted process.
    */
   private CharSequence maybeLift(TickTockContextGenerator tt, CharSequence process) {
-    return isTickTock() ? tt.liftTickTock(process) : process;
+    return isTickTock() ? tt.liftTickTock(group, process) : process;
   }
 
   /**

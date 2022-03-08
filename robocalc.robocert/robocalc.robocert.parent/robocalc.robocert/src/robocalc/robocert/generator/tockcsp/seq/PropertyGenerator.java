@@ -14,23 +14,20 @@ package robocalc.robocert.generator.tockcsp.seq;
 
 import com.google.inject.Inject;
 import java.util.Objects;
-import robocalc.robocert.generator.intf.core.TargetField;
+import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.core.SpecificationGroupElementFinder;
-import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPRefinement;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.TickTockContextGenerator;
-import robocalc.robocert.generator.tockcsp.ll.csp.CSPRefinement;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceProperty;
 import robocalc.robocert.model.robocert.SequencePropertyType;
-import robocalc.robocert.model.robocert.Target;
 
 /** Generates CSP-M for sequence properties. */
 public record PropertyGenerator(
   TickTockContextGenerator tt,
   CSPStructureGenerator csp,
   RoboCertFactory rf,
-  TargetGenerator tg,
   SpecificationGroupElementFinder sf
 ) {
 
@@ -39,7 +36,6 @@ public record PropertyGenerator(
     Objects.requireNonNull(tt);
     Objects.requireNonNull(csp);
     Objects.requireNonNull(rf);
-    Objects.requireNonNull(tg);
     Objects.requireNonNull(sf);
   }
 
@@ -64,7 +60,7 @@ public record PropertyGenerator(
    * @return the lowered refinement.
    */
   public CSPRefinement lower(SequenceProperty p) {
-    return new CSPRefinement(p.isNegated(), lhs(p), rhs(p), p.getModel());
+    return new CSPRefinement(p.isNegated(), p.getInteraction().getGroup(), lhs(p), rhs(p), p.getModel());
   }
 
   /**
@@ -98,14 +94,14 @@ public record PropertyGenerator(
    *     target of t.
    */
   private CharSequence sequenceWhenTypeElseTarget(SequenceProperty it, SequencePropertyType t) {
-    return it.getType() == t ? sequenceRef(it) : targetRef();
+    return it.getType() == t ? sequenceRef(it) : targetRef(it);
   }
 
   private CharSequence sequenceRef(SequenceProperty it) {
     return sf.getFullCSPName(it.getInteraction());
   }
 
-  private CharSequence targetRef() {
-    return tg.getFullCSPName(TargetField.CLOSED);
+  private CharSequence targetRef(SequenceProperty it) {
+    return sf.getFullCSPName(it.getInteraction().getGroup(), SpecGroupParametricField.TARGET);
   }
 }

@@ -42,8 +42,8 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class PropertyGeneratorTest {
-  private static final String TARGET_CSP = "Target::Closed";
-  private static final String SEQUENCE_CSP = "grp::Closed::Seqs::seq";
+  private static final String TARGET_CSP = "Test::Closed::Target";
+  private static final String SEQUENCE_CSP = "Test::Closed::Seqs::seq";
 
   @Inject private MessageFactory mf;
   @Inject private RoboCertFactory rf;
@@ -125,7 +125,7 @@ class PropertyGeneratorTest {
   private SpecificationGroup makeGroup(Target t) {
     final var g = rf.createSpecificationGroup();
     g.getActors().addAll(mf.systemActors());
-    g.setName("grp");
+    g.setName("Test");
     g.setTarget(t);
     return g;
   }

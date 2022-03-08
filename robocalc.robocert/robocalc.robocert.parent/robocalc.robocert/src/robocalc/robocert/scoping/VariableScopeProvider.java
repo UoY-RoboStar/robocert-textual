@@ -27,7 +27,7 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import robocalc.robocert.generator.utils.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.Specification;
+import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SpecificationGroup;
 
 /**
@@ -62,10 +62,10 @@ public record VariableScopeProvider(
    * @return the scope, which contains memory variables.
    */
   private List<Variable> memVariables(RefExp expr) {
-    return getParent(expr, Specification.class).stream().flatMap(this::specMemVariables).toList();
+    return getParent(expr, Interaction.class).stream().flatMap(this::specMemVariables).toList();
   }
 
-  private Stream<Variable> specMemVariables(Specification x) {
+  private Stream<Variable> specMemVariables(Interaction x) {
     return Optional.ofNullable(x.getVariables()).stream().flatMap(y -> y.getVars().stream());
   }
 

@@ -16,14 +16,13 @@ import com.google.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import robocalc.robocert.generator.tockcsp.core.AssertionGroupGenerator;
 import robocalc.robocert.generator.tockcsp.core.ImportGenerator;
 import robocalc.robocert.generator.tockcsp.core.SpecificationGroupGenerator;
-import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
+import robocalc.robocert.generator.utils.name.GroupNamer;
 import robocalc.robocert.model.robocert.AssertionGroup;
-import robocalc.robocert.model.robocert.CSPFragment;
+import robocalc.robocert.model.robocert.CSPGroup;
 import robocalc.robocert.model.robocert.CertPackage;
 import robocalc.robocert.model.robocert.Group;
 import robocalc.robocert.model.robocert.SpecificationGroup;
@@ -35,23 +34,23 @@ import robocalc.robocert.model.robocert.SpecificationGroup;
  */
 public record CertPackageGenerator (
 	AssertionGroupGenerator ag,
+	GroupNamer groupNamer,
 	SpecificationGroupGenerator sg,
-	TargetGenerator tg,
 	ImportGenerator ig
 ) {
 
 	/**
 	 * Constructs a CertPackage generator.
 	 * @param ag the assertion group generator.
+	 * @param groupNamer a namer used for CSP groups.
 	 * @param sg the sequence group generator.
-	 * @param tg the target generator.
 	 * @param ig the import generator.
 	 */
 	@Inject
 	public CertPackageGenerator {
 		Objects.requireNonNull(ag);
+		Objects.requireNonNull(groupNamer);
 		Objects.requireNonNull(sg);
-		Objects.requireNonNull(tg);
 		Objects.requireNonNull(ig);
 	}
 
@@ -63,9 +62,8 @@ public record CertPackageGenerator (
 	public CharSequence generate(CertPackage pkg) {
 		final var header = generateHeader();
 		final var imports = ig.generate(pkg.eResource());
-		final var preamble = generatePreamble(pkg);
 		final var groups = generateGroups(pkg);
-		return String.join("\n\n", header, imports, preamble, groups);
+		return String.join("\n\n", header, imports, groups);
 	}
 
 	/**
@@ -87,10 +85,6 @@ public record CertPackageGenerator (
 		return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
 	}
 
-	private CharSequence generatePreamble(CertPackage pkg) {
-		return Optional.ofNullable(pkg.getPreambleCSP()).map(CSPFragment::getContents).orElse("-- no CSP preamble");
-	}
-
 	/**
 	 * @return included CSP for all groups.
 	 *
@@ -104,10 +98,22 @@ public record CertPackageGenerator (
 		// TODO(@MattWindsor91): dependency-inject these somehow
 		if (it instanceof AssertionGroup a)
 			return ag.generate(a);
+		if (it instanceof CSPGroup c)
+			return generateCSPGroup(c);
 		if (it instanceof SpecificationGroup s)
 			return sg.generate(s);
 
 		throw new IllegalArgumentException("unsupported group: %s".formatted(it));
+	}
+
+	private CharSequence generateCSPGroup(CSPGroup it) {
+		final var name = groupNamer.getOrSynthesiseName(it);
+		return String.join(
+				"\n",
+				"-- BEGIN INLINE CSP %s".formatted(name),
+				it.getCsp().getContents(),
+				"-- END INLINE CSP %s".formatted(name)
+		);
 	}
 
 }

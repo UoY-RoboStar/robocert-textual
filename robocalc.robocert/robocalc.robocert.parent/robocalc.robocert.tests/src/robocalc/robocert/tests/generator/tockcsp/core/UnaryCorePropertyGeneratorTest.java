@@ -40,21 +40,21 @@ class CorePropertyGeneratorTest {
   /** Tests the generation of determinism assertions. */
   @Test
   void testDeterminism() {
-    assertGeneratesBody("Target::Closed :[deterministic]", CorePropertyType.DETERMINISM);
+    assertGeneratesBody("Test::Closed::Target :[deterministic]", CorePropertyType.DETERMINISM);
   }
 
   /** Tests the generation of timed deadlock freedom assertions. */
   @Test
   void testDeadlockFree() {
     assertGeneratesBody(
-        "prioritise( Target::Closed[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
+        "prioritise( Test::Closed::Target[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
         CorePropertyType.DEADLOCK_FREE);
   }
 
   @Test
   void testTimelockFree() {
     assertGeneratesBody(
-        "RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= Target::Closed",
+        "RUN({tock}) ||| CHAOS(diff(Events, {|tock|})) [F= Test::Closed::Target",
         CorePropertyType.TIMELOCK_FREE);
   }
 
@@ -74,6 +74,11 @@ class CorePropertyGeneratorTest {
     final var p = rc.createCoreProperty();
     p.setNegated(isNegated);
     p.setType(type);
+
+    final var g = rc.createSpecificationGroup();
+    g.setName("Test");
+    p.setGroup(g);
+
     assertThat(p, generatesCSP(expected, gen::generate));
   }
 }

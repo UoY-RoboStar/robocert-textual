@@ -17,8 +17,7 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
  * A top-level RoboCert package.
  */
 CertPackage:
-	('csp' preambleCSP=CSPFragment)?
-	(groups+=(SpecificationGroup | AssertionGroup))*;
+	(groups+=(CSPGroup | SpecificationGroup | AssertionGroup))*;
 
 //
 // TARGETS
@@ -87,15 +86,8 @@ SpecificationGroup:
 	'specification' 'group' {SpecificationGroup} name=ID?
 	BEGIN
 	'target' '=' target=Target instantiation=Instantiation?
-	(ActorList | specifications+=Specification | messageSets+=NamedMessageSet)*
+	(ActorList | interactions+=Interaction | messageSets+=NamedMessageSet)*
 	END;
-	
-/**
- * A specification.
- */
-Specification:
-	Interaction | CSPSpecification
-;
 
 /**
  * Explicitly specifying the semantic model of a property.
@@ -234,10 +226,10 @@ CSPFragment:
 	contents=INTERPOLATE;
 
 /**
- * A CSP specification.
+ * A CSP fragment in group position.
  */
-CSPSpecification:
-	'csp' name=ID ':' csp=CSPFragment
+CSPGroup:
+	'csp' {CSPGroup} name=ID? csp=CSPFragment
 ;
 
 ///////////////////////////////////////////////////////////////////////////////

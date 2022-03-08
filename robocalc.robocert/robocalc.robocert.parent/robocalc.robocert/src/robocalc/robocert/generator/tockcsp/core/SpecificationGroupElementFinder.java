@@ -41,7 +41,17 @@ public class SpecificationGroupElementFinder {
    * @return CSP-M expanding to a module-qualified name of a field.
    */
   public CharSequence getFullCSPName(SpecificationGroup it, SpecGroupParametricField field) {
-    return csp.namespaced(
-        gn.getOrSynthesiseName(it), SpecGroupField.PARAMETRIC_CLOSED.toString(), field.toString());
+    return csp.namespaced(getFullCSPName(it, SpecGroupField.PARAMETRIC_CLOSED), field.toString());
+  }
+
+  /**
+   * Gets the fully qualified CSP name of a field on a sequence group.
+   *
+   * @param it the group whose field is to be located.
+   * @param field the field in question.
+   * @return CSP-M expanding to a module-qualified name of a field.
+   */
+  public CharSequence getFullCSPName(SpecificationGroup it, SpecGroupField field) {
+    return csp.namespaced(gn.getOrSynthesiseName(it), field.toString());
   }
 }

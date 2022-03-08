@@ -8,18 +8,18 @@ package robocalc.robocert.generator.intf.core;
  */
 public enum SpecGroupParametricField {
 	/**
-	 * The module in the sequence group containing any memory definitions.
+	 * The module in the specification group containing any memory definitions.
 	 */
 	MEMORY_MODULE,	
 	/**
-	 * The module in the sequence group containing any sequences.
+	 * The module in the specification group containing any sequences.
 	 */
 	SEQUENCE_MODULE,
 	/**
-	 * The process in the sequence group representing the target.
+	 * The process in the specification group representing the target.
 	 */
 	TARGET;
-	
+
 	@Override
 	public String toString() {
 		return switch(this) {

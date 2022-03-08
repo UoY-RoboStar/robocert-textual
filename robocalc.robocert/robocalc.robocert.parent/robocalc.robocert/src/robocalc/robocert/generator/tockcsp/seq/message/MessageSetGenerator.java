@@ -13,13 +13,11 @@
 package robocalc.robocert.generator.tockcsp.seq.message;
 
 import com.google.inject.Inject;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import robocalc.robocert.generator.intf.core.TargetField;
-import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
+import robocalc.robocert.generator.tockcsp.core.SpecificationGroupElementFinder;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.MessageSetOptimiser;
 import robocalc.robocert.model.robocert.BinaryMessageSet;
@@ -28,6 +26,7 @@ import robocalc.robocert.model.robocert.ExtensionalMessageSet;
 import robocalc.robocert.model.robocert.MessageSet;
 import robocalc.robocert.model.robocert.NamedMessageSet;
 import robocalc.robocert.model.robocert.RefMessageSet;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
 
 /**
@@ -36,7 +35,7 @@ import robocalc.robocert.model.robocert.UniverseMessageSet;
  * @author Matt Windsor
  */
 public record MessageSetGenerator(CSPStructureGenerator csp,
-																	TargetGenerator tgg,
+																	SpecificationGroupElementFinder elementFinder,
 																	MessageSetOptimiser mso,
 																	MessageGenerator msg) {
 	// TODO(@MattWindsor91): split named set functionality out of this.
@@ -54,12 +53,16 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 	 * Constructs a message set generator.
 	 *
 	 * @param csp generator for low-level CSP-M structure.
-	 * @param tgg target group generator, used for resolving a target's universe field.
+	 * @param elementFinder generator for references to specification group elements.
 	 * @param mso optimiser for message sets, used for named message set generation.
 	 * @param msg generator for message specs.
 	 */
 	@Inject
 	public MessageSetGenerator {
+		Objects.requireNonNull(csp);
+		Objects.requireNonNull(elementFinder);
+		Objects.requireNonNull(mso);
+		Objects.requireNonNull(msg);
 	}
 
 	/**
@@ -112,11 +115,12 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 	/**
 	 * Generates the named set module for a sequence group.
 	 *
-	 * @param sets the message sets to expose in the module.
+	 * @param group the group containing the sets.
 	 * @return generated CSP for the named message set group.
 	 */
-	public CharSequence generateNamedSets(List<NamedMessageSet> sets) {
-		final var stdSets = Stream.of(universeDef());
+	public CharSequence generateNamedSets(SpecificationGroup group) {
+		final var sets = group.getMessageSets();
+		final var stdSets = Stream.of(universeDef(group));
 		final var userSets = sets.stream().filter(Objects::nonNull)
 				.map(x -> csp.definition(x.getName(), generateNamedSet(x)));
 		final var allSets = Stream.concat(stdSets, userSets);
@@ -124,8 +128,13 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 		return csp.module(MODULE_NAME, allSets.collect(Collectors.joining("\n")));
 	}
 
-	private CharSequence universeDef() {
-		return csp.definition(UNIVERSE_NAME, tgg.getFullCSPName(TargetField.UNIVERSE));
+	private CharSequence universeDef(SpecificationGroup group) {
+		// TODO(@MattWindsor91): this seems overly broad.
+		return csp.definition(UNIVERSE_NAME, semEvents(group));
+	}
+
+	private CharSequence semEvents(SpecificationGroup group) {
+		return csp.namespaced(group.getTarget().getElement().getName(), "sem__events");
 	}
 
 	private CharSequence generateNamedSet(NamedMessageSet it) {

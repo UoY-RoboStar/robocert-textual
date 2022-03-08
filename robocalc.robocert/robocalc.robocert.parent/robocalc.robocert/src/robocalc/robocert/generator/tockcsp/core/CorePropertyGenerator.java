@@ -15,7 +15,7 @@ package robocalc.robocert.generator.tockcsp.core;
 
 import com.google.inject.Inject;
 import java.util.Objects;
-import robocalc.robocert.generator.intf.core.TargetField;
+import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.CoreProperty;
 import robocalc.robocert.model.robocert.CorePropertyType;
@@ -26,10 +26,10 @@ import robocalc.robocert.model.robocert.CorePropertyType;
  *
  * @author Matt Windsor
  */
-public record CorePropertyGenerator(TargetGenerator targetGen, CSPStructureGenerator csp) {
+public record CorePropertyGenerator(SpecificationGroupElementFinder elementFinder, CSPStructureGenerator csp) {
 	@Inject
 	public CorePropertyGenerator {
-		Objects.requireNonNull(targetGen);
+		Objects.requireNonNull(elementFinder);
 		Objects.requireNonNull(csp);
 	}
 
@@ -41,6 +41,9 @@ public record CorePropertyGenerator(TargetGenerator targetGen, CSPStructureGener
 	 * @return generated CSP-M for a core property.
 	 */
 	public CharSequence generate(CoreProperty p) {
+		Objects.requireNonNull(p, "can't generate for a null core property");
+		Objects.requireNonNull(p.getGroup(), "core property must reference a group");
+
 		final var t = p.getType();
 		final var neg = p.isNegated();
 
@@ -54,7 +57,8 @@ public record CorePropertyGenerator(TargetGenerator targetGen, CSPStructureGener
 		// Similar situation for properties that require the tick-tock model.
 
 		// TODO(@MattWindsor91): assertion?
-		final var proc = targetGen.getFullCSPName(TargetField.CLOSED);
+		// TODO(@MattWindsor91): what about instantiations?
+		final var proc = elementFinder.getFullCSPName(p.getGroup(), SpecGroupParametricField.TARGET);
 
 		if (t == CorePropertyType.TERMINATION)
 			return neg ? generateNontermination(proc) : generateTermination(proc);

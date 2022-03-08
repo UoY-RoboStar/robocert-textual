@@ -51,14 +51,11 @@ abstract class OptionallyNamedElement {
 
 @genmodel(documentation="A RoboCert package.")
 class CertPackage extends robochart.BasicPackage {
-	@genmodel(documentation="Any raw CSP to include inside this package.")
-	val CSPFragment[0..1] preambleCSP;
-
 	@genmodel(documentation="Any groups in this package.
 
 Groups form an ordered list because they can lexically depend on things
 defined in previous groups.")
-	val Group[*]#parent groups;
+	ordered val Group[*]#parent groups;
 }
 
 @genmodel(documentation="A group in a RoboCert package.")
@@ -81,10 +78,8 @@ class SpecificationGroup extends Group {
 	@genmodel(documentation="The actors available in this sequence group.")
 	!ordered val Actor[2..*]#group actors;
 
-	@genmodel(documentation="The specifications inside this sequence group.
-
-Ordered because some may be order-sensitive, eg CSP.")
-	ordered val Specification[*]#group specifications;
+	@genmodel(documentation="The interactions inside this sequence group.")
+	ordered val Interaction[*]#group interactions;
 	
 	//
 	// Derived properties
@@ -99,15 +94,6 @@ Ordered because some may be order-sensitive, eg CSP.")
 	
 	@genmodel(documentation="Shortcut for getting the world of the group, if any.")
 	derived volatile transient readonly ref World[0..1] world;
-}
-
-@genmodel(documentation="A specification (which lives in some form of SpecGroup).")
-abstract class Specification extends robochart.NamedElement {
-	@genmodel(documentation="The parent group.")
-	ref SpecificationGroup[1]#specifications group;
-
-	@genmodel(documentation="The variables available for receiving arguments.")
-	val robochart.VariableList[0..1] variables;
 }
 
 
@@ -295,7 +281,13 @@ enum Temperature {
 ///////////////////////////////////////////////////////////////////////////////
 
 @genmodel(documentation="An interaction spawning a sequence diagram.")
-class Interaction extends Specification {	
+class Interaction extends robochart.NamedElement {
+	@genmodel(documentation="The parent group.")
+	ref SpecificationGroup[1]#interactions group;
+
+	@genmodel(documentation="The variables available for receiving arguments.")
+	val robochart.VariableList[0..1] variables;
+
 	@genmodel(documentation="The set of group actors forming lifelines/gates in this diagram.
 
 The order determines that in which lifelines are shown in the graphical notation.")
@@ -305,11 +297,12 @@ The order determines that in which lifelines are shown in the graphical notation
 	ordered val InteractionFragment[+] fragments;
 }
 
+
 //
-// STEPS
+// FRAGMENTS
 //
 
-// NOTE: When adding new steps, remember to extend the step generators.
+// NOTE: When adding new fragments, remember to extend the generators.
 
 @genmodel(documentation="A single interaction fragment in a subsequence.")
 abstract class InteractionFragment {
@@ -750,13 +743,13 @@ class CSPFragment {
 	attr String[1] contents;
 }
 
-@genmodel(documentation="A CSP fragment in property position.")
-class CSPProperty extends Property {
+@genmodel(documentation="A CSP fragment in group position.")
+class CSPGroup extends Group {
 	val CSPFragment[1] csp;
 }
 
-@genmodel(documentation="A CSP fragment in specification position.")
-class CSPSpecification extends Specification {
+@genmodel(documentation="A CSP fragment in property position.")
+class CSPProperty extends Property {
 	val CSPFragment[1] csp;
 }
 

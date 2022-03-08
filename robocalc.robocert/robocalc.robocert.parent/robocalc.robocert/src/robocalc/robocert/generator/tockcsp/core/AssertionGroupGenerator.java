@@ -71,11 +71,15 @@ public class AssertionGroupGenerator extends GroupGenerator<AssertionGroup> {
 		// Remember to add new properties as time goes by.
 		// TODO(@MattWindsor91): dependency-inject these, somehow
 		if (p instanceof CSPProperty c)
-			return "assert%s %s".formatted(c.isNegated() ? " not" : "", c.getCsp());
+			return generateCSPProperty(c);
 		if (p instanceof SequenceProperty s)
 			return spl.generate(s);
 		if (p instanceof CoreProperty u)
 			return ug.generate(u);
 		throw new IllegalArgumentException("Unsupported assertion property type: %s (missing match arm?)".formatted(p));
+	}
+
+	private String generateCSPProperty(CSPProperty c) {
+		return "assert%s %s".formatted(c.isNegated() ? " not" : "", c.getCsp());
 	}
 }

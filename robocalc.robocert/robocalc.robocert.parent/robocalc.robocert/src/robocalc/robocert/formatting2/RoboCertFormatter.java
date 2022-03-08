@@ -22,7 +22,7 @@ public class RoboCertFormatter extends RoboChartFormatter {
 
   protected void format(SpecificationGroup group, IFormattableDocument doc) {
     // TODO: format HiddenRegions around keywords, attributes, cross references, etc.
-    for (var seq : group.getSpecifications()) {
+    for (var seq : group.getInteractions()) {
       doc.format(seq);
     }
   }

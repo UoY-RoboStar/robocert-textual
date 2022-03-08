@@ -13,8 +13,10 @@
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import com.google.inject.Inject;
-import robocalc.robocert.generator.intf.core.TargetField;
-import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
+import java.util.Objects;
+import robocalc.robocert.generator.intf.core.SpecGroupField;
+import robocalc.robocert.generator.tockcsp.core.SpecificationGroupElementFinder;
+import robocalc.robocert.model.robocert.SpecificationGroup;
 
 /**
  * Generates the appropriate tick-tock 'context' (minimal covering set of all events in a process)
@@ -25,27 +27,31 @@ import robocalc.robocert.generator.tockcsp.core.TargetGenerator;
  *
  * @author Matt Windsor
  */
-public class TickTockContextGenerator {
-  @Inject private CSPStructureGenerator csp;
-  @Inject private TargetGenerator tg;
+public record TickTockContextGenerator(CSPStructureGenerator csp, SpecificationGroupElementFinder elementFinder) {
+  @Inject public TickTockContextGenerator {
+    Objects.requireNonNull(csp);
+    Objects.requireNonNull(elementFinder);
+  }
 
   /**
    * Lifts the given process body into the tick-tock context of a target.
    *
+   * @param group the group whose target is wanted.
    * @param inner the body to lift.
    * @return the lifted body.
    */
-  public CharSequence liftTickTock(CharSequence inner) {
+  public CharSequence liftTickTock(SpecificationGroup group, CharSequence inner) {
     // This should line up with how the RoboChart standard library implements model shifting.
-    return csp.function(csp.namespaced(generateRef(), "TT"), inner);
+    return csp.function(csp.namespaced(generateRef(group), "TT"), inner);
   }
 
   /**
-   * Generates a reference to a tick-tock context for the given target.
+   * Generates a reference to a tick-tock context for the target of the given specification group.
    *
+   * @param group the group whose target is wanted.
    * @return CSP-M referring to the tick-tock context.
    */
-  public CharSequence generateRef() {
-    return tg.getFullCSPName(TargetField.TICK_TOCK_CONTEXT);
+  public CharSequence generateRef(SpecificationGroup group) {
+    return elementFinder.getFullCSPName(group, SpecGroupField.TICK_TOCK_CONTEXT);
   }
 }

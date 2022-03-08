@@ -23,7 +23,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.testing.util.ParseHelper;
 import robocalc.robocert.model.robocert.CertPackage;
 import robocalc.robocert.model.robocert.ExpressionValueSpecification;
-import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
@@ -98,10 +97,7 @@ specification group X
 		if (grp.isEmpty()) {
 			throw new IllegalArgumentException("package does not contain a specification group");
 		}
-		if (grp.get().getSpecifications().get(0) instanceof Interaction i) {
-			return i.getFragments();
-		}
-		throw new IllegalArgumentException("package group does not contain an interaction");
+		return grp.get().getInteractions().get(0).getFragments();
 	}
 
 	/**
