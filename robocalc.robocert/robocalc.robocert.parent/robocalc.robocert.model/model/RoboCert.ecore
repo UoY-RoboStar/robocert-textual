@@ -45,12 +45,6 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group containing specifications."/>
     </eAnnotations>
-    <eOperations name="getConstant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Gets any available instantiation for the constant in this instantiation."/>
-      </eAnnotations>
-      <eParameters name="constant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
-    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target" containment="true" eOpposite="#//Target/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
@@ -79,18 +73,6 @@
         eType="#//Interaction" containment="true" eOpposite="#//Interaction/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The interactions inside this sequence group."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="targetActor" eType="#//TargetActor"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the target actor of the group, if any."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="world" eType="#//World"
-        changeable="false" volatile="true" transient="true" derived="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Shortcut for getting the world of the group, if any."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

@@ -20,7 +20,6 @@ import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RefMessageSet;
-import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.UniverseMessageSet;
 import robocalc.robocert.model.robocert.World;
@@ -77,11 +76,6 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   @Override
   public RefMessageSet createRefMessageSet() {
     return new RefMessageSetImplCustom();
-  }
-
-  @Override
-  public SpecificationGroup createSpecificationGroup() {
-    return new SpecificationGroupImplCustom();
   }
 
   @Override

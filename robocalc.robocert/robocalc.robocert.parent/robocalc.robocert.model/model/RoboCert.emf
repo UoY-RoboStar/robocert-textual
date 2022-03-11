@@ -80,23 +80,6 @@ class SpecificationGroup extends Group {
 
 	@genmodel(documentation="The interactions inside this sequence group.")
 	ordered val Interaction[*]#group interactions;
-	
-	//
-	// Derived properties
-	//
-
-	@genmodel(documentation="Gets any available instantiation for the constant in this instantiation.")	
-	derived readonly transient volatile op robochart.Expression[0..1] getConstant(robochart.Variable constant); 
-
-	// NOTE(@MattWindsor91): these derivations have to be on the *group*, not
-	// the sequences.  This is because implicit edges in message sets rely on
-	// these existing.
-
-	@genmodel(documentation="Shortcut for getting the target actor of the group, if any.")
-	derived volatile transient readonly ref TargetActor[0..1] targetActor;
-	
-	@genmodel(documentation="Shortcut for getting the world of the group, if any.")
-	derived volatile transient readonly ref World[0..1] world;
 }
 
 
