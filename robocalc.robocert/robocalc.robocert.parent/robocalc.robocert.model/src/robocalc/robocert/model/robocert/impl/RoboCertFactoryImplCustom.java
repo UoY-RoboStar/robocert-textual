@@ -17,7 +17,6 @@ import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.ExtensionalMessageSet;
 import robocalc.robocert.model.robocert.InModuleTarget;
-import robocalc.robocert.model.robocert.Instantiation;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RefMessageSet;
@@ -56,11 +55,6 @@ public class RoboCertFactoryImplCustom extends RoboCertFactoryImpl {
   @Override
   public ExtensionalMessageSet createExtensionalMessageSet() {
     return new ExtensionalMessageSetImplCustom();
-  }
-
-  @Override
-  public Instantiation createInstantiation() {
-    return new InstantiationImplCustom();
   }
 
   @Override

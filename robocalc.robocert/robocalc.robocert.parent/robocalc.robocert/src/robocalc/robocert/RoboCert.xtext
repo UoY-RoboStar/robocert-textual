@@ -38,12 +38,6 @@ ControllerTarget:
 // TODO(@MattWindsor91): extended targets
 
 /**
- * A target override in a sequence diagram.
- */
-Instantiation:
-	'with' BEGIN (assignments+=ConstAssignment)+ END;
-
-/**
  * A constant assignment.
  * 
  * As with many such lists, the definition of ConstAssignment allows commas
@@ -85,7 +79,7 @@ terminal END:
 SpecificationGroup:
 	'specification' 'group' {SpecificationGroup} name=ID?
 	BEGIN
-	'target' '=' target=Target instantiation=Instantiation?
+	'target' '=' target=Target ('with' BEGIN (assignments+=ConstAssignment)+ END)?
 	(ActorList | interactions+=Interaction | messageSets+=NamedMessageSet)*
 	END;
 
@@ -145,7 +139,7 @@ Assertion:
  * Top-level disjunction of properties.
  */
 Property:
-	CoreProperty | 'csp' {CSPProperty} (negated?='negated') csp=CSPFragment | SequenceProperty;
+	CoreProperty | CSPProperty | SequenceProperty;
 
 /**
  * Core properties with only one argument.
@@ -220,16 +214,17 @@ terminal INTERPOLATE:
 //
 
 /**
- * A CSP fragment.
- */
-CSPFragment:
-	contents=INTERPOLATE;
-
-/**
  * A CSP fragment in group position.
  */
 CSPGroup:
-	'csp' {CSPGroup} name=ID? csp=CSPFragment
+	'csp' {CSPGroup} name=ID? csp=INTERPOLATE
+;
+
+/**
+ * A CSP property in assertion position.
+ */
+CSPProperty:
+    'csp' {CSPProperty} (negated?='negated') csp=INTERPOLATE
 ;
 
 ///////////////////////////////////////////////////////////////////////////////

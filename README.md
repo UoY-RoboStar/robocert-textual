@@ -44,6 +44,9 @@ Packages are subject to renaming and moving at any time.
 - The RoboChart metamodel (see below - you may need to check out a local copy);
 - The RoboChart textual grammar (we currently inherit from it in Xtext - this
   may change).
+- Java 17.  This should now be readily available for modern systems (I was able
+  to install it on Ubuntu 20.04, for instance), but likely won't be your
+  default install at time of writing.
 
 ## How to use
 
@@ -66,3 +69,9 @@ know how you get on.
   in `robocalc.robocert` generates the Xtext artefacts from the grammar.
 - Once everything has been generated, you should be able to run
   `robocalc.robocert` as an Eclipse plugin.
+- For the tests, we need Hamcrest 2.2; at time of writing, Eclipse and JUnit
+  tend to ship Hamcrest 1.3.  If using Eclipse, add the Eclipse Orbit
+  repository (eg [2021-12](https://download.eclipse.org/tools/orbit/downloads/2021-12/))
+  and get Hamcrest from there.  Not doing this will result in Eclipse
+  pulling in the wrong Hamcrest and spouting very cryptic errors.
+

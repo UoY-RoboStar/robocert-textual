@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 University of York and others
+ * Copyright (c) 2021, 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,6 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.generator.utils;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,9 +21,10 @@ import java.util.stream.Stream;
 import com.google.inject.Inject;
 
 import circus.robocalc.robochart.Variable;
-import robocalc.robocert.model.robocert.Instantiation;
+import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.Target;
+import robocalc.robocert.model.robocert.util.InstantiationHelper;
 
 /**
  * Deduces the correct parameterisation for {@link Target}s, and handles
@@ -29,12 +32,16 @@ import robocalc.robocert.model.robocert.Target;
  *
  * @author Matt Windsor
  */
-public class TargetParameterResolver {
-	// TODO(@MattWindsor91): move some of these to the metamodel?
+public record TargetParameterResolver(InstantiationHelper instHelp, RCModuleHelper moduleHelp, VariableHelper varHelp) {
+	// TODO(@MattWindsor91): if we manage to get rid of varHelp here, we might
+	// be able to move this to the model helpers.
+	
 	@Inject
-	private RCModuleHelper mx;
-	@Inject
-	private VariableHelper vx;
+	public TargetParameterResolver {
+		Objects.requireNonNull(instHelp);
+		Objects.requireNonNull(moduleHelp);
+		Objects.requireNonNull(varHelp);
+	}
 
 	/**
 	 * Gets the parameterisation for a target.
@@ -45,7 +52,7 @@ public class TargetParameterResolver {
 	 */
 	public Stream<Variable> parameterisation(Target t) {
 		if (t instanceof ModuleTarget m)
-			return mx.parameterisation(m.getModule());
+			return moduleHelp.parameterisation(m.getModule());
 		throw new IllegalArgumentException("don't know how to get parameterisation of %s".formatted(t));
 	}
 
@@ -61,18 +68,18 @@ public class TargetParameterResolver {
 	 * @param inst the instantiation in question (may be null).
 	 * @return an iterator of uninstantiated constant names.
 	 */
-	public Stream<Variable> excludeInstantiated(Stream<Variable> s, Instantiation inst) {
+	public Stream<Variable> excludeInstantiated(Stream<Variable> s, List<ConstAssignment> inst) {
 		if (inst == null)
 			return s;
 
 		final var keys = instantiatedKeys(inst);
 		// We rely on vx.constantId being a String here;
 		// other CharSequences might not have proper equality.
-		return s.filter(x -> !keys.contains(vx.constantId(x)));
+		return s.filter(x -> !keys.contains(varHelp.constantId(x)));
 	}
 
-	private Set<String> instantiatedKeys(Instantiation inst) {
-		return inst.getAssignments().stream().flatMap(x -> x.getConstants().stream()).map(vx::constantId)
+	private Set<String> instantiatedKeys(List<ConstAssignment> inst) {
+		return instHelp.allConstants(inst).map(varHelp::constantId)
 				.collect(Collectors.toUnmodifiableSet());
 	}
 }

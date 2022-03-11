@@ -45,16 +45,22 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A group containing specifications."/>
     </eAnnotations>
+    <eOperations name="getConstant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="Gets any available instantiation for the constant in this instantiation."/>
+      </eAnnotations>
+      <eParameters name="constant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" lowerBound="1"
         eType="#//Target" containment="true" eOpposite="#//Target/group">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The target of this group."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="instantiation" eType="#//Instantiation"
-        containment="true" eOpposite="#//Instantiation/group">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignments" upperBound="-1"
+        eType="#//ConstAssignment" containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The instantiation, if any, in effect in this group."/>
+        <details key="documentation" value="The constant assignments in effect on this specification group."/>
       </eAnnotations>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="messageSets" ordered="false"
@@ -192,29 +198,6 @@
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//ControllerDef">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The controller referred to by this target."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Instantiation">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Specifies a (partial) instantiation of targets in a group."/>
-    </eAnnotations>
-    <eOperations name="getConstant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Gets any available instantiation for the constant in this instantiation."/>
-      </eAnnotations>
-      <eParameters name="constant" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Variable"/>
-    </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" lowerBound="1" eType="#//SpecificationGroup"
-        eOpposite="#//SpecificationGroup/instantiation">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The parent group of this instantiation."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="assignments" lowerBound="1"
-        upperBound="-1" eType="#//ConstAssignment" containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The constant assignments in effect at this instantiation."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -892,29 +875,16 @@
       </eAnnotations>
     </eLiterals>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CSPFragment">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A fragment of CSP-M."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contents" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The raw contents of the CSP fragment."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPGroup" eSuperTypes="#//Group">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A CSP fragment in group position."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="csp" lowerBound="1" eType="#//CSPFragment"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="csp" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CSPProperty" eSuperTypes="#//Property">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A CSP fragment in property position."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="csp" lowerBound="1" eType="#//CSPFragment"
-        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="csp" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

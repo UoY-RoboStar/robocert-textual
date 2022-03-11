@@ -69,8 +69,8 @@ class SpecificationGroup extends Group {
 	@genmodel(documentation="The target of this group.")
 	val Target[1]#group target;
 
-	@genmodel(documentation="The instantiation, if any, in effect in this group.")
-	val Instantiation[0..1]#group instantiation;
+	@genmodel(documentation="The constant assignments in effect on this specification group.")
+	val ConstAssignment[*] assignments;
 
 	@genmodel(documentation="Any message sets named on the sequence group.")
 	!ordered val NamedMessageSet[*]#group messageSets;
@@ -84,6 +84,9 @@ class SpecificationGroup extends Group {
 	//
 	// Derived properties
 	//
+
+	@genmodel(documentation="Gets any available instantiation for the constant in this instantiation.")	
+	derived readonly transient volatile op robochart.Expression[0..1] getConstant(robochart.Variable constant); 
 
 	// NOTE(@MattWindsor91): these derivations have to be on the *group*, not
 	// the sequences.  This is because implicit edges in message sets rely on
@@ -178,22 +181,6 @@ class InModuleTarget extends CollectionTarget {
 class InControllerTarget extends CollectionTarget {
 	@genmodel(documentation="The controller referred to by this target.")
 	ref robochart.ControllerDef[1] controller;
-}
-
-//
-// Instantiations
-//
-
-@genmodel(documentation="Specifies a (partial) instantiation of targets in a group.")
-class Instantiation {
-	@genmodel(documentation="The parent group of this instantiation.")
-	ref SpecificationGroup[1]#instantiation group;
-
-	@genmodel(documentation="The constant assignments in effect at this instantiation.")
-	val ConstAssignment[+] assignments;
-
-	@genmodel(documentation="Gets any available instantiation for the constant in this instantiation.")	
-	derived readonly transient volatile op robochart.Expression[0..1] getConstant(robochart.Variable constant); 
 }
 
 @genmodel(documentation="Assigns a value to one or more constants.")
@@ -737,19 +724,13 @@ as a result, the sequence notion of temperature is irrelevant, as is the distinc
 // CSP
 //
 
-@genmodel(documentation="A fragment of CSP-M.")
-class CSPFragment {
-	@genmodel(documentation="The raw contents of the CSP fragment.")
-	attr String[1] contents;
-}
-
 @genmodel(documentation="A CSP fragment in group position.")
 class CSPGroup extends Group {
-	val CSPFragment[1] csp;
+	attr String[1] csp;
 }
 
 @genmodel(documentation="A CSP fragment in property position.")
 class CSPProperty extends Property {
-	val CSPFragment[1] csp;
+	attr String[1] csp;
 }
 

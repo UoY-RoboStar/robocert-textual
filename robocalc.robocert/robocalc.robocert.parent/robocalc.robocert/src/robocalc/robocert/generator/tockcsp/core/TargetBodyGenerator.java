@@ -16,23 +16,32 @@ import circus.robocalc.robochart.Expression;
 import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
+
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 import robocalc.robocert.generator.utils.TargetParameterResolver;
 import robocalc.robocert.generator.utils.VariableHelper;
-import robocalc.robocert.model.robocert.Instantiation;
+import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Target;
+import robocalc.robocert.model.robocert.util.InstantiationHelper;
 
 /**
  * Generates CSP-M for the various forms of a target.
  *
  * @author Matt Windsor
  */
-public class TargetBodyGenerator {
+public record TargetBodyGenerator(CTimedGeneratorUtils gu, ExpressionGenerator eg, TargetParameterResolver paramRes, InstantiationHelper instHelp, VariableHelper varHelp) {
   private static final String ID = "{- id -} 0";
-  @Inject private ExpressionGenerator eg;
-  @Inject private TargetParameterResolver pr;
-  @Inject private VariableHelper vx;
-  @Inject private CTimedGeneratorUtils gu;
+  
+  @Inject
+  public TargetBodyGenerator {
+    Objects.requireNonNull(gu);
+    Objects.requireNonNull(eg);
+    Objects.requireNonNull(paramRes);
+    Objects.requireNonNull(instHelp);
+    Objects.requireNonNull(varHelp);
+  }
 
   /**
    * Generates the RHS of an open target definition.
@@ -66,11 +75,11 @@ public class TargetBodyGenerator {
    *     instantiated, instantiated with the given instantiation.
    */
   public CharSequence[] generateRefParams(
-      Target t, Instantiation lastInst, Instantiation thisInst, boolean withId) {
+      Target t, List<ConstAssignment> lastInst, List<ConstAssignment> thisInst, boolean withId) {
     // TODO(@MattWindsor91): work out what we need here to have derived
     // groups.  Maybe a stack of instantiations?
     var params =
-        pr.excludeInstantiated(pr.parameterisation(t), lastInst)
+        paramRes.excludeInstantiated(paramRes.parameterisation(t), lastInst)
             .map(k -> generateConstant(thisInst, k));
     if (withId) params = Stream.concat(Stream.of(ID), params);
     return params.toArray(CharSequence[]::new);
@@ -87,19 +96,17 @@ public class TargetBodyGenerator {
    *
    * <p>If the value is available, we emit a CSP comment giving the name, for clarity.
    *
-   * @param it the instantiation (may be null).
+   * @param inst the instantiation (may be null).
    * @param k the constant whose value is requested.
    * @return a CSP string expanding to the value of the constant.
    */
-  private CharSequence generateConstant(Instantiation it, Variable k) {
-    final var id = vx.constantId(k);
-    final var instantiation = getConstant(it, k);
-    return instantiation == null ? id : generateNamedExpression(instantiation, id);
+  private CharSequence generateConstant(List<ConstAssignment> inst, Variable k) {
+    final var id = varHelp.constantId(k);
+    final var expr = instHelp.getConstant(inst, k);
+    return expr.map(i -> generateNamedExpression(i, id)).orElse(id);
   }
 
-  private Expression getConstant(Instantiation it, Variable k) {
-    return it == null ? null : it.getConstant(k);
-  }
+
 
   private CharSequence generateNamedExpression(Expression it, CharSequence id) {
     return "{- %s -} %s".formatted(id, eg.generate(it));

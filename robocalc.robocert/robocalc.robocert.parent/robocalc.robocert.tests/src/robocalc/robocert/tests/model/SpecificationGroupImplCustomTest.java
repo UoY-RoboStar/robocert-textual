@@ -16,9 +16,15 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static robocalc.robocert.tests.util.IsIntegerExpWithValue.intExprWithValue;
 
 import com.google.inject.Inject;
+
+import circus.robocalc.robochart.RoboChartFactory;
+
 import java.util.List;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +34,7 @@ import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.World;
+import robocalc.robocert.model.robocert.util.ExpressionFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
@@ -40,6 +47,8 @@ import robocalc.robocert.tests.RoboCertInjectorProvider;
 @InjectWith(RoboCertInjectorProvider.class)
 class SpecificationGroupImplCustomTest {
   @Inject private RoboCertFactory rf;
+  @Inject private RoboChartFactory cf;
+  @Inject private ExpressionFactory xf;
 
   private SpecificationGroup group;
   private TargetActor module;
@@ -75,5 +84,33 @@ class SpecificationGroupImplCustomTest {
   @Test
   void testContextActor_empty() {
     assertThat(rf.createSpecificationGroup().getWorld(), is(nullValue()));
+  }
+  
+  @Test
+  public void testGetConstant() {
+    final var x1 = cf.createVariable();
+    x1.setName("foo");
+    final var x2 = EcoreUtil.copy(x1);
+    final var y1 = cf.createVariable();
+    y1.setName("bar");
+    final var y2 = EcoreUtil.copy(y1);
+
+    final var inst = rf.createSpecificationGroup();
+    final var assts = inst.getAssignments();
+
+    final var asst1 = rf.createConstAssignment();
+    asst1.getConstants().addAll(List.of(x1, y2));
+    asst1.setValue(xf.integer(42));
+    assts.add(asst1);
+
+    final var asst2 = rf.createConstAssignment();
+    asst2.getConstants().add(x2);
+    asst2.setValue(xf.integer(24));
+    assts.add(asst2);
+
+    assertThat(inst.getConstant(x1), is(intExprWithValue(42)));
+    assertThat(inst.getConstant(x2), is(intExprWithValue(24)));
+    assertThat(inst.getConstant(y1), is(nullValue()));
+    assertThat(inst.getConstant(y2), is(intExprWithValue(42)));
   }
 }

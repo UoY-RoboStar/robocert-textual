@@ -111,7 +111,7 @@ public record CertPackageGenerator (
 		return String.join(
 				"\n",
 				"-- BEGIN INLINE CSP %s".formatted(name),
-				it.getCsp().getContents(),
+				it.getCsp(),
 				"-- END INLINE CSP %s".formatted(name)
 		);
 	}

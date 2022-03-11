@@ -13,6 +13,8 @@
 package robocalc.robocert.generator.tockcsp.core;
 
 import com.google.inject.Inject;
+
+import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,7 +25,7 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
-import robocalc.robocert.model.robocert.Instantiation;
+import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SpecificationGroup;
 
@@ -64,7 +66,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
    */
   private CharSequence closedDef(SpecificationGroup it) {
     return csp.instance(
-        SpecGroupField.PARAMETRIC_CLOSED.toString(), openSig(it, it.getInstantiation()));
+        SpecGroupField.PARAMETRIC_CLOSED.toString(), openSig(it, it.getAssignments()));
   }
 
   /**
@@ -75,9 +77,10 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
    * instantiations CSP file.
    *
    * @param it the group for which we are generating CSP.
+   * @param inst the instantiation for this 'open' form.
    * @return generated CSP for referring to the 'open' form of this group.
    */
-  public CharSequence generateOpenRef(SpecificationGroup it, Instantiation instantiation) {
+  public CharSequence generateOpenRef(SpecificationGroup it, List<ConstAssignment> instantiation) {
     return csp.function(openRefName(it), openSigParams(it, instantiation));
   }
 
@@ -126,7 +129,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   private CharSequence targetDefBody(SpecificationGroup it) {
     return csp.function(
         tg.generateDef(it.getTarget()),
-        tg.generateRefParams(it.getTarget(), null, it.getInstantiation(), true));
+        tg.generateRefParams(it.getTarget(), null, it.getAssignments(), true));
   }
 
   private CharSequence tickTockContext() {
@@ -151,12 +154,12 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
    * @param outerInst any instantiation being applied at the outer level (may be null).
    * @return CSP referring to, or giving the signature of, the 'open' form of this group.
    */
-  private CharSequence openSig(SpecificationGroup group, Instantiation outerInst) {
+  private CharSequence openSig(SpecificationGroup group, List<ConstAssignment> outerInst) {
     return csp.function(SpecGroupField.PARAMETRIC_OPEN.toString(), openSigParams(group, outerInst));
   }
 
-  private CharSequence[] openSigParams(SpecificationGroup group, Instantiation outerInst) {
-    return tg.generateRefParams(group.getTarget(), group.getInstantiation(), outerInst, false);
+  private CharSequence[] openSigParams(SpecificationGroup group, List<ConstAssignment> outerInst) {
+    return tg.generateRefParams(group.getTarget(), group.getAssignments(), outerInst, false);
   }
 
   @Override

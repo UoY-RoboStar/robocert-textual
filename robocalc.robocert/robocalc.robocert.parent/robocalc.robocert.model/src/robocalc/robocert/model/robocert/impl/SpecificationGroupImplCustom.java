@@ -12,9 +12,12 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
+import circus.robocalc.robochart.Expression;
+import circus.robocalc.robochart.Variable;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.World;
+import robocalc.robocert.model.robocert.util.InstantiationHelper;
 import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
@@ -23,6 +26,12 @@ import robocalc.robocert.model.robocert.util.StreamHelpers;
  * @author Matt Windsor
  */
 public class SpecificationGroupImplCustom extends SpecificationGroupImpl {
+  @Override
+  public Expression getConstant(Variable v) {
+    // TODO(@MattWindsor91): is this needed?
+    return new InstantiationHelper().getConstant(assignments, v).orElse(null);
+  }
+	
   @Override
   public TargetActor basicGetTargetActor() {
     return getFirstActor(TargetActor.class);
