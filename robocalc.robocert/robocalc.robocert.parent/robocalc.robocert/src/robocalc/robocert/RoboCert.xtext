@@ -280,8 +280,10 @@ fragment Subsequence *:
  * - 'nothing'.
  */
 BlockInteractionOperand returns InteractionOperand:
-	guard=(ImplicitEmptyGuard | Guard)
-	((=> Subsequence 'end') | fragments+=InteractionFragment | 'nothing')
+	// Singleton
+	':' guard=(ImplicitEmptyGuard | Guard) (fragments+=InteractionFragment | 'nothing') |
+	// Non-singleton
+	guard=(ImplicitEmptyGuard | Guard) (Subsequence 'end' | 'nothing')
 ;
 
 /**
@@ -334,13 +336,12 @@ BlockFragment:
 	('opt' | 'optional') {OptFragment} |
 	('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet 'until' |
 	'block' {UntilFragment} intraMessages=EmptySet |
-	'loop' {LoopFragment} bound=MaybeLoopBound) ('as' name=ID)? body=BlockInteractionOperand;
+	'loop' {LoopFragment} bound=MaybeLoopBound) (name=ID)? body=BlockInteractionOperand;
 
 DurationFragment:
 	'taking'
 	('at' 'least' lowerBound = TimeUnits ('and' 'at' 'most' upperBound=TimeUnits)? |
-	'at' 'most' upperBound = TimeUnits)
-	'on';
+	'at' 'most' upperBound = TimeUnits);
 
 //
 // Loop bounds
@@ -370,13 +371,13 @@ BranchFragment:
 	ParFragment | AltOrXAltFragment;
 
 ParFragment:
-	('par' | 'parallel') {ParFragment}
+	('par' | 'parallel') {ParFragment} (name=ID)? 
 		branches+=GuardedInteractionOperand
 		('and' branches+=GuardedInteractionOperand)+
 	'end';
 	
 AltOrXAltFragment returns BranchFragment:
-	(('alt' | 'provisional'? 'alternative') {AltFragment} | ('xalt' | 'mandatory' 'alternative') {XAltFragment})
+	(('alt' | 'provisional'? 'alternative') {AltFragment} | ('xalt' | 'mandatory' 'alternative') {XAltFragment}) (name=ID)?
 		branches+=GuardedInteractionOperand
 		('else' branches+=GuardedInteractionOperand)+
 	'end';
