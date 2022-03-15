@@ -281,9 +281,9 @@ fragment Subsequence *:
  */
 BlockInteractionOperand returns InteractionOperand:
 	// Singleton
-	':' guard=(ImplicitEmptyGuard | Guard) (fragments+=InteractionFragment | 'nothing') |
+	':' guard=Guard (fragments+=InteractionFragment | 'nothing') |
 	// Non-singleton
-	guard=(ImplicitEmptyGuard | Guard) (Subsequence 'end' | 'nothing')
+	guard=Guard (Subsequence 'end' | 'nothing')
 ;
 
 /**
@@ -292,15 +292,18 @@ BlockInteractionOperand returns InteractionOperand:
  * As per BlockInteractionOperand, but these are always guarded, and do not have a trailing 'end'.
  * (The 'end' comes from the enclosing branch.)
  */
-GuardedInteractionOperand returns InteractionOperand:
-	guard=Guard
-	((=> Subsequence) | fragments+=InteractionFragment | 'nothing')
+BranchInteractionOperand returns InteractionOperand:
+	// Singleton
+	':' guard=Guard (fragments+=InteractionFragment | 'nothing') |
+	// Non-singleton
+	guard=Guard (Subsequence | 'nothing')
 ;
 
 /**
  * An explicit guard.
  */
 Guard:
+	{EmptyGuard} |
 	'[' (
 	'always' {EmptyGuard} |
 	'otherwise' {ElseGuard} |
@@ -372,14 +375,14 @@ BranchFragment:
 
 ParFragment:
 	('par' | 'parallel') {ParFragment} (name=ID)? 
-		branches+=GuardedInteractionOperand
-		('and' branches+=GuardedInteractionOperand)+
+		branches+=BranchInteractionOperand
+		('and' branches+=BranchInteractionOperand)+
 	'end';
 	
 AltOrXAltFragment returns BranchFragment:
 	(('alt' | 'provisional'? 'alternative') {AltFragment} | ('xalt' | 'mandatory' 'alternative') {XAltFragment}) (name=ID)?
-		branches+=GuardedInteractionOperand
-		('else' branches+=GuardedInteractionOperand)+
+		branches+=BranchInteractionOperand
+		('else' branches+=BranchInteractionOperand)+
 	'end';
 
 //
