@@ -132,7 +132,8 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A target referring to a RoboChart state machine."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stm" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//StateMachineDef">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" lowerBound="1"
+        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//StateMachineDef">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The state machine referred to by this target."/>
       </eAnnotations>

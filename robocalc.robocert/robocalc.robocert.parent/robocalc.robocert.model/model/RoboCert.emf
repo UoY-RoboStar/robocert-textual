@@ -135,7 +135,7 @@ class ControllerTarget extends ComponentTarget {
 @genmodel(documentation="A target referring to a RoboChart state machine.")
 class StateMachineTarget extends ComponentTarget {
 	@genmodel(documentation="The state machine referred to by this target.")
-	ref robochart.StateMachineDef[1] stm;
+	ref robochart.StateMachineDef[1] stateMachine;
 }
 
 @genmodel(documentation="A target referring to a RoboChart operation.")
