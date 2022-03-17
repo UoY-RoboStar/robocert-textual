@@ -16,13 +16,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
 import com.google.inject.Inject;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
-import robocalc.robocert.model.robocert.SpecificationGroup;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.model.robocert.util.SetFactory;
 import robocalc.robocert.model.robocert.util.ValueSpecificationFactory;

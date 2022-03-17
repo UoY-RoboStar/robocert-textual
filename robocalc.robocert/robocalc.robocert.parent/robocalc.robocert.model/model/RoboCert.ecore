@@ -399,16 +399,15 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="Fragment imposing a duration constraint on a block."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerBound" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actor" lowerBound="1" eType="#//Actor">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Lower bound, in time units after the start of the block."/>
+        <details key="documentation" value="The lifeline to which we are attaching the constraint."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="upperBound" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//DiscreteBound"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Upper bound, in time units after the start of the block."/>
+        <details key="documentation" value="The bound on the number of time units that can occur in this block."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -427,62 +426,26 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="A fragment containing one or more sequence elements in loop."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//LoopBound"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bound" eType="#//DiscreteBound"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The loop bound."/>
+        <details key="documentation" value="The loop bound, if there is one.  Evaluated once only."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LoopBound" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="DiscreteBound">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A bound on the number of iterations the loop can make."/>
+      <details key="documentation" value="A possibly open-ended bound on a discrete quantity."/>
     </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InfiniteLoopBound" eSuperTypes="#//LoopBound">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A loop bound that makes the loop execute infinitely until otherwise broken."/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DefiniteLoopBound" eSuperTypes="#//LoopBound">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A loop bound that executes a specific number of times.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(times)."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="times" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="count" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
+        <details key="documentation" value="The number to which we are constraining the quantity.&#xD;&#xA;&#xD;&#xA;May be a range, in which case the  is nondeterministic over the range."/>
       </eAnnotations>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="LowerLoopBound" eSuperTypes="#//LoopBound">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A loop bound that executes a nondeterministic number of times that is at least a lower bound.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(lowerTimes, *)."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lower" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Lower number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RangeLoopBound" eSuperTypes="#//LoopBound">
-    <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="A loop bound that executes a nondeterministic number of times between two bounds.&#xD;&#xA;&#xD;&#xA;Corresponds to UML2 loop(lowerTimes, upperTimes)."/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="lowerTimes" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="Lower number of times the loop must execute, unless prematurely broken.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="upperTimes" lowerBound="1"
-        eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
-        containment="true">
-      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The upper number of times the loop must execute.&#xD;&#xA;&#xD;&#xA;Evaluated once only."/>
+        <details key="documentation" value="Whether this is a lower bound rather than an exact bound.&#xD;&#xA;&#xD;&#xA;This only makes sense if count is a natural and not a range."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

@@ -346,12 +346,12 @@ class OptFragment extends BlockFragment {
 }
 
 @genmodel(documentation="Fragment imposing a duration constraint on a block.")
-class DurationFragment extends BlockFragment {
-	@genmodel(documentation="Lower bound, in time units after the start of the block.")
-	val robochart.Expression[0..1] lowerBound;
+class DurationFragment extends BlockFragment {	
+	@genmodel(documentation="The lifeline to which we are attaching the constraint.")
+	ref Actor[1] actor;
 
-	@genmodel(documentation="Upper bound, in time units after the start of the block.")
-	val robochart.Expression[0..1] upperBound;
+	@genmodel(documentation="The bound on the number of time units that can occur in this block.")
+	val DiscreteBound[1] bound;
 }
 
 @genmodel(documentation="An interaction fragment blocking the diagram until any occurrence happens on the block.
@@ -364,57 +364,28 @@ class UntilFragment extends BlockFragment {
 
 @genmodel(documentation="A fragment containing one or more sequence elements in loop.")
 class LoopFragment extends BlockFragment {
-	@genmodel(documentation="The loop bound.")
-	val LoopBound[1] bound;
+	@genmodel(documentation="The loop bound, if there is one.  Evaluated once only.")
+	val DiscreteBound[0..1] bound;
 
 	// TODO: conditionals
 }
 
 
 //
-// Loop bounds
+// Discrete bounds
 //
 
-@genmodel(documentation="A bound on the number of iterations the loop can make.")
-abstract class LoopBound {
-}
+@genmodel(documentation="A possibly open-ended bound on a discrete quantity.")
+class DiscreteBound {
+	@genmodel(documentation="The number to which we are constraining the quantity.
 
-@genmodel(documentation="A loop bound that makes the loop execute infinitely until otherwise broken.")
-class InfiniteLoopBound extends LoopBound {
-}
+May be a range, in which case the  is nondeterministic over the range.")
+ 	val robochart.Expression[1] count;
+ 
+ 	@genmodel(documentation="Whether this is a lower bound rather than an exact bound.
 
-@genmodel(documentation="A loop bound that executes a specific number of times.
-
-Corresponds to UML2 loop(times).")
-class DefiniteLoopBound extends LoopBound {
-	@genmodel(documentation="The number of times the loop must execute, unless prematurely broken.
-
-Evaluated once only.")
- 	val robochart.Expression[1] times;
-}
-
-@genmodel(documentation="A loop bound that executes a nondeterministic number of times that is at least a lower bound.
-
-Corresponds to UML2 loop(lowerTimes, *).")
-class LowerLoopBound extends LoopBound {
-	@genmodel(documentation="Lower number of times the loop must execute, unless prematurely broken.
-
-Evaluated once only.")
- 	val robochart.Expression[1] lowerTimes;
-}
-
-@genmodel(documentation="A loop bound that executes a nondeterministic number of times between two bounds.
-
-Corresponds to UML2 loop(lowerTimes, upperTimes).")
-class RangeLoopBound extends LoopBound {
-	@genmodel(documentation="Lower number of times the loop must execute, unless prematurely broken.
-
-Evaluated once only.")
-	val robochart.Expression[1] lowerTimes;
-	@genmodel(documentation="The upper number of times the loop must execute.
-
-Evaluated once only.")
-	val robochart.Expression[1] upperTimes;
+This only makes sense if count is a natural and not a range.")
+ 	attr boolean lower;
 }
 
 
