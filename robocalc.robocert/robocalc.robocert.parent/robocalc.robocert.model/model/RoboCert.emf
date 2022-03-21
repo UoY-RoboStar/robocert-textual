@@ -365,7 +365,7 @@ class UntilFragment extends BlockFragment {
 @genmodel(documentation="A fragment containing one or more sequence elements in loop.")
 class LoopFragment extends BlockFragment {
 	@genmodel(documentation="The loop bound, if there is one.  Evaluated once only.")
-	val DiscreteBound[0..1] bound;
+	val DiscreteBound[?] bound;
 
 	// TODO: conditionals
 }
@@ -377,15 +377,11 @@ class LoopFragment extends BlockFragment {
 
 @genmodel(documentation="A possibly open-ended bound on a discrete quantity.")
 class DiscreteBound {
-	@genmodel(documentation="The number to which we are constraining the quantity.
-
-May be a range, in which case the  is nondeterministic over the range.")
- 	val robochart.Expression[1] count;
+	@genmodel(documentation="The lower bound, which defaults to the upper bound.")
+ 	val robochart.Expression[?] lower;
  
- 	@genmodel(documentation="Whether this is a lower bound rather than an exact bound.
-
-This only makes sense if count is a natural and not a range.")
- 	attr boolean lower;
+ 	@genmodel(documentation="The upper bound, which defaults to infinity.")
+ 	val robochart.Expression[?] upper;
 }
 
 

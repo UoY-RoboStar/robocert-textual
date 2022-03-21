@@ -13,8 +13,10 @@
 package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import circus.robocalc.robochart.Variable;
+
 import com.google.inject.Inject;
 import java.util.stream.Stream;
+import java.util.Optional;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
@@ -63,7 +65,9 @@ public record InteractionFragmentGeneratorImpl(
 		}
 		// Note that LoopFragments are a form of BlockFragment.
 		if (f instanceof LoopFragment l) {
-			return Stream.concat(ls.getExprVariables(l.getBound()), branchVariables(l.getBody()));
+			// The loop may have a bound, whose expressions we'll need to load.
+			final var boundVars = Optional.ofNullable(l.getBound()).stream().flatMap(ls::getExprVariables);
+			return Stream.concat(boundVars, branchVariables(l.getBody()));
 		}
 		if (f instanceof BlockFragment b) {
 			return branchVariables(b.getBody());

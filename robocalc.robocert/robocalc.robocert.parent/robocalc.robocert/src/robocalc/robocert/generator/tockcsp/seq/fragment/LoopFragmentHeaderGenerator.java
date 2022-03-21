@@ -13,15 +13,8 @@
 package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
-
-import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
-import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
-import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.DefiniteLoopBound;
-import robocalc.robocert.model.robocert.InfiniteLoopBound;
+import java.util.Objects;
 import robocalc.robocert.model.robocert.LoopFragment;
-import robocalc.robocert.model.robocert.LowerLoopBound;
-import robocalc.robocert.model.robocert.RangeLoopBound;
 
 /**
  * Generates CSP-M for the header part of {@link LoopFragment}s.
@@ -31,42 +24,37 @@ import robocalc.robocert.model.robocert.RangeLoopBound;
  * @author Matt Windsor
  */
 public record LoopFragmentHeaderGenerator(
-		CSPStructureGenerator csp,
-		ExpressionGenerator eg,
-		SubsequenceGenerator sg) {
+		DiscreteBoundGenerator boundGen) {
+
+	/**
+	 * Name of the process family that implements the bounded loop header.
+	 * (See {@link DiscreteBoundGenerator} for information about the specific processes referenced.)
+	 */
+	private static final String BOUNDED_LOOP_PROC = "BoundedLoop"; // in robocert_seq_defs
 
 	/**
 	 * Constructs a CSP-M loop generator.
 	 *
-	 * @param csp a CSP structure generator.
-	 * @param eg  an expression generator.
-	 * @param sg  a subsequence generator.
+	 * @param boundGen a discrete bound generator.
 	 */
 	@Inject
 	public LoopFragmentHeaderGenerator {
+		Objects.requireNonNull(boundGen);
 	}
 
 	/**
-	 * Generates CSP for a loop fragment header.
+	 * Generates CSP-M for the header of a loop fragment.
+	 * <p>
+	 * At the mathematical level, this becomes the 'loop' builtin for unbounded loops, and a variety
+	 * of recursive contraptions for bounded loops.
 	 *
-	 * @param fragment the loop fragment for which we are generating a header.
+	 * @param frag   loop fragment for which we are generating a header.
 	 * @return the generated CSP.
 	 */
-	public CharSequence generate(LoopFragment fragment) {
-		final var b = fragment.getBound();
-		if (b instanceof InfiniteLoopBound) {
-			return "loop";
-		}
-		if (b instanceof LowerLoopBound l) {
-			return csp.function("loop_at_least", eg.generate(l.getLowerTimes()));
-		}
-		if (b instanceof DefiniteLoopBound d) {
-			return csp.function("loop_exactly", eg.generate(d.getTimes()));
-		}
-		if (b instanceof RangeLoopBound r) {
-			return csp.function("loop_between", eg.generate(r.getLowerTimes()),
-					eg.generate(r.getUpperTimes()));
-		}
-		throw new IllegalArgumentException("unsupported loop bound: %s".formatted(b));
+	public CharSequence generate(LoopFragment frag) {
+		Objects.requireNonNull(frag);
+		final var bound = frag.getBound();
+		// The absence of a bound implies an unbounded loop.
+		return bound == null ? "loop" : boundGen.generate(bound, BOUNDED_LOOP_PROC);
 	}
 }

@@ -57,25 +57,32 @@ Timed(OneStep) {
   DurationUB(ub__)(P__) = EndBy(P__, ub__)
 
   -- Semantics of a both-bounded duration fragment.
-  Duration(lb__, ub__)(P__) = DurationUB(ub__)(DurationLB(lb__)(P__))
+  DurationRange(lb__, ub__)(P__) = DurationUB(ub__)(DurationLB(lb__)(P__))
+
+  -- Semantics of an exact-bounded duration fragment.
+  Duration(b__) = DurationRange(b__, b__)
 }
 
 -- Use the standard FDR loop function for infinite loops.
 external loop
 
--- Loops P exactly bnd times.
-loop_exactly(bnd)(P) =
-  let L(x) =
-    if x <= 0 then SKIP else P; L(x-1)
-  within L(bnd)
+-- Loops P__ an indefinite number of times.
+-- Similar to `loop` but allows termination at any time.
+LoopIndef(P__) =
+  SKIP |~| P__; LoopIndef(P__)
 
--- Loops P between lb and ub times.
-loop_between(lb, ub)(P) =
-  let L(x) =
-    if x <= 0 then SKIP else SKIP |~| P; L(x-1)
-  within loop_exactly(lb)(P); L(ub - lb)
+-- Loops P__ exactly bnd__ times.
+BoundedLoop(bnd__)(P__) =
+  if bnd__ <= 0 then SKIP else P__; BoundedLoop(bnd__ - 1)(P__)
+
+-- Loops P__ at most ub__ times.
+BoundedLoopUB(ub__)(P__) =
+  if ub__ <= 0 then SKIP else (SKIP |~| (P__; BoundedLoopUB(ub__ - 1)(P__)))
+
+-- Loops P__ between lb__ and ub__ times.
+BoundedLoopBetween(lb__, ub__)(P__) =
+  BoundedLoop(lb__)(P__); BoundedLoopUB(ub__ - lb__)(P__)
 		
--- Loops P at least lb times.
-loop_at_least(lb)(P) =
-  let L = SKIP |~| P; L
-  within loop_exactly(lb)(P); L
+-- Loops P__ at least lb__ times.
+BoundedLoopLB(lb__)(P__) =
+  BoundedLoop(lb__)(P__); LoopIndef(P__)

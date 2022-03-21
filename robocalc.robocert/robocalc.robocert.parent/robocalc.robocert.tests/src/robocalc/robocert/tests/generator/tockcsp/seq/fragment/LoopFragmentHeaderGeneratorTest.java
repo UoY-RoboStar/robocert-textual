@@ -24,8 +24,8 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.generator.tockcsp.seq.fragment.DurationFragmentHeaderGenerator;
-import robocalc.robocert.model.robocert.DurationFragment;
+import robocalc.robocert.generator.tockcsp.seq.fragment.LoopFragmentHeaderGenerator;
+import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
@@ -37,74 +37,74 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
-class DurationFragmentHeaderGeneratorTest {
+class LoopFragmentHeaderGeneratorTest {
   /** The system under test. */
-  @Inject private DurationFragmentHeaderGenerator gen;
+  @Inject private LoopFragmentHeaderGenerator gen;
 
   @Inject private RoboCertFactory factory;
 
   @Inject private ExpressionFactory exprs;
 
-  private DurationFragment fragment;
+  private LoopFragment fragment;
 
   @BeforeEach
   void setUp() {
     final var inner = factory.createInteractionOperand();
-    fragment = factory.createDurationFragment();
+    fragment = factory.createLoopFragment();
     fragment.setBody(inner);
     fragment.setBound(factory.createDiscreteBound());
   }
 
-  /** Makes sure no-bound-object durations (which are ill-formed) can't generate CSP. */
+  /** Tests that a loop with no bound object becomes the standard csp loop process. */
   @Test
   void noBoundObject() {
     fragment.setBound(null);
-    assertThrows(NullPointerException.class, () -> gen.generate(fragment));
+    assertThat(fragment, generatesCSPLoopHeader("loop"));
   }
 
-  /** Makes sure no-bound durations (which are ill-formed) can't generate CSP. */
+  /** Makes sure no-bound loops (which are ill-formed) can't generate CSP. */
   @Test
   void noBounds() {
     assertThrows(NullPointerException.class, () -> gen.generate(fragment));
   }
 
-  /** Tests that a duration with a lower bound only is generated properly. */
+  /** Tests that a loop with a lower bound only is generated properly. */
   @Test
   void lowerBound() {
     fragment.getBound().setLower(exprs.integer(3));
-    assertThat(fragment, generatesCSPDurationHeader("DurationLB(3)"));
+    assertThat(fragment, generatesCSPLoopHeader("BoundedLoopLB(3)"));
   }
 
   /**
-   * Tests that a duration with a zero lower-bound and given upper-bound generates an upper-bound
+   * Tests that a loop with a zero lower-bound and given upper-bound generates an upper-bound
    * process.
    */
   @Test
   void upperBound() {
     fragment.getBound().setLower(exprs.integer(0));
     fragment.getBound().setUpper(exprs.integer(5));
-    assertThat(fragment, generatesCSPDurationHeader("DurationUB(5)"));
+    assertThat(fragment, generatesCSPLoopHeader("BoundedLoopUB(5)"));
   }
 
   /**
-   * Tests that a duration with a null lower-bound and given upper-bound generates an exact-bound
+   * Tests that a loop with a null lower-bound and given upper-bound generates an exact-bound
    * process.
    */
   @Test
   void exactBound() {
     fragment.getBound().setUpper(exprs.integer(5));
-    assertThat(fragment, generatesCSPDurationHeader("Duration(5)"));
+    assertThat(fragment, generatesCSPLoopHeader("BoundedLoop(5)"));
   }
 
-  /** Tests that a duration with both bounds is generated properly. */
+  /** Tests that a loop with both bounds is generated properly. */
   @Test
   void bothBounds() {
     fragment.getBound().setLower(exprs.integer(4));
     fragment.getBound().setUpper(exprs.integer(6));
-    assertThat(fragment, generatesCSPDurationHeader("DurationRange(4, 6)"));
+    assertThat(fragment, generatesCSPLoopHeader("BoundedLoopRange(4, 6)"));
   }
 
-  private Matcher<DurationFragment> generatesCSPDurationHeader(String expected) {
+  private Matcher<LoopFragment> generatesCSPLoopHeader(String expected) {
     return generatesCSP(expected, gen::generate);
   }
 }

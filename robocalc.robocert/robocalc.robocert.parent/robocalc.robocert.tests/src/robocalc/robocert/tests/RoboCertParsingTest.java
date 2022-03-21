@@ -33,7 +33,7 @@ specification group S
   sequence Test
     var x: real
     actors T and W
-    anything until deadlock on T
+    anything until: deadlock on T
 """));
 		Assertions.assertNotNull(result);
 		final var errors = result.eResource().getErrors();

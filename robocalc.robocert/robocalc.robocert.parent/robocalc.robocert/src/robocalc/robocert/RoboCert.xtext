@@ -339,10 +339,10 @@ BlockFragment:
 	('opt' | 'optional') {OptFragment} |
 	('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet 'until' |
 	'block' {UntilFragment} intraMessages=EmptySet |
-	'loop' {LoopFragment} ('(' bound=DiscreteBound  'times'?')')?) (name=ID)? body=BlockInteractionOperand;
+	'loop' {LoopFragment} ('(' bound=DiscreteBound 'times'? ')')?) (name=ID)? body=BlockInteractionOperand;
 
 DurationFragment:
-	'taking' bound=DiscreteBound 'units'? 'on';
+	'duration' '(' bound=DiscreteBound 'units'? ')' 'on' actor=[Actor];
 
 //
 // Discrete bounds
@@ -352,7 +352,9 @@ DurationFragment:
  * A discrete bound.
  */
 DiscreteBound:
-	(lower?='at' 'least')? count=Expression;
+	upper=Expression |
+	'at' 'least' lower=Expression |
+	'between' lower=Expression 'and' upper=Expression;
 
 //
 // Branch steps
