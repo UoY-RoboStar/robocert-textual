@@ -4,6 +4,7 @@
 package robocalc.robocert.validation;
 
 import org.eclipse.xtext.validation.ComposedChecks;
+import robocalc.robocert.validation.seq.DiscreteBoundValidator;
 
 /**
  * This class contains custom validation rules.
@@ -11,6 +12,6 @@ import org.eclipse.xtext.validation.ComposedChecks;
  * See
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
-@ComposedChecks(validators = { ActorValidator.class, MessageValidator.class, SequenceGroupValidator.class })
+@ComposedChecks(validators = { ActorValidator.class, DiscreteBoundValidator.class, MessageValidator.class, SequenceGroupValidator.class })
 public class RoboCertValidator extends AbstractRoboCertValidator {
 }
