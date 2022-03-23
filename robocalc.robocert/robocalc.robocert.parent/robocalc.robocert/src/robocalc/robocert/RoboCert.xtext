@@ -124,7 +124,7 @@ SingletonAssertionGroup returns AssertionGroup:
  * Produces the body of a non-singleton assertion group.
  */
 FullAssertionGroup returns AssertionGroup:
-	{AssertionGroup} 'group' (name=ID)? ':' BEGIN ('assertion' assertions+=Assertion)* END;
+	{AssertionGroup} 'group' (name=ID)? BEGIN ('assertion' assertions+=Assertion)* END;
 
 /**
  * An assertion, less the leading 'assertion' keyword (because this might be
