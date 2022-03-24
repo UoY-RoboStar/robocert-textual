@@ -48,6 +48,7 @@ public class InstantiationHelper {
 	 * @return the expression corresponding to k, if it is instantiated in inst.
 	 */
 	public Optional<Expression> getConstant(List<ConstAssignment> inst, Variable k) {
+		// TODO(@MattWindsor91): do we need to take Parameter here instead?
 		return nullableInstToStream(inst)
 				.mapMulti(
 						(ConstAssignment x, Consumer<Expression> acc) -> {

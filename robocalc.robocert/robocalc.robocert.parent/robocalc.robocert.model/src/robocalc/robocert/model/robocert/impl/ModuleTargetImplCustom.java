@@ -18,7 +18,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import circus.robocalc.robochart.NamedElement;
-import robocalc.robocert.model.robocert.util.DefinitionHelper;
+import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
  * Adds derived operation definitions to {@link ModuleTargetImpl}.
@@ -33,7 +33,7 @@ class ModuleTargetImplCustom extends ModuleTargetImpl {
 
 	@Override
 	public EList<NamedElement> getContextElements() {
-		return new DefinitionHelper().platform(getModule()).stream().collect(Collectors.toCollection(BasicEList::new));
+		return new DefinitionResolver().platform(getModule()).stream().collect(Collectors.toCollection(BasicEList::new));
 	}
 	
 	/**

@@ -28,14 +28,14 @@ import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.util.DefinitionHelper;
+import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
  * Resolves RoboChart contexts related to actors.
  *
  * @author Matt Windsor
  */
-public record ActorContextFinder(DefinitionHelper dh) {
+public record ActorContextFinder(DefinitionResolver dh) {
 
 	/**
 	 * Constructs an actor context finder.

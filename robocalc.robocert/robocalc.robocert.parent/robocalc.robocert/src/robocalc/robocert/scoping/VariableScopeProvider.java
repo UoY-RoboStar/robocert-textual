@@ -25,7 +25,8 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
-import robocalc.robocert.generator.utils.TargetParameterResolver;
+import robocalc.robocert.generator.utils.param.Parameter;
+import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SpecificationGroup;
@@ -99,7 +100,7 @@ public record VariableScopeProvider(
   }
 
   private Stream<Variable> specGroupConstants(SpecificationGroup group) {
-    return tpResolver.parameterisation(group.getTarget());
+    return tpResolver.parameterisation(group.getTarget()).map(Parameter::constant);
   }
 
   /**

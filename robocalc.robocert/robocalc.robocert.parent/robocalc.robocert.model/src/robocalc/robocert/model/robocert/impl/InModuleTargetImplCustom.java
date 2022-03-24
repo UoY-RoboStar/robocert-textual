@@ -21,7 +21,7 @@ import org.eclipse.emf.common.util.EList;
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
 import circus.robocalc.robochart.RoboticPlatform;
-import robocalc.robocert.model.robocert.util.DefinitionHelper;
+import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
  * Adds derived operation definitions to {@link InModuleTargetImpl}.
@@ -45,7 +45,7 @@ class InModuleTargetImplCustom extends InModuleTargetImpl {
 	
 	@Override
 	public EList<NamedElement> getContextElements() {
-		return new DefinitionHelper().platform(getModule()).stream().collect(Collectors.toCollection(BasicEList::new));
+		return new DefinitionResolver().platform(getModule()).stream().collect(Collectors.toCollection(BasicEList::new));
 	}
 	
 	/**

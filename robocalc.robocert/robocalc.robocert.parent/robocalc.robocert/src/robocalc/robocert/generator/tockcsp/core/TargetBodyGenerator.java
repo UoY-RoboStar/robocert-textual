@@ -13,15 +13,14 @@
 package robocalc.robocert.generator.tockcsp.core;
 
 import circus.robocalc.robochart.Expression;
-import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-import robocalc.robocert.generator.utils.TargetParameterResolver;
 import robocalc.robocert.generator.utils.VariableHelper;
+import robocalc.robocert.generator.utils.param.Parameter;
+import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.InstantiationHelper;
@@ -54,7 +53,7 @@ public record TargetBodyGenerator(CTimedGeneratorUtils gu, ExpressionGenerator e
    */
   public CharSequence generateDef(Target t) {
     /*
-     * In email with Pedro (4 Aug): the target of a refinement against a (simple)
+     * In email with Pedro (2021-08-04): the target of a refinement against a (simple)
      * specification should usually be unoptimised (D__); model comparisons should
      * usually be optimised (O__).
      *
@@ -79,8 +78,8 @@ public record TargetBodyGenerator(CTimedGeneratorUtils gu, ExpressionGenerator e
     // TODO(@MattWindsor91): work out what we need here to have derived
     // groups.  Maybe a stack of instantiations?
     var params =
-        paramRes.excludeInstantiated(paramRes.parameterisation(t), lastInst)
-            .map(k -> generateConstant(thisInst, k));
+        paramRes.excludeInstantiated(gu, paramRes.parameterisation(t), lastInst)
+            .map(k -> generateParam(thisInst, k));
     if (withId) params = Stream.concat(Stream.of(ID), params);
     return params.toArray(CharSequence[]::new);
   }
@@ -88,11 +87,11 @@ public record TargetBodyGenerator(CTimedGeneratorUtils gu, ExpressionGenerator e
   // TODO(@MattWindsor91): move this?
 
   /**
-   * Generates the value of a constant given an instantiation.
+   * Generates the value of a parameter given an instantiation.
    *
    * <p>If the value isn't available, we emit the constant ID; this will resolve either to a
-   * parameter (when defining an open target) or a definition in instantiations.csp (when defining a
-   * closed target).
+   * formal parameter on the target (when defining an open target) or a definition in
+   * instantiations.csp (when defining a closed target).
    *
    * <p>If the value is available, we emit a CSP comment giving the name, for clarity.
    *
@@ -100,13 +99,11 @@ public record TargetBodyGenerator(CTimedGeneratorUtils gu, ExpressionGenerator e
    * @param k the constant whose value is requested.
    * @return a CSP string expanding to the value of the constant.
    */
-  private CharSequence generateConstant(List<ConstAssignment> inst, Variable k) {
-    final var id = varHelp.constantId(k);
-    final var expr = instHelp.getConstant(inst, k);
+  private CharSequence generateParam(List<ConstAssignment> inst, Parameter k) {
+    final var id = k.cspId(gu);
+    final var expr = instHelp.getConstant(inst, k.constant());
     return expr.map(i -> generateNamedExpression(i, id)).orElse(id);
   }
-
-
 
   private CharSequence generateNamedExpression(Expression it, CharSequence id) {
     return "{- %s -} %s".formatted(id, eg.generate(it));
