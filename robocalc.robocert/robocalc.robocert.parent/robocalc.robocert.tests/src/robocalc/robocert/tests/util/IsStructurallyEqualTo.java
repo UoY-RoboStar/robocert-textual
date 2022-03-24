@@ -23,7 +23,7 @@ import org.hamcrest.TypeSafeMatcher;
  * @author Matt Windsor
  */
 public class IsStructurallyEqualTo<T extends EObject> extends TypeSafeMatcher<T> {
-	private T expected;
+	private final T expected;
 	
 	/**
 	 * Constructs a matcher with the given expected object.

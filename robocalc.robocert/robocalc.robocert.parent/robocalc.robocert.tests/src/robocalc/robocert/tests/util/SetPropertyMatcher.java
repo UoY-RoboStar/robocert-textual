@@ -92,8 +92,8 @@ public class SetPropertyMatcher extends TypeSafeDiagnosingMatcher<MessageSet> {
 
   @Override
   protected boolean matchesSafely(MessageSet messageSet, Description description) {
-    var u = matchTri("universal", isUniversal, messageSet.isUniversal(), description);
-    var a = matchTri("active", isActive, messageSet.isActive(), description);
+    final var u = matchTri("universal", isUniversal, messageSet.isUniversal(), description);
+    final var a = matchTri("active", isActive, messageSet.isActive(), description);
 
     return u && a;
   }
@@ -111,7 +111,7 @@ public class SetPropertyMatcher extends TypeSafeDiagnosingMatcher<MessageSet> {
     if (tri == null)
       return true;
 
-    var matched = tri == actual;
+    final var matched = tri == actual;
     if (!matched) {
       description.appendText("set was ");
       describeTri(qualifier, actual, description);

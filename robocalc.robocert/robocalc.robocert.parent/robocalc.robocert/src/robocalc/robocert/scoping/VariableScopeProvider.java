@@ -80,7 +80,7 @@ public record VariableScopeProvider(
    * @return the scope, which contains constant variables.
    */
   private IScope constScope(RefExp expr) {
-    return unifiedScope(constants(expr));
+    return unifiedScope(constants(expr).toList());
   }
 
   /**
@@ -91,12 +91,14 @@ public record VariableScopeProvider(
    * @return the scope (may be null).
    */
   public IScope constAssignmentScope(ConstAssignment asst) {
-    return unifiedScope(constants(asst));
+    // The constants must not have an initial value.
+    return unifiedScope(constants(asst).filter(v -> v.getInitial() == null).toList());
   }
 
-  private List<Variable> constants(EObject obj) {
-    // constScope and constAssignmentScope have the same effective body.
-    return getParent(obj, SpecificationGroup.class).stream().flatMap(this::specGroupConstants).toList();
+  private Stream<Variable> constants(EObject obj) {
+    // constScope and constAssignmentScope have the same effective body, except for filtering out
+    // value-instantiated constants in the latter.
+    return getParent(obj, SpecificationGroup.class).stream().flatMap(this::specGroupConstants);
   }
 
   private Stream<Variable> specGroupConstants(SpecificationGroup group) {

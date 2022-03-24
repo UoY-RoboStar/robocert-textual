@@ -15,7 +15,6 @@ package robocalc.robocert.generator.utils.param;
 
 import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.RCModule;
-import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.Objects;
@@ -42,53 +41,72 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
     Objects.requireNonNull(defResolver);
   }
 
+  //
+  // Modules
+  //
+
   /**
    * Gets the variables that make up this module's parameterisation.
    *
    * <p>This should align with the definition in the CSP semantics.
    *
-   * @param it the RoboChart module.
-   * @return a stream over parameters.
+   * @param mod the RoboChart module.
+   * @return a stream over module parameters.
    */
-  public Stream<Parameter> parameterisation(RCModule it) {
-    return Stream.concat(platformParams(it), controllerParams(it));
+  public Stream<Parameter> parameterisation(RCModule mod) {
+    return Stream.concat(platformParams(mod), controllerParams(mod));
   }
 
-  private Stream<Parameter> platformParams(RCModule it) {
-    return defResolver.platform(it).stream().flatMap(this::platformParams);
+  private Stream<Parameter> platformParams(RCModule mod) {
+    return defResolver.platform(mod).stream().flatMap(this::constantsOf);
   }
 
-  private Stream<Parameter> platformParams(RoboticPlatformDef rp) {
-    return Parameter.localsOf(rp, gu);
+  private Stream<Parameter> controllerParams(RCModule mod) {
+    return defResolver.controllers(mod).flatMap(this::moduleParameterisation);
   }
 
-  private Stream<Parameter> controllerParams(RCModule it) {
-    return defResolver.controllers(it).flatMap(this::moduleParameterisation);
+  //
+  // Controllers
+  //
+
+  /**
+   * Gets this controller's parameterisation.
+   *
+   * <p>This should align with the definition in the CSP semantics.
+   *
+   * @param ctrl the RoboChart controller.
+   * @return a stream over module parameters.
+   */
+  public Stream<Parameter> parameterisation(ControllerDef ctrl) {
+    final var requiredConstants =
+        gu.requiredConstants(ctrl).stream().map(x -> new Parameter(x, ctrl));
+    return Stream.concat(requiredConstants, moduleParameterisation(ctrl));
   }
 
   /**
    * Gets this controller's contribution to its module's parameterisation.
    *
-   * @param it  the controller.
+   * @param ctrl the controller.
    *
    * @return the stream of variables that should be added to the module
    *         parameterisation to account for this controller.
    */
-  public Stream<Parameter> moduleParameterisation(ControllerDef it) {
-    // TODO(@MattWindsor91): is this the controller parameterisation too?
+  private Stream<Parameter> moduleParameterisation(ControllerDef ctrl) {
+    final var localOperationConstants =
+        ctrl.getLOperations().stream().map(defResolver::resolve).flatMap(this::constantsOf);
     return Stream.concat(
-        constantsOf(it),
-        Stream.concat(stateMachineConstants(it), localOperationConstants(it))
+        constantsOf(ctrl),
+        Stream.concat(stateMachineConstants(ctrl), localOperationConstants)
     );
   }
 
-  private Stream<Parameter> localOperationConstants(ControllerDef it) {
-    return it.getLOperations().stream().map(defResolver::resolve).flatMap(this::constantsOf);
+  private Stream<Parameter> stateMachineConstants(ControllerDef ctrl) {
+    return ctrl.getMachines().stream().map(defResolver::resolve).flatMap(this::constantsOf);
   }
 
-  private Stream<Parameter> stateMachineConstants(ControllerDef it) {
-    return it.getMachines().stream().map(defResolver::resolve).flatMap(this::constantsOf);
-  }
+  //
+  // Misc
+  //
 
   private Stream<Parameter> constantsOf(EObject it) {
     return Parameter.localsOf(it, gu);

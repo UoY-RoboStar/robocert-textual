@@ -37,6 +37,7 @@ public record VariableHelper(CTimedGeneratorUtils gu) {
 	 * @return the constant ID.
 	 */
 	public String constantId(Variable it) {
+		// TODO(@MattWindsor91): this needs to be replaced with gu.constantId, I think
 		Objects.requireNonNull(it, "can't get ID of null constant");
 		return "const_" + gu.id(it);
 	}

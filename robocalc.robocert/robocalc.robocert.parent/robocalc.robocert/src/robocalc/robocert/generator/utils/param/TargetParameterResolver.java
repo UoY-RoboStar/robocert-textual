@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import robocalc.robocert.generator.utils.VariableHelper;
 import robocalc.robocert.model.robocert.ConstAssignment;
+import robocalc.robocert.model.robocert.ControllerTarget;
+import robocalc.robocert.model.robocert.InControllerTarget;
+import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.InstantiationHelper;
@@ -50,8 +53,14 @@ public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartPar
 	 * @return a stream of all parameters defined on this target's module.
 	 */
 	public Stream<Parameter> parameterisation(Target t) {
+		if (t instanceof InModuleTarget m)
+			return rcResolver.parameterisation(m.getModule());
+		if (t instanceof InControllerTarget m)
+			return rcResolver.parameterisation(m.getController());
 		if (t instanceof ModuleTarget m)
 			return rcResolver.parameterisation(m.getModule());
+		if (t instanceof ControllerTarget m)
+			return rcResolver.parameterisation(m.getController());
 		throw new IllegalArgumentException("don't know how to get parameterisation of %s".formatted(t));
 	}
 
