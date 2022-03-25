@@ -6,14 +6,6 @@
 
 <plugin>
 
-   <extension
-         point="org.eclipse.emf.ecore.factory_override">
-      <factory
-            class="robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom"
-            uri="http://robocert.robocalc/">
-      </factory>
-   </extension>
-
    <extension point="org.eclipse.emf.ecore.generated_package">
       <!-- @generated RoboCert -->
       <package

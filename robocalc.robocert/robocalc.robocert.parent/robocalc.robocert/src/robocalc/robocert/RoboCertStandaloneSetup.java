@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EPackage;
 import com.google.inject.Injector;
 
 import robocalc.robocert.model.robocert.RoboCertPackage;
-import robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom;
+import robocalc.robocert.model.robocert.impl.RoboCertFactoryImpl;
 
 /**
  * Initialization support for running Xtext languages without Equinox extension
@@ -34,7 +34,6 @@ public class RoboCertStandaloneSetup extends RoboCertStandaloneSetupGenerated {
 	@Override
 	public void register(Injector injector) {
 		if (!EPackage.Registry.INSTANCE.containsKey(RoboCertPackage.eNS_URI))
-			// this has been modified to register the custom factory for RoboCert
 			EPackage.Registry.INSTANCE.put(RoboCertPackage.eNS_URI, new EPackage.Descriptor() {
 				@Override
 				public EPackage getEPackage() {
@@ -43,7 +42,7 @@ public class RoboCertStandaloneSetup extends RoboCertStandaloneSetupGenerated {
 
 				@Override
 				public EFactory getEFactory() {
-					return new RoboCertFactoryImplCustom();
+					return new RoboCertFactoryImpl();
 				}
 
 			});

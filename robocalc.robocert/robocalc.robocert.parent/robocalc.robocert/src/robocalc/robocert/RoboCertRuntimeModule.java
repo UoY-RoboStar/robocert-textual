@@ -23,7 +23,7 @@ import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl;
 import robocalc.robocert.generator.tockcsp.seq.fragment.InteractionFragmentGeneratorImpl;
-import robocalc.robocert.model.robocert.impl.RoboCertFactoryImplCustom;
+import robocalc.robocert.model.robocert.impl.RoboCertFactoryImpl;
 
 /** 
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -76,11 +76,11 @@ public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	}
 
 	/**
-	 * Binds the RoboCert custom factory.
+	 * Binds the RoboCert factory.
 	 */
 	public Class<? extends RoboCertFactory> bindRoboCertFactory() {
 		// TODO(@MattWindsor91): is this the right way to do this?
-		return RoboCertFactoryImplCustom.class;
+		return RoboCertFactoryImpl.class;
 	}
 
 	/**
