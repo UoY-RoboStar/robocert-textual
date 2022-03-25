@@ -22,6 +22,7 @@ import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
 import circus.robocalc.robochart.RoboticPlatform;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
+import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
  * Adds derived operation definitions to {@link InModuleTargetImpl}.
@@ -36,18 +37,13 @@ class InModuleTargetImplCustom extends InModuleTargetImpl {
 
 	@Override
 	public EList<ConnectionNode> getComponents() {
-		return nodes().filter(x -> !(x instanceof RoboticPlatform)).collect(Collectors.toCollection(BasicEList::new));
+		return StreamHelpers.toEList(nodes().filter(x -> !(x instanceof RoboticPlatform)));
 	}
 
 	private Stream<ConnectionNode> nodes() {
 		return getModule().getNodes().stream();
 	}
-	
-	@Override
-	public EList<NamedElement> getContextElements() {
-		return new DefinitionResolver().platform(getModule()).stream().collect(Collectors.toCollection(BasicEList::new));
-	}
-	
+
 	/**
 	 * @return a human-readable summary of this module.
 	 */

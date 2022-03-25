@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 University of York and others
+ * Copyright (c) 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,20 +13,24 @@
 
 package robocalc.robocert.model.robocert.impl;
 
-import circus.robocalc.robochart.Parameter;
-import circus.robocalc.robochart.Type;
-import org.eclipse.emf.common.util.EList;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import circus.robocalc.robochart.NamedElement;
 
 /**
- * Inserts derived functionality into {@link OperationTopicImpl}.
+ * Adds derived operation definitions to {@link ControllerTargetImpl}.
  *
  * @author Matt Windsor
  */
-public class OperationTopicImplCustom extends OperationTopicImpl {
-
+public class ControllerTargetImplCustom extends ControllerTargetImpl {
   @Override
-  public EList<Type> getParamTypes() {
-    return StreamHelpers.toEList(getOperation().getParameters().stream().map(Parameter::getType));
+  public NamedElement basicGetElement() {
+    return getController();
+  }
+
+  /**
+   * @return a human-readable summary of this controller.
+   */
+  @Override
+  public String toString() {
+    return "controller " + getController().getName();
   }
 }

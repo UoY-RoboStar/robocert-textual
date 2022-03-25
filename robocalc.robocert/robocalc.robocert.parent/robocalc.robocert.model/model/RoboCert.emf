@@ -101,11 +101,6 @@ abstract class Target {
 	// Derived properties
 	//
 
-	// TODO(@MattWindsor91): move parameterisation here?
-
-	@genmodel(documentation="Any elements inside the context of this target.")
-	derived volatile transient readonly ref robochart.NamedElement[*] contextElements;
-
 	@genmodel(documentation="Lowest common denominator for the targeted element.")
 	derived volatile transient readonly ref robochart.NamedElement[1] element;	
 }

@@ -43,15 +43,6 @@ public abstract class TargetImplCustomTest<T extends Target> {
 			testListsEquivalent(expectedComponents(), t.getComponents());
 		}
 	}	
-	
-	/**
-	 * Tests that the context elements collection is what we expect it to
-	 * be.
-	 */
-	@Test
-	void testContextElements() {
-		testListsEquivalent(expectedContextElements(), example.getContextElements());
-	}
 
 	@Test
 	void testElement() {
@@ -72,12 +63,6 @@ public abstract class TargetImplCustomTest<T extends Target> {
 	 */
 	protected abstract ConnectionNode[] expectedComponents();
 
-	
-	/**
-	 * @return the expected context from the example.
-	 */
-	protected abstract NamedElement[] expectedContextElements();
-	
 	/**
 	 * @return the expected element of the example.
 	 */

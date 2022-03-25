@@ -75,11 +75,6 @@ public class ModuleTargetImplCustomTest extends TargetImplCustomTest<ModuleTarge
 	}
 
 	@Override
-	protected NamedElement[] expectedContextElements() {
-		return new NamedElement[] {rp};
-	}
-
-	@Override
 	protected NamedElement expectedElement() {
 		return module;
 	}

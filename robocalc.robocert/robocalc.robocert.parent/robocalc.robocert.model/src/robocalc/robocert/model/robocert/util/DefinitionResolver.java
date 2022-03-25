@@ -29,6 +29,7 @@ import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.RoboticPlatformRef;
+import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * Helper class for finding definitions of various RoboChart components.
@@ -36,6 +37,10 @@ import circus.robocalc.robochart.RoboticPlatformRef;
  * @author Matt Windsor
  */
 public class DefinitionResolver {
+	//
+	// RCModule
+	//
+
 	/**
 	 * Gets the robotic platform definition for a RoboChart module.
 	 *
@@ -61,6 +66,26 @@ public class DefinitionResolver {
 			return Stream.empty();
 		return StreamHelpers.filter(m.getNodes().parallelStream(), clazz);
 	}
+
+	//
+	// Controllers
+	//
+
+	/**
+	 * Gets the enclosing module for a RoboChart controller.
+	 *
+	 * This assumes that the controller is inside a module.
+	 *
+	 * @param c the RoboChart controller.
+	 * @return the controller's module, if it has one.
+	 */
+	public Optional<RCModule> module(ControllerDef c) {
+		return Optional.ofNullable(EcoreUtil2.getContainerOfType(c, RCModule.class));
+	}
+
+	//
+	// Resolving
+	//
 
 	/**
 	 * Resolves a {@link RoboticPlatform} into a {@link RoboticPlatformDef}.

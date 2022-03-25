@@ -13,7 +13,10 @@
 package robocalc.robocert.model.robocert.util;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 
 /**
  * Miscellaneous stream helpers.
@@ -43,5 +46,16 @@ public class StreamHelpers {
 	 */
 	public static <T, U extends T> Optional<U> firstOfClass(Stream<T> in, Class<U> clazz) {
 		return filter(in, clazz).findFirst();
+	}
+
+	/**
+	 * Collects a stream to an EList, potentially downcasting.
+	 * @param in the stream to collect.
+	 * @param <T> the output type.
+	 * @param <U> the input type.
+	 * @return the EList containing the contents of in.
+	 */
+	public static <T, U extends T> EList<T> toEList(Stream<U> in) {
+		return in.collect(Collectors.toCollection(BasicEList::new));
 	}
 }
