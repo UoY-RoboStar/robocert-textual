@@ -12,31 +12,24 @@
  ********************************************************************************/
 package robocalc.robocert.model.robocert.impl;
 
-import java.util.stream.Collectors;
-
-import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.EList;
-
 import circus.robocalc.robochart.NamedElement;
-import robocalc.robocert.model.robocert.util.DefinitionResolver;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
  * Adds derived operation definitions to {@link ModuleTargetImpl}.
  *
  * @author Matt Windsor
  */
-class ModuleTargetImplCustom extends ModuleTargetImpl {
-	@Override
-	public NamedElement basicGetElement() {
-		return getModule();
-	}
+public class ModuleTargetImplCustom extends ModuleTargetImpl {
+  @Override
+  public NamedElement basicGetElement() {
+    return getModule();
+  }
 
-	/**
-	 * @return a human-readable summary of this module.
-	 */
-	@Override
-	public String toString() {
-		return "module " + getModule().getName();
-	}
+  /**
+   * @return a human-readable summary of this module.
+   */
+  @Override
+  public String toString() {
+    return "module " + getModule().getName();
+  }
 }

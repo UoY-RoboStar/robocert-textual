@@ -33,16 +33,19 @@ public abstract class TargetImplCustomTest<T extends Target> {
 	}
 
 	/**
-	 * Tests that the components collection is what we expect it to
-	 * be.
+	 * Tests that the components collection is what we expect it to be.
 	 */
 	@Test
 	void testComponents() {
-		// TODO(@MattWindsor91): this wrapper is a quickfix, consider replacing.
+		testListsEquivalent(expectedComponents(), components());
+	}
+
+	private List<ConnectionNode> components() {
 		if (example instanceof CollectionTarget t) {
-			testListsEquivalent(expectedComponents(), t.getComponents());
+			return t.getComponents();
 		}
-	}	
+		return List.of();
+	}
 
 	@Test
 	void testElement() {
@@ -69,7 +72,7 @@ public abstract class TargetImplCustomTest<T extends Target> {
 	protected abstract NamedElement expectedElement();
 	
 	private <U> void testListsEquivalent(U[] expected, List<U>actual) {
-		assertThat(actual.size(), is(expected.length));
+		assertThat("lists must have same number of items", actual.size(), is(expected.length));
 		assertThat(actual, hasItems(expected));
 	}
 

@@ -17,33 +17,34 @@ import circus.robocalc.robochart.NamedElement;
 import circus.robocalc.robochart.RoboticPlatform;
 import java.util.stream.Stream;
 import org.eclipse.emf.common.util.EList;
+import robocalc.robocert.model.robocert.util.DefinitionResolver;
 import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
- * Adds derived operation definitions to {@link InModuleTargetImpl}.
+ * Adds derived operation definitions to {@link InControllerTargetImpl}.
  *
  * @author Matt Windsor
  */
-public class InModuleTargetImplCustom extends InModuleTargetImpl {
-  @Override
-  public NamedElement basicGetElement() {
-    return getModule();
-  }
+public class InControllerTargetImplCustom extends InControllerTargetImpl {
+	@Override
+	public NamedElement basicGetElement() {
+		return getController();
+	}
 
-  @Override
-  public EList<ConnectionNode> getComponents() {
-    return StreamHelpers.toEList(nodes().filter(x -> !(x instanceof RoboticPlatform)));
-  }
+	@Override
+	public EList<ConnectionNode> getComponents() {
+		final var dr = new DefinitionResolver();
+		return StreamHelpers.toEList(Stream.concat(
+				getController().getLOperations().stream().map(dr::resolve),
+				getController().getMachines().stream().map(dr::resolve)
+		));
+	}
 
-  private Stream<ConnectionNode> nodes() {
-    return getModule().getNodes().stream();
-  }
-
-  /**
-   * @return a human-readable summary of this module.
-   */
-  @Override
-  public String toString() {
-    return "components of module " + getModule().getName();
-  }
+	/**
+	 * @return a human-readable summary of this module.
+	 */
+	@Override
+	public String toString() {
+		return "components of controller " + getController().getName();
+	}
 }

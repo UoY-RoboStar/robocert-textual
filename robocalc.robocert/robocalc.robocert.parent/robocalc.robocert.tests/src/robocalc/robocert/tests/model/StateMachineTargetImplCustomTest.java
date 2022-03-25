@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021, 2022 University of York and others
+ * Copyright (c) 2021 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,38 +14,38 @@ package robocalc.robocert.tests.model;
 
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
-import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
+import circus.robocalc.robochart.StateMachineDef;
 import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.StateMachineTarget;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link ModuleTarget}s, and also tests that the factory resolves
- * them correctly.
+ * Tests any custom functionality on {@link StateMachineTarget}s, and also tests that the factory
+ * resolves them correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class ModuleTargetImplCustomTest extends TargetImplCustomTest<ModuleTarget> {
+public class StateMachineTargetImplCustomTest extends TargetImplCustomTest<StateMachineTarget> {
   @Inject private RoboCertFactory rf;
   @Inject private RoboChartFactory cf;
 
-  private RCModule module;
+  private StateMachineDef def;
 
   @BeforeEach
   void setUp() {
-    module = cf.createRCModule();
-    module.setName("foo");
+    example = rf.createStateMachineTarget();
 
-    example = rf.createModuleTarget();
-    example.setModule(module);
+    def = cf.createStateMachineDef();
+    def.setName("foo");
+    example.setStateMachine(def);
   }
 
   @Override
@@ -55,11 +55,11 @@ public class ModuleTargetImplCustomTest extends TargetImplCustomTest<ModuleTarge
 
   @Override
   protected NamedElement expectedElement() {
-    return module;
+    return def;
   }
 
   @Override
   protected String expectedString() {
-    return "module foo";
+    return "state machine foo";
   }
 }
