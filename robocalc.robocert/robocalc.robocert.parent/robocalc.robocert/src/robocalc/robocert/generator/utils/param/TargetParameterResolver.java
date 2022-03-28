@@ -48,9 +48,12 @@ public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartPar
 	}
 
 	/**
-	 * Gets the parameterisation for a target.
+	 * Gets the full parameterisation for a target.
 	 *
-	 * @param t the target for which we are trying to get all constants.
+	 * <p>This contains every constant and (for operation targets) formal parameter that is visible
+	 * on the surface of the target.
+	 *
+	 * @param t the target for which we are trying to get the parameterisation.
 	 *
 	 * @return a stream of all parameters defined on this target's module.
 	 */
@@ -93,6 +96,16 @@ public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartPar
 		// We rely on constantId being a String here;
 		// other CharSequences might not have proper equality.
 		return s.filter(x -> !keys.contains(x.cspId(gu)));
+	}
+
+	/**
+	 * Filters from the stream any parameters with existing values at the RoboChart level.
+	 *
+	 * @param s the parameter stream to filter.
+	 * @return the filtered stream.
+	 */
+	public Stream<Parameter> excludeWithValue(Stream<Parameter> s) {
+		return s.filter(x -> x.tryGetConstant().map(k -> k.getInitial() == null).orElse(true));
 	}
 
 	private Set<String> instantiatedKeys(List<ConstAssignment> inst) {

@@ -13,7 +13,6 @@
 package robocalc.robocert.generator.tockcsp.core;
 
 import com.google.inject.Inject;
-
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -39,7 +38,7 @@ import robocalc.robocert.model.robocert.SpecificationGroup;
  */
 public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGroup> {
   @Inject private CSPStructureGenerator csp;
-  @Inject private TargetBodyGenerator tg;
+  @Inject private TargetGenerator tg;
   @Inject private InteractionGenerator sg;
   @Inject private MessageSetGenerator msg;
   @Inject private ModuleGenerator mg;
@@ -80,8 +79,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
    * @param inst the instantiation for this 'open' form.
    * @return generated CSP for referring to the 'open' form of this group.
    */
-  public CharSequence generateOpenRef(SpecificationGroup it, List<ConstAssignment> instantiation) {
-    return csp.function(openRefName(it), openSigParams(it, instantiation));
+  public CharSequence generateOpenRef(SpecificationGroup it, List<ConstAssignment> inst) {
+    return csp.function(openRefName(it), openSigParams(it, inst));
   }
 
   private CharSequence openRefName(SpecificationGroup it) {
@@ -89,7 +88,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   }
 
   /**
-   * Generates a process definition for the 'open' form of this target.
+   * Generates a process definition for the 'open' form of this specification.
    *
    * @param it the group for which we are generating an open form.
    * @return generated CSP for the 'open' form of a spec group.
@@ -122,14 +121,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   }
 
   private CharSequence targetDef(SpecificationGroup it) {
-    // NOTE(@MattWindsor91): as far as I know, this needn't be timed
-    return csp.definition(SpecGroupParametricField.TARGET.toString(), targetDefBody(it));
-  }
-
-  private CharSequence targetDefBody(SpecificationGroup it) {
-    return csp.function(
-        tg.generateDef(it.getTarget()),
-        tg.generateRefParams(it.getTarget(), null, it.getAssignments(), true));
+    // NOTE(@MattWindsor91): as far as I know, this doesn't need to be timed
+    return csp.definition(SpecGroupParametricField.TARGET.toString(), tg.openDef(it.getTarget(), it.getAssignments()));
   }
 
   private CharSequence tickTockContext() {
@@ -151,7 +144,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
    * can have the same signature generator.
    *
    * @param group the group for which we are generating an open form.
-   * @param outerInst any instantiation being applied at the outer level (may be null).
+   * @param outerInst any instantiation being applied at the outer level (can be null).
    * @return CSP referring to, or giving the signature of, the 'open' form of this group.
    */
   private CharSequence openSig(SpecificationGroup group, List<ConstAssignment> outerInst) {
@@ -159,7 +152,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   }
 
   private CharSequence[] openSigParams(SpecificationGroup group, List<ConstAssignment> outerInst) {
-    return tg.generateRefParams(group.getTarget(), group.getAssignments(), outerInst, false);
+    return tg.openSigParams(group.getTarget(), group.getAssignments(), outerInst);
   }
 
   @Override
