@@ -27,13 +27,19 @@ CertPackage:
  * A target of a sequence diagram.
  */
 Target:
-	ModuleTarget | ControllerTarget;
+	ComponentTarget | CollectionTarget;
 
-ModuleTarget:
-	'module' module=[RCModule|QualifiedName];
+ComponentTarget:
+	'module' {ModuleTarget} module=[RCModule|QualifiedName] |
+	'controller' {ControllerTarget} controller=[ControllerDef|QualifiedName] |
+	'state' 'machine' {StateMachineTarget} stateMachine=[StateMachineDef|QualifiedName] |
+	'operation' {OperationTarget} operation=[OperationDef|QualifiedName];
 
-ControllerTarget:
-	'controller' controller=[ControllerDef|QualifiedName];
+CollectionTarget:
+	'components' 'of' (
+		'module' {InModuleTarget} module=[RCModule|QualifiedName] |
+		'controller' {InControllerTarget} controller=[ControllerDef|QualifiedName]
+	);
 
 // TODO(@MattWindsor91): extended targets
 
