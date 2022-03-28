@@ -23,14 +23,14 @@ import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.generator.utils.param.Parameter;
+import robocalc.robocert.generator.utils.param.ConstantParameter;
 import robocalc.robocert.tests.util.DummyVariableFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
-/** Tests functionality of {@link Parameter}s. */
+/** Tests functionality of {@link ConstantParameter}s. */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
-class ParameterTest {
+class ConstantParameterTest {
   @Inject private CTimedGeneratorUtils gu;
   @Inject private DummyVariableFactory varFactory;
   @Inject private RoboChartFactory roboChartFactory;
@@ -50,7 +50,7 @@ class ParameterTest {
     final var ctrl = roboChartFactory.createControllerDef();
     ctrl.setName("ctrl");
     // We're not testing lookup of constants here, so we don't link the interface to ctrl.
-    final var p = new Parameter(vl.getVars().get(0), ctrl);
+    final var p = new ConstantParameter(vl.getVars().get(0), ctrl);
 
     assertThat(p.cspId(gu), is("const_ctrl_var"));
   }

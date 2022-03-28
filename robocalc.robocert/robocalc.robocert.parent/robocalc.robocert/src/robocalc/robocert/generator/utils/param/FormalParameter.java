@@ -18,21 +18,19 @@ import circus.robocalc.robochart.generator.csp.comp.untimed.CGeneratorUtils;
 import java.util.Optional;
 
 /**
- * Common denominator of functionality of things that make up a target parameterisation.
+ * Uses a formal parameter of an operation as a target parameter.
+ * @param param the parameter to wrap.
  *
  * @author Matt Windsor
  */
-public interface Parameter {
-  /**
-   * Gets the CSP-M ID of the parameter (as used in parameterisation files, etc).
-   *
-   * @param gu a RoboChart CSP-M generator utilities object.
-   * @return the snake-cased constant identifier of the parameter.
-   */
-  String cspId(CGeneratorUtils gu);
+public record FormalParameter(circus.robocalc.robochart.Parameter param) implements Parameter {
+  @Override
+  public String cspId(CGeneratorUtils gu) {
+    return gu.paramId(param);
+  }
 
-  /**
-   * @return the underlying constant of this parameter, if one exists.
-   */
-  Optional<Variable> tryGetConstant();
+  @Override
+  public Optional<Variable> tryGetConstant() {
+    return Optional.empty();
+  }
 }

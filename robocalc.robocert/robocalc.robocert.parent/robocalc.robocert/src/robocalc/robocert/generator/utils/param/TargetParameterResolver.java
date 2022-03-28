@@ -25,6 +25,8 @@ import robocalc.robocert.model.robocert.ControllerTarget;
 import robocalc.robocert.model.robocert.InControllerTarget;
 import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.ModuleTarget;
+import robocalc.robocert.model.robocert.OperationTarget;
+import robocalc.robocert.model.robocert.StateMachineTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.InstantiationHelper;
 
@@ -55,12 +57,16 @@ public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartPar
 	public Stream<Parameter> parameterisation(Target t) {
 		if (t instanceof InModuleTarget m)
 			return rcResolver.parameterisation(m.getModule());
-		if (t instanceof InControllerTarget m)
-			return rcResolver.parameterisation(m.getController());
+		if (t instanceof InControllerTarget c)
+			return rcResolver.parameterisation(c.getController());
 		if (t instanceof ModuleTarget m)
 			return rcResolver.parameterisation(m.getModule());
-		if (t instanceof ControllerTarget m)
-			return rcResolver.parameterisation(m.getController());
+		if (t instanceof ControllerTarget c)
+			return rcResolver.parameterisation(c.getController());
+		if (t instanceof StateMachineTarget s)
+			return rcResolver.parameterisation(s.getStateMachine());
+		if (t instanceof OperationTarget o)
+			return rcResolver.parameterisation(o.getOperation());
 		throw new IllegalArgumentException("don't know how to get parameterisation of %s".formatted(t));
 	}
 

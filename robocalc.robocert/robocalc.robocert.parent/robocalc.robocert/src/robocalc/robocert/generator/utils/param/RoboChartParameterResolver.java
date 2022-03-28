@@ -13,11 +13,16 @@
  ******************************************************************************/
 package robocalc.robocert.generator.utils.param;
 
+import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.ControllerDef;
+import circus.robocalc.robochart.OperationDef;
 import circus.robocalc.robochart.RCModule;
+import circus.robocalc.robochart.StateMachineBody;
+import circus.robocalc.robochart.StateMachineDef;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
@@ -54,15 +59,9 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
    * @return a stream over module parameters.
    */
   public Stream<Parameter> parameterisation(RCModule mod) {
-    return Stream.concat(platformParams(mod), controllerParams(mod));
-  }
-
-  private Stream<Parameter> platformParams(RCModule mod) {
-    return defResolver.platform(mod).stream().flatMap(this::constantsOf);
-  }
-
-  private Stream<Parameter> controllerParams(RCModule mod) {
-    return defResolver.controllers(mod).flatMap(this::moduleParameterisation);
+    final var platformParams = defResolver.platform(mod).stream().flatMap(this::localsOf);
+    final var ctrlParams = defResolver.controllers(mod).flatMap(this::moduleParameterisation);
+    return Stream.concat(platformParams, ctrlParams);
   }
 
   //
@@ -75,12 +74,10 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
    * <p>This should align with the definition in the CSP semantics.
    *
    * @param ctrl the RoboChart controller.
-   * @return a stream over module parameters.
+   * @return a stream over controller parameters.
    */
   public Stream<Parameter> parameterisation(ControllerDef ctrl) {
-    final var requiredConstants =
-        gu.requiredConstants(ctrl).stream().map(x -> new Parameter(x, ctrl));
-    return Stream.concat(requiredConstants, moduleParameterisation(ctrl));
+    return Stream.concat(requiredParams(ctrl), moduleParameterisation(ctrl));
   }
 
   /**
@@ -92,23 +89,62 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
    *         parameterisation to account for this controller.
    */
   private Stream<Parameter> moduleParameterisation(ControllerDef ctrl) {
-    final var localOperationConstants =
-        ctrl.getLOperations().stream().map(defResolver::resolve).flatMap(this::constantsOf);
-    return Stream.concat(
-        constantsOf(ctrl),
-        Stream.concat(stateMachineConstants(ctrl), localOperationConstants)
-    );
-  }
-
-  private Stream<Parameter> stateMachineConstants(ControllerDef ctrl) {
-    return ctrl.getMachines().stream().map(defResolver::resolve).flatMap(this::constantsOf);
+    final var localOpParams =
+        ctrl.getLOperations().stream().map(defResolver::resolve).flatMap(this::localsOf);
+    final var stmParams = ctrl.getMachines().stream().map(defResolver::resolve)
+        .flatMap(this::localsOf);
+    return Stream.concat(localsOf(ctrl), Stream.concat(stmParams, localOpParams));
   }
 
   //
-  // Misc
+  // State machines
   //
 
-  private Stream<Parameter> constantsOf(EObject it) {
-    return Parameter.localsOf(it, gu);
+  /**
+   * Gets this state machine's parameterisation.
+   *
+   * <p>This should align with the definition in the CSP semantics.
+   *
+   * @param stm the RoboChart state machine.
+   * @return a stream over state machine parameters.
+   */
+  public Stream<Parameter> parameterisation(StateMachineDef stm) {
+    return bodyParameterisation(stm);
+  }
+
+  //
+  // Operations
+  //
+
+  /**
+   * Gets this operation's parameterisation.
+   *
+   * <p>This should align with the definition in the CSP semantics.
+   *
+   * @param op the RoboChart operation.
+   * @return a stream over operation parameters.
+   */
+  public Stream<Parameter> parameterisation(OperationDef op) {
+    final var formalParams = op.getParameters().stream().map(FormalParameter::new);
+    return Stream.concat(formalParams, bodyParameterisation(op));
+  }
+
+  //
+  // Helpers
+  //
+
+  private Stream<Parameter> bodyParameterisation(StateMachineBody body) {
+    // TODO(@MattWindsor91): what is 'defined' here?
+    final var ops = gu.requiredOperationDefinitions(Set.of(), gu.requiredOperations(body));
+    final var opParams = ops.stream().flatMap(this::localsOf);
+    return Stream.concat(requiredParams(body), Stream.concat(localsOf(body), opParams));
+  }
+
+  private Stream<Parameter> requiredParams(Context ctx) {
+    return gu.requiredConstants(ctx).stream().map(x -> new ConstantParameter(x, ctx));
+  }
+
+  private Stream<Parameter> localsOf(EObject it) {
+    return ConstantParameter.localsOf(it, gu);
   }
 }

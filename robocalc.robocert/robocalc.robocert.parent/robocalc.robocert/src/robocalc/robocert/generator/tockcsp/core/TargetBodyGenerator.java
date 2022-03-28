@@ -17,8 +17,10 @@ import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 import robocalc.robocert.generator.utils.VariableHelper;
+import robocalc.robocert.generator.utils.param.ConstantParameter;
 import robocalc.robocert.generator.utils.param.Parameter;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ConstAssignment;
@@ -96,12 +98,12 @@ public record TargetBodyGenerator(CTimedGeneratorUtils gu, ExpressionGenerator e
    * <p>If the value is available, we emit a CSP comment giving the name, for clarity.
    *
    * @param inst the instantiation (may be null).
-   * @param k the constant whose value is requested.
+   * @param p the parameter whose value is requested.
    * @return a CSP string expanding to the value of the constant.
    */
-  private CharSequence generateParam(List<ConstAssignment> inst, Parameter k) {
-    final var id = k.cspId(gu);
-    final var expr = instHelp.getConstant(inst, k.constant());
+  private CharSequence generateParam(List<ConstAssignment> inst, Parameter p) {
+    final var id = p.cspId(gu);
+    final var expr = p.tryGetConstant().flatMap(k -> instHelp.getConstant(inst, k));
     return expr.map(i -> generateNamedExpression(i, id)).orElse(id);
   }
 
