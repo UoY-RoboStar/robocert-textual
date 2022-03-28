@@ -14,7 +14,6 @@ package robocalc.robocert.model.robocert.impl;
 
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
-import circus.robocalc.robochart.RoboticPlatform;
 import java.util.stream.Stream;
 import org.eclipse.emf.common.util.EList;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
