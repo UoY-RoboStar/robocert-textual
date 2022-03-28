@@ -42,6 +42,9 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
 
   /** Hardcoded ID (will need to be fixed if we support collections of robots). */
   private static final String ID = "{- id -} 0";
+
+  /** Eventually this should be exposed to the user. */
+  private static final boolean USE_OPTIMISED_TARGETS = true;
   
   @Inject
   public TargetGenerator {
@@ -67,12 +70,13 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
     /*
      * In email with Pedro (2021-08-04): the target of a refinement against a (simple)
      * specification should usually be unoptimised (D__); model comparisons should
-     * usually be optimised (O__).
+     * usually be optimised (O__).  However, in practice c. 2022-03-28, it seems that O__ is
+     * outperforming D__ across the board and is safe to enable.  This might change gain in future.
      *
      * TODO(@MattWindsor91): eventually, we should be able to select the
      * optimisation level.
      */
-    final var name = gu.getFullProcessName(t.getElement(), false);
+    final var name = gu.getFullProcessName(t.getElement(), false, USE_OPTIMISED_TARGETS);
     final var args = Stream.concat(Stream.of(ID),
         paramRes.parameterisation(t).map(k -> generateParam(inst, k))).toArray(CharSequence[]::new);
     return csp.function(name, args);

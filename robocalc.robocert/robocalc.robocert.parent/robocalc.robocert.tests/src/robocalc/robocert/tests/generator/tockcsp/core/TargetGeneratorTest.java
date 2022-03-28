@@ -73,7 +73,7 @@ class TargetGeneratorTest {
         target,
         generatesOpenDef(
             null,
-            "mod::D__({- id -} 0, {- const_mod_rp_foo -} 42, const_mod_rp_bar, const_mod_rp_baz)"));
+            "mod::O__({- id -} 0, {- const_mod_rp_foo -} 42, const_mod_rp_bar, const_mod_rp_baz)"));
 
     // Instantiate "baz" at the RoboCert level:
     final var cinst = certFactory.createConstAssignment();
@@ -83,7 +83,7 @@ class TargetGeneratorTest {
         target,
         generatesOpenDef(
             List.of(cinst),
-            "mod::D__({- id -} 0, {- const_mod_rp_foo -} 42, const_mod_rp_bar, {- const_mod_rp_baz -} 64)"));
+            "mod::O__({- id -} 0, {- const_mod_rp_foo -} 42, const_mod_rp_bar, {- const_mod_rp_baz -} 64)"));
   }
 
   /**
