@@ -35,7 +35,6 @@ import robocalc.robocert.model.robocert.UniverseMessageSet;
  * @author Matt Windsor
  */
 public record MessageSetGenerator(CSPStructureGenerator csp,
-																	SpecificationGroupElementFinder elementFinder,
 																	MessageSetOptimiser mso,
 																	MessageGenerator msg) {
 	// TODO(@MattWindsor91): split named set functionality out of this.
@@ -53,14 +52,12 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 	 * Constructs a message set generator.
 	 *
 	 * @param csp generator for low-level CSP-M structure.
-	 * @param elementFinder generator for references to specification group elements.
 	 * @param mso optimiser for message sets, used for named message set generation.
 	 * @param msg generator for message specs.
 	 */
 	@Inject
 	public MessageSetGenerator {
 		Objects.requireNonNull(csp);
-		Objects.requireNonNull(elementFinder);
 		Objects.requireNonNull(mso);
 		Objects.requireNonNull(msg);
 	}
@@ -90,7 +87,7 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 	 */
 	public CharSequence generate(MessageSet m) {
 		if (m instanceof UniverseMessageSet) {
-			return csp.namespaced(MODULE_NAME, UNIVERSE_NAME);
+			return qualifiedUniverseName();
 		}
 		if (m instanceof ExtensionalMessageSet e) {
 			return msg.generateBulkCSPEventSet(e.getMessages());
@@ -110,35 +107,6 @@ public record MessageSetGenerator(CSPStructureGenerator csp,
 			case INTERSECTION -> "inter";
 			case DIFFERENCE -> "diff";
 		};
-	}
-
-	/**
-	 * Generates the named set module for a sequence group.
-	 *
-	 * @param group the group containing the sets.
-	 * @return generated CSP for the named message set group.
-	 */
-	public CharSequence generateNamedSets(SpecificationGroup group) {
-		final var sets = group.getMessageSets();
-		final var stdSets = Stream.of(universeDef(group));
-		final var userSets = sets.stream().filter(Objects::nonNull)
-				.map(x -> csp.definition(x.getName(), generateNamedSet(x)));
-		final var allSets = Stream.concat(stdSets, userSets);
-
-		return csp.module(MODULE_NAME, allSets.collect(Collectors.joining("\n")));
-	}
-
-	private CharSequence universeDef(SpecificationGroup group) {
-		// TODO(@MattWindsor91): this seems overly broad.
-		return csp.definition(UNIVERSE_NAME, semEvents(group));
-	}
-
-	private CharSequence semEvents(SpecificationGroup group) {
-		return csp.namespaced(group.getTarget().getElement().getName(), "sem__events");
-	}
-
-	private CharSequence generateNamedSet(NamedMessageSet it) {
-		return optimiseAndGenerate(it.getSet(), it::setSet);
 	}
 
 	public CharSequence qualifiedUniverseName() {

@@ -24,6 +24,7 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.NamedSetModuleGenerator;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SpecificationGroup;
@@ -40,7 +41,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   @Inject private CSPStructureGenerator csp;
   @Inject private TargetGenerator tg;
   @Inject private InteractionGenerator sg;
-  @Inject private MessageSetGenerator msg;
+  @Inject private NamedSetModuleGenerator msg;
   @Inject private ModuleGenerator mg;
 
   @Override
@@ -162,7 +163,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
   @Override
   protected Stream<CharSequence> generatePrivateElements(SpecificationGroup group) {
-    return Stream.of(msg.generateNamedSets(group));
+    return Stream.of(msg.generate(group));
   }
 
   protected Stream<CharSequence> specificationElements(SpecificationGroup group) {
