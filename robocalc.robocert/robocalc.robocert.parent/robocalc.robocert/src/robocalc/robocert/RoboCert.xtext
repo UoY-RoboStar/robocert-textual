@@ -413,7 +413,7 @@ Message:
  * A message topic.
  */
 MessageTopic:
-	'event' {EventTopic} efrom=[Event|QualifiedName] ('/' eto=[Event|QualifiedName]) |
+	'event' {EventTopic} efrom=[Event|QualifiedName] ('/' eto=[Event|QualifiedName])? |
 	('op' | 'operation') {OperationTopic} operation=[OperationSig|QualifiedName];
 
 //

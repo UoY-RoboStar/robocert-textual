@@ -12,22 +12,21 @@
  ********************************************************************************/
 package robocalc.robocert.scoping;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import com.google.inject.Inject;
-
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.ControllerRef;
-import circus.robocalc.robochart.RCModule;
+import circus.robocalc.robochart.OperationRef;
 import circus.robocalc.robochart.StateMachineRef;
+import com.google.inject.Inject;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
-import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.Target;
+import robocalc.robocert.model.robocert.TargetActor;
+import robocalc.robocert.model.robocert.World;
+import robocalc.robocert.model.robocert.util.ActorNodeResolver;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
@@ -35,15 +34,17 @@ import robocalc.robocert.model.robocert.util.DefinitionResolver;
  *
  * @author Matt Windsor
  */
-public record ActorContextFinder(DefinitionResolver dh) {
+public record ActorContextFinder(DefinitionResolver defResolver, ActorNodeResolver nodeResolver) {
 
 	/**
 	 * Constructs an actor context finder.
 	 *
-	 * @param dh a definition helper used to find robotic platforms in modules.
+	 * @param defResolver a definition helper used to find robotic platforms in modules.
+	 * @param nodeResolver used to find the sets of world connection nodes.
 	 */
 	@Inject
 	public ActorContextFinder {
+		Objects.requireNonNull(defResolver);
 	}
 
 	/**
@@ -58,19 +59,7 @@ public record ActorContextFinder(DefinitionResolver dh) {
 	 * unambiguously from just the latter.
 	 */
 	public Optional<Stream<Context>> contexts(Actor a) {
-		if (a instanceof ComponentActor c) {
-			return Optional.of(contextsOfNode(c.getNode()));
-		}
-		if (a instanceof World x) {
-			return Optional.of(contextsOfTargetWorld(x.getGroup().getTarget()));
-		}
-
-		// See API note above.
-		if (a instanceof TargetActor) {
-			return Optional.empty();
-		}
-
-		throw new IllegalArgumentException("Actor not supported for context finding: %s".formatted(a));
+		return Optional.of(nodeResolver.resolve(a).flatMap(this::contextsOfNode));
 	}
 
 	/**
@@ -82,41 +71,18 @@ public record ActorContextFinder(DefinitionResolver dh) {
 	 */
 	private Stream<Context> contextsOfNode(ConnectionNode n) {
 		// Maybe the node is directly a context?
-		if (n instanceof Context x) {
+		if (n instanceof Context x)
 			return Stream.of(x);
-		}
 
 		// Resolve references to their definitions, which are contexts.
-		if (n instanceof ControllerRef c) {
+		if (n instanceof ControllerRef c)
 			return Stream.of(c.getRef());
-		}
-		if (n instanceof StateMachineRef s) {
+		if (n instanceof StateMachineRef s)
 			return Stream.of(s.getRef());
-		}
+		if (n instanceof OperationRef r)
+			return Stream.of(r.getRef());
 
 		throw new IllegalArgumentException("Node not supported for context finding: %s".formatted(n));
 	}
 
-	/**
-	 * Retrieves RoboChart contexts deriving from a {@link World} attached to the given target.
-	 *
-	 * @param t the target for which we are getting contexts.
-	 * @return the stream of contexts in scope of the actor.
-	 */
-	private Stream<Context> contextsOfTargetWorld(Target t) {
-		// Module target contexts come from the robotic platform directly.
-		if (t instanceof ModuleTarget m) {
-			return contextsOfModuleContext(m.getModule());
-		}
-
-		// TODO(@MattWindsor91): controller target contexts should other controllers as
-		// well as the module.
-
-		// Not yet supported.
-		throw new IllegalArgumentException("Target not supported for context finding: %s".formatted(t));
-	}
-
-	private Stream<Context> contextsOfModuleContext(RCModule m) {
-		return dh.platform(m).map((Context c) -> c).stream();
-	}
 }

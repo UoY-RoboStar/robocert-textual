@@ -30,6 +30,8 @@ import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.OperationTopic;
+import robocalc.robocert.model.robocert.util.ActorNodeResolver;
+import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
  * Scoping logic for message topics.
