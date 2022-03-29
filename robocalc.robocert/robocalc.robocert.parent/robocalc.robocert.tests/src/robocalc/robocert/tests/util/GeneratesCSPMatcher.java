@@ -77,8 +77,17 @@ public class GeneratesCSPMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
     if (result.equals(expected)) return true;
 
     final var prefix = Strings.commonPrefix(result, expected);
-    final var suffix = Strings.commonSuffix(result, expected);
-    final var different = result.substring(prefix.length(), result.length() - suffix.length());
+    var suffix = Strings.commonSuffix(result, expected);
+    final var lpoint = prefix.length();
+    var rpoint = result.length() - suffix.length();
+    // It might be that the difference is that something got inserted in 'expected' that is absent
+    // in 'result', and the removal causes the common prefix and suffix to overlap.  Here, we
+    // resolve the overlap by trimming the suffix.
+    if (rpoint <= lpoint) {
+      suffix = suffix.substring(lpoint - rpoint);
+      rpoint = lpoint;
+    }
+    final var different = result.substring(lpoint, rpoint);
 
     mismatchDescription.appendText("got CSP-M ([[ ]] = difference): ");
     mismatchDescription.appendText(prefix);

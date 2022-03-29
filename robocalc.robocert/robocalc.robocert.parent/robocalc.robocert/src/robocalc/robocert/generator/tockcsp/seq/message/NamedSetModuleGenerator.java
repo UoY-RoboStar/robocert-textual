@@ -13,6 +13,7 @@
 
 package robocalc.robocert.generator.tockcsp.seq.message;
 
+import circus.robocalc.robochart.generator.csp.comp.untimed.CGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,18 +25,20 @@ import robocalc.robocert.model.robocert.SpecificationGroup;
 /**
  * Generates the named sets module for a specification group.
  *
- * <p>This module enumerates all of the named message sets defined by the user on the group, as well
+ * <p>This module enumerates all the named message sets defined by the user on the group, as well
  * as auto-generated sets such as the target's universe.
  */
-public record NamedSetModuleGenerator(CSPStructureGenerator csp, MessageSetGenerator setGenerator) {
+public record NamedSetModuleGenerator(CGeneratorUtils gu, CSPStructureGenerator csp, MessageSetGenerator setGenerator) {
   /**
    * Constructs a named set module generator.
    *
+   * @param gu RoboChart generator utilities.
    * @param csp generator for CSP structures.
    * @param setGenerator generator for message sets.
    */
   @Inject
   public NamedSetModuleGenerator {
+    Objects.requireNonNull(gu);
     Objects.requireNonNull(csp);
     Objects.requireNonNull(setGenerator);
   }
@@ -62,7 +65,7 @@ public record NamedSetModuleGenerator(CSPStructureGenerator csp, MessageSetGener
   }
 
   private CharSequence semEvents(SpecificationGroup group) {
-    return csp.namespaced(group.getTarget().getElement().getName(), "sem__events");
+    return csp.namespaced(gu.processId(group.getTarget().getElement()), "sem__events");
   }
 
   private CharSequence generateNamedSet(NamedMessageSet it) {
