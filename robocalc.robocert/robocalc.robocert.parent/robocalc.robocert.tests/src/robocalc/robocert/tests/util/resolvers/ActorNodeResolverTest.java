@@ -13,21 +13,15 @@
 
 package robocalc.robocert.tests.util.resolvers;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import circus.robocalc.robochart.ConnectionNode;
-import circus.robocalc.robochart.ControllerDef;
-import circus.robocalc.robochart.Event;
-import circus.robocalc.robochart.RCModule;
-import circus.robocalc.robochart.RoboChartFactory;
-import circus.robocalc.robochart.StateMachineDef;
 import com.google.inject.Inject;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.model.robocert.Actor;
@@ -40,61 +34,35 @@ import robocalc.robocert.model.robocert.util.TargetFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests that the {@link ActorNodeResolver} seems to be resolving things correctly.
+ * Tests that the {@link ActorNodeResolver} seems to be resolving things correctly on
+ * {@link ForagingExample}.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
 class ActorNodeResolverTest {
-  // The model used here is a cut down version of the Buchanan et al. foraging robot.
-
   @Inject
   private ActorNodeResolver resolver;
   @Inject
-  private RoboChartFactory chartFactory;
+  private ForagingExample example;
   @Inject
   private RoboCertFactory certFactory;
   @Inject
   private TargetFactory targetFactory;
 
-  private Event obstacleAvoidanceObstacle;
-  private Event avoidObstacle;
-
-  private ControllerDef obstacleAvoidance;
-  private StateMachineDef avoid;
-
-  @BeforeEach
-  void setUp() {
-    avoidObstacle = chartFactory.createEvent();
-    avoidObstacle.setName("obstacle");
-
-    avoid = chartFactory.createStateMachineDef();
-    avoid.setName("Avoid");
-    avoid.getEvents().add(avoidObstacle);
-
-    obstacleAvoidanceObstacle = chartFactory.createEvent();
-    obstacleAvoidanceObstacle.setName("obstacle");
-
-    obstacleAvoidance = chartFactory.createControllerDef();
-    obstacleAvoidance.setName("ObstacleAvoidance");
-    obstacleAvoidance.getEvents().add(obstacleAvoidanceObstacle);
-    obstacleAvoidance.getMachines().add(avoid);
-
-    RCModule foraging = chartFactory.createRCModule();
-    foraging.setName("Foraging");
-    foraging.getNodes().add(obstacleAvoidance);
-  }
-
+  /**
+   * Tests resolving connection nodes on a state machine in the example.
+   */
   @Test
   void testResolve_stateMachine() {
-    final var stm = targetFactory.stateMachine(avoid);
+    final var stm = targetFactory.stateMachine(example.avoid);
 
     final var world = resolve(world(stm));
-    assertThat(world, hasItems(obstacleAvoidance));
+    assertThat(world, hasItems(example.platform, example.obstacleAvoidance));
 
     final var target = resolve(target(stm));
-    assertThat(target, hasItems(avoid));
+    assertThat(target, hasItems(example.avoid));
   }
 
   private Set<ConnectionNode> resolve(Actor a) {
@@ -103,6 +71,7 @@ class ActorNodeResolverTest {
 
   /**
    * Creates a dummy world actor for the given target.
+   *
    * @param t the target to wrap into an actor.
    * @return the wrapped actor.
    */
@@ -114,6 +83,7 @@ class ActorNodeResolverTest {
 
   /**
    * Creates a dummy target actor for the given target.
+   *
    * @param t the target to wrap into an actor.
    * @return the wrapped actor.
    */

@@ -59,7 +59,7 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	 */
 	private IScope tryGetScope(EObject context, EReference reference) {
 		if (context instanceof EventTopic e && isEventReference(reference))
-			return tx.getEventScope(e);
+			return tx.getEventScope(e, reference == EVENT_TOPIC__EFROM);
 		if (context instanceof OperationTopic o && reference == OPERATION_TOPIC__OPERATION)
 			return tx.getOperationScope(o);
 		if (context instanceof ConstAssignment k && reference == CONST_ASSIGNMENT__CONSTANTS)
