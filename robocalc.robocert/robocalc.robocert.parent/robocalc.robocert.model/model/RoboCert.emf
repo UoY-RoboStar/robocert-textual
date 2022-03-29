@@ -515,13 +515,17 @@ For event topics, there is at most one pseudo-parameter: the type of the event."
 
 @genmodel(documentation="An event message topic.")
 class EventTopic extends MessageTopic {
-	@genmodel(documentation="The name of the event.")
-	ref robochart.Event[1] event;
+	@genmodel(documentation="The from-event specification.")
+	ref robochart.Event[1] efrom;
+	@genmodel(documentation="The to-event specification.
+
+If missing, we locate the to-event by searching for the opposite of the from-event.  It must have the same name and type.")
+	ref robochart.Event[?] eto;
 }
 
 @genmodel(documentation="An operation message topic.")
 class OperationTopic extends MessageTopic {
-	@genmodel(documentation="The name of the operation.")
+	@genmodel(documentation="The operation signature.")
 	ref robochart.OperationSig[1] operation;
 }
 

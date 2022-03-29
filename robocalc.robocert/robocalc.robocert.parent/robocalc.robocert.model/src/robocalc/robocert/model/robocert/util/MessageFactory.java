@@ -19,8 +19,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.MessageTopic;
+import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.ValueSpecification;
 
@@ -65,14 +67,28 @@ public class MessageFactory {
   }
 
   /**
-   * Constructs an event topic with the given event.
+   * Constructs an event topic with the given from-event.
    *
    * @param e the event to use.
    * @return the event topic.
    */
-  public MessageTopic eventTopic(Event e) {
+  public EventTopic eventTopic(Event e) {
     final var it = rc.createEventTopic();
-    it.setEvent(e);
+    it.setEfrom(e);
+    return it;
+  }
+
+  /**
+   * Constructs an event topic with the given from-event and to-event.
+   *
+   * @param efrom the from-event to use.
+   * @param eto the to-event to use.
+   * @return the event topic.
+   */
+  public EventTopic eventTopic(Event efrom, Event eto) {
+    final var it = rc.createEventTopic();
+    it.setEfrom(efrom);
+    it.setEto(eto);
     return it;
   }
 
@@ -82,23 +98,29 @@ public class MessageFactory {
    * @param o the signature of the operation to use.
    * @return the event topic.
    */
-  public MessageTopic opTopic(OperationSig o) {
+  public OperationTopic opTopic(OperationSig o) {
     final var it = rc.createOperationTopic();
     it.setOperation(o);
     return it;
   }
 
-  /** @return a target actor. */
+  /**
+   * @return a target actor.
+   */
   public Actor targetActor() {
     return rc.createTargetActor();
   }
 
-  /** @return a world. */
+  /**
+   * @return a world.
+   */
   public Actor world() {
     return rc.createWorld();
   }
 
-  /** @return a list containing all actors defined on a module target. */
+  /**
+   * @return a list containing all actors defined on a module target.
+   */
   public List<Actor> systemActors() {
     return List.of(targetActor(), world());
   }

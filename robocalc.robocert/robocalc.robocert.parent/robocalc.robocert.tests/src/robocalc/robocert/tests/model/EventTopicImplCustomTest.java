@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.model.robocert.util.TypeFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
@@ -45,6 +46,8 @@ class EventTopicImplCustomTest {
   private RoboChartFactory chartFactory;
   @Inject
   private TypeFactory typeFactory;
+  @Inject
+  private MessageFactory messageFactory;
 
   private Event event;
   private EventTopic topic;
@@ -54,8 +57,7 @@ class EventTopicImplCustomTest {
     event = chartFactory.createEvent();
     event.setName("foo");
 
-    topic = certFactory.createEventTopic();
-    topic.setEvent(event);
+    topic = messageFactory.eventTopic(event);
   }
 
 

@@ -14,7 +14,8 @@
 package robocalc.robocert.scoping;
 
 import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.CONST_ASSIGNMENT__CONSTANTS;
-import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.EVENT_TOPIC__EVENT;
+import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.EVENT_TOPIC__EFROM;
+import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.EVENT_TOPIC__ETO;
 import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.OPERATION_TOPIC__OPERATION;
 
 import circus.robocalc.robochart.RoboChartPackage.Literals;
@@ -57,7 +58,7 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	 *         parent scoping rules).
 	 */
 	private IScope tryGetScope(EObject context, EReference reference) {
-		if (context instanceof EventTopic e && reference == EVENT_TOPIC__EVENT)
+		if (context instanceof EventTopic e && isEventReference(reference))
 			return tx.getEventScope(e);
 		if (context instanceof OperationTopic o && reference == OPERATION_TOPIC__OPERATION)
 			return tx.getOperationScope(o);
@@ -74,4 +75,7 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 		return null;
 	}
 
+	private boolean isEventReference(EReference reference) {
+		return reference == EVENT_TOPIC__EFROM || reference == EVENT_TOPIC__ETO;
+	}
 }

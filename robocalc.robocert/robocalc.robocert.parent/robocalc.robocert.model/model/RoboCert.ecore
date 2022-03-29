@@ -612,9 +612,14 @@
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
       <details key="documentation" value="An event message topic."/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="event" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="efrom" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The name of the event."/>
+        <details key="documentation" value="The from-event specification."/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eto" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Event">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value="The to-event specification.&#xD;&#xA;&#xD;&#xA;If missing, we locate the to-event by searching for the opposite of the from-event.  It must have the same name and type."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -625,7 +630,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="operation" lowerBound="1"
         eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//OperationSig">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The name of the operation."/>
+        <details key="documentation" value="The operation signature."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>

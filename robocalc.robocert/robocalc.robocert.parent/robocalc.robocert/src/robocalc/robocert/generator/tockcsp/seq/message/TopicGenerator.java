@@ -13,7 +13,6 @@
 
 package robocalc.robocert.generator.tockcsp.seq.message;
 
-import circus.robocalc.robochart.Type;
 import circus.robocalc.robochart.generator.csp.untimed.TypeGenerator;
 import com.google.inject.Inject;
 import java.util.stream.Collectors;
@@ -41,7 +40,7 @@ public record TopicGenerator(TemporaryVariableGenerator bg,
 		// This should reflect the convention for naming event and operation channels in RoboChart.
 		// TODO(@MattWindsor91): perhaps there is a GeneratorUtils thing we can call here?
 		if (t instanceof EventTopic e) {
-			return e.getEvent().getName();
+			return e.getEfrom().getName();
 		}
 		if (t instanceof OperationTopic o) {
 			return o.getOperation().getName() + "Call";
@@ -75,21 +74,7 @@ public record TopicGenerator(TemporaryVariableGenerator bg,
 
 	private CharSequence generateRange(MessageTopic t, WildcardValueSpecification arg, long index) {
 		final var name = bg.generateArgumentName(arg.getDestination(), index);
-		final var ty = tg.compileType(paramTypeAt(t, index));
+		final var ty = tg.compileType(t.getParamTypes().get((int) index));
 		return "%s <- %s".formatted(name, ty);
-	}
-
-	private Type paramTypeAt(MessageTopic t, long index) {
-		if (t instanceof EventTopic e && index == 0) {
-			return e.getEvent().getType();
-		}
-		if (t instanceof OperationTopic o) {
-			final var params = o.getOperation().getParameters();
-			if (index < params.size()) {
-				return params.get((int) index).getType();
-			}
-		}
-		throw new IndexOutOfBoundsException(
-				"couldn't get type of index %d of topic %s".formatted(index, t));
 	}
 }
