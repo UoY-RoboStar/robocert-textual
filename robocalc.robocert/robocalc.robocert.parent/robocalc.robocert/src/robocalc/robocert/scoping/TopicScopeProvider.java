@@ -17,11 +17,9 @@ import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
@@ -29,6 +27,7 @@ import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.OperationTopic;
+import robocalc.robocert.model.robocert.util.ActorContextFinder;
 
 /**
  * Scoping logic for message topics.
@@ -70,14 +69,11 @@ public record TopicScopeProvider(
       Function<Context, List<T>> selector) {
     final var msg = t.getMessage();
     final var candidates = actorCandidates(isFrom ? msg.getFrom() : msg.getTo(), selector);
-    return Scopes.scopeFor(candidates.orElse(Set.of()));
+    return Scopes.scopeFor(candidates);
   }
 
-  private <T extends EObject> Optional<Set<T>> actorCandidates(
+  private <T extends EObject> Set<T> actorCandidates(
       Actor a, Function<Context, List<T>> selector) {
-    return acf.contexts(a)
-        .map(
-            (Stream<Context> x) ->
-                x.map(selector).flatMap(List<T>::stream).collect(Collectors.toSet()));
+    return acf.contexts(a).map(selector).flatMap(List<T>::stream).collect(Collectors.toSet());
   }
 }

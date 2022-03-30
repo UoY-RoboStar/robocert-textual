@@ -16,9 +16,12 @@ package robocalc.robocert.model.robocert.util;
 import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.ControllerDef;
+import circus.robocalc.robochart.ControllerRef;
+import circus.robocalc.robochart.OperationRef;
 import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.StateMachineBody;
+import circus.robocalc.robochart.StateMachineRef;
 import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.Set;
@@ -61,10 +64,10 @@ public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver 
    * @param topic the topic of the event to look up.
    * @param from the from-actor of the event's message.
    * @param to the to-actor of the event's message.
-   * @param target the target on which the event is defined.
    * @return the stream of candidate connections.
    */
-  public Stream<Connection> resolve(EventTopic topic, Actor from, Actor to, Target target) {
+  public Stream<Connection> resolve(EventTopic topic, Actor from, Actor to) {
+    final var target = from.getGroup().getTarget();
     if (target instanceof ComponentTarget t)
       return resolveComponent(topic, from, to, t);
     if (target instanceof CollectionTarget t)
@@ -170,22 +173,47 @@ public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver 
     return m.getConnections().stream();
   }
 
-  private Stream<Connection> outboundModuleConnections(RCModule m) {
-    return moduleConnections(m).filter(this::connectsPlatform);
+  private Stream<Connection> controllerConnections(ControllerDef ctrl) {
+    return ctrl.getConnections().stream();
   }
 
-  private Stream<Connection> controllerConnections(ControllerDef ctrl) {
-    return defResolver.module(ctrl).stream().flatMap(this::moduleConnections);
+  private Stream<Connection> outboundModuleConnections(RCModule m) {
+    return moduleConnections(m).filter(this::connectsPlatform);
   }
 
   private Stream<Connection> outboundControllerConnections(ControllerDef ctrl) {
     // An outbound controller connection is any connection in the module that goes to or from the
     // controller.
-    return controllerConnections(ctrl).filter(c -> c.getFrom() == ctrl || c.getTo() == ctrl);
+    return defResolver.module(ctrl).stream().flatMap(this::moduleConnections).filter(c -> connectsController(c, ctrl));
   }
 
   private Stream<Connection> outboundStateMachineBodyConnections(StateMachineBody smb) {
-    return defResolver.controller(smb).stream().flatMap(this::controllerConnections).filter(c -> c.getFrom() == smb || c.getTo() == smb);
+    return defResolver.controller(smb).stream().flatMap(this::controllerConnections).filter(c -> connectsStateMachine(c, smb));
+  }
+
+  private boolean connectsController(Connection c, ControllerDef ctrl) {
+    return connectsController(c.getFrom(), ctrl) || connectsController(c.getTo(), ctrl);
+  }
+
+  private boolean connectsController(ConnectionNode n, ControllerDef ctrl) {
+    if (n instanceof ControllerRef r) {
+      n = r.getRef();
+    }
+    return n == ctrl;
+  }
+
+  private boolean connectsStateMachine(Connection c, StateMachineBody smb) {
+    return connectsStateMachine(c.getFrom(), smb) || connectsStateMachine(c.getTo(), smb);
+  }
+
+  private boolean connectsStateMachine(ConnectionNode n, StateMachineBody smb) {
+    if (n instanceof StateMachineRef r) {
+      n = r.getRef();
+    } else if (n instanceof OperationRef r) {
+      n = r.getRef();
+    }
+
+    return n == smb;
   }
 
   private boolean connectsPlatform(Connection c) {
