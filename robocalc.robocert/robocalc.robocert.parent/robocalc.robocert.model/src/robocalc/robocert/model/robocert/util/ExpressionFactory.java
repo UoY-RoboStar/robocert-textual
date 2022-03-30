@@ -4,13 +4,18 @@ import circus.robocalc.robochart.And;
 import circus.robocalc.robochart.BinaryExpression;
 import circus.robocalc.robochart.BooleanExp;
 import circus.robocalc.robochart.Different;
+import circus.robocalc.robochart.Div;
 import circus.robocalc.robochart.Expression;
 import circus.robocalc.robochart.IntegerExp;
 import circus.robocalc.robochart.InverseExp;
 import circus.robocalc.robochart.LessOrEqual;
+import circus.robocalc.robochart.Minus;
+import circus.robocalc.robochart.Modulus;
+import circus.robocalc.robochart.Mult;
 import circus.robocalc.robochart.NamedExpression;
 import circus.robocalc.robochart.Neg;
 import circus.robocalc.robochart.Or;
+import circus.robocalc.robochart.Plus;
 import circus.robocalc.robochart.RefExp;
 import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
@@ -22,7 +27,9 @@ import java.util.function.Supplier;
  * @author Matt Windsor
  */
 public class ExpressionFactory {
-  @Inject private RoboChartFactory rc;
+
+  @Inject
+  private RoboChartFactory rc;
 
   /**
    * Creates a {@link BooleanExp} with the given truth value.
@@ -58,6 +65,61 @@ public class ExpressionFactory {
     final var result = rc.createRefExp();
     result.setRef(v);
     return result;
+  }
+
+  /**
+   * Creates a 'plus' expression with the given operands.
+   *
+   * @param lhs the left operand.
+   * @param rhs the right operand.
+   * @return the given binary expression.
+   */
+  public Plus plus(Expression lhs, Expression rhs) {
+    return binary(rc::createPlus, lhs, rhs);
+  }
+
+  /**
+   * Creates a 'minus' expression with the given operands.
+   *
+   * @param lhs the left operand.
+   * @param rhs the right operand.
+   * @return the given binary expression.
+   */
+  public Minus minus(Expression lhs, Expression rhs) {
+    return binary(rc::createMinus, lhs, rhs);
+  }
+
+  /**
+   * Creates a 'mult' expression with the given operands.
+   *
+   * @param lhs the left operand.
+   * @param rhs the right operand.
+   * @return the given binary expression.
+   */
+  public Mult mult(Expression lhs, Expression rhs) {
+    return binary(rc::createMult, lhs, rhs);
+  }
+
+  /**
+   * Creates a 'div' expression with the given operands.
+   *
+   * @param lhs the left operand.
+   * @param rhs the right operand.
+   * @return the given binary expression.
+   */
+  public Div div(Expression lhs, Expression rhs) {
+    return binary(rc::createDiv, lhs, rhs);
+  }
+
+  /**
+   * Creates a 'modulus' expression with the given operands.
+   *
+   * @param lhs the left operand.
+   * @param rhs the right operand.
+   * @return the given binary expression.
+   */
+  public Modulus modulus(Expression lhs, Expression rhs) {
+    return binary(rc::createModulus, lhs, rhs);
   }
 
   /**
@@ -108,8 +170,8 @@ public class ExpressionFactory {
    * Creates a binary expression with the given operands.
    *
    * @param ctor the constructor function.
-   * @param lhs the left operand.
-   * @param rhs the right operand.
+   * @param lhs  the left operand.
+   * @param rhs  the right operand.
    * @return the given binary expression.
    */
   private <T extends BinaryExpression> T binary(Supplier<T> ctor, Expression lhs, Expression rhs) {

@@ -64,12 +64,19 @@ class ExpressionGeneratorTest {
     assertThat(ef.neg(ef.ref(vf.constant("x"))), generates("-(const_x)"));
   }
 
-  /** Tests that generating logical expressions works properly. */
+  /** Tests that generating some logical expressions works properly. */
   @Test
   void testGenerateLogicalExprs() {
     assertThat(ef.and(ef.bool(true), ef.bool(false)), generates("(true) and (false)"));
     assertThat(
         ef.or(ef.ref(vf.mem("x")), ef.ref(vf.constant("y"))), generates("(Bnd__x) or (const_y)"));
+  }
+
+  /** Tests that generating some arithmetic expressions works properly. */
+  @Test
+  void testGenerateArithExprs() {
+    assertThat(ef.plus(ef.integer(54), ef.integer(321)), generates("Plus(54, 321, core_int)"));
+    assertThat(ef.div(ef.integer(12), ef.integer(345)), generates("Div(12, 345, core_int)"));
   }
 
   /** Tests that generating relational expressions works properly. */
