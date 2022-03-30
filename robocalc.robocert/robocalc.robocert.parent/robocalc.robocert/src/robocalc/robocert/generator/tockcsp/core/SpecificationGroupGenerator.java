@@ -123,7 +123,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
   private CharSequence targetDef(SpecificationGroup it) {
     // NOTE(@MattWindsor91): as far as I know, this doesn't need to be timed
-    return csp.definition(SpecGroupParametricField.TARGET.toString(), tg.openDef(it.getTarget(), it.getAssignments()));
+    return tg.openDef(it.getTarget(), it.getAssignments());
   }
 
   private CharSequence tickTockContext() {

@@ -40,13 +40,21 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class TargetGeneratorTest {
-  @Inject private RoboCertFactory certFactory;
-  @Inject private RoboChartFactory chartFactory;
-  @Inject private ExpressionFactory exprFactory;
-  @Inject private DummyVariableFactory varFactory;
 
-  /** The system under test. */
-  @Inject private TargetGenerator gen;
+  @Inject
+  private RoboCertFactory certFactory;
+  @Inject
+  private RoboChartFactory chartFactory;
+  @Inject
+  private ExpressionFactory exprFactory;
+  @Inject
+  private DummyVariableFactory varFactory;
+
+  /**
+   * The system under test.
+   */
+  @Inject
+  private TargetGenerator gen;
 
   /**
    * Tests {@code openDef} on a representative module target with one open constant, one
@@ -73,7 +81,12 @@ class TargetGeneratorTest {
         target,
         generatesOpenDef(
             null,
-            "mod::O__({- id -} 0, {- const_mod_rp_foo -} 42, const_mod_rp_bar, const_mod_rp_baz)"));
+            """
+                -- Begin overrides to instantiations.csp
+                const_mod_rp_foo = 42 -- initialised in RoboChart
+                -- End overrides to instantiations.csp
+                Target = mod::O__({- id -} 0, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
+                """));
 
     // Instantiate "baz" at the RoboCert level:
     final var cinst = certFactory.createConstAssignment();
@@ -83,7 +96,13 @@ class TargetGeneratorTest {
         target,
         generatesOpenDef(
             List.of(cinst),
-            "mod::O__({- id -} 0, {- const_mod_rp_foo -} 42, const_mod_rp_bar, {- const_mod_rp_baz -} 64)"));
+            """
+                -- Begin overrides to instantiations.csp
+                const_mod_rp_foo = 42 -- initialised in RoboChart
+                const_mod_rp_baz = 64 -- initialised in RoboCert
+                -- End overrides to instantiations.csp
+                Target = mod::O__({- id -} 0, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
+                """));
   }
 
   /**

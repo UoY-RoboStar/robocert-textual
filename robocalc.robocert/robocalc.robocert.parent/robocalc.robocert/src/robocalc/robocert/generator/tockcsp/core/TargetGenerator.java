@@ -19,7 +19,9 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.VariableHelper;
 import robocalc.robocert.generator.utils.param.Parameter;
@@ -40,12 +42,16 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
                               InstantiationHelper instHelp,
                               VariableHelper varHelp) {
 
-  /** Hardcoded ID (will need to be fixed if we support collections of robots). */
+  /**
+   * Hardcoded ID (will need to be fixed if we support collections of robots).
+   */
   private static final String ID = "{- id -} 0";
 
-  /** Eventually this should be exposed to the user. */
+  /**
+   * Eventually this should be exposed to the user.
+   */
   private static final boolean USE_OPTIMISED_TARGETS = true;
-  
+
   @Inject
   public TargetGenerator {
     Objects.requireNonNull(gu);
@@ -59,14 +65,60 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
   /**
    * Generates an instantiated form of a target process.
    *
-   * @implNote This is currently just a reference to the corresponding RoboStar model element, but
-   *     this might change if we add any targets that don't correspond to such things. There is
-   *     currently no way to specify an optimised definition.
-   * @param t the target.
+   * @param t    the target.
    * @param inst any constant assignments defined alongside the target.
    * @return CSP-M for the target definition.
+   * @implNote This is currently just a reference to the corresponding RoboStar model element, but
+   * this might change if we add any targets that don't correspond to such things. There is
+   * currently no way to specify an optimised definition.
    */
   public CharSequence openDef(Target t, List<ConstAssignment> inst) {
+    final var params = paramRes.parameterisation(t).toList();
+    return """
+        -- Begin overrides to instantiations.csp
+        %s
+        -- End overrides to instantiations.csp
+        %s
+        """.formatted(overrides(inst, params), targetProcess(t, params));
+  }
+
+  private CharSequence overrides(List<ConstAssignment> inst, List<Parameter> params) {
+    return params.stream().flatMap(p -> override(inst, p)).collect(Collectors.joining("\n"));
+  }
+
+  /**
+   * Generates any override needed for a parameter given an instantiation.
+   *
+   * <p>This will replace the definition in instantiations.csp in the scope of any specifications
+   * defined on the relevant group.
+   *
+   * @param inst the instantiation (may be null).
+   * @param p    the parameter whose value is requested.
+   * @return a zero-or-one element stream containing CSP for the parameter.
+   */
+  private Stream<String> override(List<ConstAssignment> inst, Parameter p) {
+    final var id = p.cspId(gu);
+
+    final var initial = p.tryGetConstant().map(Variable::getInitial);
+    if (initial.isPresent()) {
+      return Stream.of(
+          commentedDefinition("RoboChart", id, initial.get()));
+    }
+
+    final var asst = p.tryGetConstant().flatMap(k -> instHelp.getConstant(inst, k));
+    return asst.map(
+            expression -> commentedDefinition("RoboCert", id, expression))
+        .stream();
+  }
+
+  private String commentedDefinition(String comment, String id, Expression expression) {
+    // trim is necessary because csp.definition emits a newline by default.
+    final var def = csp.definition(id, eg.generate(expression)).toString().trim();
+    return "%s -- initialised in %s".formatted(def, comment);
+  }
+
+
+  private CharSequence targetProcess(Target t, List<Parameter> params) {
     /*
      * In email with Pedro (2021-08-04): the target of a refinement against a (simple)
      * specification should usually be unoptimised (D__); model comparisons should
@@ -78,18 +130,18 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
      */
     final var name = gu.getFullProcessName(t.getElement(), false, USE_OPTIMISED_TARGETS);
     final var args = Stream.concat(Stream.of(ID),
-        paramRes.parameterisation(t).map(k -> generateParam(inst, k))).toArray(CharSequence[]::new);
-    return csp.function(name, args);
+        params.stream().map(k -> k.cspId(gu))).toArray(CharSequence[]::new);
+    return csp.definition(SpecGroupParametricField.TARGET.toString(), csp.function(name, args));
   }
 
   /**
    * Uses a target to generate the parameter list of an open specification.
    *
-   * @param t the target.
+   * @param t        the target.
    * @param lastInst any instantiation that has already been applied to the target.
    * @param thisInst the instantiation being applied to the target here.
    * @return an array of CSP-M elements corresponding to the arguments of a target that are not yet
-   *     instantiated, instantiated with the given instantiation.
+   * instantiated, instantiated with the given instantiation.
    */
   public CharSequence[] openSigParams(
       Target t, List<ConstAssignment> lastInst, List<ConstAssignment> thisInst) {
@@ -102,7 +154,7 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
   }
 
   /**
-   * Generates the value of a parameter given an instantiation.
+   * Generates a parameter of a target open signature given an instantiation.
    *
    * <p>If the value isn't available, we emit the constant ID; this will resolve either to a
    * formal parameter on the target (when defining an open target) or a definition in
@@ -130,7 +182,7 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
    * disjoint in practice.
    *
    * @param inst the instantiation to fall back into.
-   * @param k the constant to investigate.
+   * @param k    the constant to investigate.
    * @return the retrieved expression, if any.
    */
   private Optional<Expression> constantValue(List<ConstAssignment> inst, Variable k) {
