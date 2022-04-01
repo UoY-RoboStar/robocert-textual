@@ -491,6 +491,13 @@ class Message {
 	ref Actor[1] from;
 	@genmodel(documentation="The destination of the message.")
 	ref Actor[1] to;
+	
+	//
+	// Derived properties
+	//
+	
+	@genmodel(documentation="Whether this message has at least one Actor that is a World.")
+	derived transient readonly volatile attr boolean outbound;
 }
 
 

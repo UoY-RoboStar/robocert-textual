@@ -24,7 +24,9 @@ import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.MessageTopic;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.ValueSpecification;
+import robocalc.robocert.model.robocert.World;
 
 /**
  * High-level factory for message-related objects.
@@ -107,14 +109,14 @@ public class MessageFactory {
   /**
    * @return a target actor.
    */
-  public Actor targetActor() {
+  public TargetActor targetActor() {
     return rc.createTargetActor();
   }
 
   /**
    * @return a world.
    */
-  public Actor world() {
+  public World world() {
     return rc.createWorld();
   }
 
