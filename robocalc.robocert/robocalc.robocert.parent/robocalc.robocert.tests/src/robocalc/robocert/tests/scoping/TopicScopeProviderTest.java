@@ -16,7 +16,6 @@ package robocalc.robocert.tests.scoping;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static robocalc.robocert.tests.util.Matchers.hasScope;
 
-import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
@@ -34,6 +33,8 @@ import robocalc.robocert.tests.util.resolvers.ForagingExample;
 
 /**
  * Tests {@link TopicScopeProvider}.
+ *
+ * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
@@ -52,10 +53,10 @@ class TopicScopeProviderTest {
 
 
   /**
-   * Tests that a constant assignment on an empty controller generates an empty scope.
+   * Tests that the topic scope for a module is always the module.
    */
   @Test
-  void testConstAssignmentScope_module() {
+  void testTopicScope_module() {
     final var mod = targetFactory.module(example.foraging);
     final var world = certFactory.createWorld();
     final var target = certFactory.createTargetActor();
@@ -63,7 +64,7 @@ class TopicScopeProviderTest {
 
     final var topic = msgFactory.eventTopic(null);
     msgFactory.spec(world, target, topic);
-    assertThat(scope.getEventScope(topic, true), hasScope(example.platformObstacle));
+    assertThat(scope.getEventScope(topic, true), hasScope(example.obstacleAvoidanceObstacle));
     assertThat(scope.getEventScope(topic, false), hasScope(example.obstacleAvoidanceObstacle));
   }
 

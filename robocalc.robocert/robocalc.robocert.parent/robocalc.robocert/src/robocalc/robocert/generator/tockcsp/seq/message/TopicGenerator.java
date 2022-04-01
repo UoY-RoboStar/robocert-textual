@@ -12,7 +12,6 @@
  ******************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq.message;
 
-import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import java.util.Objects;
 import javax.inject.Inject;
@@ -41,18 +40,16 @@ public record TopicGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu,
   /**
    * Constructs a channel generator.
    *
-   * @param csp           CSP structure generator, used mainly for constructing namespaced
-   *                      references.
-   * @param gu            RoboChart generator utilities.
-   * @param eventResolver Resolves events into connections.
-   * @param nodeResolver  Resolves actors into connection nodes.
-   * @param ctxResolver   Resolves actors into contexts.
+   * @param csp          CSP structure generator, used mainly for constructing namespaced
+   *                     references.
+   * @param gu           RoboChart generator utilities.
+   * @param nodeResolver Resolves actors into connection nodes.
+   * @param ctxResolver  Resolves actors into contexts.
    */
   @Inject
   public TopicGenerator {
     Objects.requireNonNull(csp);
     Objects.requireNonNull(gu);
-    Objects.requireNonNull(eventResolver);
     Objects.requireNonNull(nodeResolver);
     Objects.requireNonNull(ctxResolver);
   }
@@ -77,19 +74,12 @@ public record TopicGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu,
   }
 
   private CharSequence generateEvent(EventTopic e, Actor from, Actor to) {
-    // Instead of resolving events directly from the topic and actors, we use
-    // a separate step to pull out one (and hopefully one) Connection that matches them, and use
-    // the information from that.
-    //
-    // We don't use the from/to from the connection, because the connection might be bidirectional
-    // and we might be using it in the reverse direction from its definition.
-    final var connection = eventResolver.resolve(e, from, to).findAny().orElseThrow();
+    final var dir = inferDirection(from, to);
 
-    // TODO(@MattWindsor91): work out if this is right in terms of bidirectionals.
-
-    final var dir = inferDirection(to);
-
-    final var eTarget = dir == Direction.IN ? connection.getEto() : connection.getEfrom();
+    // We only use efrom/eto for event naming, so it's ok to do this.
+    final var efrom = e.getEfrom();
+    final var eto = Objects.requireNonNullElse(e.getEto(), efrom);
+    final var eTarget = dir == Direction.IN ? eto : efrom;
 
     // TODO(@MattWindsor91): this could do with being closer to the logic in the RoboChart
     // statement generator.
@@ -113,14 +103,22 @@ public record TopicGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu,
     return gu.processId(pbase);
   }
 
-  private Direction inferDirection(Actor to) {
+  private Direction inferDirection(Actor from, Actor to) {
+    // Firstly, do we have an outbound connection?
+    if (from instanceof World) {
+      // Use 'to' as namespace, 'eto' as event, and the direction is 'in'
+      return Direction.IN;
+    }
+    if (to instanceof World) {
+      // Use 'from' as namespace, 'efrom' as event, and the direction is 'out'
+      return Direction.OUT;
+    }
+    // We're in a multi-component situation.
     // Following rule 15 of the RoboChart semantics, we usually take the namespace of the 'to' actor
-    // and emit as IN.  There is one exception, namely if the 'to' points to a robotic platform.
+    // and emit as IN.
 
     // TODO(@MattWindsor91): synchronous semantics
-
-    final var isOut = nodeResolver.resolve(to).anyMatch(RoboticPlatformDef.class::isInstance);
-    return isOut ? Direction.OUT : Direction.IN;
+    return Direction.IN;
   }
 
   /**
