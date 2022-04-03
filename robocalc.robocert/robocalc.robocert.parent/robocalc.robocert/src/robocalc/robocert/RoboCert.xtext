@@ -517,7 +517,7 @@ Actor:
  */
 SequenceProperty:
 	interaction=[Interaction|QualifiedName]
-	('is' negated?='not' type=IsSequencePropertyType
+	('is' negated?='not'? type=IsSequencePropertyType
 	| 'does' negated?='not' type=DoesNotSequencePropertyType
 	| type=DoesSequencePropertyType)
 	InSemanticModelSpec?;
