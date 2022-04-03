@@ -12,7 +12,6 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq;
 
-import circus.robocalc.robochart.VariableList;
 import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 import java.util.List;
@@ -33,12 +32,19 @@ import robocalc.robocert.model.robocert.Interaction;
  * @author Matt Windsor
  */
 public class InteractionGenerator {
-  @Inject private LetGenerator lg;
-  @Inject private MessageSetGenerator msg;
-  @Inject private CSPStructureGenerator csp;
-  @Inject private SubsequenceGenerator sg;
-  @Inject private ModuleGenerator mg;
-  @Inject private LifelineContextFactory lcf;
+
+  @Inject
+  private LetGenerator lg;
+  @Inject
+  private MessageSetGenerator msg;
+  @Inject
+  private CSPStructureGenerator csp;
+  @Inject
+  private SubsequenceGenerator sg;
+  @Inject
+  private ModuleGenerator mg;
+  @Inject
+  private LifelineContextFactory lcf;
 
   /**
    * Generates CSP-M for a sequence.
@@ -57,6 +63,7 @@ public class InteractionGenerator {
 
   /**
    * Can we safely get away with not emitting a memory?
+   *
    * @param s the interaction for which we are generating CSP-M.
    * @return true if, and only if, there is no need to emit a memory for this interaction.
    */
@@ -70,9 +77,8 @@ public class InteractionGenerator {
     // Technically, we don't really need a let-within here if we only have
     // one process, but it simplifies some of the rest of the generator to
     // not special-case that.
-    final var body =
-        csp.iterAlphaParallel(
-            lines.size(), LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
+    final var body = csp.seq(csp.iterAlphaParallel(lines.size(), LifelineContext.ALPHA_FUNCTION,
+        LifelineContext.PROC_FUNCTION), "USTOP");
     return lg.let(alphas(lines), procs(s, lines)).within(body);
   }
 
@@ -85,14 +91,12 @@ public class InteractionGenerator {
     return defs(lines, LifelineContext::procCSP, x -> csp.tuple(generateLifelineBody(s, x)));
   }
 
-  private CharSequence defs(
-      List<LifelineContext> lines,
+  private CharSequence defs(List<LifelineContext> lines,
       BiFunction<LifelineContext, CSPStructureGenerator, CharSequence> lhs,
       Function<LifelineContext, CharSequence> rhs) {
     //noinspection UnstableApiUsage
-    return Streams.mapWithIndex(
-            lines.stream(), (x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x)))
-        .collect(Collectors.joining());
+    return Streams.mapWithIndex(lines.stream(),
+        (x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x))).collect(Collectors.joining());
   }
 
   private CharSequence generateLifelineBody(Interaction s, LifelineContext ctx) {
