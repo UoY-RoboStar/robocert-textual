@@ -6,6 +6,7 @@ import circus.robocalc.robochart.BooleanExp;
 import circus.robocalc.robochart.Different;
 import circus.robocalc.robochart.Div;
 import circus.robocalc.robochart.Expression;
+import circus.robocalc.robochart.FloatExp;
 import circus.robocalc.robochart.IntegerExp;
 import circus.robocalc.robochart.InverseExp;
 import circus.robocalc.robochart.LessOrEqual;
@@ -41,6 +42,18 @@ public class ExpressionFactory {
     final var x = rc.createBooleanExp();
     x.setValue(truth ? "true" : "false");
     return x;
+  }
+
+  /**
+   * Creates a {@link FloatExp} with the given value.
+   *
+   * @param value the value.
+   * @return a RoboCert lifting of the given float value.
+   */
+  public FloatExp floating(float value) {
+    final var result = rc.createFloatExp();
+    result.setValue(value);
+    return result;
   }
 
   /**

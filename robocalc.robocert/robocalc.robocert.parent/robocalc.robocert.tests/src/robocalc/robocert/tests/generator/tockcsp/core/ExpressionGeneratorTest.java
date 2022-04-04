@@ -35,18 +35,26 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class ExpressionGeneratorTest {
-  @Inject private ExpressionFactory ef;
-  @Inject private ExpressionGenerator eg;
-  @Inject private DummyVariableFactory vf;
 
-  /** Tests that generating the Boolean literals works properly. */
+  @Inject
+  private ExpressionFactory ef;
+  @Inject
+  private ExpressionGenerator eg;
+  @Inject
+  private DummyVariableFactory vf;
+
+  /**
+   * Tests that generating the Boolean literals works properly.
+   */
   @Test
   void testGenerateBoolExprs() {
     assertThat(ef.bool(true), generates("true"));
     assertThat(ef.bool(false), generates("false"));
   }
 
-  /** Tests that generating integer literals works properly. */
+  /**
+   * Tests that generating integer literals works properly.
+   */
   @Test
   void testGenerateIntExprs() {
     assertThat(ef.integer(0), generates("0"));
@@ -56,7 +64,9 @@ class ExpressionGeneratorTest {
     assertThat(ef.integer(-1), generates("-1"));
   }
 
-  /** Tests that generating minus expressions works properly. */
+  /**
+   * Tests that generating minus expressions works properly.
+   */
   @Test
   void testGenerateMinusExprs() {
     assertThat(ef.neg(ef.integer(1)), generates("-(1)"));
@@ -64,15 +74,19 @@ class ExpressionGeneratorTest {
     assertThat(ef.neg(ef.ref(vf.constant("x"))), generates("-(const_x)"));
   }
 
-  /** Tests that generating some logical expressions works properly. */
+  /**
+   * Tests that generating some logical expressions works properly.
+   */
   @Test
   void testGenerateLogicalExprs() {
     assertThat(ef.and(ef.bool(true), ef.bool(false)), generates("(true) and (false)"));
-    assertThat(
-        ef.or(ef.ref(vf.mem("x")), ef.ref(vf.constant("y"))), generates("(Bnd__x) or (const_y)"));
+    assertThat(ef.or(ef.ref(vf.mem("x")), ef.ref(vf.constant("y"))),
+        generates("(Bnd__x) or (const_y)"));
   }
 
-  /** Tests that generating some arithmetic expressions works properly. */
+  /**
+   * Tests that generating some arithmetic expressions works properly.
+   */
   @Test
   void testGenerateArithExprs() {
     // TODO(@MattWindsor91): work out how to get the correct types here
@@ -80,7 +94,9 @@ class ExpressionGeneratorTest {
     assertThat(ef.div(ef.integer(12), ef.integer(345)), generates("Div(12, 345, Object)"));
   }
 
-  /** Tests that generating relational expressions works properly. */
+  /**
+   * Tests that generating relational expressions works properly.
+   */
   @Test
   void testGenerateLessOrEqual() {
     assertThat(ef.le(ef.integer(42), ef.integer(56)), generates("(42) <= (56)"));

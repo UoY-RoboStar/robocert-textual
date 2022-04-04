@@ -7,6 +7,7 @@ import circus.robocalc.robochart.Different;
 import circus.robocalc.robochart.Div;
 import circus.robocalc.robochart.Equals;
 import circus.robocalc.robochart.Expression;
+import circus.robocalc.robochart.FloatExp;
 import circus.robocalc.robochart.GreaterOrEqual;
 import circus.robocalc.robochart.GreaterThan;
 import circus.robocalc.robochart.IntegerExp;
@@ -39,11 +40,8 @@ import robocalc.robocert.generator.utils.VariableHelper;
  *
  * @author Matt Windsor
  */
-public record ExpressionGenerator(
-    TemporaryVariableGenerator bg,
-    VariableHelper vx,
-    TypeGenerator typeGen,
-    RoboCalcTypeProvider typeProvider) {
+public record ExpressionGenerator(TemporaryVariableGenerator bg, VariableHelper vx,
+                                  TypeGenerator typeGen, RoboCalcTypeProvider typeProvider) {
 
   @Inject
   public ExpressionGenerator {
@@ -75,6 +73,11 @@ public record ExpressionGenerator(
     if (it instanceof IntegerExp i) {
       return Integer.toString(i.getValue());
     }
+    if (it instanceof FloatExp f) {
+      throw new IllegalArgumentException(
+          // See robochart-csp-gen#39.
+          "floating point expressions are unsupported for CSP generation: %s".formatted(f));
+    }
     if (it instanceof Neg m) {
       return "-(" + generate(m.getExp()) + ")";
     }
@@ -84,6 +87,7 @@ public record ExpressionGenerator(
 
   private CharSequence generateVariable(Variable v) {
     // in RoboCert, variables are either RoboChart constants or spec-level bindings.
+    // This is the main difference between our generator and that of RoboCert.
     return switch (v.getModifier()) {
       case CONST -> vx.constantId(v);
       case VAR -> bg.generateExpressionName(v);
@@ -92,8 +96,8 @@ public record ExpressionGenerator(
 
   private CharSequence generateBinary(BinaryExpression it) {
     // TODO(@MattWindsor91): this can likely be optimised for precedence?
-    return tryGenerateArithBinary(it).orElseGet(() ->
-        "(%s) %s (%s)".formatted(generate(it.getLeft()), generateCspOp(it),
+    return tryGenerateArithBinary(it).orElseGet(
+        () -> "(%s) %s (%s)".formatted(generate(it.getLeft()), generateCspOp(it),
             generate(it.getRight())));
   }
 
