@@ -480,11 +480,10 @@ PrimitiveSet returns MessageSet:
 	'message'? 'set' {RefMessageSet} set=[NamedMessageSet];
 
 /**
- * An extensional message set (including singleton message sets).
+ * An extensional message set.
  */
 ExtensionalMessageSet:
-	'{' {ExtensionalMessageSet} messages+=Message (',' messages+=Message)* '}' |
-	messages+=Message;
+	'{' {ExtensionalMessageSet} messages+=Message (',' messages+=Message)* '}';
 
 //
 // Value specifications
