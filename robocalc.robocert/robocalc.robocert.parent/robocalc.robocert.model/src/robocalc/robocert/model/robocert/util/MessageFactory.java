@@ -34,15 +34,17 @@ import robocalc.robocert.model.robocert.World;
  * @author Matt Windsor
  */
 public class MessageFactory {
-  @Inject private RoboCertFactory rc;
+
+  @Inject
+  private RoboCertFactory rc;
 
   /**
    * Constructs a message spec with the given topic, edge, and arguments.
    *
-   * @param from from-actor to use for the message spec.
-   * @param to to-actor to use for the message spec.
+   * @param from  from-actor to use for the message spec.
+   * @param to    to-actor to use for the message spec.
    * @param topic topic to use for the message spec.
-   * @param args arguments to use for the message spec.
+   * @param args  arguments to use for the message spec.
    * @return the specification.
    */
   public Message spec(Actor from, Actor to, MessageTopic topic, ValueSpecification... args) {
@@ -52,14 +54,14 @@ public class MessageFactory {
   /**
    * Constructs a message spec with the given topic, edge, and argument collection.
    *
-   * @param from from-actor to use for the message spec.
-   * @param to to-actor to use for the message spec.
+   * @param from  from-actor to use for the message spec.
+   * @param to    to-actor to use for the message spec.
    * @param topic the topic to use for the message spec.
-   * @param args the arguments to use for the message spec.
+   * @param args  the arguments to use for the message spec.
    * @return the specification.
    */
-  public Message spec(
-      Actor from, Actor to, MessageTopic topic, Collection<? extends ValueSpecification> args) {
+  public Message spec(Actor from, Actor to, MessageTopic topic,
+      Collection<? extends ValueSpecification> args) {
     final var it = rc.createMessage();
     it.setFrom(from);
     it.setTo(to);
@@ -84,7 +86,7 @@ public class MessageFactory {
    * Constructs an event topic with the given from-event and to-event.
    *
    * @param efrom the from-event to use.
-   * @param eto the to-event to use.
+   * @param eto   the to-event to use.
    * @return the event topic.
    */
   public EventTopic eventTopic(Event efrom, Event eto) {

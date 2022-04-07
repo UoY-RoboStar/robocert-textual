@@ -25,6 +25,7 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.EventTopic;
+import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.ActorContextFinder;
@@ -54,16 +55,19 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, ActorContextFinder acf
     final var from = msg.getFrom();
     final var to = msg.getTo();
 
-    // For outbound messages, always get scope from the end of the message we can see from the
-    // target.  This means that, if we're getting the efrom and 'from' is the world, we switch
-    // to 'to' instead.
-    //
-    // It doesn't matter if we're trying to get eto here and pick up the World -
-    // outbound messages can't have both efrom and eto specified via well-formedness condition
-    // SMTp4.
-    final var actor = isEfrom && !(from instanceof World) ? from : to;
+    // For component messages, we take scope from whichever side of the message we are resolving.
+    // For outbound messages, we can only resolve efrom, but need to work out which of the two
+    // actors gives us the right scope. By default, we use whichever Actor isn't the World.
+    if (msg.isOutbound()) {
+      isEfrom = to instanceof World;
+      // However, there is a corner-case: the appropriate scope on a module target is the robotic
+      // platform (ie, the World), and not the contents of the module (ie, the TargetActor).
+      if (from.getGroup().getTarget() instanceof ModuleTarget) {
+        isEfrom = !isEfrom;
+      }
+    }
 
-    return Scopes.scopeFor(actorCandidates(actor, gu::allEvents));
+    return Scopes.scopeFor(actorCandidates(isEfrom ? from : to, gu::allEvents));
   }
 
   /**
