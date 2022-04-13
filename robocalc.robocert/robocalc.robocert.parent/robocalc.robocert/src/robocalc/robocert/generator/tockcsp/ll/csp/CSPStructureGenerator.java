@@ -233,6 +233,21 @@ public class CSPStructureGenerator {
   }
 
   /**
+   * Produces a basic datatype.
+   *
+   * @param name     the name of the datatype.
+   * @param elements the discriminants of the datatype (must be at least one).
+   * @return CSP-M for the datatype.
+   */
+  public CharSequence datatype(CharSequence name, CharSequence... elements) {
+    // TODO(@MattWindsor91): break overly long datatypes.
+    if (elements.length < 1) {
+      throw new IllegalArgumentException("datatype %s must contain at least one element".formatted(name));
+    }
+    return definition("datatype %s".formatted(name), String.join(" | ", elements));
+  }
+
+  /**
    * Lifts a body into a timed section if the given Boolean is true.
    *
    * @param isTimed the boolean.
@@ -289,7 +304,7 @@ public class CSPStructureGenerator {
     return elements.collect(Collectors.joining("\n"));
   }
 
-  private String indentStrip(CharSequence cs) {
+  public static String indentStrip(CharSequence cs) {
     return cs.toString().indent(INDENT).stripTrailing();
   }
 

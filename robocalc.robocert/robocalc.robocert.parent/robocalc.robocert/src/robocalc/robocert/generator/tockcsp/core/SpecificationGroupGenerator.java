@@ -99,9 +99,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     // Space here for expansion.
     final var specs = it.getInteractions();
 
-    final var rootElements = Stream.of(targetDef(it), msgSetGen.generate(it));
-
-    final var elements = Streams.concat(rootElements, actorModule(it).stream(), memModule(specs).stream(), specModule(specs).stream());
+    final var elements = Streams.concat(Stream.of(targetDef(it)), msgSetGen.generate(it).stream(),
+        actorModule(it).stream(), memModule(specs).stream(), specModule(specs).stream());
 
     return csp.innerJoin(elements);
   }
@@ -183,7 +182,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     return Collectors.collectingAndThen(Collectors.joining("\n"), x -> moduleIfNonEmpty(x, field));
   }
 
-  private Optional<CharSequence> moduleIfNonEmpty(CharSequence mod, SpecGroupParametricField field) {
+  private Optional<CharSequence> moduleIfNonEmpty(CharSequence mod,
+      SpecGroupParametricField field) {
     if (mod.isEmpty()) {
       return Optional.empty();
     }

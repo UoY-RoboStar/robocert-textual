@@ -13,10 +13,11 @@
 package robocalc.robocert.tests.generator.tockcsp.seq.message;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
+import static org.hamcrest.Matchers.is;
 
 import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
+import java.util.Optional;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
@@ -40,8 +41,8 @@ public class NamedSetModuleGeneratorTest {
   @Inject private NamedSetModuleGenerator msg;
 
   /**
-   * Tests generation of a module for a specification group targeting a controller nested inside a
-   * module, but with no user-defined sets.
+   * Tests that a module for a specification group targeting a controller nested inside a
+   * module, but with no user-defined sets, does not generate a message set.
    */
   @Test
   void testGenerate_nestedTarget_empty() {
@@ -63,12 +64,6 @@ public class NamedSetModuleGeneratorTest {
     grp.setName("Specs");
     grp.setTarget(target);
 
-    final var expected = """
-module MsgSets
-exports
-endmodule
-    """;
-
-    assertThat(grp, generatesCSP(expected, msg::generate));
+    assertThat(msg.generate(grp), is(Optional.empty()));
   }
 }

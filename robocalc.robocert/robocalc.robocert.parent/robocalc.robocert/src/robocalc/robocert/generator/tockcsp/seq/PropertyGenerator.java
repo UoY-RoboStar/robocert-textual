@@ -23,13 +23,13 @@ import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceProperty;
 import robocalc.robocert.model.robocert.SequencePropertyType;
 
-/** Generates CSP-M for sequence properties. */
-public record PropertyGenerator(
-  TickTockContextGenerator tt,
-  CSPStructureGenerator csp,
-  RoboCertFactory rf,
-  SpecificationGroupElementFinder sf
-) {
+/**
+ * Generates CSP-M for sequence properties.
+ *
+ * @author Matt Windsor
+ */
+public record PropertyGenerator(TickTockContextGenerator tt, CSPStructureGenerator csp,
+                                RoboCertFactory rf, SpecificationGroupElementFinder sf) {
 
   @Inject
   public PropertyGenerator {
@@ -56,11 +56,11 @@ public record PropertyGenerator(
    * Lowers a sequence property to a CSP refinement.
    *
    * @param p the property to lower.
-   *
    * @return the lowered refinement.
    */
   public CSPRefinement lower(SequenceProperty p) {
-    return new CSPRefinement(p.isNegated(), p.getInteraction().getGroup(), lhs(p), rhs(p), p.getModel());
+    return new CSPRefinement(p.isNegated(), p.getInteraction().getGroup(), lhs(p), rhs(p),
+        p.getModel());
   }
 
   /**
@@ -89,16 +89,18 @@ public record PropertyGenerator(
 
   /**
    * @param it the sequence property.
-   * @param t the type that it must have for this call to expand to the sequence.
+   * @param t  the type that it must have for this call to expand to the sequence.
    * @return if the sequence property type of it is t, the sequence of t; else, the instantiated
-   *     target of t.
+   * target of t.
    */
   private CharSequence sequenceWhenTypeElseTarget(SequenceProperty it, SequencePropertyType t) {
     return it.getType() == t ? sequenceRef(it) : targetRef(it);
   }
 
   private CharSequence sequenceRef(SequenceProperty it) {
-    return sf.getFullCSPName(it.getInteraction());
+    final var seq = it.getInteraction();
+    return csp.namespaced(
+        sf.getFullCSPName(seq.getGroup(), SpecGroupParametricField.SEQUENCE_MODULE), seq.getName());
   }
 
   private CharSequence targetRef(SequenceProperty it) {

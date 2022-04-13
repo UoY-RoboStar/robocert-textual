@@ -16,9 +16,8 @@ package robocalc.robocert.generator.tockcsp.seq.message;
 import circus.robocalc.robochart.generator.csp.comp.untimed.CGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.NamedMessageSet;
 import robocalc.robocert.model.robocert.SpecificationGroup;
 
 /**
@@ -48,17 +47,18 @@ public record NamedSetModuleGenerator(CGeneratorUtils gu, CSPStructureGenerator 
    * Generates the named set module for a sequence group.
    *
    * @param group the group containing the sets.
-   * @return generated CSP for the named message set group.
+   * @return generated CSP for the named message set group, if one should be generated.
    */
-  public CharSequence generate(SpecificationGroup group) {
+  public Optional<CharSequence> generate(SpecificationGroup group) {
     final var sets = group.getMessageSets();
-    final var userSets = sets.stream().filter(Objects::nonNull)
-        .map(x -> csp.definition(x.getName(), generateNamedSet(x)));
+    final var userSets = sets.stream().filter(Objects::nonNull).map(
+            x -> csp.definition(x.getName(), setGenerator.optimiseAndGenerate(x.getSet(), x::setSet)))
+        .toList();
 
-    return csp.module(MessageSetGenerator.MODULE_NAME, userSets.collect(Collectors.joining("\n")));
+    if (userSets.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(csp.module(MessageSetGenerator.MODULE_NAME, String.join("\n", userSets)));
   }
 
-  private CharSequence generateNamedSet(NamedMessageSet it) {
-    return setGenerator.optimiseAndGenerate(it.getSet(), it::setSet);
-  }
 }

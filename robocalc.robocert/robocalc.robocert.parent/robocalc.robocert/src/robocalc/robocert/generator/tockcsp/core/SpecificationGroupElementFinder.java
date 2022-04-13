@@ -5,7 +5,6 @@ import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.name.GroupNamer;
-import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SpecificationGroup;
 
 /**
@@ -17,19 +16,6 @@ import robocalc.robocert.model.robocert.SpecificationGroup;
 public class SpecificationGroupElementFinder {
   @Inject private CSPStructureGenerator csp;
   @Inject private GroupNamer gn;
-
-  /**
-   * Gets the fully qualified CSP name of an interaction, including its group.
-   *
-   * <p>We assume that we want the closed form of the specification group.
-   *
-   * @param it the sequence to locate.
-   * @return CSP-M expanding to a module-qualified name of the sequence.
-   */
-  public CharSequence getFullCSPName(Interaction it) {
-    return csp.namespaced(
-        getFullCSPName(it.getGroup(), SpecGroupParametricField.SEQUENCE_MODULE), it.getName());
-  }
 
   /**
    * Gets the fully qualified CSP name of a field on a sequence group's parametric part.
