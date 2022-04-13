@@ -12,6 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.core;
 
+import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.stream.Collector;
@@ -23,7 +24,6 @@ import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
-import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.NamedSetModuleGenerator;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Interaction;
@@ -38,15 +38,24 @@ import robocalc.robocert.model.robocert.SpecificationGroup;
  * @author Matt Windsor
  */
 public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGroup> {
-  @Inject private CSPStructureGenerator csp;
-  @Inject private TargetGenerator tg;
-  @Inject private InteractionGenerator sg;
-  @Inject private NamedSetModuleGenerator msg;
-  @Inject private ModuleGenerator mg;
+
+  @Inject
+  private CSPStructureGenerator csp;
+  @Inject
+  private TargetGenerator tg;
+  @Inject
+  private InteractionGenerator sg;
+  @Inject
+  private NamedSetModuleGenerator msg;
+  @Inject
+  private ModuleGenerator mg;
 
   @Override
   protected Stream<CharSequence> generateBodyElements(SpecificationGroup group) {
-    return Stream.of(openDef(group), closedDef(group), tickTockContext());
+    final var openDef = csp.module(openSig(group, null), openDefBody(group));
+    final var closedDef = csp.instance(SpecGroupField.PARAMETRIC_CLOSED.toString(),
+        openSig(group, group.getAssignments()));
+    return Stream.of(openDef, closedDef, tickTockContext());
   }
 
   @Override
@@ -56,27 +65,13 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   }
 
   /**
-   * Generates a process definition for the 'closed' form of this group.
-   *
-   * <p>The closed form has no parameters, with all constants assigned values either from its
-   * target's instantiation or from the top-level instantiations.csp file.
-   *
-   * @param it the group for which we are generating a closed form.
-   * @return CSP defining the 'closed' form of this group.
-   */
-  private CharSequence closedDef(SpecificationGroup it) {
-    return csp.instance(
-        SpecGroupField.PARAMETRIC_CLOSED.toString(), openSig(it, it.getAssignments()));
-  }
-
-  /**
    * Generates an external reference for the 'open' form of this group.
    *
    * <p>The open form has parameters exposed, and any reference to it must fill those parameters
    * using either values in the given instantiation or, where values are missing, references to the
    * instantiations CSP file.
    *
-   * @param it the group for which we are generating CSP.
+   * @param it   the group for which we are generating CSP.
    * @param inst the instantiation for this 'open' form.
    * @return generated CSP for referring to the 'open' form of this group.
    */
@@ -89,36 +84,22 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   }
 
   /**
-   * Generates a process definition for the 'open' form of this specification.
-   *
-   * @param it the group for which we are generating an open form.
-   * @return generated CSP for the 'open' form of a spec group.
-   */
-  private CharSequence openDef(SpecificationGroup it) {
-    return csp.module(openSig(it, null), openDefBody(it));
-  }
-
-  /**
    * Generates the body of this specification's 'open' form.
    *
-   * @implNote This merges elements from two sources: a set common to all specifications (such as
-   *     the target definition), and a set overridden by the downstream class.
    * @param it the group for which we are generating an open form.
    * @return CSP-M for the body of the 'open' form of the spec group.
+   * @implNote This merges elements from two sources: a set common to all specifications (such as
+   * the target definition), and a set overridden by the downstream class.
    */
   private CharSequence openDefBody(SpecificationGroup it) {
-    return csp.innerJoin(openDefBodyElements(it));
-  }
-
-  /**
-   * Generates the set of elements inside the open form.
-   *
-   * @param it the group for which we are generating an open form.
-   * @return CSP-M for common elements of the body of the 'open' form of the spec group.
-   */
-  private Stream<CharSequence> openDefBodyElements(SpecificationGroup it) {
     // Space here for expansion.
-    return Stream.concat(Stream.of(targetDef(it)), specificationElements(it));
+    final var specs = it.getInteractions();
+
+    final var rootElements = Stream.of(targetDef(it), msg.generate(it));
+
+    final var elements = Streams.concat(rootElements, memModule(specs), specModule(specs));
+
+    return csp.innerJoin(elements);
   }
 
   private CharSequence targetDef(SpecificationGroup it) {
@@ -128,13 +109,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
   private CharSequence tickTockContext() {
     // TODO(@MattWindsor91): restrict from the universe?
-    return csp.instance(
-        SpecGroupField.TICK_TOCK_CONTEXT.toString(), csp.function("model_shifting", universe()));
-  }
-
-  private CharSequence universe() {
-    return csp.namespaced(
-        SpecGroupField.MESSAGE_SET_MODULE.toString(), MessageSetGenerator.UNIVERSE_NAME);
+    return csp.instance(SpecGroupField.TICK_TOCK_CONTEXT.toString(),
+        csp.function("model_shifting", SpecGroupField.UNIVERSE.toString()));
   }
 
   /**
@@ -144,7 +120,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
    * we refer to any fallback references to the instantiations file, both definitions and references
    * can have the same signature generator.
    *
-   * @param group the group for which we are generating an open form.
+   * @param group     the group for which we are generating an open form.
    * @param outerInst any instantiation being applied at the outer level (can be null).
    * @return CSP referring to, or giving the signature of, the 'open' form of this group.
    */
@@ -163,25 +139,22 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
   @Override
   protected Stream<CharSequence> generatePrivateElements(SpecificationGroup group) {
-    return Stream.of(msg.generate(group));
-  }
+    // Put only things that don't need to be exposed publicly AND don't depend on the constant
+    // instantiation here.
+    final var universe = csp.definition(SpecGroupField.UNIVERSE.toString(),
+      csp.namespaced(tg.semEvents(group.getTarget())));
 
-  protected Stream<CharSequence> specificationElements(SpecificationGroup group) {
-    final var specs = group.getInteractions();
-    return Stream.concat(memModule(specs), specModule(specs));
+    return Stream.of(universe);
   }
 
   private Stream<CharSequence> memModule(EList<Interaction> sequences) {
-    return sequences.stream()
-        .map(Interaction::getVariables)
-        .filter(x -> x != null && !x.getVars().isEmpty())
-        .map(mg::generate)
+    return sequences.stream().map(Interaction::getVariables)
+        .filter(x -> x != null && !x.getVars().isEmpty()).map(mg::generate)
         .collect(collectToModule(SpecGroupParametricField.MEMORY_MODULE));
   }
 
   private Stream<CharSequence> specModule(EList<Interaction> sequences) {
-    return sequences.stream()
-        .map(this::specDef)
+    return sequences.stream().map(this::specDef)
         .collect(collectToModule(SpecGroupParametricField.SEQUENCE_MODULE));
   }
 
@@ -191,11 +164,11 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
   /**
    * Joins a stream of character sequences with newlines, then wraps the result in a parametric
-   * field module only if the resulting sequence is empty.
+   * field module only if the resulting sequence is non-empty.
    *
    * @param field the field corresponding to the module to produce.
    * @return an empty Stream if there is no module; else, a singleton Stream containing the
-   *     character sequence.
+   * character sequence.
    */
   private Collector<CharSequence, ?, Stream<CharSequence>> collectToModule(
       SpecGroupParametricField field) {
@@ -207,8 +180,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     final var name = field.toString();
     final var isTimed = field == SpecGroupParametricField.SEQUENCE_MODULE;
 
-    return Stream.of(mod)
-        .filter(x -> !x.isEmpty())
+    return Stream.of(mod).filter(x -> !x.isEmpty())
         .map(x -> csp.module(name, csp.timedIf(isTimed, x)));
   }
 }

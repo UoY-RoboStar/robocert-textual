@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
-import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.model.robocert.Interaction;
 
 /**
@@ -35,8 +35,6 @@ public class InteractionGenerator {
 
   @Inject
   private LetGenerator lg;
-  @Inject
-  private MessageSetGenerator msg;
   @Inject
   private CSPStructureGenerator csp;
   @Inject
@@ -84,7 +82,7 @@ public class InteractionGenerator {
 
   private CharSequence alphas(List<LifelineContext> lines) {
     // TODO(@MattWindsor91): do NOT synchronise on everything!
-    return defs(lines, LifelineContext::alphaCSP, x -> msg.qualifiedUniverseName());
+    return defs(lines, LifelineContext::alphaCSP, x -> SpecGroupField.UNIVERSE.toString());
   }
 
   private CharSequence procs(Interaction s, List<LifelineContext> lines) {

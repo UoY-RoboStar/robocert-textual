@@ -29,6 +29,7 @@ import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
+import robocalc.robocert.model.robocert.util.TargetFactory;
 import robocalc.robocert.tests.util.DummyVariableFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
@@ -49,6 +50,8 @@ class TargetGeneratorTest {
   private ExpressionFactory exprFactory;
   @Inject
   private DummyVariableFactory varFactory;
+  @Inject
+  private TargetFactory targetFactory;
 
   /**
    * The system under test.
@@ -74,35 +77,26 @@ class TargetGeneratorTest {
     module.getNodes().add(rp);
     module.setName("mod");
 
-    final var target = certFactory.createModuleTarget();
-    target.setModule(module);
+    final var target = targetFactory.module(module);
 
-    assertThat(
-        target,
-        generatesOpenDef(
-            null,
-            """
-                -- Begin overrides to instantiations.csp
-                const_mod_rp_foo = 42 -- initialised in RoboChart
-                -- End overrides to instantiations.csp
-                Target = mod::O__({- id -} 0, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
-                """));
+    assertThat(target, generatesOpenDef(null, """
+        -- Begin overrides to instantiations.csp
+        const_mod_rp_foo = 42 -- initialised in RoboChart
+        -- End overrides to instantiations.csp
+        Target = mod::O__({- id -} 0, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
+        """));
 
     // Instantiate "baz" at the RoboCert level:
     final var cinst = certFactory.createConstAssignment();
     cinst.getConstants().add(vars.getVars().get(2));
     cinst.setValue(exprFactory.integer(64));
-    assertThat(
-        target,
-        generatesOpenDef(
-            List.of(cinst),
-            """
-                -- Begin overrides to instantiations.csp
-                const_mod_rp_foo = 42 -- initialised in RoboChart
-                const_mod_rp_baz = 64 -- initialised in RoboCert
-                -- End overrides to instantiations.csp
-                Target = mod::O__({- id -} 0, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
-                """));
+    assertThat(target, generatesOpenDef(List.of(cinst), """
+        -- Begin overrides to instantiations.csp
+        const_mod_rp_foo = 42 -- initialised in RoboChart
+        const_mod_rp_baz = 64 -- initialised in RoboCert
+        -- End overrides to instantiations.csp
+        Target = mod::O__({- id -} 0, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
+        """));
   }
 
   /**
@@ -113,5 +107,30 @@ class TargetGeneratorTest {
    */
   private Matcher<Target> generatesOpenDef(List<ConstAssignment> inst, String expected) {
     return generatesCSP(expected, t -> gen.openDef(t, inst));
+  }
+
+  /**
+   * Tests generation of sem-events for a specification group targeting a controller nested inside a
+   * module, but with no user-defined sets.
+   *
+   * <p>This is a regression test for GitHub issue #109.
+   */
+  @Test
+  void testSemEvents_NestedTarget() {
+    final var ctrl = chartFactory.createControllerDef();
+    ctrl.setName("Ctrl");
+
+    // nesting
+    final var mod = chartFactory.createRCModule();
+    mod.setName("Mod");
+    mod.getNodes().add(ctrl);
+
+    final var target = targetFactory.controller(ctrl);
+
+    final var grp = targetFactory.certFactory().createSpecificationGroup();
+    grp.setName("Specs");
+    grp.setTarget(target);
+
+    assertThat(grp.getTarget(), generatesCSP("Mod::Ctrl::sem__events", gen::semEvents));
   }
 }

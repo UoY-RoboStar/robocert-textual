@@ -35,12 +35,9 @@ import robocalc.robocert.model.robocert.util.InstantiationHelper;
  *
  * @author Matt Windsor
  */
-public record TargetGenerator(CTimedGeneratorUtils gu,
-                              CSPStructureGenerator csp,
-                              ExpressionGenerator eg,
-                              TargetParameterResolver paramRes,
-                              InstantiationHelper instHelp,
-                              VariableHelper varHelp) {
+public record TargetGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp,
+                              ExpressionGenerator eg, TargetParameterResolver paramRes,
+                              InstantiationHelper instHelp, VariableHelper varHelp) {
 
   /**
    * Hardcoded ID (will need to be fixed if we support collections of robots).
@@ -60,6 +57,19 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
     Objects.requireNonNull(paramRes);
     Objects.requireNonNull(instHelp);
     Objects.requireNonNull(varHelp);
+  }
+
+  /**
+   * Gets the semantic events set of the given target.
+   *
+   * <p>We currently use this as the universe set; technically it is an overapproximation as it
+   * doesn't account for directionality of events.
+   *
+   * @param t the target for which we want the event set.
+   * @return the CSP-M name of the semantic events set.
+   */
+  public CharSequence semEvents(Target t) {
+    return csp.namespaced(gu.processId(t.getElement()), "sem__events");
   }
 
   /**
@@ -101,14 +111,11 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
 
     final var initial = p.tryGetConstant().map(Variable::getInitial);
     if (initial.isPresent()) {
-      return Stream.of(
-          commentedDefinition("RoboChart", id, initial.get()));
+      return Stream.of(commentedDefinition("RoboChart", id, initial.get()));
     }
 
     final var asst = p.tryGetConstant().flatMap(k -> instHelp.getConstant(inst, k));
-    return asst.map(
-            expression -> commentedDefinition("RoboCert", id, expression))
-        .stream();
+    return asst.map(expression -> commentedDefinition("RoboCert", id, expression)).stream();
   }
 
   private String commentedDefinition(String comment, String id, Expression expression) {
@@ -129,8 +136,8 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
      * optimisation level.
      */
     final var name = gu.getFullProcessName(t.getElement(), false, USE_OPTIMISED_TARGETS);
-    final var args = Stream.concat(Stream.of(ID),
-        params.stream().map(k -> k.cspId(gu))).toArray(CharSequence[]::new);
+    final var args = Stream.concat(Stream.of(ID), params.stream().map(k -> k.cspId(gu)))
+        .toArray(CharSequence[]::new);
     return csp.definition(SpecGroupParametricField.TARGET.toString(), csp.function(name, args));
   }
 
@@ -143,8 +150,8 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
    * @return an array of CSP-M elements corresponding to the arguments of a target that are not yet
    * instantiated, instantiated with the given instantiation.
    */
-  public CharSequence[] openSigParams(
-      Target t, List<ConstAssignment> lastInst, List<ConstAssignment> thisInst) {
+  public CharSequence[] openSigParams(Target t, List<ConstAssignment> lastInst,
+      List<ConstAssignment> thisInst) {
     // TODO(@MattWindsor91): work out what we need here to have derived
     // groups.  Maybe a stack of instantiations?
     var params = paramRes.parameterisation(t);
@@ -163,7 +170,7 @@ public record TargetGenerator(CTimedGeneratorUtils gu,
    * <p>If the value is available, we emit a CSP comment giving the name, for clarity.
    *
    * @param inst the instantiation (may be null).
-   * @param p the parameter whose value is requested.
+   * @param p    the parameter whose value is requested.
    * @return a CSP string expanding to the value of the constant.
    */
   private CharSequence generateParam(List<ConstAssignment> inst, Parameter p) {

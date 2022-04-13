@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2021 University of York and others
+ * Copyright (c) 2021, 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -15,6 +15,7 @@ package robocalc.robocert.generator.tockcsp.seq.message;
 import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.function.Consumer;
+import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.MessageSetOptimiser;
 import robocalc.robocert.model.robocert.BinaryMessageSet;
@@ -37,10 +38,6 @@ public record MessageSetGenerator(CSPStructureGenerator csp, MessageSetOptimiser
    * The name of the message set module exposed by RoboCert.
    */
   public static final CharSequence MODULE_NAME = "MsgSets";
-  /**
-   * The name of the universe set exposed by RoboCert in the message set module.
-   */
-  public static final CharSequence UNIVERSE_NAME = "Universe";
 
   /**
    * Constructs a message set generator.
@@ -81,7 +78,7 @@ public record MessageSetGenerator(CSPStructureGenerator csp, MessageSetOptimiser
    */
   public CharSequence generate(MessageSet m) {
     if (m instanceof UniverseMessageSet) {
-      return qualifiedUniverseName();
+      return SpecGroupField.UNIVERSE.toString();
     }
     if (m instanceof ExtensionalMessageSet e) {
       return msg.generateBulkCSPEventSet(e.getMessages());
@@ -101,9 +98,5 @@ public record MessageSetGenerator(CSPStructureGenerator csp, MessageSetOptimiser
       case INTERSECTION -> "inter";
       case DIFFERENCE -> "diff";
     };
-  }
-
-  public CharSequence qualifiedUniverseName() {
-    return csp.namespaced(MODULE_NAME, UNIVERSE_NAME);
   }
 }

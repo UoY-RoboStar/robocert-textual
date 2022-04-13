@@ -42,12 +42,12 @@ public class NamedSetModuleGeneratorTest {
   /**
    * Tests generation of a module for a specification group targeting a controller nested inside a
    * module, but with no user-defined sets.
-   *
-   * <p>This is a regression test for GitHub issue #109.
    */
   @Test
-  void testGenerate_NestedTarget() {
-    // TODO(@MattWindsor91): if we ever change the universe definition, this will break.
+  void testGenerate_nestedTarget_empty() {
+    // This used to be a regression test for GitHub issue #109, but that is now done in
+    // TargetGeneratorTest.  Instead, this mainly just makes sure that we're not putting the
+    // universe or anything similar in the message sets.
 
     final var ctrl = chartFactory.createControllerDef();
     ctrl.setName("Ctrl");
@@ -66,7 +66,6 @@ public class NamedSetModuleGeneratorTest {
     final var expected = """
 module MsgSets
 exports
-  Universe = Mod::Ctrl::sem__events
 endmodule
     """;
 
