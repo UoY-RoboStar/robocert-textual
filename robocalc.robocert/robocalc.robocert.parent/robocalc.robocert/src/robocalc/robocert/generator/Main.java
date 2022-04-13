@@ -52,12 +52,19 @@ import robocalc.robocert.generator.utils.FilenameHelper;
  * @author Matt Windsor
  */
 public class Main {
-  @Inject private Provider<ResourceSet> resourceSetProvider;
-  @Inject private IResourceValidator validator;
-  @Inject private GeneratorDelegate generator;
-  @Inject private JavaIoFileSystemAccess fileAccess;
-  @Inject private FilenameHelper filename;
-  @Inject private IOutputConfigurationProvider outputConfigurationProvider;
+
+  @Inject
+  private Provider<ResourceSet> resourceSetProvider;
+  @Inject
+  private IResourceValidator validator;
+  @Inject
+  private GeneratorDelegate generator;
+  @Inject
+  private JavaIoFileSystemAccess fileAccess;
+  @Inject
+  private FilenameHelper filename;
+  @Inject
+  private IOutputConfigurationProvider outputConfigurationProvider;
 
   /**
    * Runs the command-line interface.
@@ -146,9 +153,12 @@ public class Main {
   private void expandRelativeDir(String string, OutputConfiguration x) {
     x.setOutputDirectory(x.getOutputDirectory().replaceFirst("^.", string));
   }
-
+ 
+  @SuppressWarnings("LocalCanBeFinal")
   private List<Path> findFiles(Path project) throws IOException {
-    return Files.walk(project).filter(this::shouldConsider).toList();
+    try (var files = Files.walk(project)) {
+      return files.filter(this::shouldConsider).toList();
+    }
   }
 
   //
@@ -186,21 +196,29 @@ public class Main {
     if ("jar".equals(uri.getScheme())) {
       fs = FileSystems.newFileSystem(uri, Collections.emptyMap());
       myPath = fs.getPath("lib/robochart");
-    } else myPath = Paths.get(uri);
+    } else {
+      myPath = Paths.get(uri);
+    }
 
     // can't use the stream directly because addResourceToSet throws
     final var walk = Files.list(myPath);
-    for (final var it = walk.iterator(); it.hasNext(); ) addResourceToSet(set, it.next());
+    for (final var it = walk.iterator(); it.hasNext(); ) {
+      addResourceToSet(set, it.next());
+    }
     walk.close();
 
-    if (fs != null) fs.close();
+    if (fs != null) {
+      fs.close();
+    }
     return set;
   }
 
   private java.net.URI findRoboChartStandardLibrary() throws URISyntaxException {
     final var classLoader = RoboCertStandaloneSetup.class.getClassLoader();
     var url = classLoader.getResource("lib/robochart");
-    if (url == null) url = classLoader.getResource("robochart");
+    if (url == null) {
+      url = classLoader.getResource("robochart");
+    }
     final var uri = Objects.requireNonNull(url).toURI();
     System.out.println(uri);
     return uri;
