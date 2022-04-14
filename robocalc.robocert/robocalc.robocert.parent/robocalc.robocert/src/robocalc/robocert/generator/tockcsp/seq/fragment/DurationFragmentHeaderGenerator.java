@@ -15,6 +15,7 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.DurationFragment;
 
 /**
@@ -22,7 +23,8 @@ import robocalc.robocert.model.robocert.DurationFragment;
  *
  * @author Matt Windsor
  */
-public record DurationFragmentHeaderGenerator(DiscreteBoundGenerator boundGen) {
+public record DurationFragmentHeaderGenerator(CSPStructureGenerator csp,
+                                              DiscreteBoundGenerator boundGen) {
 
   /**
    * Name of the process family that implements the bounded duration header. (See
@@ -47,19 +49,19 @@ public record DurationFragmentHeaderGenerator(DiscreteBoundGenerator boundGen) {
    * bounds become interleaved waits.  This only occurs on the lifeline affected by the deadline.
    *
    * @param frag duration fragment for which we are generating a header.
-   * @param ctx lifeline context, used to see if this is the correct lifeline for the duration
-   *            to take effect.
+   * @param ctx  lifeline context, used to see if this is the correct lifeline for the duration to
+   *             take effect.
    * @return the generated CSP-M.
    */
   public CharSequence generate(DurationFragment frag, LifelineContext ctx) {
     Objects.requireNonNull(frag);
 
-    if (ctx.isForLifeline(frag.getActor())) {
-      final var bound = frag.getBound();
-      Objects.requireNonNull(bound, "duration fragments must have bounds");
-      return boundGen.generate(bound, DURATION_PROC);
-    } else {
-      return "{- duration on actor %s -} ".formatted(ctx.actor().getName());
+    if (!ctx.isForLifeline(frag.getActor())) {
+      return csp.commented("duration on %s".formatted(ctx.actor().getName()), "");
     }
+
+    final var bound = frag.getBound();
+    Objects.requireNonNull(bound, "duration fragments must have bounds");
+    return boundGen.generate(bound, DURATION_PROC);
   }
 }

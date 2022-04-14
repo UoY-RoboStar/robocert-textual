@@ -14,13 +14,11 @@ package robocalc.robocert.generator.tockcsp.seq.occurrence;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.model.robocert.DeadlockOccurrence;
-import robocalc.robocert.model.robocert.LifelineOccurrence;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.Occurrence;
 import robocalc.robocert.model.robocert.WaitOccurrence;
@@ -30,10 +28,8 @@ import robocalc.robocert.model.robocert.WaitOccurrence;
  *
  * @author Matt Windsor
  */
-public record OccurrenceGeneratorImpl(CSPStructureGenerator csp,
-                                      ExpressionGenerator eg,
-                                      LoadStoreGenerator lsg,
-                                      MessageGenerator msg) implements
+public record OccurrenceGeneratorImpl(CSPStructureGenerator csp, ExpressionGenerator eg,
+                                      LoadStoreGenerator lsg, MessageGenerator msg) implements
     OccurrenceGenerator {
 
   /**
@@ -51,38 +47,33 @@ public record OccurrenceGeneratorImpl(CSPStructureGenerator csp,
   /**
    * Generates CSP-M for an occurrence.
    *
-   * @param occ   the occurrence.
-   * @param ctx context for the current lifeline.
+   * @param occ the occurrence.
    * @return the generated CSP.
    */
-  public CharSequence generate(Occurrence occ, LifelineContext ctx) {
+  public CharSequence generate(Occurrence occ) {
+    // We assume that the occurrence fragment generator has decided that this occurrence is
+    // relevant to the lifeline.
     if (occ instanceof MessageOccurrence m) {
       return generateMessage(m);
     }
-    if (occ instanceof LifelineOccurrence l) {
-      return l.getActor().equals(ctx.actor()) ? generateLifeline(l) : "{- not this lifeline -} SKIP";
+    if (occ instanceof DeadlockOccurrence) {
+      return "STOP";
+    }
+    if (occ instanceof WaitOccurrence w) {
+      return generateWait(w);
     }
     throw new IllegalArgumentException("unsupported occurrence: %s".formatted(occ));
   }
 
   private CharSequence generateMessage(MessageOccurrence m) {
     // TODO(@MattWindsor91): This should really be in the CSPStructureGenerator... somehow.
-    return "%s -> %sSKIP".formatted(msg.generatePrefix(m.getMessage()), lsg.generateBindingStores(m));
-  }
-
-  private CharSequence generateLifeline(LifelineOccurrence l) {
-    if (l instanceof DeadlockOccurrence) {
-      return "STOP";
-    }
-    if (l instanceof WaitOccurrence w) {
-      // TODO(@MattWindsor91): only if ctx names this actor.
-      return generateWait(w);
-    }
-    throw new IllegalArgumentException("unsupported lifeline occurrence: %s".formatted(l));
+    return "%s -> %sSKIP".formatted(msg.generatePrefix(m.getMessage()),
+        lsg.generateBindingStores(m));
   }
 
   private CharSequence generateWait(WaitOccurrence w) {
     // This is in the tock-CSP standard library.
     return csp.function("WAIT", eg.generate(w.getUnits()));
   }
+
 }

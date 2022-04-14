@@ -22,11 +22,13 @@ import robocalc.robocert.model.robocert.Occurrence;
 public interface OccurrenceGenerator {
 
   /**
-   * Generates code for an occurrence from the perspective of a lifeline.
+   * Generates code for an occurrence.
+   *
+   * <p>This generator does not handle lifeline context specifics; the occurrence fragment
+   * generator will handle them.
    *
    * @param occ the occurrence.
-   * @param ctx context for the current lifeline.
    * @return the generated code.
    */
-  CharSequence generate(Occurrence occ, LifelineContext ctx);
+  CharSequence generate(Occurrence occ);
 }

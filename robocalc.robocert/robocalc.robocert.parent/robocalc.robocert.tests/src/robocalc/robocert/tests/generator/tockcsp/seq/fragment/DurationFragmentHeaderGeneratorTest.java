@@ -119,7 +119,7 @@ class DurationFragmentHeaderGeneratorTest {
     fragment.setActor(a);
     fragment.getBound().setLower(exprs.integer(4));
     fragment.getBound().setUpper(exprs.integer(6));
-    assertThat(fragment, generatesCSPDurationHeader("{- duration on actor C -} "));
+    assertThat(fragment, generatesCSPDurationHeader("{- duration on C -} "));
   }
 
   private Matcher<DurationFragment> generatesCSPDurationHeader(String expected) {

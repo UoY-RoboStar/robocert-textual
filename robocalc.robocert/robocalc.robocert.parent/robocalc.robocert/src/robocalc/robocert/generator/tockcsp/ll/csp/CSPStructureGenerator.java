@@ -29,6 +29,7 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
 
   /**
    * Constructs a CSP structure generator.
+   *
    * @param binGenerator sub-generator for binary operations.
    * @param letGenerator sub-generator for let expressions.
    */
@@ -40,10 +41,11 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
 
   /**
    * Shorthand for starting to build a let expression.
+   *
    * @param elements the elements of the top of the let expression.
    * @return an object for constructing the let expression.
    */
-  public Let let(CharSequence ...elements) {
+  public Let let(CharSequence... elements) {
     return letGenerator.let(elements);
   }
 
@@ -52,6 +54,13 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
    */
   public CharSequence timestop() {
     return "USTOP";
+  }
+
+  /**
+   * @return the RoboChart encoding of timed skip.
+   */
+  public CharSequence skip() {
+    return "SKIP";
   }
 
   /**
@@ -250,7 +259,8 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
   public CharSequence datatype(CharSequence name, CharSequence... elements) {
     // TODO(@MattWindsor91): break overly long datatypes.
     if (elements.length < 1) {
-      throw new IllegalArgumentException("datatype %s must contain at least one element".formatted(name));
+      throw new IllegalArgumentException(
+          "datatype %s must contain at least one element".formatted(name));
     }
     return definition("datatype %s".formatted(name), String.join(" | ", elements));
   }
