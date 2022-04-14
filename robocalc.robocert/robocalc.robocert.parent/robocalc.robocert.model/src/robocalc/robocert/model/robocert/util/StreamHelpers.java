@@ -24,38 +24,42 @@ import org.eclipse.emf.common.util.EList;
  * @author Matt Windsor
  */
 public class StreamHelpers {
-	/**
-	 * Filters a stream based on type.
-	 * @param <T> the input type.
-	 * @param <U> the output type.
-	 * @param in the input stream.
-	 * @param clazz class of the output type.
-	 * @return the input stream, filtered only to those items of type U.
-	 */
-	public static <T, U extends T> Stream<U> filter(Stream<T> in, Class<U> clazz) {
-		return in.filter(clazz::isInstance).map(clazz::cast);
-	}
 
-	/**
-	 * Gets the first item, if any, of a stream that has the given type.
-	 * @param <T> the input type.
-	 * @param <U> the output type.
-	 * @param in the input stream.
-	 * @param clazz class of the output type.
-	 * @return the first item, if any, of the input stream that is an instance of type U.
-	 */
-	public static <T, U extends T> Optional<U> firstOfClass(Stream<T> in, Class<U> clazz) {
-		return filter(in, clazz).findFirst();
-	}
+  /**
+   * Filters a stream based on type.
+   *
+   * @param in    the input stream.
+   * @param clazz class of the output type.
+   * @param <T>   the input type.
+   * @param <U>   the output type.
+   * @return the input stream, filtered only to those items of type U.
+   */
+  public static <T, U extends T> Stream<U> filter(Stream<T> in, Class<U> clazz) {
+    return in.filter(clazz::isInstance).map(clazz::cast);
+  }
 
-	/**
-	 * Collects a stream to an EList, potentially downcasting.
-	 * @param in the stream to collect.
-	 * @param <T> the output type.
-	 * @param <U> the input type.
-	 * @return the EList containing the contents of in.
-	 */
-	public static <T, U extends T> EList<T> toEList(Stream<U> in) {
-		return in.collect(Collectors.toCollection(BasicEList::new));
-	}
+  /**
+   * Gets the first item, if any, of a stream that has the given type.
+   *
+   * @param <T>   the input type.
+   * @param <U>   the output type.
+   * @param in    the input stream.
+   * @param clazz class of the output type.
+   * @return the first item, if any, of the input stream that is an instance of type U.
+   */
+  public static <T, U extends T> Optional<U> firstOfClass(Stream<T> in, Class<U> clazz) {
+    return filter(in, clazz).findFirst();
+  }
+
+  /**
+   * Collects a stream to an EList, potentially downcasting.
+   *
+   * @param in  the stream to collect.
+   * @param <T> the output type.
+   * @param <U> the input type.
+   * @return the EList containing the contents of in.
+   */
+  public static <T, U extends T> EList<T> toEList(Stream<U> in) {
+    return in.collect(Collectors.toCollection(BasicEList::new));
+  }
 }

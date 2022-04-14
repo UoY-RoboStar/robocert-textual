@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 University of York and others
+ * Copyright (c) 2021, 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,11 +12,12 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq;
 
-import com.google.common.collect.Streams;
+import com.google.inject.Inject;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Objects;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.ComponentTarget;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.World;
 
@@ -24,9 +25,21 @@ import robocalc.robocert.model.robocert.World;
  * Creates, from a sequence, a series of lifeline contexts for use in generating individual
  * lifelines.
  *
+ * @param actorGenerator used to get data constructor names for actors.
  * @author Matt Windsor
  */
-public class LifelineContextFactory {
+public record LifelineContextFactory(ActorGenerator actorGenerator) {
+
+  /**
+   * Constructs a lifeline context factory.
+   *
+   * @param actorGenerator used to get data constructor names for actors.
+   */
+  @Inject
+  public LifelineContextFactory {
+    Objects.requireNonNull(actorGenerator);
+  }
+
   /**
    * Creates contexts for each semantics-visible lifeline in the given sequence.
    *
@@ -37,21 +50,17 @@ public class LifelineContextFactory {
    * @return the list of contexts.
    */
   public List<LifelineContext> createContexts(Interaction s) {
-    //noinspection UnstableApiUsage
-    return Streams.mapWithIndex(actorsVisibleInSemantics(s), this::createContext).toList();
-  }
+    final var target = s.getGroup().getTarget();
 
-  private Stream<Actor> actorsVisibleInSemantics(Interaction s) {
-    return s.getActors().parallelStream().filter(this::actorVisibleInSemantics);
+    final var visibleActors = s.getActors().stream().filter(this::actorVisibleInSemantics).toList();
+    final var isSingleton = target instanceof ComponentTarget || visibleActors.size() < 2;
+
+    return visibleActors.parallelStream()
+        .map(a -> new LifelineContext(a, actorGenerator.dataConstructor(a), isSingleton)).toList();
   }
 
   private boolean actorVisibleInSemantics(Actor a) {
     // This may change in future.
     return !(a instanceof World);
-  }
-
-  private LifelineContext createContext(Actor a, long index) {
-    // This will expand in future.
-    return new LifelineContext(a, index);
   }
 }

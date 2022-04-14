@@ -12,8 +12,11 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
+import com.google.inject.Inject;
+import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator.Let;
 
 /**
  * Generates common CSP-M structures such as modules and timed sections.
@@ -22,7 +25,34 @@ import java.util.stream.Collectors;
  *
  * @author Matt Windsor
  */
-public class CSPStructureGenerator {
+public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator letGenerator) {
+
+  /**
+   * Constructs a CSP structure generator.
+   * @param binGenerator sub-generator for binary operations.
+   * @param letGenerator sub-generator for let expressions.
+   */
+  @Inject
+  public CSPStructureGenerator {
+    Objects.requireNonNull(binGenerator);
+    Objects.requireNonNull(letGenerator);
+  }
+
+  /**
+   * Shorthand for starting to build a let expression.
+   * @param elements the elements of the top of the let expression.
+   * @return an object for constructing the let expression.
+   */
+  public Let let(CharSequence ...elements) {
+    return letGenerator.let(elements);
+  }
+
+  /**
+   * @return the RoboChart encoding of timestop.
+   */
+  public CharSequence timestop() {
+    return "USTOP";
+  }
 
   /**
    * Generates a comment before something else.
@@ -159,7 +189,7 @@ public class CSPStructureGenerator {
    * @return CSP-M for the sequential composition of the given arguments.
    */
   public CharSequence seq(CharSequence... args) {
-    return (args.length == 0) ? "SKIP" : String.join(";\n", args);
+    return binGenerator.seq(args);
   }
 
   /**

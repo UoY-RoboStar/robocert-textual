@@ -53,7 +53,7 @@ class SubsequenceGeneratorTest {
 	}
 	
 	private Matcher<List<InteractionFragment>> generates(String expected) {
-		final var ctx = new LifelineContext(rc.createTargetActor(), 0);
+		final var ctx = new LifelineContext(rc.createTargetActor(), "a", true);
 		return generatesCSP(expected, s -> sg.generate(s, ctx));
 	}
 }

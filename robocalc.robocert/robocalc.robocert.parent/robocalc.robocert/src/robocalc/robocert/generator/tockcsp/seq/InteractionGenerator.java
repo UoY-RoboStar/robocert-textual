@@ -73,34 +73,24 @@ public class InteractionGenerator {
   private CharSequence generateWithoutMemory(Interaction s) {
     final var lines = lcf.createContexts(s);
     return switch (lines.size()) {
-      case 0 -> "USTOP";
-      case 1 -> csp.seq(generateLifelineBody(s, lines.get(0)), "USTOP");
-      default -> csp.seq(generateMultiLifeline(s, lines), "USTOP");
+      case 0 -> csp.timestop();
+      case 1 -> csp.seq(sg.generate(s.getFragments(), lines.get(0)), csp.timestop());
+      default -> generateMultiLifeline(s, lines);
     };
   }
 
   private CharSequence generateMultiLifeline(Interaction s, List<LifelineContext> lines) {
-    // TODO(@MattWindsor91): don't use a StringBuilder here.
-    final var sb = new StringBuilder();
-    final var nlines = lines.size();
-    for (var i = 0; i < nlines; i++) {
-      final var line = lines.get(i);
-      sb.append(line.procCSP(csp)).append(" ");
-      if (i < nlines - 1) {
-        sb.append("[| ").append(line.alphaCSP(csp)).append(" |] ");
-      }
-    }
-
-    return lg.let(alphas(lines), procs(s, lines)).within(sb.toString());
-  }
-
-  private CharSequence alphas(List<LifelineContext> lines) {
     // TODO(@MattWindsor91): do NOT synchronise on everything!
-    return defs(lines, LifelineContext::alphaCSP, x -> SpecGroupField.UNIVERSE.toString());
-  }
+    final var alphas = defs(lines, LifelineContext::alphaCSP,
+        x -> SpecGroupField.UNIVERSE.toString());
 
-  private CharSequence procs(Interaction s, List<LifelineContext> lines) {
-    return defs(lines, LifelineContext::procCSP, x -> csp.tuple(generateLifelineBody(s, x)));
+    final var procs = defs(lines, LifelineContext::procCSP,
+        x -> csp.tuple(sg.generate(s.getFragments(), x)));
+
+    final var body = csp.binGenerator()
+        .genParallel(x -> x.procCSP(csp), (x, _y) -> x.alphaCSP(csp), lines);
+
+    return lg.let(alphas, procs).within(csp.seq(body, csp.timestop()));
   }
 
   private CharSequence defs(List<LifelineContext> lines,
@@ -108,10 +98,7 @@ public class InteractionGenerator {
       Function<LifelineContext, CharSequence> rhs) {
     //noinspection UnstableApiUsage
     return Streams.mapWithIndex(lines.stream(),
-        (x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x))).collect(Collectors.joining("\n"));
-  }
-
-  private CharSequence generateLifelineBody(Interaction s, LifelineContext ctx) {
-    return sg.generate(s.getFragments(), ctx);
+            (x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x)))
+        .collect(Collectors.joining("\n"));
   }
 }
