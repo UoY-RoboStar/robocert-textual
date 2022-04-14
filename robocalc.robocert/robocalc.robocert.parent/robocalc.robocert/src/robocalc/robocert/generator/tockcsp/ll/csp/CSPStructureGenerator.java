@@ -163,28 +163,6 @@ public class CSPStructureGenerator {
   }
 
   /**
-   * Generates an iterated alphabetised parallel over the set [0, count), where the alphabet and
-   * process definitions are handled by the functions alphaFun(x) and procFun(x) respectively (where
-   * x is an element of the set).
-   * <p>
-   * This will generate notationally optimised CSP-M in the special cases of 0, 1, and 2 elements.
-   *
-   * @param count    number of processes (and respective alphabets).
-   * @param alphaFun name of the alphabetisation function (in CSP-M).
-   * @param procFun  name of the process function (in CSP-M).
-   * @return an iterated alphabetised parallel composition of procFun(0), ..., procFun(count-1),
-   * with alphabets in alphaFun(0), ..., alphaFun(count-1).
-   */
-  public CharSequence iterAlphaParallel(int count, CharSequence alphaFun, CharSequence procFun) {
-    return switch (count) {
-      case 0 -> "STOP";
-      case 1 -> "%s(0)".formatted(procFun);
-      case 2 -> "%s(0) [%s(0)||%s(0)] %s(1)".formatted(procFun, alphaFun, alphaFun, procFun);
-      default -> "|| x: {0..%d} @ [%s(x)] %s(x)".formatted(count - 1, alphaFun, procFun);
-    };
-  }
-
-  /**
    * Generates a CSP-M module with a name and public body.
    *
    * @param name the name of the module.
