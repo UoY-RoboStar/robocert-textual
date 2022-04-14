@@ -25,41 +25,39 @@ import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
  * Top-level generator for {@link BlockFragment}s.
- *
- * The CSP-M compilation strategy for block fragments is to lower them to the form F(P), where
- * P is the subsequence for the block and F is a function (possibly partially applied) representing
- * the 'header' of the fragment.
+ * <p>
+ * The CSP-M compilation strategy for block fragments is to lower them to the form F(P), where P is
+ * the subsequence for the block and F is a function (possibly partially applied) representing the
+ * 'header' of the fragment.
  */
 public record BlockFragmentGenerator
-    (CSPStructureGenerator csp,
-     InteractionOperandGenerator operandGen,
-     DurationFragmentHeaderGenerator durationHeaderGen,
-     LoopFragmentHeaderGenerator loopHeaderGen,
-     UntilFragmentHeaderGenerator untilHeaderGen
-     )
-{
+    (CSPStructureGenerator csp, InteractionOperandGenerator operandGen,
+     DurationFragmentHeaderGenerator durationHeaderGen, LoopFragmentHeaderGenerator loopHeaderGen,
+     UntilFragmentHeaderGenerator untilHeaderGen) {
+
   @Inject
-  public BlockFragmentGenerator {}
+  public BlockFragmentGenerator {
+  }
 
   /**
    * Generates CSP-M for a block fragment.
    *
    * @param fragment the fragment to generate.
-   * @param ctx the lifeline context for the current lifeline.
+   * @param ctx      the lifeline context for the current lifeline.
    * @return generated CSP-M for the block fragment.
    */
   public CharSequence generate(BlockFragment fragment, LifelineContext ctx) {
-    return String.join("", generateHeader(fragment), generateBody(fragment, ctx));
+    return String.join("", generateHeader(fragment, ctx), generateBody(fragment, ctx));
   }
 
-  private CharSequence generateHeader(BlockFragment fragment) {
+  private CharSequence generateHeader(BlockFragment fragment, LifelineContext ctx) {
     if (fragment instanceof DurationFragment d) {
-      return durationHeaderGen.generate(d);
+      return durationHeaderGen.generate(d, ctx);
     }
     if (fragment instanceof LoopFragment l) {
       return loopHeaderGen.generate(l);
     }
-    if (fragment instanceof OptFragment l) {
+    if (fragment instanceof OptFragment) {
       return "Opt";
     }
     if (fragment instanceof UntilFragment u) {

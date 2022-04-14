@@ -12,6 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.generator.intf.seq;
 
+import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Actor;
 
@@ -47,6 +48,17 @@ public record LifelineContext(Actor actor, CharSequence dataConstructor, boolean
    */
   public CharSequence procCSP(CSPStructureGenerator csp) {
     return lifelineDef(csp, PROC_FUNCTION);
+  }
+
+  /**
+   * Is this context for the given actor?
+   *
+   * @param a the actor to check against.
+   * @return true provided that this context is building the lifeline for {@code a}.
+   */
+  public boolean isForLifeline(Actor a) {
+    // TODO(@MattWindsor91): can we just use reference equality?
+    return EcoreUtil2.equals(a, actor);
   }
 
   private CharSequence lifelineDef(CSPStructureGenerator csp, String defName) {

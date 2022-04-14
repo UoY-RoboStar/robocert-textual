@@ -24,6 +24,7 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.seq.fragment.DurationFragmentHeaderGenerator;
 import robocalc.robocert.model.robocert.DurationFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
@@ -46,26 +47,32 @@ class DurationFragmentHeaderGeneratorTest {
   @Inject private ExpressionFactory exprs;
 
   private DurationFragment fragment;
+  private LifelineContext ctx;
 
   @BeforeEach
   void setUp() {
+    final var act = factory.createComponentActor();
+    act.setName("C");
+    ctx = new LifelineContext(act, "x", false);
+
     final var inner = factory.createInteractionOperand();
     fragment = factory.createDurationFragment();
     fragment.setBody(inner);
     fragment.setBound(factory.createDiscreteBound());
+    fragment.setActor(ctx.actor());
   }
 
   /** Makes sure no-bound-object durations (which are ill-formed) can't generate CSP. */
   @Test
   void noBoundObject() {
     fragment.setBound(null);
-    assertThrows(NullPointerException.class, () -> gen.generate(fragment));
+    assertThrows(NullPointerException.class, () -> gen.generate(fragment, ctx));
   }
 
   /** Makes sure no-bound durations (which are ill-formed) can't generate CSP. */
   @Test
   void noBounds() {
-    assertThrows(NullPointerException.class, () -> gen.generate(fragment));
+    assertThrows(NullPointerException.class, () -> gen.generate(fragment, ctx));
   }
 
   /** Tests that a duration with a lower bound only is generated properly. */
@@ -104,7 +111,18 @@ class DurationFragmentHeaderGeneratorTest {
     assertThat(fragment, generatesCSPDurationHeader("DurationRange(4, 6)"));
   }
 
+  /** Tests that a non-singleton duration for the wrong actor is generated properly. */
+  @Test
+  void wrongActorNonSingleton() {
+    final var a = factory.createWorld();
+    a.setName("W");
+    fragment.setActor(a);
+    fragment.getBound().setLower(exprs.integer(4));
+    fragment.getBound().setUpper(exprs.integer(6));
+    assertThat(fragment, generatesCSPDurationHeader("{- duration on actor C -} "));
+  }
+
   private Matcher<DurationFragment> generatesCSPDurationHeader(String expected) {
-    return generatesCSP(expected, gen::generate);
+    return generatesCSP(expected, c -> gen.generate(c, ctx));
   }
 }
