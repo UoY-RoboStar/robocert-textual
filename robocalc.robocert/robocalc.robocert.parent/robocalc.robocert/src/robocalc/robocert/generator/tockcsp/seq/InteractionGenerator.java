@@ -72,12 +72,26 @@ public class InteractionGenerator {
 
   private CharSequence generateWithoutMemory(Interaction s) {
     final var lines = lcf.createContexts(s);
-    // Technically, we don't really need a let-within here if we only have
-    // one process, but it simplifies some of the rest of the generator to
-    // not special-case that.
-    final var body = csp.seq(csp.iterAlphaParallel(lines.size(), LifelineContext.ALPHA_FUNCTION,
-        LifelineContext.PROC_FUNCTION), "USTOP");
-    return lg.let(alphas(lines), procs(s, lines)).within(body);
+    return switch (lines.size()) {
+      case 0 -> "USTOP";
+      case 1 -> csp.seq(generateLifelineBody(s, lines.get(0)), "USTOP");
+      default -> csp.seq(generateMultiLifeline(s, lines), "USTOP");
+    };
+  }
+
+  private CharSequence generateMultiLifeline(Interaction s, List<LifelineContext> lines) {
+    // TODO(@MattWindsor91): don't use a StringBuilder here.
+    final var sb = new StringBuilder();
+    final var nlines = lines.size();
+    for (var i = 0; i < nlines; i++) {
+      final var line = lines.get(i);
+      sb.append(line.procCSP(csp)).append(" ");
+      if (i < nlines - 1) {
+        sb.append("[| ").append(line.alphaCSP(csp)).append(" |] ");
+      }
+    }
+
+    return lg.let(alphas(lines), procs(s, lines)).within(sb.toString());
   }
 
   private CharSequence alphas(List<LifelineContext> lines) {
@@ -94,7 +108,7 @@ public class InteractionGenerator {
       Function<LifelineContext, CharSequence> rhs) {
     //noinspection UnstableApiUsage
     return Streams.mapWithIndex(lines.stream(),
-        (x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x))).collect(Collectors.joining());
+        (x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x))).collect(Collectors.joining("\n"));
   }
 
   private CharSequence generateLifelineBody(Interaction s, LifelineContext ctx) {
