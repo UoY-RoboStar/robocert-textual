@@ -12,19 +12,23 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq;
 
-import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
+import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
+import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.model.robocert.Interaction;
+import robocalc.robocert.model.robocert.Message;
 
 /**
  * Generates the top-level CSP-M infrastructure for {@link Interaction}s.
@@ -43,6 +47,8 @@ public class InteractionGenerator {
   private ModuleGenerator mg;
   @Inject
   private LifelineContextFactory lcf;
+  @Inject
+  private MessageGenerator msgGen;
 
   /**
    * Generates CSP-M for a sequence.
@@ -80,15 +86,14 @@ public class InteractionGenerator {
   }
 
   private CharSequence generateMultiLifeline(Interaction s, List<LifelineContext> lines) {
-    // TODO(@MattWindsor91): do NOT synchronise on everything!
     final var alphas = defs(lines, LifelineContext::alphaCSP,
-        x -> SpecGroupField.UNIVERSE.toString());
+        x -> alpha(s, x));
 
     final var procs = defs(lines, LifelineContext::procCSP,
         x -> csp.tuple(sg.generate(s.getFragments(), x)));
 
-    final var body = csp.binGenerator()
-        .genParallel(x -> x.procCSP(csp), (x, _y) -> x.alphaCSP(csp), lines);
+    final var body = csp.iterAlphaParallel(SpecGroupParametricField.ACTOR_ENUM.toString(),
+        LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
 
     return lg.let(alphas, procs).within(csp.seq(body, csp.timestop()));
   }
@@ -96,9 +101,18 @@ public class InteractionGenerator {
   private CharSequence defs(List<LifelineContext> lines,
       BiFunction<LifelineContext, CSPStructureGenerator, CharSequence> lhs,
       Function<LifelineContext, CharSequence> rhs) {
-    //noinspection UnstableApiUsage
-    return Streams.mapWithIndex(lines.stream(),
-            (x, i) -> csp.definition(lhs.apply(x, csp), rhs.apply(x)))
+    return lines.stream().map(x -> csp.definition(lhs.apply(x, csp), rhs.apply(x)))
         .collect(Collectors.joining("\n"));
+  }
+
+  private CharSequence alpha(Interaction s, LifelineContext ctx) {
+    // If we're using alphabet sets, we'll be using a separate process to handle UntilFragments.
+    // This means that the set of events handled directly by a lifeline is precisely that defined
+    // by its messages.
+    final var messages = EcoreUtil2.eAllOfType(s, Message.class);
+    final var sets = messages.stream()
+        .filter(m -> ctx.isForAnyOf(Stream.of(m.getFrom(), m.getTo())))
+        .map(msgGen::generateCSPEventSet).toArray(CharSequence[]::new);
+    return csp.iteratedUnion(csp.set(sets));
   }
 }

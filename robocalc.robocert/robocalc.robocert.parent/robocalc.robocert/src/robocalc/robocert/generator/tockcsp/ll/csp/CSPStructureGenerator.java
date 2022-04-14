@@ -129,6 +129,24 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
   }
 
   /**
+   * Generates an iterated alphabetised parallel over the set [0, count), where the alphabet and
+   * process definitions are handled by the functions alphaFun(x) and procFun(x) respectively (where
+   * x is an element of the set).
+   * <p>
+   * This will generate notationally optimised CSP-M in the special cases of 0, 1, and 2 elements.
+   *
+   * @param indices  set of indices (in CSP-M).
+   * @param alphaFun name of the alphabetisation function (in CSP-M).
+   * @param procFun  name of the process function (in CSP-M).
+   * @return an iterated alphabetised parallel composition of procFun(X), with alphabet alphaFun(X),
+   * where X comes from indices.
+   */
+  public CharSequence iterAlphaParallel(CharSequence indices, CharSequence alphaFun,
+      CharSequence procFun) {
+    return "|| x: %s @ [%s(x)] %s(x)".formatted(indices, alphaFun, procFun);
+  }
+
+  /**
    * Generates a CSP set comprehension construct.
    *
    * @param lhs  the LHS of the set comprehension.

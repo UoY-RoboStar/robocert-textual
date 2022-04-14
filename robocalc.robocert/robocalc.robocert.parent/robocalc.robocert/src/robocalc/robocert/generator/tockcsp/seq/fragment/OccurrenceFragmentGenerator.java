@@ -63,7 +63,7 @@ public record OccurrenceFragmentGenerator(CSPStructureGenerator csp, OccurrenceG
     final var occ = fragment.getOccurrence();
 
     // The occurrence must be relevant to this lifeline to generate it at all.
-    if (occurrenceActors(occ).noneMatch(ctx::isForLifeline)) {
+    if (!ctx.isForAnyOf(occurrenceActors(occ))) {
       return csp.commented("occurrence on %s".formatted(ctx.actor().getName()), csp.skip());
     }
 

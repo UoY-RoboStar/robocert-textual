@@ -56,7 +56,7 @@ public record DurationFragmentHeaderGenerator(CSPStructureGenerator csp,
   public CharSequence generate(DurationFragment frag, LifelineContext ctx) {
     Objects.requireNonNull(frag);
 
-    if (!ctx.isForLifeline(frag.getActor())) {
+    if (!ctx.isFor(frag.getActor())) {
       return csp.commented("duration on %s".formatted(ctx.actor().getName()), "");
     }
 
