@@ -14,9 +14,15 @@
 
 package robocalc.robocert.generator.tockcsp.core.tgt;
 
+import circus.robocalc.robochart.Connection;
+import circus.robocalc.robochart.Context;
+import circus.robocalc.robochart.Controller;
+import circus.robocalc.robochart.ControllerDef;
+import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedControllerGenerator;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedModuleGenerator;
+import circus.robocalc.robochart.generator.csp.comp.untimed.CMemoryGenerator;
 import com.google.inject.Inject;
 import java.util.Objects;
 import org.eclipse.emf.ecore.EObject;
@@ -24,6 +30,8 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.InControllerTarget;
 import robocalc.robocert.model.robocert.InModuleTarget;
+import robocalc.robocert.model.robocert.util.DefinitionResolver;
+import robocalc.robocert.model.robocert.util.StreamHelpers;
 
 /**
  * Generates CSP-M for the bodies of collection targets.
@@ -36,12 +44,21 @@ import robocalc.robocert.model.robocert.InModuleTarget;
  *
  * @author Matt Windsor
  */
-public record CollectionTargetBodyGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu, CTimedControllerGenerator ctrlGen, CTimedModuleGenerator modGen) {
+public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
+                                            DefinitionResolver defResolve, CTimedGeneratorUtils gu,
+                                            CTimedControllerGenerator ctrlGen,
+                                            CTimedModuleGenerator modGen,
+                                            CMemoryGenerator memGen) {
 
   /**
    * Constructs the generator.
    *
-   * @param csp low-level CSP formatter.
+   * @param csp        low-level CSP formatter.
+   * @param defResolve resolver for robotic platform definitions etc.
+   * @param gu         the RoboChart generator utilities.
+   * @param ctrlGen    the RoboChart controller generator.
+   * @param modGen     the RoboChart module generator.
+   * @param memGen     the RoboChart memory generator.
    */
   @Inject
   public CollectionTargetBodyGenerator {
@@ -49,6 +66,7 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp, CTimedGen
     Objects.requireNonNull(gu);
     Objects.requireNonNull(ctrlGen);
     Objects.requireNonNull(modGen);
+    Objects.requireNonNull(memGen);
   }
 
   /**
@@ -67,13 +85,26 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp, CTimedGen
     throw new IllegalArgumentException("unsupported collection target: %s".formatted(target));
   }
 
-
   public CharSequence generate(InModuleTarget target) {
     final var module = target.getModule();
+    final var rp = defResolve.platform(module).orElse(null);
 
-    final var body = "SKIP";
+    // As in the original module
+    final var async = module.getConnections().stream().filter(this::isAsyncConnection).toList();
+    final var bidirecAsync = async.stream().filter(Connection::isBidirec).toList();
 
-    return prioritiseAndHideTermination(body, module);
+    final var ctrls = StreamHelpers.filter(module.getNodes().stream(), Controller.class).toList();
+    final var ctrlBody = modGen.composeControllers(module, rp, ctrls, module.getConnections(),
+        false, false);
+    final var mem = memoryModule(rp);
+    final var memSet = csp.set(); // for now
+
+    var body = csp.function("wbisim", csp.bins().genParallel(ctrlBody, memSet, mem));
+    if (0 < async.size()) {
+      body = csp.let(modGen.compileBuffers(async, bidirecAsync, module)).within(body);
+    }
+
+    return handleTerminationAndPrioritise(body, module);
 
 /*
 				D__«params» = prioritise(
@@ -134,12 +165,22 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp, CTimedGen
  */
   }
 
+  private boolean isAsyncConnection(Connection c) {
+    return c.isAsync() && !(c.getTo() instanceof RoboticPlatform)
+        && !(c.getFrom() instanceof RoboticPlatform);
+  }
+
   public CharSequence generate(InControllerTarget target) {
     final var ctrl = target.getController();
 
-    final var body = "SKIP";
+    final var stms = ctrlGen.composeStateMachines(ctrl, ctrl.getMachines(), ctrl.getConnections(),
+        false, false);
+    final var mem = memoryModule(ctrl);
+    final var memSet = csp.set(); // for now
 
-    return prioritiseAndHideTermination(body, ctrl);
+    final var body = csp.function("wbisim", csp.bins().genParallel(stms, memSet, mem));
+
+    return handleTerminationAndPrioritise(body, ctrl);
     /*
     				D__«params» = prioritise(wbisim(
 					«ctrl.composeStateMachines(ctrl.machines,ctrl.connections, false, false)»
@@ -176,13 +217,19 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp, CTimedGen
      */
   }
 
-  private CharSequence prioritiseAndHideTermination(CharSequence body, EObject element) {
-    final var cs = csp.sets();
+  private String memoryModule(Context ctx) {
+    return "Memory" + memGen.memoryInstantiation(ctx);
+  }
 
-    final var terminate = procElement(element, "terminate");
+  private CharSequence handleTerminationAndPrioritise(CharSequence body, EObject element) {
+    final var cs = csp.sets();
+    final var cb = csp.bins();
+
+    final var terminate = cs.set(procElement(element, "terminate"));
     final var visibleMemoryEvents = procElement(element, "visibleMemoryEvents");
     final var priorities = cs.list(visibleMemoryEvents, cs.set("tock"));
-    return csp.function("prioritise", csp.bins().hide(body, cs.set(terminate)), priorities);
+    return csp.function("prioritise", cb.hide(cb.interrupt(body, terminate, csp.skip()), terminate),
+        priorities);
   }
 
   private CharSequence procElement(EObject element, CharSequence name) {

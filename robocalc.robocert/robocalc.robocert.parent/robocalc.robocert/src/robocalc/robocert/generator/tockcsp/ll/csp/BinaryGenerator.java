@@ -25,7 +25,20 @@ import java.util.function.Function;
 public class BinaryGenerator {
 
   /**
+   * Constructs an interrupt operation.
+   *
+   * @param lhs the left-hand side.
+   * @param set the interrupt set.
+   * @param rhs the right-hand side.
+   * @return the CSP-M interrupt operation.
+   */
+  public CharSequence interrupt(CharSequence lhs, CharSequence set, CharSequence rhs) {
+    return "%s [| %s |> %s".formatted(lhs, set, rhs);
+  }
+
+  /**
    * Constructs a hiding operation.
+   *
    * @param lhs the left-hand side.
    * @param rhs the right-hand side.
    * @return the CSP-M hiding operation.
@@ -42,6 +55,18 @@ public class BinaryGenerator {
    */
   public CharSequence seq(CharSequence... args) {
     return (args.length == 0) ? "SKIP" : String.join(";\n", args);
+  }
+
+  /**
+   * Constructs a generalised parallel operation between two processes.
+   *
+   * @param lhs   the left-hand process.
+   * @param alpha the alphabet between lhs and rhs.
+   * @param rhs   the right-hand process.
+   * @return CSP-M for the generalised parallel.
+   */
+  public CharSequence genParallel(CharSequence lhs, CharSequence alpha, CharSequence rhs) {
+    return genParallel(x -> x, (_l, _r) -> alpha, List.of(lhs, rhs));
   }
 
   /**

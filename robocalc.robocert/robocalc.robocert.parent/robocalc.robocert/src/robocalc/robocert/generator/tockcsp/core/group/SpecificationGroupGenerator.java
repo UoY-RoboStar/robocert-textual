@@ -109,7 +109,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     final var target =
       csp.definition(SpecGroupParametricField.TARGET.toString(), targetGen.openDef(group.getTarget()));
 
-    final var elements = Streams.concat(Stream.of(target),
+    final var elements = Streams.concat(Stream.of("transparent wbisim", target),
         msgSetGen.generate(group).stream(), memModule(specs).stream(), specModule(specs).stream());
 
     return csp.innerJoin(elements);
