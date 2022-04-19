@@ -72,7 +72,7 @@ public class DefinitionResolver {
 	private <T extends ConnectionNode> Stream<T> nodes(RCModule m, Class<T> clazz) {
 		if (m == null)
 			return Stream.empty();
-		return StreamHelpers.filter(m.getNodes().parallelStream(), clazz);
+		return StreamHelper.filter(m.getNodes().parallelStream(), clazz);
 	}
 
 	//

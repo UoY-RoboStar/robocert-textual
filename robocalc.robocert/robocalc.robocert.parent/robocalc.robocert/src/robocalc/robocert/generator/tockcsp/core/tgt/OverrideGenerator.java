@@ -26,6 +26,7 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.param.Parameter;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.util.InstantiationHelper;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Generates overrides of constants from RoboChart and RoboCert instantiations.
@@ -63,7 +64,9 @@ public record OverrideGenerator(CSPStructureGenerator csp, ExpressionGenerator e
    * @return CSP-M for the overrides block.
    */
   public CharSequence generate(List<ConstAssignment> inst, List<Parameter> params) {
-    return params.stream().flatMap(p -> override(inst, p))
+    final var id = csp.definition(TargetGenerator.ID, "0");
+    final var paramOverrides = params.stream().flatMap(p -> override(inst, p));
+    return StreamHelper.push(id, paramOverrides)
         .collect(Collectors.joining("\n", "-- begin overrides\n", "\n-- end overrides"));
   }
 

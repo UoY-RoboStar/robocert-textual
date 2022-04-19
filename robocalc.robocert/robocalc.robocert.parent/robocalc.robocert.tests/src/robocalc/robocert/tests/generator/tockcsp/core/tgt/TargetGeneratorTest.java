@@ -73,7 +73,7 @@ class TargetGeneratorTest {
     final var target = targetFactory.module(module);
 
     assertThat(target, generatesCSP("""
-        mod::O__({- id -} 0, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
+        mod::O__(id__, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
         """, gen::openDef));
   }
 

@@ -30,7 +30,7 @@ import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SpecificationGroup;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Provides scopes for variables.
@@ -104,7 +104,7 @@ public record VariableScopeProvider(
 
   private Stream<Variable> specGroupConstants(SpecificationGroup group) {
     // TODO(@MattWindsor91): find a way of making it so that we can assign parameters
-    return StreamHelpers.filter(tpResolver.parameterisation(group.getTarget()), ConstantParameter.class).map(ConstantParameter::constant);
+    return StreamHelper.filter(tpResolver.parameterisation(group.getTarget()), ConstantParameter.class).map(ConstantParameter::constant);
   }
 
   /**

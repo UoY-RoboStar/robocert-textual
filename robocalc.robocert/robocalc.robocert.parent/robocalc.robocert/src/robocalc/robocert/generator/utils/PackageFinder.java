@@ -16,7 +16,7 @@ package robocalc.robocert.generator.utils;
 import circus.robocalc.robochart.BasicPackage;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.resource.Resource;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Extensions for finding RoboStar packages in resources.
@@ -50,6 +50,6 @@ public class PackageFinder {
    */
   public <T extends BasicPackage> Stream<T> packagesInResource(
       Resource r, Class<T> clazz) {
-    return StreamHelpers.filter(r.getContents().stream(), clazz);
+    return StreamHelper.filter(r.getContents().stream(), clazz);
   }
 }

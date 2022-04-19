@@ -17,7 +17,6 @@ package robocalc.robocert.generator.tockcsp.core.tgt;
 import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.Controller;
-import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedControllerGenerator;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
@@ -31,7 +30,7 @@ import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.InControllerTarget;
 import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Generates CSP-M for the bodies of collection targets.
@@ -93,7 +92,7 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
     final var async = module.getConnections().stream().filter(this::isAsyncConnection).toList();
     final var bidirecAsync = async.stream().filter(Connection::isBidirec).toList();
 
-    final var ctrls = StreamHelpers.filter(module.getNodes().stream(), Controller.class).toList();
+    final var ctrls = StreamHelper.filter(module.getNodes().stream(), Controller.class).toList();
     final var ctrlBody = modGen.composeControllers(module, rp, ctrls, module.getConnections(),
         false, false);
     final var mem = memoryModule(rp);

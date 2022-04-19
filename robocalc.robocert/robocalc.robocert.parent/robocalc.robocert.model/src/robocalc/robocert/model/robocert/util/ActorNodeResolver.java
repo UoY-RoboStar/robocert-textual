@@ -202,7 +202,7 @@ public record ActorNodeResolver(DefinitionResolver defResolver) {
     // The world of a state machine or operation is everything visible inside its controller,
     // except the state machine body itself.
     return defResolver.controller(s).stream().flatMap(c -> {
-      final var above = Stream.concat(Stream.of(c), controllerWorld(c));
+      final var above = StreamHelper.push(c, controllerWorld(c));
       final var local = Stream.concat(c.getLOperations().stream(), c.getMachines().stream());
       return Stream.concat(above, local.filter(x -> x != s));
     });

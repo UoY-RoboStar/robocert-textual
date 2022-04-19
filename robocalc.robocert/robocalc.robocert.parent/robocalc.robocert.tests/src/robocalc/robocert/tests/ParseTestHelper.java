@@ -27,7 +27,7 @@ import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.MessageOccurrence;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
 import robocalc.robocert.model.robocert.SpecificationGroup;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /** 
  * Boilerplate for doing parser tests.
@@ -93,7 +93,7 @@ specification group X
 	 * @return the unlifted subsequence.
 	 */
 	public EList<InteractionFragment> unliftSubsequence(CertPackage it) {
-		final var grp = StreamHelpers.firstOfClass(it.getGroups().stream(), SpecificationGroup.class);
+		final var grp = StreamHelper.firstOfClass(it.getGroups().stream(), SpecificationGroup.class);
 		if (grp.isEmpty()) {
 			throw new IllegalArgumentException("package does not contain a specification group");
 		}
@@ -121,7 +121,7 @@ specification group X
 	 */
 	public Expression unliftExpr(CertPackage it) {
 		final var sseq = unliftSubsequence(it);
-		final var oocc = StreamHelpers.firstOfClass(sseq.stream(), OccurrenceFragment.class);
+		final var oocc = StreamHelper.firstOfClass(sseq.stream(), OccurrenceFragment.class);
 		if (oocc.isEmpty()) {
 			throw new IllegalArgumentException("subsequence does not contain an occurrence fragment");
 		}

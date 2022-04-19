@@ -86,6 +86,7 @@ class OverrideGeneratorTest {
 
     assertThat(target, generates(null, """
         -- begin overrides
+        id__ = 0
         const_mod_rp_foo = 42 -- initialised in RoboChart
         -- end overrides
         """));
@@ -96,6 +97,7 @@ class OverrideGeneratorTest {
     cinst.setValue(exprFactory.integer(64));
     assertThat(target, generates(List.of(cinst), """
         -- begin overrides
+        id__ = 0
         const_mod_rp_foo = 42 -- initialised in RoboChart
         const_mod_rp_baz = 64 -- initialised in RoboCert
         -- end overrides

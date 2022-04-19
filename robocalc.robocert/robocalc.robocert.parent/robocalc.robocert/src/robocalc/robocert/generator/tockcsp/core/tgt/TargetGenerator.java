@@ -19,7 +19,6 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.VariableHelper;
@@ -29,6 +28,7 @@ import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.InstantiationHelper;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Generates CSP-M for target definitions and parameterisations.
@@ -40,9 +40,11 @@ public record TargetGenerator(CollectionTargetBodyGenerator collGen, CTimedGener
                               InstantiationHelper instHelp, VariableHelper varHelp) {
 
   /**
-   * Hardcoded ID (will need to be fixed if we support collections of robots).
+   * Hardcoded ID (may need to be changed if we support collections of robots).
+   *
+   * The value of this is defined in the block of overrides for the specification group.
    */
-  private static final String ID = "{- id -} 0";
+  public static final String ID = "id__";
 
   /**
    * Eventually this should be exposed to the user.
@@ -99,7 +101,7 @@ public record TargetGenerator(CollectionTargetBodyGenerator collGen, CTimedGener
      * optimisation level.
      */
     final var name = gu.getFullProcessName(t.getElement(), false, USE_OPTIMISED_TARGETS);
-    final var args = Stream.concat(Stream.of(ID), params.stream().map(k -> k.cspId(gu)))
+    final var args = StreamHelper.push(ID, params.stream().map(k -> k.cspId(gu)))
         .toArray(CharSequence[]::new);
     return csp.function(name, args);
   }

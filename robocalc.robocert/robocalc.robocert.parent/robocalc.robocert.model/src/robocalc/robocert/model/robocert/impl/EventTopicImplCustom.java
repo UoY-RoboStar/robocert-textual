@@ -16,7 +16,7 @@ package robocalc.robocert.model.robocert.impl;
 import circus.robocalc.robochart.Type;
 import java.util.Optional;
 import org.eclipse.emf.common.util.EList;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Inserts derived functionality into {@link EventTopicImpl}.
@@ -28,6 +28,6 @@ public class EventTopicImplCustom extends EventTopicImpl {
   @Override
   public EList<Type> getParamTypes() {
     // If the event is well-formed, efrom and eto will have the same type.
-    return StreamHelpers.toEList(Optional.ofNullable(getEfrom().getType()).stream());
+    return StreamHelper.toEList(Optional.ofNullable(getEfrom().getType()).stream());
   }
 }

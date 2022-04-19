@@ -23,7 +23,19 @@ import org.eclipse.emf.common.util.EList;
  *
  * @author Matt Windsor
  */
-public class StreamHelpers {
+public class StreamHelper {
+
+  /**
+   * Produces a stream by concatenating a single item onto another stream.
+   *
+   * @param head the head of the concatenated stream.
+   * @param tail the stream to which we are concatenating.
+   * @param <T>  type of elements in the string.
+   * @return the concatenation of head and tail.
+   */
+  public static <T> Stream<T> push(T head, Stream<? extends T> tail) {
+    return Stream.concat(Stream.of(head), tail);
+  }
 
   /**
    * Filters a stream based on type.

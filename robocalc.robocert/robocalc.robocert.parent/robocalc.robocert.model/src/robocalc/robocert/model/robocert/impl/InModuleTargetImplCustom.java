@@ -17,7 +17,7 @@ import circus.robocalc.robochart.NamedElement;
 import circus.robocalc.robochart.RoboticPlatform;
 import java.util.stream.Stream;
 import org.eclipse.emf.common.util.EList;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Adds derived operation definitions to {@link InModuleTargetImpl}.
@@ -32,7 +32,7 @@ public class InModuleTargetImplCustom extends InModuleTargetImpl {
 
   @Override
   public EList<ConnectionNode> getComponents() {
-    return StreamHelpers.toEList(nodes().filter(x -> !(x instanceof RoboticPlatform)));
+    return StreamHelper.toEList(nodes().filter(x -> !(x instanceof RoboticPlatform)));
   }
 
   private Stream<ConnectionNode> nodes() {

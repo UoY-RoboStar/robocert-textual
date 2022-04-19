@@ -16,7 +16,7 @@ package robocalc.robocert.model.robocert.impl;
 import circus.robocalc.robochart.Parameter;
 import circus.robocalc.robochart.Type;
 import org.eclipse.emf.common.util.EList;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Inserts derived functionality into {@link OperationTopicImpl}.
@@ -26,6 +26,6 @@ import robocalc.robocert.model.robocert.util.StreamHelpers;
 public class OperationTopicImplCustom extends OperationTopicImpl {
   @Override
   public EList<Type> getParamTypes() {
-    return StreamHelpers.toEList(getOperation().getParameters().stream().map(Parameter::getType));
+    return StreamHelper.toEList(getOperation().getParameters().stream().map(Parameter::getType));
   }
 }

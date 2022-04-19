@@ -28,7 +28,7 @@ import robocalc.robocert.model.robocert.EmptyGuard;
 import robocalc.robocert.model.robocert.ExprGuard;
 import robocalc.robocert.model.robocert.Guard;
 import robocalc.robocert.model.robocert.InteractionOperand;
-import robocalc.robocert.model.robocert.util.StreamHelpers;
+import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Generates CSP-M for interaction operands and guards.
@@ -79,7 +79,7 @@ public record InteractionOperandGenerator(ExpressionGenerator eg,
 	}
 
 	private Stream<ExprGuard> neighbourExprGuards(ElseGuard l) {
-		return StreamHelpers.filter(neighbourGuards(l), ExprGuard.class);
+		return StreamHelper.filter(neighbourGuards(l), ExprGuard.class);
 	}
 
 	private Stream<Guard> neighbourGuards(ElseGuard l) {
