@@ -14,31 +14,17 @@
 
 package robocalc.robocert.generator.tockcsp.core.tgt;
 
-import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.Context;
-import circus.robocalc.robochart.Controller;
-import circus.robocalc.robochart.ControllerDef;
-import circus.robocalc.robochart.RCModule;
-import circus.robocalc.robochart.RoboticPlatform;
-import circus.robocalc.robochart.RoboticPlatformDef;
-import circus.robocalc.robochart.StateMachine;
 import circus.robocalc.robochart.Variable;
-import circus.robocalc.robochart.generator.csp.comp.timed.CTimedControllerGenerator;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
-import circus.robocalc.robochart.generator.csp.comp.timed.CTimedModuleGenerator;
 import circus.robocalc.robochart.generator.csp.comp.untimed.CMemoryGenerator;
 import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator;
 import com.google.inject.Inject;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.CollectionTarget;
-import robocalc.robocert.model.robocert.InControllerTarget;
-import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
-import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**
  * Generates CSP-M for the bodies of collection targets.
@@ -49,33 +35,23 @@ import robocalc.robocert.model.robocert.util.StreamHelper;
  * such, this generator is heavily based on the generator used for RoboChart module and controller
  * processes.
  *
+ * @param <T> type of targets being generated.
+ * @param <E> type of target elements.
+ * @param <C> type of contexts used for memory etc.
  * @author Matt Windsor
  */
-public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
-                                            DefinitionResolver defResolve, CTimedGeneratorUtils gu,
-                                            CTimedControllerGenerator ctrlGen,
-                                            CTimedModuleGenerator modGen, CMemoryGenerator memGen, ExpressionGenerator exprGen) {
+public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, E extends EObject, C extends Context> {
 
-  /**
-   * Constructs the generator.
-   *
-   * @param csp        low-level CSP formatter.
-   * @param defResolve resolver for robotic platform definitions etc.
-   * @param gu         the RoboChart generator utilities.
-   * @param ctrlGen    the RoboChart controller generator.
-   * @param modGen     the RoboChart module generator.
-   * @param memGen     the RoboChart memory generator.
-   * @param exprGen     the RoboChart expression generator.
-   */
   @Inject
-  public CollectionTargetBodyGenerator {
-    Objects.requireNonNull(csp);
-    Objects.requireNonNull(gu);
-    Objects.requireNonNull(ctrlGen);
-    Objects.requireNonNull(modGen);
-    Objects.requireNonNull(memGen);
-    Objects.requireNonNull(exprGen);
-  }
+  protected CSPStructureGenerator csp;
+  @Inject
+  protected DefinitionResolver defResolve;
+  @Inject
+  protected CTimedGeneratorUtils gu;
+  @Inject
+  protected CMemoryGenerator memGen;
+  @Inject
+  protected ExpressionGenerator exprGen;
 
   /**
    * Generates CSP-M for a collection target.
@@ -83,126 +59,84 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
    * @param target the target to generate.
    * @return CSP-M for the target definition.
    */
-  public CharSequence generate(CollectionTarget target) {
-    if (target instanceof InModuleTarget m) {
-      return generate(m);
-    }
-    if (target instanceof InControllerTarget c) {
-      return generate(c);
-    }
-    throw new IllegalArgumentException("unsupported collection target: %s".formatted(target));
+  public CharSequence generate(T target) {
+    final var element = element(target);
+    final var ctx = context(element);
+    final var ns = namespace(element);
+
+    final var innerBody = innerBody(element, ctx);
+
+    final var mem = memoryModule(ns, ctx);
+    final var memSet = csp.enumeratedSet(memorySet(ns, element, ctx).toArray(CharSequence[]::new));
+    final var body = csp.bins().genParallel(innerBody, memSet, mem);
+    return handleTerminationAndOptimise(ns, wrapOuter(element, ctx, body));
   }
 
-  public CharSequence generate(InModuleTarget target) {
-    final var module = target.getModule();
-    final var ns = module.getName();
+  /**
+   * Gets the element of the target.
+   * @param target the target.
+   * @return the target element.
+   */
+  protected abstract E element(T target);
 
-    final var rp = defResolve.platform(module).orElse(null);
+  /**
+   * Gets the namespace of the target's element.
+   *
+   * @param element the element in question.
+   * @return the target's element's namespace.
+   */
+  protected abstract CharSequence namespace(E element);
 
-    // As in the original module
-    final var async = module.getConnections().stream().filter(this::isAsyncConnection).toList();
+  /**
+   * Gets the memory context of the target's element.
+   *
+   * @param element the element in question.
+   * @return the target's element's memory context (itself for controllers, the platform for
+   * modules).
+   */
+  protected abstract C context(E element);
 
-    final var ctrls = StreamHelper.filter(module.getNodes().stream(), Controller.class).toList();
-    final var ctrlBody = modGen.composeControllers(module, rp, ctrls, module.getConnections(),
-        false, false);
-    final var mem = memoryModule(ns, rp);
-    final var memSet = csp.enumeratedSet(memorySet(module, rp).toArray(CharSequence[]::new));
+  /**
+   * Gets the variables of the target's components.
+   *
+   * @param element element of the target being generated.
+   * @return a stream of generated references to the elements of components of the element.
+   */
+  protected abstract Stream<CharSequence> componentVars(E element);
 
-    final Stream<CharSequence> vars = gu.allLocalVariables(rp).stream().mapMulti((v, c) -> {
-      final var init = v.getInitial();
-      if (init != null) {
-        c.accept("%s!%s ->".formatted(intSet(v), exprGen.compileExpression(init, module)));
-      }
-    });
+  /**
+   * Creates the inner body of the target.
+   *
+   * @param element element of the target being generated.
+   * @param ctx     memory context of the target being generated.
+   * @return CSP-M for the wrapped body.
+   */
+  protected abstract CharSequence innerBody(E element, C ctx);
 
-    var body = csp.bins().genParallel(ctrlBody, memSet, mem);
-    body = Stream.concat(vars, Stream.of(body)).collect(Collectors.joining("\n"));
-
-    if (0 < async.size()) {
-      body = wrapAsync(module, async, body);
-    }
-
-    return handleTerminationAndOptimise(ns, body);
-  }
-
-  private CharSequence wrapAsync(RCModule module, List<Connection> async,
-      CharSequence body) {
-    final var bidirecAsync = async.stream().filter(Connection::isBidirec).toList();
-    final var syncset = async.stream().flatMap(c ->
-        Stream.of(
-            csp.namespaced(gu.connectionNodeName(c.getTo()), gu.eventId(c.getEto())),
-            csp.namespaced(gu.connectionNodeName(c.getFrom()), gu.eventId(c.getEfrom()))
-        )
-    ).toArray(CharSequence[]::new);
-    return csp.bins().genParallel(
-        csp.sets().tuple(modGen.composeBuffers(async, bidirecAsync, module)),
-        csp.enumeratedSet(syncset),
-        csp.let(modGen.compileBuffers(async, bidirecAsync, module)).within(body)
-    );
-  }
+  /**
+   * Wraps the outer body of the target.
+   *
+   * @param element element of the target being generated.
+   * @param ctx     memory context of the target being generated.
+   * @param body    the outer body (eg, after parallelising with the memory).
+   * @return CSP-M for the wrapped body.
+   */
+  protected abstract CharSequence wrapOuter(E element, C ctx, CharSequence body);
 
   /**
    * Calculates the memory synchronisation set for an in-module target.
    *
-   * @param module the module.
-   * @param rp     the module's robotic platform.
+   * @param ns      namespace of the target being generated.
+   * @param element element of the target being generated.
+   * @param ctx     memory context of the target being generated.
    * @return the elements of the synchronisation set, to be fed into an enumerated set.
    */
-  private Stream<CharSequence> memorySet(RCModule module, RoboticPlatformDef rp) {
-    final var locals = gu.allLocalVariables(rp).stream().map(gu::variableId);
-    final var ctrlVars = defResolve.controllers(module)
-        .flatMap(c -> gu.requiredVariables(c).stream().map(v -> extSet(c, v)));
-    return Stream.concat(locals, ctrlVars);
+  private Stream<CharSequence> memorySet(CharSequence ns, E element, C ctx) {
+    final var locals = gu.allLocalVariables(ctx).stream().map(this::intSet);
+    return Stream.concat(locals, componentVars(element)).map(v -> csp.namespaced(ns, v));
   }
 
-  private CharSequence extSet(ControllerDef c, Variable v) {
-    return csp.namespaced(gu.ctrlName(c), extSet(v));
-  }
-
-  private boolean isAsyncConnection(Connection c) {
-    return c.isAsync() && !(c.getTo() instanceof RoboticPlatform)
-        && !(c.getFrom() instanceof RoboticPlatform);
-  }
-
-  public CharSequence generate(InControllerTarget target) {
-    final var ctrl = target.getController();
-    final var ns = gu.ctrlName(ctrl);
-
-    final var stms = ctrlGen.composeStateMachines(ctrl, ctrl.getMachines(), ctrl.getConnections(),
-        false, false);
-    final var mem = memoryModule(ns, ctrl);
-    final var memSet = csp.enumeratedSet(memorySet(ns, ctrl).toArray(CharSequence[]::new));
-
-    final var body = csp.function("wbisim", csp.bins().genParallel(stms, memSet, mem));
-
-    return handleTerminationAndOptimise(ns, body);
-  }
-
-  /**
-   * Calculates the memory synchronisation set for an in-controller target.
-   *
-   * @param ns   the controller namespace.
-   * @param ctrl the controller.
-   * @return the elements of the synchronisation set, to be fed into an enumerated set.
-   */
-  private Stream<CharSequence> memorySet(CharSequence ns, ControllerDef ctrl) {
-    final var locals = locals(ctrl);
-    final var stmVars = ctrl.getMachines().stream()
-        .flatMap(s -> gu.requiredVariables(gu.stmDef(s)).stream().map(v -> extSet(s, v)));
-
-    // Unlike the normal semantics, we have to prefix everything with the controller namespace.
-    return Stream.concat(locals, stmVars).map(x -> csp.namespaced(ns, x));
-  }
-
-  private Stream<String> locals(Context ctx) {
-    return gu.allLocalVariables(ctx).stream().map(this::intSet);
-  }
-
-  private CharSequence extSet(StateMachine s, Variable v) {
-    return csp.namespaced(gu.stmName(s), extSet(v));
-  }
-
-  private CharSequence memoryModule(String ns, Context ctx) {
+  private CharSequence memoryModule(CharSequence ns, Context ctx) {
     // Assuming always optimised, eg adding dbisim.
     return csp.function("dbisim", csp.namespaced(ns, "Memory") + memGen.memoryInstantiation(ctx));
   }
@@ -216,11 +150,11 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
         cb.hide(cb.interrupt(csp.tuple(body), terminate, csp.skip()), terminate)));
   }
 
-  private String intSet(Variable v) {
+  protected String intSet(Variable v) {
     return "set_" + gu.variableId(v);
   }
 
-  private String extSet(Variable v) {
+  protected String extSet(Variable v) {
     return "set_EXT_" + gu.variableId(v);
   }
 }

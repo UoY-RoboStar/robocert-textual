@@ -24,8 +24,9 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.VariableHelper;
 import robocalc.robocert.generator.utils.param.Parameter;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
-import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.ConstAssignment;
+import robocalc.robocert.model.robocert.InControllerTarget;
+import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.InstantiationHelper;
 import robocalc.robocert.model.robocert.util.StreamHelper;
@@ -35,7 +36,7 @@ import robocalc.robocert.model.robocert.util.StreamHelper;
  *
  * @author Matt Windsor
  */
-public record TargetGenerator(CollectionTargetBodyGenerator collGen, CTimedGeneratorUtils gu, CSPStructureGenerator csp,
+public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen, InModuleTargetBodyGenerator modGen, CTimedGeneratorUtils gu, CSPStructureGenerator csp,
                               ExpressionGenerator eg, TargetParameterResolver paramRes,
                               InstantiationHelper instHelp, VariableHelper varHelp) {
 
@@ -53,7 +54,8 @@ public record TargetGenerator(CollectionTargetBodyGenerator collGen, CTimedGener
 
   @Inject
   public TargetGenerator {
-    Objects.requireNonNull(collGen);
+    Objects.requireNonNull(ctrlGen);
+    Objects.requireNonNull(modGen);
     Objects.requireNonNull(gu);
     Objects.requireNonNull(csp);
     Objects.requireNonNull(eg);
@@ -83,8 +85,11 @@ public record TargetGenerator(CollectionTargetBodyGenerator collGen, CTimedGener
    */
   public CharSequence openDef(Target t) {
     // These targets are more involved to generate, and we delegate them to a different generator.
-    if (t instanceof CollectionTarget c) {
-      return collGen.generate(c);
+    if (t instanceof InModuleTarget m) {
+      return modGen.generate(m);
+    }
+    if (t instanceof InControllerTarget c) {
+      return ctrlGen.generate(c);
     }
 
     // We now assume that we have a component target; these are just references to the RoboChart
