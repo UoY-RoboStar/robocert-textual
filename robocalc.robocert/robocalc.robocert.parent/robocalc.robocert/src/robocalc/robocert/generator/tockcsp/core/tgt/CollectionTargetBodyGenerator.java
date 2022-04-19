@@ -17,14 +17,22 @@ package robocalc.robocert.generator.tockcsp.core.tgt;
 import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.Controller;
+import circus.robocalc.robochart.ControllerDef;
+import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboticPlatform;
+import circus.robocalc.robochart.RoboticPlatformDef;
+import circus.robocalc.robochart.StateMachine;
+import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedControllerGenerator;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedModuleGenerator;
 import circus.robocalc.robochart.generator.csp.comp.untimed.CMemoryGenerator;
+import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator;
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Objects;
-import org.eclipse.emf.ecore.EObject;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.InControllerTarget;
@@ -46,8 +54,7 @@ import robocalc.robocert.model.robocert.util.StreamHelper;
 public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
                                             DefinitionResolver defResolve, CTimedGeneratorUtils gu,
                                             CTimedControllerGenerator ctrlGen,
-                                            CTimedModuleGenerator modGen,
-                                            CMemoryGenerator memGen) {
+                                            CTimedModuleGenerator modGen, CMemoryGenerator memGen, ExpressionGenerator exprGen) {
 
   /**
    * Constructs the generator.
@@ -58,6 +65,7 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
    * @param ctrlGen    the RoboChart controller generator.
    * @param modGen     the RoboChart module generator.
    * @param memGen     the RoboChart memory generator.
+   * @param exprGen     the RoboChart expression generator.
    */
   @Inject
   public CollectionTargetBodyGenerator {
@@ -66,6 +74,7 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
     Objects.requireNonNull(ctrlGen);
     Objects.requireNonNull(modGen);
     Objects.requireNonNull(memGen);
+    Objects.requireNonNull(exprGen);
   }
 
   /**
@@ -86,82 +95,68 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
 
   public CharSequence generate(InModuleTarget target) {
     final var module = target.getModule();
+    final var ns = module.getName();
+
     final var rp = defResolve.platform(module).orElse(null);
 
     // As in the original module
     final var async = module.getConnections().stream().filter(this::isAsyncConnection).toList();
-    final var bidirecAsync = async.stream().filter(Connection::isBidirec).toList();
 
     final var ctrls = StreamHelper.filter(module.getNodes().stream(), Controller.class).toList();
     final var ctrlBody = modGen.composeControllers(module, rp, ctrls, module.getConnections(),
         false, false);
-    final var mem = memoryModule(rp);
-    final var memSet = csp.set(); // for now
+    final var mem = memoryModule(ns, rp);
+    final var memSet = csp.enumeratedSet(memorySet(module, rp).toArray(CharSequence[]::new));
 
-    var body = csp.function("wbisim", csp.bins().genParallel(ctrlBody, memSet, mem));
+    final Stream<CharSequence> vars = gu.allLocalVariables(rp).stream().mapMulti((v, c) -> {
+      final var init = v.getInitial();
+      if (init != null) {
+        c.accept("%s!%s ->".formatted(intSet(v), exprGen.compileExpression(init, module)));
+      }
+    });
+
+    var body = csp.bins().genParallel(ctrlBody, memSet, mem);
+    body = Stream.concat(vars, Stream.of(body)).collect(Collectors.joining("\n"));
+
     if (0 < async.size()) {
-      body = csp.let(modGen.compileBuffers(async, bidirecAsync, module)).within(body);
+      body = wrapAsync(module, async, body);
     }
 
-    return handleTerminationAndPrioritise(body, module);
+    return handleTerminationAndOptimise(ns, body);
+  }
 
-/*
-				D__«params» = prioritise(
-					(«IF async.size > 0»let
-						«compileBuffers(async, bidirecAsync, m)»
-					within
-						«ENDIF»
-						(
-							(
-								(«composeBuffers(async, bidirecAsync, m)»)
-									[|{|«FOR e: syncset SEPARATOR ","»«e»«ENDFOR»|}|]
-								(
-									«FOR v: gu.allLocalVariables(rp)»
-									«IF v.initial !== null»
-									set_«gu.variableId(v)»!«eg.compileExpression(v.initial,m)» ->
-									«ENDIF»
-									«ENDFOR»
-									«m.composeControllers(rp,m.nodes.filter(Controller).toList,m.connections,false, false)»
-										[|
-											union(
-												{|
-													«FOR v : gu.allLocalVariables(rp) SEPARATOR ','»
-													set_«gu.variableId(v)»
-													«ENDFOR»
-												|},
-												{|
-													«FOR c : m.nodes.filter[x|x instanceof Controller && gu.requiredVariables((x as Controller).ctrlDef).size > 0].map[x|x as Controller] SEPARATOR ','»
-													«FOR v: gu.requiredVariables(c.ctrlDef) SEPARATOR ','»«gu.ctrlName(c)»::set_EXT_«gu.variableId(v)»«ENDFOR»
-													«ENDFOR»
-												|}
-											)
-										|]
-									Memory«memg.memoryInstantiation(rp as Context)»
-								)
-							)
-							\ Union({
-								{|
-									«FOR e : syncset SEPARATOR ","»
-									«e»
-									«ENDFOR»
-								|},
-								{|
-									«FOR c : m.nodes.filter[x|x instanceof Controller && gu.requiredVariables((x as Controller).ctrlDef).size > 0].map[x|x as Controller] SEPARATOR ','»
-									«FOR v: gu.requiredVariables(c.ctrlDef) SEPARATOR ','»«c.name»::set_EXT_«gu.variableId(v)»«ENDFOR»
-									«ENDFOR»
-								|},
-								{|
-									«FOR v : gu.allLocalVariables(rp) SEPARATOR ','»
-									get_«gu.variableId(v)», set_«gu.variableId(v)»
-									«ENDFOR»
-								|}
-							})
-							[|{|terminate|}|>SKIP
-						)\{|terminate|}
-					),
-					<visibleMemoryEvents,{tock}>
-				)
- */
+  private CharSequence wrapAsync(RCModule module, List<Connection> async,
+      CharSequence body) {
+    final var bidirecAsync = async.stream().filter(Connection::isBidirec).toList();
+    final var syncset = async.stream().flatMap(c ->
+        Stream.of(
+            csp.namespaced(gu.connectionNodeName(c.getTo()), gu.eventId(c.getEto())),
+            csp.namespaced(gu.connectionNodeName(c.getFrom()), gu.eventId(c.getEfrom()))
+        )
+    ).toArray(CharSequence[]::new);
+    return csp.bins().genParallel(
+        csp.sets().tuple(modGen.composeBuffers(async, bidirecAsync, module)),
+        csp.enumeratedSet(syncset),
+        csp.let(modGen.compileBuffers(async, bidirecAsync, module)).within(body)
+    );
+  }
+
+  /**
+   * Calculates the memory synchronisation set for an in-module target.
+   *
+   * @param module the module.
+   * @param rp     the module's robotic platform.
+   * @return the elements of the synchronisation set, to be fed into an enumerated set.
+   */
+  private Stream<CharSequence> memorySet(RCModule module, RoboticPlatformDef rp) {
+    final var locals = gu.allLocalVariables(rp).stream().map(gu::variableId);
+    final var ctrlVars = defResolve.controllers(module)
+        .flatMap(c -> gu.requiredVariables(c).stream().map(v -> extSet(c, v)));
+    return Stream.concat(locals, ctrlVars);
+  }
+
+  private CharSequence extSet(ControllerDef c, Variable v) {
+    return csp.namespaced(gu.ctrlName(c), extSet(v));
   }
 
   private boolean isAsyncConnection(Connection c) {
@@ -171,67 +166,61 @@ public record CollectionTargetBodyGenerator(CSPStructureGenerator csp,
 
   public CharSequence generate(InControllerTarget target) {
     final var ctrl = target.getController();
+    final var ns = gu.ctrlName(ctrl);
 
     final var stms = ctrlGen.composeStateMachines(ctrl, ctrl.getMachines(), ctrl.getConnections(),
         false, false);
-    final var mem = memoryModule(ctrl);
-    final var memSet = csp.set(); // for now
+    final var mem = memoryModule(ns, ctrl);
+    final var memSet = csp.enumeratedSet(memorySet(ns, ctrl).toArray(CharSequence[]::new));
 
     final var body = csp.function("wbisim", csp.bins().genParallel(stms, memSet, mem));
 
-    return handleTerminationAndPrioritise(body, ctrl);
-    /*
-    				D__«params» = prioritise(wbisim(
-					«ctrl.composeStateMachines(ctrl.machines,ctrl.connections, false, false)»
-						[|
-							union(
-								{|
-									«FOR v : gu.allLocalVariables(ctrl) SEPARATOR ','»
-									set_«gu.variableId(v)»
-									«ENDFOR»
-								|},
-								{|
-									«FOR s : ctrl.machines.filter[x | gu.requiredVariables(gu.stmDef(x)).size > 0] SEPARATOR ','»
-									«FOR v: gu.requiredVariables(gu.stmDef(s)) SEPARATOR ','»«gu.stmName(s)»::set_EXT_«gu.variableId(v)»«ENDFOR»
-									«ENDFOR»
-								|}
-							)
-						|]
-					Memory«memg.memoryInstantiation(ctrl as Context)»
-				)
-				\ union(
-					{|
-						«FOR v : gu.allLocalVariables(ctrl) SEPARATOR ','»
-						set_«gu.variableId(v)», get_«gu.variableId(v)»
-						«ENDFOR»
-					|},
-					{|
-						«FOR s : ctrl.machines.filter[x | gu.requiredVariables(gu.stmDef(x)).size > 0] SEPARATOR ','»
-						«FOR v: gu.requiredVariables(gu.stmDef(s)) SEPARATOR ','»«gu.stmName(s)»::set_EXT_«gu.variableId(v)»«ENDFOR»
-						«ENDFOR»
-					|}
-				)
-				[|{|terminate|}|>SKIP,
-				<union(visibleMemoryEvents,{terminate}),{tock}>)
-     */
+    return handleTerminationAndOptimise(ns, body);
   }
 
-  private String memoryModule(Context ctx) {
-    return "Memory" + memGen.memoryInstantiation(ctx);
+  /**
+   * Calculates the memory synchronisation set for an in-controller target.
+   *
+   * @param ns   the controller namespace.
+   * @param ctrl the controller.
+   * @return the elements of the synchronisation set, to be fed into an enumerated set.
+   */
+  private Stream<CharSequence> memorySet(CharSequence ns, ControllerDef ctrl) {
+    final var locals = locals(ctrl);
+    final var stmVars = ctrl.getMachines().stream()
+        .flatMap(s -> gu.requiredVariables(gu.stmDef(s)).stream().map(v -> extSet(s, v)));
+
+    // Unlike the normal semantics, we have to prefix everything with the controller namespace.
+    return Stream.concat(locals, stmVars).map(x -> csp.namespaced(ns, x));
   }
 
-  private CharSequence handleTerminationAndPrioritise(CharSequence body, EObject element) {
+  private Stream<String> locals(Context ctx) {
+    return gu.allLocalVariables(ctx).stream().map(this::intSet);
+  }
+
+  private CharSequence extSet(StateMachine s, Variable v) {
+    return csp.namespaced(gu.stmName(s), extSet(v));
+  }
+
+  private CharSequence memoryModule(String ns, Context ctx) {
+    // Assuming always optimised, eg adding dbisim.
+    return csp.function("dbisim", csp.namespaced(ns, "Memory") + memGen.memoryInstantiation(ctx));
+  }
+
+  private CharSequence handleTerminationAndOptimise(CharSequence ns, CharSequence body) {
     final var cs = csp.sets();
     final var cb = csp.bins();
 
-    final var terminate = cs.set(procElement(element, "terminate"));
-    final var visibleMemoryEvents = procElement(element, "visibleMemoryEvents");
-    final var priorities = cs.list(visibleMemoryEvents, cs.set("tock"));
-    return csp.function("prioritise", cb.hide(cb.interrupt(body, terminate, csp.skip()), terminate),
-        priorities);
+    final var terminate = cs.set(csp.namespaced(ns, "terminate"));
+    return csp.function("sbisim", csp.function("diamond",
+        cb.hide(cb.interrupt(csp.tuple(body), terminate, csp.skip()), terminate)));
   }
 
-  private CharSequence procElement(EObject element, CharSequence name) {
-    return csp.namespaced(gu.processId(element), name);
+  private String intSet(Variable v) {
+    return "set_" + gu.variableId(v);
+  }
+
+  private String extSet(Variable v) {
+    return "set_EXT_" + gu.variableId(v);
   }
 }
