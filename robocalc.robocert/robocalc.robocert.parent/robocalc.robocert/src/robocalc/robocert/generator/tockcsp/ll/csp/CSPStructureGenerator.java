@@ -25,21 +25,21 @@ import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator.Let;
  *
  * @author Matt Windsor
  */
-public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator letGenerator,
-                                    SetGenerator setGenerator) {
+public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenerator,
+                                    SetGenerator sets) {
 
   /**
    * Constructs a CSP structure generator.
    *
-   * @param binGenerator sub-generator for binary operations.
+   * @param bins sub-generator for binary operations.
    * @param letGenerator sub-generator for let expressions.
-   * @param setGenerator sub-generator for set expressions.
+   * @param sets sub-generator for set expressions.
    */
   @Inject
   public CSPStructureGenerator {
-    Objects.requireNonNull(binGenerator);
+    Objects.requireNonNull(bins);
     Objects.requireNonNull(letGenerator);
-    Objects.requireNonNull(setGenerator);
+    Objects.requireNonNull(sets);
   }
 
   /**
@@ -157,7 +157,7 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
    * @return CSP-M for the set comprehension.
    */
   public CharSequence setComprehension(CharSequence lhs, CharSequence... rhss) {
-    return setGenerator.setComprehension(lhs, rhss);
+    return sets.setComprehension(lhs, rhss);
   }
 
   /**
@@ -167,7 +167,7 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
    * @return CSP-M for the set.
    */
   public CharSequence set(CharSequence... args) {
-    return setGenerator.set(args);
+    return sets.set(args);
   }
 
   /**
@@ -177,7 +177,7 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
    * @return CSP-M for the enumerated set.
    */
   public CharSequence enumeratedSet(CharSequence... args) {
-    return setGenerator.enumeratedSet(args);
+    return sets.enumeratedSet(args);
   }
 
   /**
@@ -187,7 +187,17 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
    * @return CSP-M for the tuple.
    */
   public CharSequence tuple(CharSequence... args) {
-    return setGenerator.tuple(args);
+    return sets.tuple(args);
+  }
+
+  /**
+   * Generates a list.
+   *
+   * @param args the contents of the list.
+   * @return CSP-M for the list.
+   */
+  public CharSequence list(CharSequence... args) {
+    return sets.list(args);
   }
 
   /**
@@ -197,7 +207,7 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
    * @return CSP-M for the sequential composition of the given arguments.
    */
   public CharSequence seq(CharSequence... args) {
-    return binGenerator.seq(args);
+    return bins.seq(args);
   }
 
   /**

@@ -58,6 +58,16 @@ public class SetGenerator {
     return setlike("(", ")", args);
   }
 
+  /**
+   * Generates a list.
+   *
+   * @param args the contents of the list.
+   * @return CSP-M for the list.
+   */
+  public CharSequence list(CharSequence... args) {
+    return setlike("<", ">", args);
+  }
+
   private CharSequence setlike(CharSequence lhs, CharSequence rhs, CharSequence... args) {
     var body = String.join(", ", args);
 

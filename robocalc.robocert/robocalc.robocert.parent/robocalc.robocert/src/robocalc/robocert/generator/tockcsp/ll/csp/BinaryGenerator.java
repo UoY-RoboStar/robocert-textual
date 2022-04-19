@@ -25,6 +25,16 @@ import java.util.function.Function;
 public class BinaryGenerator {
 
   /**
+   * Constructs a hiding operation.
+   * @param lhs the left-hand side.
+   * @param rhs the right-hand side.
+   * @return the CSP-M hiding operation.
+   */
+  public CharSequence hide(CharSequence lhs, CharSequence rhs) {
+    return String.join(" \\ ", lhs, rhs);
+  }
+
+  /**
    * Sequential composition.
    *
    * @param args the processes to sequentially compose.

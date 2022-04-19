@@ -22,8 +22,8 @@ import java.util.stream.Stream;
 import org.eclipse.emf.common.util.EList;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
-import robocalc.robocert.generator.tockcsp.core.target.OverrideGenerator;
-import robocalc.robocert.generator.tockcsp.core.target.TargetGenerator;
+import robocalc.robocert.generator.tockcsp.core.tgt.OverrideGenerator;
+import robocalc.robocert.generator.tockcsp.core.tgt.TargetGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ActorGenerator;
@@ -106,7 +106,10 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     // Space here for expansion.
     final var specs = group.getInteractions();
 
-    final var elements = Streams.concat(Stream.of(targetGen.openDef(group.getTarget())),
+    final var target =
+      csp.definition(SpecGroupParametricField.TARGET.toString(), targetGen.openDef(group.getTarget()));
+
+    final var elements = Streams.concat(Stream.of(target),
         msgSetGen.generate(group).stream(), memModule(specs).stream(), specModule(specs).stream());
 
     return csp.innerJoin(elements);
