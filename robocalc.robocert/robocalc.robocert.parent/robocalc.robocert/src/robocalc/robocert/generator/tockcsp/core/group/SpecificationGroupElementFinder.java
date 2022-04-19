@@ -1,4 +1,17 @@
-package robocalc.robocert.generator.tockcsp.core;
+/*******************************************************************************
+ * Copyright (c) 2022 University of York and others
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   $author - initial definition
+ ******************************************************************************/
+
+package robocalc.robocert.generator.tockcsp.core.group;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.core.SpecGroupField;

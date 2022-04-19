@@ -15,7 +15,7 @@ package robocalc.robocert.generator.tockcsp.seq;
 import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
-import robocalc.robocert.generator.tockcsp.core.SpecificationGroupElementFinder;
+import robocalc.robocert.generator.tockcsp.core.group.SpecificationGroupElementFinder;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPRefinement;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.TickTockContextGenerator;

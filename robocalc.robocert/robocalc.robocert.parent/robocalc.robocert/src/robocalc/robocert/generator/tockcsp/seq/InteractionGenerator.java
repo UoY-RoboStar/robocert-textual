@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
-import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
@@ -86,13 +85,12 @@ public class InteractionGenerator {
   }
 
   private CharSequence generateMultiLifeline(Interaction s, List<LifelineContext> lines) {
-    final var alphas = defs(lines, LifelineContext::alphaCSP,
-        x -> alpha(s, x));
+    final var alphas = defs(lines, LifelineContext::alphaCSP, x -> alpha(s, x));
 
     final var procs = defs(lines, LifelineContext::procCSP,
         x -> csp.tuple(sg.generate(s.getFragments(), x)));
 
-    final var body = csp.iterAlphaParallel(SpecGroupParametricField.ACTOR_ENUM.toString(),
+    final var body = csp.iterAlphaParallel(SpecGroupField.ACTOR_ENUM.toString(),
         LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
 
     return lg.let(alphas, procs).within(csp.seq(body, csp.timestop()));

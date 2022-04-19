@@ -16,6 +16,7 @@ package robocalc.robocert.generator.tockcsp.core;
 import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
+import robocalc.robocert.generator.tockcsp.core.group.SpecificationGroupElementFinder;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.CoreProperty;
 import robocalc.robocert.model.robocert.CorePropertyType;

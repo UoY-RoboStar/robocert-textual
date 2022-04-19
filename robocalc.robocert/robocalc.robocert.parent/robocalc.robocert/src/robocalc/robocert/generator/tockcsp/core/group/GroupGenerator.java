@@ -1,7 +1,17 @@
-/**
+/*******************************************************************************
+ * Copyright (c) 2022 University of York and others
  *
- */
-package robocalc.robocert.generator.tockcsp.core;
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Matt Windsor - initial definition
+ ******************************************************************************/
+
+package robocalc.robocert.generator.tockcsp.core.group;
 
 import java.util.stream.Stream;
 
@@ -94,8 +104,7 @@ public abstract class GroupGenerator<T extends Group> {
 		if (!isInModule(group))
 			return body;
 
-		final var name = gn.getOrSynthesiseName(group);
-		return privBody.isEmpty() ? csp.module(name, body) : csp.moduleWithPrivate(name, privBody, body);
+		return csp.module(gn.getOrSynthesiseName(group)).withPrivate(privBody).withPublic(body).end();
 	}
 
 	private CharSequence generateHeader(T group) {

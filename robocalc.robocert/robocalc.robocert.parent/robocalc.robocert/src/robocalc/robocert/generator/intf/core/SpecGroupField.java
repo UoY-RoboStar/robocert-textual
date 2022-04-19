@@ -50,6 +50,11 @@ public enum SpecGroupField {
   //
 
   /**
+   * The enumeration of actors in the specification group.
+   */
+  ACTOR_ENUM,
+
+  /**
    * The module in a sequence group containing any named message sets.
    */
   MESSAGE_SET_MODULE;
@@ -57,6 +62,7 @@ public enum SpecGroupField {
   @Override
   public String toString() {
     return switch (this) {
+      case ACTOR_ENUM -> "Actors";
       case MESSAGE_SET_MODULE -> "MsgSets";
       case PARAMETRIC_CLOSED -> "Closed";
       case PARAMETRIC_OPEN -> "Open";

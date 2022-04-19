@@ -25,7 +25,8 @@ import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator.Let;
  *
  * @author Matt Windsor
  */
-public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator letGenerator, SetGenerator setGenerator) {
+public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator letGenerator,
+                                    SetGenerator setGenerator) {
 
   /**
    * Constructs a CSP structure generator.
@@ -200,37 +201,13 @@ public record CSPStructureGenerator(BinaryGenerator binGenerator, LetGenerator l
   }
 
   /**
-   * Generates a CSP-M module with a name and public body.
+   * Opens a CSP-M module.
    *
    * @param name the name of the module.
-   * @param pub  the public body of the module.
-   * @return CSP-M for the module.
+   * @return a factory for building the module.
    */
-  public CharSequence module(CharSequence name, CharSequence pub) {
-    return """
-        module %s
-        exports
-        %s
-        endmodule
-        """.formatted(name, indentStrip(pub));
-  }
-
-  /**
-   * Generates a CSP-M module with a name and both public and private bodies.
-   *
-   * @param name the name of the module.
-   * @param priv the private body of the module.
-   * @param pub  the public body of the module.
-   * @return CSP-M for the module.
-   */
-  public CharSequence moduleWithPrivate(CharSequence name, CharSequence priv, CharSequence pub) {
-    return """
-        module %s
-        %s
-        exports
-        %s
-        endmodule
-        """.formatted(name, indentStrip(priv), indentStrip(pub));
+  public Module module(CharSequence name) {
+    return new Module(name);
   }
 
   /**

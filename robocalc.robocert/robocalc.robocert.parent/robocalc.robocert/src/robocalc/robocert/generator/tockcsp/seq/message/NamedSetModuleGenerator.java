@@ -53,12 +53,12 @@ public record NamedSetModuleGenerator(CGeneratorUtils gu, CSPStructureGenerator 
     final var sets = group.getMessageSets();
     final var userSets = sets.stream().filter(Objects::nonNull).map(
             x -> csp.definition(x.getName(), setGenerator.optimiseAndGenerate(x.getSet(), x::setSet)))
-        .toList();
+        .toArray(CharSequence[]::new);
 
-    if (userSets.isEmpty()) {
+    if (userSets.length == 0) {
       return Optional.empty();
     }
-    return Optional.of(csp.module(MessageSetGenerator.MODULE_NAME, String.join("\n", userSets)));
+    return Optional.of(csp.module(MessageSetGenerator.MODULE_NAME).withPublic(userSets).end());
   }
 
 }
