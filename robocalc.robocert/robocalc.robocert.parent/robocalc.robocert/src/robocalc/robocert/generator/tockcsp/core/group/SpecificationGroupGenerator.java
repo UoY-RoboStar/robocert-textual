@@ -156,7 +156,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     final var universe = csp.definition(SpecGroupField.UNIVERSE.toString(),
         csp.namespaced(targetGen.semEvents(group.getTarget())));
 
-    return Stream.concat(Stream.of(universe), actorModule(group).stream());
+    return Stream.concat(Stream.of(overrides, universe), actorModule(group).stream());
   }
 
   private Optional<CharSequence> memModule(EList<Interaction> sequences) {
