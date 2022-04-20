@@ -18,13 +18,11 @@ import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.Controller;
 import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.ControllerRef;
-import circus.robocalc.robochart.NamedElement;
 import circus.robocalc.robochart.OperationSig;
 import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.Variable;
-import circus.robocalc.robochart.VariableModifier;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedModuleGenerator;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -115,39 +113,51 @@ public class InModuleTargetBodyGenerator extends
       Stream<Controller> components) {
     final var connections = element.getConnections();
 
-    // TODO(@MattWindsor91): reimplement this
+    // The next bits of code use stacks and stack reversing quite a bit, so these comments are
+    // examples of what the stack will look like at each stage.
+
+    // pairs = c1, c2, c3, c4, c5
     final var pairs = components.map(x -> renamingControllerChanset(ns, x, connections, ctx))
-        .toList();
-    final var ctrls = new LinkedList<Component>();
-    for (int i = 0; i < pairs.size(); i++) {
-      final var x = pairs.get(i);
-      final var xs = pairs.subList(i + 1, pairs.size());
+        .collect(Collectors.toCollection(LinkedList::new));
 
-      final var channels = new HashSet<>(x.getValue());
-      final var otherChannels = xs.stream().flatMap(y -> y.getValue().stream())
-          .collect(Collectors.toSet());
-
-      ctrls.add(new Component(x.getKey(), Sets.intersection(channels, otherChannels)));
-    }
+    // moved one stack onto another, so:
+    // ctrls = c5[], c4[c5], c3[c4, c5], c2[c3, c4, c5], c1[c2, c3, c4, c5]
+    final var ctrls = makeIntersections(pairs);
 
     final var cb = csp.bins();
     final var cs = csp.sets();
 
     // It's ill-formed for there to be no controllers.
-    var output = ctrls.removeLast().body;
+
+    // starting with c5
+    // stack has: c4[c5], c3[c4, c5], etc.
+    var output = ctrls.pop().body;
+
     while (!ctrls.isEmpty()) {
-      final var ctrl = ctrls.removeLast();
+      // TODO(@MattWindsor91): implement this more efficiently, eg. as a fold or reduce.
+      final var ctrl = ctrls.pop();
 
-      final var body =
-          cs.tuple(cb.genParallel(ctrl.body,
-              cs.enumeratedSet(ctrl.intersection.toArray(CharSequence[]::new)), output));
-
-      final var diff = csp.enumeratedDiff(ctrl.intersection,
-          Set.of(csp.namespaced(ns, "terminate").toString()));
-      output =  "{}".contentEquals(diff) ? body : cb.hide(body, diff);
+      // We don't hide the intersection in this version of the semantics, as sequence diagrams
+      // need to be able to inspect inter-controller communications.
+      output = cs.tuple(cb.genParallel(ctrl.body,
+          cs.enumeratedSet(ctrl.intersection.toArray(CharSequence[]::new)), output));
     }
 
     return output;
+  }
+
+  private LinkedList<Component> makeIntersections(LinkedList<Pair<CharSequence, List<String>>> pairs) {
+    final var ctrls = new LinkedList<Component>();
+    while (!pairs.isEmpty()) {
+      final var x = pairs.pop();
+
+      final var channels = new HashSet<>(x.getValue());
+      final var otherChannels = pairs.stream().flatMap(y -> y.getValue().stream())
+          .collect(Collectors.toSet());
+
+      ctrls.push(new Component(x.getKey(), Sets.intersection(channels, otherChannels)));
+    }
+    return ctrls;
   }
 
   private Pair<CharSequence, List<String>> renamingControllerChanset(String ns, Controller ctrl,
@@ -160,8 +170,6 @@ public class InModuleTargetBodyGenerator extends
 
     renameTerminate(renaming, chanset, ns, ctrlName);
     renameConnections(renaming, chanset, ns, ctrl, connections);
-    renameVariables(renaming, ns, ctrlDef, ctrlName, rp);
-    renameOperations(renaming, ns, ctrlDef, ctrlName, rp);
 
     final var s =
         csp.namespaced(ctrlName, gu.getSuffix(false, true)).toString() + gu.parameterisation(
@@ -188,8 +196,7 @@ public class InModuleTargetBodyGenerator extends
       }
     }).collect(Collectors.toSet());
 
-    return gu.allEvents(ctrlDef).stream()
-        .filter(e -> !(connectedEvents.contains(e)))
+    return gu.allEvents(ctrlDef).stream().filter(e -> !(connectedEvents.contains(e)))
         .map(e -> csp.namespaced(ctrlName, gu.eventId(e))).toArray(CharSequence[]::new);
   }
 
@@ -200,80 +207,33 @@ public class InModuleTargetBodyGenerator extends
     chanset.add(terminate(ns).toString());
   }
 
-  private void renameVariables(Renaming renaming, String ns, ControllerDef ctrlDef,
-      CharSequence ctrlName, RoboticPlatformDef rp) {
-    // dealing with variable renamings
-    // required variables of the controller
-    final var rvars = ctrlDef.getRInterfaces().stream().flatMap(i -> i.getVariableList().stream())
-        .filter(vl -> vl.getModifier() == VariableModifier.VAR).flatMap(vl -> vl.getVars().stream())
-        .map(NamedElement::getName).collect(Collectors.toUnmodifiableSet());
-
-    // variables of the platform (either provided or required) that are also required by the controller
-    // matching is done by name, should be updated eventually to match for type as well
-    gu.allVariables(rp).stream().filter(v -> rvars.contains(v.getName())).forEach(
-        v -> renaming.rename(csp.namespaced(ctrlName, intSet(v)), csp.namespaced(ns, intSet(v)))
-            .rename(csp.namespaced(ctrlName, intGet(v)), csp.namespaced(ns, intGet(v))));
-  }
-
   private void renameConnections(Renaming renaming, LinkedList<String> chanset, String ns,
       Controller ctrl, List<Connection> connections) {
-    // dealing with connection renamings (only for synchronous connections)
     for (var c : connections) {
-      // Here, I should not apply connectionNode to from and to, as they are already connection nodes necessarily. Furthermore,
-      // connectionNode skips the reference, and returns the associated definition. We do not want this here as it duplicates
-      // connections when multiple references of the same definition are present.
       final var source = c.getFrom();
       final var target = c.getTo();
       final var esource = c.getEfrom();
       final var etarget = c.getEto();
-      // the comparison here should be to the original controller (be it a reference or definition)
-      if (source instanceof Controller src && src == ctrl) {
-        final var oldName = csp.namespaced(ns, gu.ctrlName(src), gu.eventId(esource));
 
-        // if the source is the current controller
-        // only rename if the target is the robotic platform
-        if (target instanceof RoboticPlatform) {
-          renaming.rename(oldName, csp.namespaced(ns, gu.eventId(etarget)));
-        } else if (!c.isAsync()) {
-          // this event needs to be added because we are using generalised parallelism
-          chanset.add(oldName.toString());
-        }
-      } else if (target instanceof Controller tgt && tgt == ctrl) {
-        final var oldName = csp.namespaced(ns, gu.ctrlName(tgt), gu.eventId(etarget)).toString();
-
-        // rename the event if the source if a robotic platform, or if the communication is synchronous
-        if (source instanceof RoboticPlatform) {
-          // for robotic platform events, just rename the channel, leaving the I/O marking as-is
-          renaming.rename(oldName, csp.namespaced(ns, gu.eventId(esource)));
-        } else if (source instanceof Controller src && !c.isAsync()) {
-          final var newName = csp.namespaced(ns, gu.ctrlName(src), gu.eventId(esource)).toString();
-
-          // for synchronous inter-controller communication, swap in and out to match source
-          renaming.rename(oldName + ".in", newName + ".out")
-              .rename(oldName + ".out", newName + ".in");
-          // if the source is not a robotic platform and the connection is synchronous, add to chanset
-          // only add the event to synchronisation set if it is not a controller event
-          chanset.add(newName);
-        }
+      // Unlike the RoboChart semantics, we only rename to fuse synchronous connections.  We don't
+      // rename connections heading to the robotic platform.
+      if (c.isAsync()) {
+        continue;
       }
-      // if neither the source nor the target are
-      // the current controller, the connection
-      // is irrelevant and there is no renaming
-    }
-  }
 
-  private void renameOperations(Renaming renaming, String ns, ControllerDef ctrlDef,
-      CharSequence ctrlName,
-      RoboticPlatformDef rp) {
-    // dealing with undefined operations of the controller not defined by the platform
+      if (source instanceof Controller src) {
+        final var srcName = csp.namespaced(ns, gu.ctrlName(src), gu.eventId(esource)).toString();
+        if (src == ctrl) {
+          // this event needs to be added because we are using generalised parallelism
+          chanset.add(srcName);
+        } else if (target instanceof Controller tgt && tgt == ctrl) {
+          // synchronous inter-controller communication; swap in and out to match source
+          final var tgtName = csp.namespaced(ns, gu.ctrlName(tgt), gu.eventId(etarget)).toString();
 
-    final var allContextOps = gu.allOperations(rp).stream().map(OperationSig::getName)
-        .collect(Collectors.toUnmodifiableSet());
-
-    for (var o : gu.requiredOperations(ctrlDef)) {
-      final var name = o.getName();
-      if (allContextOps.contains(name)) {
-        renaming.rename(opName(ctrlName, o), opName(ns, o));
+          renaming.rename(tgtName + ".in", srcName + ".out")
+              .rename(tgtName + ".out", srcName + ".in");
+          chanset.add(srcName);
+        }
       }
     }
   }
