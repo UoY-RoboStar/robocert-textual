@@ -12,12 +12,14 @@
  ******************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq.message;
 
+import circus.robocalc.robochart.Event;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import java.util.Objects;
 import javax.inject.Inject;
 import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.ComponentActor;
 import robocalc.robocert.model.robocert.EventTopic;
 import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.MessageTopic;
@@ -77,19 +79,46 @@ public record TopicGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu,
   }
 
   private CharSequence generateEvent(EventTopic e, Actor from, Actor to) {
-    final var dir = inferDirection(from, to);
+    final var einfo = resolveEvent(e, from, to);
+    final var channelName = csp.namespaced(namespace(einfo.actor), gu.eventId(einfo.event));
+    return String.join(".", channelName, einfo.dir.toString());
+  }
 
+  private EventInfo resolveEvent(EventTopic e, Actor from, Actor to) {
     // We only use efrom/eto for event naming, so it's ok to do this.
     final var efrom = e.getEfrom();
     final var eto = Objects.requireNonNullElse(e.getEto(), efrom);
-    final var eTarget = dir == Direction.IN ? eto : efrom;
 
-    // TODO(@MattWindsor91): this could do with being closer to the logic in the RoboChart
-    // statement generator.
-    final var nsTarget = dir == Direction.IN ? to : from;
-    final var channelName = csp.namespaced(namespace(nsTarget), gu.eventId(eTarget));
-    return String.join(".", channelName, dir.toString());
+    // Firstly, do we have an outbound connection?
+    // If so, we always resolve in favour of the the non-world side.
+    if (from instanceof World) {
+      return new EventInfo(Direction.IN, to, eto);
+    }
+    if (to instanceof World) {
+      return new EventInfo(Direction.OUT, from, efrom);
+    }
+    // We're in a multi-component situation.
+    if (from instanceof ComponentActor f) {
+      final var fnode = f.getNode();
+
+      return eventResolver.resolve(e, from, to).map(conn -> {
+        // TODO(@MattWindsor91): handle async and bidirec.
+
+        // Following rule 15 of the RoboChart semantics, we usually take the actor and event
+        // representing the 'from' of the connection.
+
+        if (fnode != conn.getFrom() && fnode != conn.getTo()) {
+          throw new IllegalArgumentException("from-node of message didn't match either end of its connection");
+        }
+
+        return new EventInfo(fnode == conn.getFrom() ? Direction.OUT : Direction.IN, f, conn.getEfrom());
+      }).findAny().orElseThrow();
+    }
+
+    throw new IllegalArgumentException("unsupported actors: %s, %s".formatted(from, to));
   }
+
+  private record EventInfo(Direction dir, Actor actor, Event event) {}
 
   private CharSequence generateOp(OperationTopic o, Actor from, Actor to) {
     if (!(to instanceof World)) {
@@ -130,24 +159,6 @@ public record TopicGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu,
     // For worlds and everything else, fallback to trying to resolve the actor to a connection node.
     // TODO(@MattWindsor91): do we even ever *reach* World here?
     return nodeResolver.resolve(base).findAny().orElseThrow();
-  }
-
-  private Direction inferDirection(Actor from, Actor to) {
-    // Firstly, do we have an outbound connection?
-    if (from instanceof World) {
-      // Use 'to' as namespace, 'eto' as event, and the direction is 'in'
-      return Direction.IN;
-    }
-    if (to instanceof World) {
-      // Use 'from' as namespace, 'efrom' as event, and the direction is 'out'
-      return Direction.OUT;
-    }
-    // We're in a multi-component situation.
-    // Following rule 15 of the RoboChart semantics, we usually take the namespace of the 'to' actor
-    // and emit as IN.
-
-    // TODO(@MattWindsor91): synchronous semantics
-    return Direction.IN;
   }
 
   /**
