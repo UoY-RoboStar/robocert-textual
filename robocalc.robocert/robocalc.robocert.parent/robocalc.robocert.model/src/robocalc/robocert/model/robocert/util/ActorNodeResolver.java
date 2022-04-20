@@ -22,9 +22,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.ComponentActor;
 import robocalc.robocert.model.robocert.ControllerTarget;
 import robocalc.robocert.model.robocert.InControllerTarget;
@@ -51,29 +49,6 @@ public record ActorNodeResolver(DefinitionResolver defResolver) {
   @Inject
   public ActorNodeResolver {
     Objects.requireNonNull(defResolver);
-  }
-
-  /**
-   * Resolves an actor to a stream of connection nodes that can represent that actor.
-   *
-   * <p>Compared to {@code resolve}, this handles {@link TargetActor}s connected to
-   * {@link ModuleTarget}s in a special way; it returns a singleton stream of the underlying module.
-   * This means that the stream is not a stream of {@link ConnectionNode}s.
-   *
-   * @param actor the actor to resolve.  Must be attached to a specification group.
-   * @return a stream of modules or connection nodes that can represent this actor.
-   */
-  public Stream<? extends EObject> resolveHandlingTargetModules(Actor actor) {
-    if (actor instanceof TargetActor) {
-      final var ot = target(actor);
-      if (ot.isPresent()) {
-        final var t = ot.get();
-        if (t instanceof ModuleTarget m) {
-          return Stream.of(m.getModule());
-        }
-      }
-    }
-    return resolve(actor);
   }
 
   /**
@@ -125,11 +100,6 @@ public record ActorNodeResolver(DefinitionResolver defResolver) {
    * @return a stream of connection nodes that can represent the target actor.
    */
   public Stream<ConnectionNode> resolveTarget(Target target) {
-    // WFC CGsA2 means that this should not happen in practice.
-    if (target instanceof CollectionTarget) {
-      return Stream.of();
-    }
-
     // Modules don't have a single connection node, as they are the top-level container for nodes.
     // Instead, we note that everything a module connects to the platform is effectively a
     // surrogate node for the module.
@@ -145,6 +115,15 @@ public record ActorNodeResolver(DefinitionResolver defResolver) {
     }
     if (target instanceof OperationTarget o) {
       return Stream.of(o.getOperation());
+    }
+
+    // Despite WFC CGsA2, these can happen if we're resolving namespaces for subcomponent events,
+    // operations etc.
+    if (target instanceof InModuleTarget m) {
+      return m.getModule().getNodes().stream().filter(x -> !(x instanceof RoboticPlatform));
+    }
+    if (target instanceof InControllerTarget c) {
+      return Stream.of(c.getController());
     }
 
     throw new IllegalArgumentException("can't resolve actor for target %s".formatted(target));

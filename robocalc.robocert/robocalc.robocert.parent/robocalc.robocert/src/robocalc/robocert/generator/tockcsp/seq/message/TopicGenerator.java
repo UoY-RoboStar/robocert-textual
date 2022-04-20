@@ -15,10 +15,13 @@ package robocalc.robocert.generator.tockcsp.seq.message;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import java.util.Objects;
 import javax.inject.Inject;
+import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.EventTopic;
+import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.MessageTopic;
+import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.ActorContextFinder;
@@ -98,9 +101,35 @@ public record TopicGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu,
   }
 
   private CharSequence namespace(Actor base) {
-    // TODO(@MattWindsor91): this doesn't seem quite right.
-    final var pbase = nodeResolver.resolveHandlingTargetModules(base).findAny().orElseThrow();
-    return gu.processId(pbase);
+    return gu.processId(namespaceRoot(base));
+  }
+
+  private EObject namespaceRoot(Actor base) {
+    if (!(base instanceof World)) {
+      // In both component and target actor cases, we want to get the namespace of the target.
+      // For target actors, this is self-evident; for component actors, it's a little subtle:
+      // the semantics we use for collection targets renames things to the target's namespace even
+      // if they belong to components, and so the namespace needs to agree.
+
+      // If the target is a module, `resolve` would give us the list of components instead of
+      // the module, so we do things slightly indirectly.
+      // TODO(@MattWindsor91): is that even the right behaviour?
+      final var ot = nodeResolver.target(base);
+      if (ot.isPresent()) {
+        final var t = ot.get();
+        if (t instanceof InModuleTarget m) {
+          return m.getModule();
+        }
+        if (t instanceof ModuleTarget m) {
+          return m.getModule();
+        }
+        return nodeResolver.resolveTarget(t).findAny().orElseThrow();
+      }
+    }
+
+    // For worlds and everything else, fallback to trying to resolve the actor to a connection node.
+    // TODO(@MattWindsor91): do we even ever *reach* World here?
+    return nodeResolver.resolve(base).findAny().orElseThrow();
   }
 
   private Direction inferDirection(Actor from, Actor to) {
