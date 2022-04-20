@@ -50,7 +50,7 @@ class BinaryGeneratorTest {
    */
   @Test
   void testGenParallel_TwoItems() {
-    assertThat(List.of("A", "B"), generatesCSP("A [| A_B |] B", this::genParallel));
+    assertThat(List.of("A", "B"), generatesCSP("A [| A:[B] |] B", this::genParallel));
   }
 
   /**
@@ -60,7 +60,7 @@ class BinaryGeneratorTest {
   @Test
   void testGenParallel_ThreeItems() {
     assertThat(List.of("A", "B", "C"),
-        generatesCSP("(A [| A_B |] B) [| B_C |] C", this::genParallel));
+        generatesCSP("(A [| A:[B, C] |] B) [| B:[C] |] C", this::genParallel));
   }
 
   /**
@@ -69,10 +69,10 @@ class BinaryGeneratorTest {
   @Test
   void testGenParallel_FourItems() {
     assertThat(List.of("A", "B", "C", "D"),
-        generatesCSP("((A [| A_B |] B) [| B_C |] C) [| C_D |] D", this::genParallel));
+        generatesCSP("((A [| A:[B, C, D] |] B) [| B:[C, D] |] C) [| C:[D] |] D", this::genParallel));
   }
 
   private CharSequence genParallel(List<CharSequence> contents) {
-    return gen.genParallel(x -> x, "%s_%s"::formatted, contents);
+    return gen.genParallel(x -> x, "%s:%s"::formatted, contents);
   }
 }

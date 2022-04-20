@@ -74,13 +74,13 @@ public class BinaryGenerator {
    * list of items, nesting the parallels to achieve effective left associativity.
    *
    * @param toProcess mapping from items to processes.
-   * @param toAlpha   mapping from pairs of consecutive items to their alphabet.
+   * @param toAlpha   mapping from pairs of (item, rest of items) to their alphabet.
    * @param items     the list of items to consider (must be non-empty).
    * @param <T>       the type of items to map into processes and operators.
    * @return CSP-M for the list of items.
    */
   public <T> CharSequence genParallel(Function<T, CharSequence> toProcess,
-      BiFunction<T, T, CharSequence> toAlpha, List<T> items) {
+      BiFunction<T, List<T>, CharSequence> toAlpha, List<T> items) {
     if (items.size() == 0) {
       throw new IllegalArgumentException("cannot construct generalised parallel without items");
     }
@@ -93,7 +93,9 @@ public class BinaryGenerator {
     }
 
     for (var i = 0; i < n; i++) {
-      final T item = items.get(i);
+      final T item = items.get(0);
+      items = items.subList(1, items.size());
+
       sb.append(toProcess.apply(item));
 
       // Close the parentheses as we go
@@ -102,7 +104,7 @@ public class BinaryGenerator {
       }
 
       if (i < n - 1) {
-        sb.append(" [| ").append(toAlpha.apply(item, items.get(i + 1))).append(" |] ");
+        sb.append(" [| ").append(toAlpha.apply(item, items)).append(" |] ");
       }
     }
 

@@ -37,7 +37,7 @@ public class InControllerTargetBodyGenerator extends
   }
 
   @Override
-  protected CharSequence namespace(ControllerDef element) {
+  protected String namespace(ControllerDef element) {
     return gu.ctrlName(element);
   }
 
@@ -53,7 +53,7 @@ public class InControllerTargetBodyGenerator extends
   }
 
   @Override
-  protected CharSequence innerBody(ControllerDef element, ControllerDef ctx) {
+  protected CharSequence innerBody(String ns, ControllerDef element, ControllerDef ctx) {
     return ctrlGen.composeStateMachines(element, element.getMachines(), element.getConnections(),
         false, false);
   }

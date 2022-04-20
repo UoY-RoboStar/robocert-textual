@@ -29,15 +29,17 @@ import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
  * Resolves parameterisations for RoboChart elements.
- *
+ * <p>
  * This is heavily based on the logic inherent to the RoboChart CSP generator's templates.
  *
  * @author Matt Windsor
  */
 public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionResolver defResolver) {
+
   /**
    * Constructs a module parameter resolver.
-   * @param gu upstream RoboChart generator utilities.
+   *
+   * @param gu          upstream RoboChart generator utilities.
    * @param defResolver resolver for RoboChart definitions.
    */
   @Inject
@@ -60,7 +62,8 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
    */
   public Stream<Parameter> parameterisation(RCModule mod) {
     final var platformParams = defResolver.platform(mod).stream().flatMap(this::localsOf);
-    final var ctrlParams = defResolver.controllers(mod).flatMap(this::moduleParameterisation);
+    final var ctrlParams = defResolver.controllers(mod).map(defResolver::resolve)
+        .flatMap(this::moduleParameterisation);
     return Stream.concat(platformParams, ctrlParams);
   }
 
@@ -84,9 +87,8 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
    * Gets this controller's contribution to its module's parameterisation.
    *
    * @param ctrl the controller.
-   *
-   * @return the stream of variables that should be added to the module
-   *         parameterisation to account for this controller.
+   * @return the stream of variables that should be added to the module parameterisation to account
+   * for this controller.
    */
   private Stream<Parameter> moduleParameterisation(ControllerDef ctrl) {
     final var localOpParams =

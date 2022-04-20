@@ -65,8 +65,8 @@ public class DefinitionResolver {
 	 * @param it the RoboChart module.
 	 * @return the module's controllers.
 	 */	
-	public Stream<ControllerDef> controllers(RCModule it) {
-		return nodes(it, Controller.class).map(this::controllerDef);
+	public Stream<Controller> controllers(RCModule it) {
+		return nodes(it, Controller.class);
 	}
 
 	private <T extends ConnectionNode> Stream<T> nodes(RCModule m, Class<T> clazz) {
@@ -154,7 +154,7 @@ public class DefinitionResolver {
 	 * @param c the controller to resolve.
 	 * @return the resolved operation.
 	 */
-	private ControllerDef controllerDef(Controller c) {
+	public ControllerDef resolve(Controller c) {
 		if (c instanceof ControllerDef d)
 			return d;
 		if (c instanceof ControllerRef r)

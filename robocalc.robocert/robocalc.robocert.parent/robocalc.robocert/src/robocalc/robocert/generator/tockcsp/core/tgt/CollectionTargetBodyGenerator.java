@@ -64,7 +64,7 @@ public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, 
     final var ctx = context(element);
     final var ns = namespace(element);
 
-    final var innerBody = innerBody(element, ctx);
+    final var innerBody = innerBody(ns, element, ctx);
 
     final var mem = memoryModule(ns, ctx);
     final var memSet = csp.enumeratedSet(memorySet(ns, element, ctx).toArray(CharSequence[]::new));
@@ -74,6 +74,7 @@ public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, 
 
   /**
    * Gets the element of the target.
+   *
    * @param target the target.
    * @return the target element.
    */
@@ -85,7 +86,7 @@ public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, 
    * @param element the element in question.
    * @return the target's element's namespace.
    */
-  protected abstract CharSequence namespace(E element);
+  protected abstract String namespace(E element);
 
   /**
    * Gets the memory context of the target's element.
@@ -107,11 +108,12 @@ public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, 
   /**
    * Creates the inner body of the target.
    *
+   * @param ns      namespace of the target being generated.
    * @param element element of the target being generated.
    * @param ctx     memory context of the target being generated.
    * @return CSP-M for the wrapped body.
    */
-  protected abstract CharSequence innerBody(E element, C ctx);
+  protected abstract CharSequence innerBody(String ns, E element, C ctx);
 
   /**
    * Wraps the outer body of the target.
@@ -131,7 +133,7 @@ public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, 
    * @param ctx     memory context of the target being generated.
    * @return the elements of the synchronisation set, to be fed into an enumerated set.
    */
-  private Stream<CharSequence> memorySet(CharSequence ns, E element, C ctx) {
+  private Stream<CharSequence> memorySet(String ns, E element, C ctx) {
     final var locals = gu.allLocalVariables(ctx).stream().map(this::intSet);
     return Stream.concat(locals, componentVars(element)).map(v -> csp.namespaced(ns, v));
   }
@@ -145,9 +147,27 @@ public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, 
     final var cs = csp.sets();
     final var cb = csp.bins();
 
-    final var terminate = cs.set(csp.namespaced(ns, "terminate"));
-    return csp.function("sbisim", csp.function("diamond",
-        cb.hide(cb.interrupt(csp.tuple(body), terminate, csp.skip()), terminate)));
+    final var terminate = cs.set(terminate(ns));
+    final var terminated = cb.interrupt(csp.tuple(body), terminate, csp.skip());
+    final var hidden = cb.hide(terminated, terminate);
+
+    final var priorities = cs.list(csp.namespaced(ns, "visibleMemoryEvents"), cs.set("tock"));
+    final var prioritised = csp.function("prioritise", hidden, priorities);
+    return csp.function("sbisim", prioritised);
+  }
+
+  /**
+   * Constructs a reference to the termination channel.
+   *
+   * @param ns the namespace of the target element.
+   * @return the terminate channel (not in a set).
+   */
+  protected CharSequence terminate(CharSequence ns) {
+    return csp.namespaced(ns, "terminate");
+  }
+
+  protected String intGet(Variable v) {
+    return "get_" + gu.variableId(v);
   }
 
   protected String intSet(Variable v) {
