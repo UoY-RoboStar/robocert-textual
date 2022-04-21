@@ -14,11 +14,12 @@
 
 package robocalc.robocert.generator.tockcsp.core.tgt;
 
+import java.util.stream.Stream;
+
+import com.google.inject.Inject;
+
 import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedControllerGenerator;
-import com.google.inject.Inject;
-import java.util.stream.Stream;
-import robocalc.robocert.model.robocert.InControllerTarget;
 
 /**
  * Generates bodies of in-controller targets.

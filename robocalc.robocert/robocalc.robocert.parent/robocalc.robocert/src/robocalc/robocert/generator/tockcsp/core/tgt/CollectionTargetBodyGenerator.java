@@ -61,12 +61,24 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
     final var ctx = context(element);
     final var ns = namespace(element);
 
-    final var innerBody = innerBody(ns, element, ctx);
-
-    final var mem = memoryModule(ns, ctx);
-    final var memSet = csp.enumeratedSet(memorySet(ns, element, ctx).toArray(CharSequence[]::new));
-    final var body = csp.bins().genParallel(innerBody, memSet, mem);
+    final var body = addMemory(element, ctx, ns, innerBody(ns, element, ctx));
     return handleTerminationAndOptimise(ns, wrapOuter(element, ctx, body));
+  }
+
+  private CharSequence addMemory(E element, C ctx, String ns, CharSequence innerBody) {
+    final var locals = gu.allLocalVariables(ctx).stream().map(this::intSet);
+    final var memorySet = Stream.concat(locals, componentVars(element))
+        .map(v -> csp.namespaced(ns, v)).toArray(CharSequence[]::new);
+    // Don't add a memory if there is no need for one.
+    if (memorySet.length == 0) {
+      return innerBody;
+    }
+
+    // Assuming always optimised, eg adding dbisim.
+    final var mem = csp.function("dbisim",
+        csp.namespaced(ns, "Memory") + memGen.memoryInstantiation(ctx));
+
+    return csp.bins().genParallel(innerBody, csp.enumeratedSet(memorySet), mem);
   }
 
   /**
@@ -114,24 +126,6 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
    */
   protected abstract CharSequence wrapOuter(E element, C ctx, CharSequence body);
 
-  /**
-   * Calculates the memory synchronisation set for an in-module target.
-   *
-   * @param ns      namespace of the target being generated.
-   * @param element element of the target being generated.
-   * @param ctx     memory context of the target being generated.
-   * @return the elements of the synchronisation set, to be fed into an enumerated set.
-   */
-  private Stream<CharSequence> memorySet(String ns, E element, C ctx) {
-    final var locals = gu.allLocalVariables(ctx).stream().map(this::intSet);
-    return Stream.concat(locals, componentVars(element)).map(v -> csp.namespaced(ns, v));
-  }
-
-  private CharSequence memoryModule(CharSequence ns, Context ctx) {
-    // Assuming always optimised, eg adding dbisim.
-    return csp.function("dbisim", csp.namespaced(ns, "Memory") + memGen.memoryInstantiation(ctx));
-  }
-
   private CharSequence handleTerminationAndOptimise(CharSequence ns, CharSequence body) {
     final var cs = csp.sets();
     final var cb = csp.bins();
@@ -153,10 +147,6 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
    */
   protected CharSequence terminate(CharSequence ns) {
     return csp.namespaced(ns, "terminate");
-  }
-
-  protected String intGet(Variable v) {
-    return "get_" + gu.variableId(v);
   }
 
   protected String intSet(Variable v) {

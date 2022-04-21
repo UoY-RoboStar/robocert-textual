@@ -14,6 +14,20 @@
 
 package robocalc.robocert.generator.tockcsp.core.tgt;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.eclipse.xtext.xbase.lib.Pair;
+
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+
 import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.Controller;
 import circus.robocalc.robochart.ControllerDef;
@@ -24,19 +38,7 @@ import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedModuleGenerator;
-import com.google.common.collect.Sets;
-import com.google.inject.Inject;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.eclipse.xtext.xbase.lib.Pair;
 import robocalc.robocert.generator.tockcsp.ll.csp.Renaming;
-import robocalc.robocert.model.robocert.InModuleTarget;
 
 /**
  * Generates bodies of in-module targets.
