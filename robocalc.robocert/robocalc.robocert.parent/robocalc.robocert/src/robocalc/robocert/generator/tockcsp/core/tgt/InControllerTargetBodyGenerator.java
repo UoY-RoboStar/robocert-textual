@@ -14,6 +14,9 @@
 
 package robocalc.robocert.generator.tockcsp.core.tgt;
 
+import circus.robocalc.robochart.StateMachine;
+import circus.robocalc.robochart.StateMachineDef;
+import java.util.List;
 import java.util.stream.Stream;
 
 import com.google.inject.Inject;
@@ -27,7 +30,7 @@ import circus.robocalc.robochart.generator.csp.comp.timed.CTimedControllerGenera
  * @author Matt Windsor
  */
 public class InControllerTargetBodyGenerator extends
-    CollectionTargetBodyGenerator<ControllerDef, ControllerDef> {
+    CollectionTargetBodyGenerator<ControllerDef, ControllerDef, StateMachine> {
 
   @Inject
   protected CTimedControllerGenerator ctrlGen;
@@ -43,9 +46,14 @@ public class InControllerTargetBodyGenerator extends
   }
 
   @Override
-  protected Stream<CharSequence> componentVars(ControllerDef element) {
-    return element.getMachines().stream()
-        .flatMap(s -> gu.requiredVariables(gu.stmDef(s)).stream().map(v -> csp.namespaced(gu.stmName(s), extSet(v))));
+  protected List<StateMachine> components(ControllerDef element) {
+    return element.getMachines();
+  }
+
+  @Override
+  protected Stream<CharSequence> componentVars(StateMachine element) {
+    return gu.requiredVariables(defResolve.resolve(element)).stream()
+        .map(v -> csp.namespaced(gu.stmName(element), extSet(v)));
   }
 
   @Override
@@ -58,4 +66,5 @@ public class InControllerTargetBodyGenerator extends
   protected CharSequence wrapOuter(ControllerDef element, ControllerDef ctx, CharSequence body) {
     return body;
   }
+
 }

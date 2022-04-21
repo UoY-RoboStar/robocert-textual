@@ -32,7 +32,6 @@ import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.Controller;
 import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.ControllerRef;
-import circus.robocalc.robochart.OperationSig;
 import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.RoboticPlatformDef;
@@ -46,7 +45,7 @@ import robocalc.robocert.generator.tockcsp.ll.csp.Renaming;
  * @author Matt Windsor
  */
 public class InModuleTargetBodyGenerator extends
-    CollectionTargetBodyGenerator<RCModule, RoboticPlatformDef> {
+    CollectionTargetBodyGenerator<RCModule, RoboticPlatformDef, Controller> {
 
   @Inject
   protected CTimedModuleGenerator modGen;
@@ -67,10 +66,14 @@ public class InModuleTargetBodyGenerator extends
   }
 
   @Override
-  protected Stream<CharSequence> componentVars(RCModule element) {
-    return defResolve.controllers(element).flatMap(
-        c -> gu.requiredVariables(defResolve.resolve(c)).stream()
-            .map(v -> csp.namespaced(gu.ctrlName(c), extSet(v))));
+  protected List<Controller> components(RCModule element) {
+    return defResolve.controllers(element).toList();
+  }
+
+  @Override
+  protected Stream<CharSequence> componentVars(Controller comp) {
+    return gu.requiredVariables(defResolve.resolve(comp)).stream()
+        .map(v -> csp.namespaced(gu.ctrlName(comp), extSet(v)));
   }
 
   @Override
@@ -143,7 +146,8 @@ public class InModuleTargetBodyGenerator extends
     return output;
   }
 
-  private LinkedList<Component> makeIntersections(LinkedList<Pair<CharSequence, List<String>>> pairs) {
+  private LinkedList<Component> makeIntersections(
+      LinkedList<Pair<CharSequence, List<String>>> pairs) {
     final var ctrls = new LinkedList<Component>();
     while (!pairs.isEmpty()) {
       final var x = pairs.pop();
@@ -233,11 +237,6 @@ public class InModuleTargetBodyGenerator extends
         }
       }
     }
-  }
-
-  private CharSequence opName(CharSequence ns, OperationSig op) {
-    // TODO(@MattWindsor91): deduplicate this in TopicGenerator?
-    return csp.namespaced(ns, op.getName() + "Call");
   }
 
   private CharSequence[] constantDefs(Controller ctrl, RoboticPlatformDef rp,
