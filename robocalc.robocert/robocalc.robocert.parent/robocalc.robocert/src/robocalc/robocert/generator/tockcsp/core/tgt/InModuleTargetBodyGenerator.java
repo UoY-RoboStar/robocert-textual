@@ -44,7 +44,7 @@ import robocalc.robocert.model.robocert.InModuleTarget;
  * @author Matt Windsor
  */
 public class InModuleTargetBodyGenerator extends
-    CollectionTargetBodyGenerator<InModuleTarget, RCModule, RoboticPlatformDef> {
+    CollectionTargetBodyGenerator<RCModule, RoboticPlatformDef> {
 
   @Inject
   protected CTimedModuleGenerator modGen;
@@ -52,11 +52,6 @@ public class InModuleTargetBodyGenerator extends
   private boolean isAsyncConnection(Connection c) {
     return c.isAsync() && !(c.getTo() instanceof RoboticPlatform)
         && !(c.getFrom() instanceof RoboticPlatform);
-  }
-
-  @Override
-  protected RCModule element(InModuleTarget target) {
-    return target.getModule();
   }
 
   @Override

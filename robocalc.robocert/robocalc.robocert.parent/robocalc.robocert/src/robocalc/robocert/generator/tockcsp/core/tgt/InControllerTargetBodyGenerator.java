@@ -26,15 +26,10 @@ import robocalc.robocert.model.robocert.InControllerTarget;
  * @author Matt Windsor
  */
 public class InControllerTargetBodyGenerator extends
-    CollectionTargetBodyGenerator<InControllerTarget, ControllerDef, ControllerDef> {
+    CollectionTargetBodyGenerator<ControllerDef, ControllerDef> {
 
   @Inject
   protected CTimedControllerGenerator ctrlGen;
-
-  @Override
-  protected ControllerDef element(InControllerTarget target) {
-    return target.getController();
-  }
 
   @Override
   protected String namespace(ControllerDef element) {

@@ -23,7 +23,6 @@ import com.google.inject.Inject;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
@@ -35,12 +34,11 @@ import robocalc.robocert.model.robocert.util.DefinitionResolver;
  * such, this generator is heavily based on the generator used for RoboChart module and controller
  * processes.
  *
- * @param <T> type of targets being generated.
  * @param <E> type of target elements.
  * @param <C> type of contexts used for memory etc.
  * @author Matt Windsor
  */
-public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, E extends EObject, C extends Context> {
+public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends Context> {
 
   @Inject
   protected CSPStructureGenerator csp;
@@ -56,11 +54,10 @@ public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, 
   /**
    * Generates CSP-M for a collection target.
    *
-   * @param target the target to generate.
+   * @param element the element of the target to generate.
    * @return CSP-M for the target definition.
    */
-  public CharSequence generate(T target) {
-    final var element = element(target);
+  public CharSequence generate(E element) {
     final var ctx = context(element);
     final var ns = namespace(element);
 
@@ -71,14 +68,6 @@ public abstract class CollectionTargetBodyGenerator<T extends CollectionTarget, 
     final var body = csp.bins().genParallel(innerBody, memSet, mem);
     return handleTerminationAndOptimise(ns, wrapOuter(element, ctx, body));
   }
-
-  /**
-   * Gets the element of the target.
-   *
-   * @param target the target.
-   * @return the target element.
-   */
-  protected abstract E element(T target);
 
   /**
    * Gets the namespace of the target's element.

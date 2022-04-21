@@ -86,10 +86,10 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen, InModuleT
   public CharSequence openDef(Target t) {
     // These targets are more involved to generate, and we delegate them to a different generator.
     if (t instanceof InModuleTarget m) {
-      return modGen.generate(m);
+      return modGen.generate(m.getModule());
     }
     if (t instanceof InControllerTarget c) {
-      return ctrlGen.generate(c);
+      return ctrlGen.generate(c.getController());
     }
 
     // We now assume that we have a component target; these are just references to the RoboChart
