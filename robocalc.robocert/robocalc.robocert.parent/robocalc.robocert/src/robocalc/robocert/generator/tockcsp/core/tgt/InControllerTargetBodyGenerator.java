@@ -14,15 +14,14 @@
 
 package robocalc.robocert.generator.tockcsp.core.tgt;
 
+import circus.robocalc.robochart.Connection;
+import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.StateMachine;
-import circus.robocalc.robochart.StateMachineDef;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Stream;
-
-import com.google.inject.Inject;
 
 import circus.robocalc.robochart.ControllerDef;
-import circus.robocalc.robochart.generator.csp.comp.timed.CTimedControllerGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.Renaming;
 
 /**
  * Generates bodies of in-controller targets.
@@ -31,9 +30,6 @@ import circus.robocalc.robochart.generator.csp.comp.timed.CTimedControllerGenera
  */
 public class InControllerTargetBodyGenerator extends
     CollectionTargetBodyGenerator<ControllerDef, ControllerDef, StateMachine> {
-
-  @Inject
-  protected CTimedControllerGenerator ctrlGen;
 
   @Override
   protected String namespace(ControllerDef element) {
@@ -51,15 +47,29 @@ public class InControllerTargetBodyGenerator extends
   }
 
   @Override
-  protected Stream<CharSequence> componentVars(StateMachine element) {
-    return gu.requiredVariables(defResolve.resolve(element)).stream()
-        .map(v -> csp.namespaced(gu.stmName(element), extSet(v)));
+  protected List<Connection> connections(ControllerDef element) {
+    return element.getConnections();
   }
 
   @Override
-  protected CharSequence innerBody(String ns, ControllerDef element, ControllerDef ctx) {
-    return ctrlGen.composeStateMachines(element, element.getMachines(), element.getConnections(),
-        false, false);
+  protected Context definition(StateMachine comp) {
+    return gu.stmDef(comp);
+  }
+
+  @Override
+  protected String name(StateMachine comp) {
+    return gu.stmName(comp);
+  }
+
+  @Override
+  protected void renameConnection(Renaming renaming, LinkedList<String> chanset, String ns,
+      StateMachine comp, Connection c) {
+
+  }
+
+  @Override
+  protected CharSequence wrapInner(ControllerDef element, ControllerDef ctx, CharSequence body) {
+    return body;
   }
 
   @Override
