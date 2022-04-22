@@ -24,7 +24,7 @@ import robocalc.robocert.model.robocert.Message;
 import robocalc.robocert.model.robocert.OperationTopic;
 import robocalc.robocert.model.robocert.RoboCertPackage.Literals;
 import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.util.EventResolver;
+import robocalc.robocert.model.robocert.util.resolve.EventResolver;
 
 /**
  * Validates aspects of message specifications.

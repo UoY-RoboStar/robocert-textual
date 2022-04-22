@@ -32,13 +32,14 @@ import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.util.EventResolver;
+import robocalc.robocert.model.robocert.util.resolve.EventResolver;
+import robocalc.robocert.model.robocert.util.resolve.EventResolverImpl;
 import robocalc.robocert.model.robocert.util.MessageFactory;
 import robocalc.robocert.model.robocert.util.TargetFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**
- * Tests that the {@link EventResolver} seems to be resolving things correctly on {@link
+ * Tests that the {@link EventResolverImpl} seems to be resolving things correctly on {@link
  * ForagingExample}.
  *
  * @author Matt Windsor

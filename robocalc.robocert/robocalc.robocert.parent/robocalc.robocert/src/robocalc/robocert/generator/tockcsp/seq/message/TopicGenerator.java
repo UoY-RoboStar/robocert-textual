@@ -28,7 +28,7 @@ import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.ActorContextFinder;
 import robocalc.robocert.model.robocert.util.ActorNodeResolver;
-import robocalc.robocert.model.robocert.util.EventResolver;
+import robocalc.robocert.model.robocert.util.resolve.EventResolver;
 
 /**
  * Generates CSP-M for message channels using message topics.

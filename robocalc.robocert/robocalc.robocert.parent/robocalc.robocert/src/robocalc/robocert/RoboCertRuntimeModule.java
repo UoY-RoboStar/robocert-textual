@@ -24,69 +24,77 @@ import org.eclipse.xtext.conversion.IValueConverterService;
 import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl;
 import robocalc.robocert.generator.tockcsp.seq.fragment.InteractionFragmentGeneratorImpl;
 import robocalc.robocert.model.robocert.impl.RoboCertFactoryImpl;
+import robocalc.robocert.model.robocert.util.resolve.EventResolver;
+import robocalc.robocert.model.robocert.util.resolve.EventResolverImpl;
 
-/** 
- * Use this class to register components to be used at runtime / without the Equinox extension registry.
+/**
+ * Use this class to register components to be used at runtime / without the Equinox extension
+ * registry.
  */
 @SuppressWarnings("unused")
 public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
-	public Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
-		return RoboCertOutputConfigurationProvider.class;
-	}
 
-	public Class<? extends OccurrenceGenerator> bindActionGenerator() {
-		return OccurrenceGeneratorImpl.class;
-	}
+  public Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
+    return RoboCertOutputConfigurationProvider.class;
+  }
 
-	public Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
-		return SubsequenceGeneratorImpl.class;
-	}
+  public Class<? extends OccurrenceGenerator> bindOccurrenceGenerator() {
+    return OccurrenceGeneratorImpl.class;
+  }
 
-	public Class<? extends InteractionFragmentGenerator> bindStepGenerator() {
-		return InteractionFragmentGeneratorImpl.class;
-	}
+  public Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
+    return SubsequenceGeneratorImpl.class;
+  }
 
-	/**
-	 * Binds the RoboChart name converter
-	 * (so that qualified names are '::'-delimited).
-	 */
-	public Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
-		return RoboChartQualifiedNameConverter.class;
-	}
+  public Class<? extends InteractionFragmentGenerator> bindInteractionFragmentGenerator() {
+    return InteractionFragmentGeneratorImpl.class;
+  }
 
-	@Override
-	public Class<? extends IValueConverterService> bindIValueConverterService() {
-		return RoboCertValueConverterService.class;
-	}
+  public Class<? extends EventResolver> bindEventResolver() {
+    return EventResolverImpl.class;
+  }
 
-	//
-	// These next two serve to put the core RoboChart toolkits into the global scope.
-	//
 
-	@Override
-	public Class<? extends IGlobalScopeProvider> bindIGlobalScopeProvider() {
-		return RoboChartImportURIGlobalScopeProvider.class;
-	}
+  /**
+   * Binds the RoboChart name converter (so that qualified names are '::'-delimited).
+   */
+  public Class<? extends IQualifiedNameConverter> bindIQualifiedNameConverter() {
+    return RoboChartQualifiedNameConverter.class;
+  }
 
-	@Override
-	public void configureIScopeProviderDelegate(Binder binder) {
-		binder.bind(org.eclipse.xtext.scoping.IScopeProvider.class)
-				.annotatedWith(com.google.inject.name.Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
-				.to(RoboChartImportedNamespaceAwareLocalScopeProvider.class);
-	}
+  @Override
+  public Class<? extends IValueConverterService> bindIValueConverterService() {
+    return RoboCertValueConverterService.class;
+  }
 
-	/**
-	 * Binds the RoboCert factory.
-	 */
-	public Class<? extends RoboCertFactory> bindRoboCertFactory() {
-		// TODO(@MattWindsor91): is this the right way to do this?
-		return RoboCertFactoryImpl.class;
-	}
+  //
+  // These next two serve to put the core RoboChart toolkits into the global scope.
+  //
 
-	/**
-	 * Binds the RoboChart custom factory.
-	 */
-	public Class<? extends RoboChartFactory> bindRoboChartFactory() {
-		return RoboChartFactoryImplCustom.class;
-	}
+  @Override
+  public Class<? extends IGlobalScopeProvider> bindIGlobalScopeProvider() {
+    return RoboChartImportURIGlobalScopeProvider.class;
+  }
+
+  @Override
+  public void configureIScopeProviderDelegate(Binder binder) {
+    binder.bind(org.eclipse.xtext.scoping.IScopeProvider.class).annotatedWith(
+            com.google.inject.name.Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
+        .to(RoboChartImportedNamespaceAwareLocalScopeProvider.class);
+  }
+
+  /**
+   * Binds the RoboCert factory.
+   */
+  public Class<? extends RoboCertFactory> bindRoboCertFactory() {
+    // TODO(@MattWindsor91): is this the right way to do this?
+    return RoboCertFactoryImpl.class;
+  }
+
+  /**
+   * Binds the RoboChart custom factory.
+   */
+  public Class<? extends RoboChartFactory> bindRoboChartFactory() {
+    return RoboChartFactoryImplCustom.class;
+  }
 }

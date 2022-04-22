@@ -11,7 +11,7 @@
  *   Matt Windsor - initial definition
  ******************************************************************************/
 
-package robocalc.robocert.model.robocert.util;
+package robocalc.robocert.model.robocert.util.resolve;
 
 import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.ConnectionNode;
@@ -42,32 +42,24 @@ import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.StateMachineTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.World;
+import robocalc.robocert.model.robocert.util.ActorNodeResolver;
+import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
  * Resolves an event topic to a connection.
  *
  * @author Matt Windsor
  */
-public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver defResolver,
-                            RoboCertFactory rcFactory) {
+public record EventResolverImpl(ActorNodeResolver actorResolver, DefinitionResolver defResolver,
+                                RoboCertFactory rcFactory) implements EventResolver {
 
   @Inject
-  public EventResolver {
+  public EventResolverImpl {
     Objects.requireNonNull(actorResolver);
     Objects.requireNonNull(defResolver);
   }
 
-  /**
-   * Resolves an event to a candidate stream of connections.
-   *
-   * <p>This stream may contain zero, one, or many connections; typically anything other than one
-   * is a well-formedness violation.
-   *
-   * @param topic the topic of the event to look up.
-   * @param from  the from-actor of the event's message.
-   * @param to    the to-actor of the event's message.
-   * @return the stream of candidate connections.
-   */
+  @Override
   public Stream<Connection> resolve(EventTopic topic, Actor from, Actor to) {
     final var target = from.getGroup().getTarget();
     if (target instanceof ComponentTarget t) {
