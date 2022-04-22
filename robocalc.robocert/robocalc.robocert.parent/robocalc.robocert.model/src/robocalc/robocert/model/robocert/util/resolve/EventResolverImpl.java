@@ -50,12 +50,13 @@ import robocalc.robocert.model.robocert.util.DefinitionResolver;
  *
  * @author Matt Windsor
  */
-public record EventResolverImpl(ActorNodeResolver actorResolver, DefinitionResolver defResolver,
-                                RoboCertFactory rcFactory) implements EventResolver {
+public record EventResolverImpl(ActorNodeResolver actorResolver, ControllerResolver ctrlResolver,
+                                DefinitionResolver defResolver) implements EventResolver {
 
   @Inject
   public EventResolverImpl {
     Objects.requireNonNull(actorResolver);
+    Objects.requireNonNull(ctrlResolver);
     Objects.requireNonNull(defResolver);
   }
 
@@ -205,7 +206,7 @@ public record EventResolverImpl(ActorNodeResolver actorResolver, DefinitionResol
   private Stream<Connection> outboundControllerConnections(ControllerDef ctrl) {
     // An outbound controller connection is any connection in the module that goes to or from the
     // controller.
-    return defResolver.module(ctrl).stream().flatMap(this::moduleConnections)
+    return ctrlResolver.module(ctrl).stream().flatMap(this::moduleConnections)
         .filter(c -> connectsController(c, ctrl));
   }
 

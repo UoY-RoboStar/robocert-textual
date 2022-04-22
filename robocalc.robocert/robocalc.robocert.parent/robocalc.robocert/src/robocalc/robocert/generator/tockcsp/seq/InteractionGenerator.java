@@ -78,8 +78,8 @@ public class InteractionGenerator {
   private CharSequence generateWithoutMemory(Interaction s) {
     final var lines = lcf.createContexts(s);
     return switch (lines.size()) {
-      case 0 -> csp.timestop();
-      case 1 -> csp.seq(sg.generate(s.getFragments(), lines.get(0)), csp.timestop());
+      case 0 -> csp.skip();
+      case 1 -> sg.generate(s.getFragments(), lines.get(0));
       default -> generateMultiLifeline(s, lines);
     };
   }
@@ -93,7 +93,7 @@ public class InteractionGenerator {
     final var body = csp.iterAlphaParallel(SpecGroupField.ACTOR_ENUM.toString(),
         LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
 
-    return lg.let(alphas, procs).within(csp.seq(body, csp.timestop()));
+    return lg.let(alphas, procs).within(body);
   }
 
   private CharSequence defs(List<LifelineContext> lines,

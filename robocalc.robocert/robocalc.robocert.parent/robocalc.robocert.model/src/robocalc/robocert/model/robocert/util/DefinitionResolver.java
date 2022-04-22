@@ -19,6 +19,8 @@ import circus.robocalc.robochart.StateMachine;
 import circus.robocalc.robochart.StateMachineBody;
 import circus.robocalc.robochart.StateMachineDef;
 import circus.robocalc.robochart.StateMachineRef;
+import com.google.inject.Inject;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -38,13 +40,19 @@ import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTarget;
 import robocalc.robocert.model.robocert.StateMachineTarget;
 import robocalc.robocert.model.robocert.Target;
+import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 
 /**
  * Helper class for finding definitions of various RoboChart components.
  * 
  * @author Matt Windsor
  */
-public class DefinitionResolver {
+public record DefinitionResolver(ControllerResolver cr) {
+	@Inject
+	public DefinitionResolver {
+		Objects.requireNonNull(cr);
+	}
+
 	//
 	// RCModule
 	//
@@ -73,22 +81,6 @@ public class DefinitionResolver {
 		if (m == null)
 			return Stream.empty();
 		return StreamHelper.filter(m.getNodes().parallelStream(), clazz);
-	}
-
-	//
-	// Controllers
-	//
-
-	/**
-	 * Gets the enclosing module for a RoboChart controller.
-	 *
-	 * This assumes that the controller is inside a module.
-	 *
-	 * @param c the RoboChart controller.
-	 * @return the controller's module, if it has one.
-	 */
-	public Optional<RCModule> module(ControllerDef c) {
-		return Optional.ofNullable(EcoreUtil2.getContainerOfType(c, RCModule.class));
 	}
 
 	//
@@ -122,13 +114,13 @@ public class DefinitionResolver {
 		if (target instanceof ModuleTarget m)
 			return Optional.of(m.getModule());
 		if (target instanceof InControllerTarget c)
-			return module(c.getController());
+			return cr.module(c.getController());
 		if (target instanceof ControllerTarget c)
-			return module(c.getController());
+			return cr.module(c.getController());
 		if (target instanceof StateMachineTarget s)
-			return controller(s.getStateMachine()).flatMap(this::module);
+			return controller(s.getStateMachine()).flatMap(cr::module);
 		if (target instanceof OperationTarget s)
-			return controller(s.getOperation()).flatMap(this::module);
+			return controller(s.getOperation()).flatMap(cr::module);
 		throw new IllegalArgumentException("can't get module of target %s".formatted(target));
 	}
 

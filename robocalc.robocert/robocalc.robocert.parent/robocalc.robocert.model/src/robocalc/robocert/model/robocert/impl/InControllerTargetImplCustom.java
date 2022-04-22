@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import org.eclipse.emf.common.util.EList;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
 import robocalc.robocert.model.robocert.util.StreamHelper;
+import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 
 /**
  * Adds derived operation definitions to {@link InControllerTargetImpl}.
@@ -32,7 +33,7 @@ public class InControllerTargetImplCustom extends InControllerTargetImpl {
 
 	@Override
 	public EList<ConnectionNode> getComponents() {
-		final var dr = new DefinitionResolver();
+		final var dr = new DefinitionResolver(new ControllerResolver());
 		return StreamHelper.toEList(Stream.concat(
 				getController().getLOperations().stream().map(dr::resolve),
 				getController().getMachines().stream().map(dr::resolve)

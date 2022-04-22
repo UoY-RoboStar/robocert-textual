@@ -33,13 +33,14 @@ import robocalc.robocert.model.robocert.StateMachineTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.World;
+import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 
 /**
  * Resolves actors into the connection nodes that can represent them.
  *
  * @param defResolver helper for resolving parts of the RoboChart object graph.
  */
-public record ActorNodeResolver(DefinitionResolver defResolver) {
+public record ActorNodeResolver(ControllerResolver ctrlResolver, DefinitionResolver defResolver) {
 
   /**
    * Constructs an actor resolver.
@@ -48,6 +49,7 @@ public record ActorNodeResolver(DefinitionResolver defResolver) {
    */
   @Inject
   public ActorNodeResolver {
+    Objects.requireNonNull(ctrlResolver);
     Objects.requireNonNull(defResolver);
   }
 
@@ -170,7 +172,7 @@ public record ActorNodeResolver(DefinitionResolver defResolver) {
   private Stream<ConnectionNode> controllerWorld(ControllerDef c) {
     // The world of a controller is everything visible inside its module, except the controller
     // itself.
-    return defResolver.module(c).stream().flatMap(m -> {
+    return ctrlResolver.module(c).stream().flatMap(m -> {
       final var above = moduleWorld(m);
       final var local = m.getNodes().stream();
       return Stream.concat(above, local.filter(x -> x != c));

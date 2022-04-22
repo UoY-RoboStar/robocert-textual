@@ -21,7 +21,6 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.TickTockContextGenerator;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceProperty;
-import robocalc.robocert.model.robocert.SequencePropertyType;
 
 /**
  * Generates CSP-M for sequence properties.
@@ -72,29 +71,28 @@ public record PropertyGenerator(TickTockContextGenerator tt, CSPStructureGenerat
    * @return the left-hand side process source.
    */
   private CharSequence lhs(SequenceProperty it) {
-    return sequenceWhenTypeElseTarget(it, SequencePropertyType.HOLDS);
+    return switch (it.getType()) {
+      case HOLDS -> sequenceRef(it);
+      case IS_OBSERVED -> targetRef(it);
+    };
   }
 
   /**
    * Gets the appropriate refinement left-hand side for this sequence property.
    *
-   * <p>This is always the mirror image of lhs.
+   * <p>This is always the mirror image of lhs, with the exception that the rhs of an is-observed
+   * property is made to end with timestop.
    *
    * @param it the property for which we are generating CSP.
    * @return the right-hand side process source.
    */
   private CharSequence rhs(SequenceProperty it) {
-    return sequenceWhenTypeElseTarget(it, SequencePropertyType.IS_OBSERVED);
-  }
-
-  /**
-   * @param it the sequence property.
-   * @param t  the type that it must have for this call to expand to the sequence.
-   * @return if the sequence property type of it is t, the sequence of t; else, the instantiated
-   * target of t.
-   */
-  private CharSequence sequenceWhenTypeElseTarget(SequenceProperty it, SequencePropertyType t) {
-    return it.getType() == t ? sequenceRef(it) : targetRef(it);
+    // We add timestop to is-observed properties so as to ensure partial traces.
+    // TODO(@MattWindsor91): is this compatible with tick-tock reasoning?
+    return switch (it.getType()) {
+      case HOLDS -> targetRef(it);
+      case IS_OBSERVED -> csp.seq(sequenceRef(it), csp.timestop());
+    };
   }
 
   private CharSequence sequenceRef(SequenceProperty it) {

@@ -12,8 +12,9 @@
  ********************************************************************************/
 package robocalc.robocert.tests.generator.tockcsp.seq;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
@@ -42,13 +43,18 @@ import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class PropertyGeneratorTest {
+
   private static final String TARGET_CSP = "Test::Closed::Target";
   private static final String SEQUENCE_CSP = "Test::Closed::Seqs::seq";
 
-  @Inject private MessageFactory mf;
-  @Inject private RoboCertFactory rf;
-  @Inject private RoboChartFactory rcf;
-  @Inject private PropertyGenerator spl;
+  @Inject
+  private MessageFactory mf;
+  @Inject
+  private RoboCertFactory rf;
+  @Inject
+  private RoboChartFactory rcf;
+  @Inject
+  private PropertyGenerator spl;
 
   private Interaction sequence;
 
@@ -59,14 +65,18 @@ class PropertyGeneratorTest {
     sequence = makeSequence(group);
   }
 
-  /** Tests that lowering a traces holds property produces the expected refinement. */
+  /**
+   * Tests that lowering a traces holds property produces the expected refinement.
+   */
   @Test
   void testLower_Traces_Holds() {
     final var prop = property(SequencePropertyType.HOLDS, SemanticModel.TRACES);
     assertLower(prop, SEQUENCE_CSP, TARGET_CSP, prop.getModel());
   }
 
-  /** Tests that lowering a traces does-not-hold property produces the expected refinement. */
+  /**
+   * Tests that lowering a traces does-not-hold property produces the expected refinement.
+   */
   @Test
   void testLower_Traces_DoesNotHold() {
     final var prop = property(SequencePropertyType.HOLDS, SemanticModel.TRACES);
@@ -74,11 +84,13 @@ class PropertyGeneratorTest {
     assertLower(prop, SEQUENCE_CSP, TARGET_CSP, prop.getModel());
   }
 
-  /** Tests that lowering a tick-tock is-observed property produces the expected refinement. */
+  /**
+   * Tests that lowering a tick-tock is-observed property produces the expected refinement.
+   */
   @Test
   void testLower_TickTock_IsObserved() {
     final var prop = property(SequencePropertyType.IS_OBSERVED, SemanticModel.TIMED);
-    assertLower(prop, TARGET_CSP, SEQUENCE_CSP, prop.getModel());
+    assertLower(prop, TARGET_CSP, SEQUENCE_CSP + ";\nUSTOP", prop.getModel());
   }
 
   /**
@@ -92,19 +104,19 @@ class PropertyGeneratorTest {
    */
   private void assertLower(SequenceProperty p, CharSequence l, CharSequence r, SemanticModel m) {
     final var it = spl.lower(p);
-    assertNotNull(it);
+    assertThat(it, is(notNullValue()));
 
     final var lhs = it.lhs();
-    assertEquals(l, lhs);
+    assertThat(l, is(lhs));
 
     final var rhs = it.rhs();
-    assertEquals(r, rhs);
+    assertThat(r, is(rhs));
 
     final var model = it.model();
-    assertNotNull(model);
-    assertEquals(m, model);
+    assertThat(model, is(notNullValue()));
+    assertThat(m, is(model));
 
-    assertEquals(p.isNegated(), it.isNegated());
+    assertThat(p.isNegated(), is(it.isNegated()));
   }
 
   private SequenceProperty property(SequencePropertyType t, SemanticModel m) {

@@ -17,9 +17,11 @@ package robocalc.robocert.generator.tockcsp.core.tgt;
 import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.StateMachine;
+import com.google.inject.Inject;
 import java.util.List;
 
 import circus.robocalc.robochart.ControllerDef;
+import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 
 /**
  * Generates bodies of in-controller targets.
@@ -28,13 +30,12 @@ import circus.robocalc.robochart.ControllerDef;
  */
 public class InControllerTargetBodyGenerator extends
     CollectionTargetBodyGenerator<ControllerDef, ControllerDef, StateMachine> {
+  @Inject
+  private ControllerResolver ctrlResolve;
 
   @Override
   protected String namespace(ControllerDef element) {
-    // TODO(@MattWindsor91): may need rethinking for controller references?
-    final var name = element.getName();
-    return defResolve.module(element).map(m -> csp.namespaced(m.getName(), name).toString())
-        .orElse(name);
+    return csp.namespaced(ctrlResolve.name(element)).toString();
   }
 
   @Override

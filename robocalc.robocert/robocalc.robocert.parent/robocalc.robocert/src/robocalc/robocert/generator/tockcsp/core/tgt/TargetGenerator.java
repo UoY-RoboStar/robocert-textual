@@ -21,28 +21,33 @@ import java.util.Objects;
 import java.util.Optional;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.generator.utils.VariableHelper;
 import robocalc.robocert.generator.utils.param.Parameter;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
+import robocalc.robocert.model.robocert.ComponentTarget;
 import robocalc.robocert.model.robocert.ConstAssignment;
+import robocalc.robocert.model.robocert.ControllerTarget;
 import robocalc.robocert.model.robocert.InControllerTarget;
 import robocalc.robocert.model.robocert.InModuleTarget;
+import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.InstantiationHelper;
 import robocalc.robocert.model.robocert.util.StreamHelper;
+import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 
 /**
  * Generates CSP-M for target definitions and parameterisations.
  *
  * @author Matt Windsor
  */
-public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen, InModuleTargetBodyGenerator modGen, CTimedGeneratorUtils gu, CSPStructureGenerator csp,
+public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen,
+                              InModuleTargetBodyGenerator modGen, ControllerResolver ctrlResolver,
+                              CTimedGeneratorUtils gu, CSPStructureGenerator csp,
                               ExpressionGenerator eg, TargetParameterResolver paramRes,
-                              InstantiationHelper instHelp, VariableHelper varHelp) {
+                              InstantiationHelper instHelp) {
 
   /**
    * Hardcoded ID (may need to be changed if we support collections of robots).
-   *
+   * <p>
    * The value of this is defined in the block of overrides for the specification group.
    */
   public static final String ID = "id__";
@@ -54,6 +59,7 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen, InModuleT
 
   @Inject
   public TargetGenerator {
+    Objects.requireNonNull(ctrlResolver);
     Objects.requireNonNull(ctrlGen);
     Objects.requireNonNull(modGen);
     Objects.requireNonNull(gu);
@@ -61,7 +67,6 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen, InModuleT
     Objects.requireNonNull(eg);
     Objects.requireNonNull(paramRes);
     Objects.requireNonNull(instHelp);
-    Objects.requireNonNull(varHelp);
   }
 
   /**
@@ -80,7 +85,7 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen, InModuleT
   /**
    * Generates an instantiated form of a target process.
    *
-   * @param t    the target.
+   * @param t the target.
    * @return CSP-M for the target definition.
    */
   public CharSequence openDef(Target t) {
@@ -91,7 +96,22 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen, InModuleT
     if (t instanceof InControllerTarget c) {
       return ctrlGen.generate(c.getController());
     }
+    // Component targets are mostly just references to the RoboChart semantics-generated processes,
+    // with one caveat: we have to hide the termination channel for controllers.
+    if (t instanceof ModuleTarget m) {
+      return componentTargetOpenDef(m);
+    }
+    if (t instanceof ControllerTarget c) {
+      // TODO(@MattWindsor91): deduplicate with in-controller.
+      final var name = csp.namespaced(ctrlResolver.name(c.getController()));
+      final var terminate = csp.namespaced(name, "terminate");
+      return csp.bins().hide(componentTargetOpenDef(c), csp.sets().set(terminate));
+    }
 
+    throw new IllegalArgumentException("unsupported target type for generation: %s".formatted(t));
+  }
+
+  private CharSequence componentTargetOpenDef(ComponentTarget t) {
     // We now assume that we have a component target; these are just references to the RoboChart
     // semantics-generated processes.
 
@@ -108,6 +128,7 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen, InModuleT
     final var name = gu.getFullProcessName(t.getElement(), false, USE_OPTIMISED_TARGETS);
     final var args = StreamHelper.push(ID, params.stream().map(k -> k.cspId(gu)))
         .toArray(CharSequence[]::new);
+
     return csp.function(name, args);
   }
 
