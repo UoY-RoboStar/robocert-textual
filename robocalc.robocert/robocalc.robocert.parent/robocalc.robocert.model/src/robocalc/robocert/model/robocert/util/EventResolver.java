@@ -48,7 +48,9 @@ import robocalc.robocert.model.robocert.World;
  *
  * @author Matt Windsor
  */
-public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver defResolver, RoboCertFactory rcFactory) {
+public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver defResolver,
+                            RoboCertFactory rcFactory) {
+
   @Inject
   public EventResolver {
     Objects.requireNonNull(actorResolver);
@@ -62,27 +64,31 @@ public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver 
    * is a well-formedness violation.
    *
    * @param topic the topic of the event to look up.
-   * @param from the from-actor of the event's message.
-   * @param to the to-actor of the event's message.
+   * @param from  the from-actor of the event's message.
+   * @param to    the to-actor of the event's message.
    * @return the stream of candidate connections.
    */
   public Stream<Connection> resolve(EventTopic topic, Actor from, Actor to) {
     final var target = from.getGroup().getTarget();
-    if (target instanceof ComponentTarget t)
+    if (target instanceof ComponentTarget t) {
       return resolveComponent(topic, from, to, t);
-    if (target instanceof CollectionTarget t)
+    }
+    if (target instanceof CollectionTarget t) {
       return resolveCollection(topic, from, to, t);
-    throw new IllegalArgumentException("target neither component nor collection: %s".formatted(target));
+    }
+    throw new IllegalArgumentException(
+        "target neither component nor collection: %s".formatted(target));
   }
 
   private Stream<Connection> resolveComponent(EventTopic topic, Actor from, Actor to, Target t) {
     // Component targets are easy to resolve: all of their connections go from the target to
     // the world, or backwards (and so are outbound in some sense).
-    return outboundConnections(t).filter(x -> matchesComponent(x, topic, actorNodes(from),
-        actorNodes(to)));
+    return outboundConnections(t).filter(
+        x -> matchesComponent(x, topic, actorNodes(from), actorNodes(to)));
   }
 
-  private Stream<Connection> resolveCollection(EventTopic topic, Actor from, Actor to, CollectionTarget t) {
+  private Stream<Connection> resolveCollection(EventTopic topic, Actor from, Actor to,
+      CollectionTarget t) {
     // Collection target connections are more complicated than component target connections, as
     // there are two situations:
     //
@@ -90,43 +96,60 @@ public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver 
     //   the target;
     // - from a ComponentActor to a World, in which case we need to proceed as if we were resolving
     //   a component connection from the target to the world instead.
-    if (from instanceof ComponentActor && to instanceof ComponentActor)
-      return innerConnections(t).filter(x -> matchesComponent(x, topic, actorNodes(from), actorNodes(to)));
+    if (from instanceof ComponentActor && to instanceof ComponentActor) {
+      return innerConnections(t).filter(
+          x -> matchesComponent(x, topic, actorNodes(from), actorNodes(to)));
+    }
 
     // WFC CGsA2 has that at least one of these must be the world.
-    if (from instanceof World)
+    if (from instanceof World) {
       return resolveOutbound(topic, actorNodes(from), targetNodes(t), t);
-    if (to instanceof World)
+    }
+    if (to instanceof World) {
       return resolveOutbound(topic, targetNodes(t), actorNodes(to), t);
+    }
 
-    throw new IllegalArgumentException("tried to resolve collection with TargetActors - violates CGsA2");
+    throw new IllegalArgumentException(
+        "tried to resolve collection with TargetActors - violates CGsA2");
   }
 
-  private Stream<Connection> resolveOutbound(EventTopic topic, Set<ConnectionNode> fromNodes, Set<ConnectionNode> toNodes, Target t) {
+  private Stream<Connection> resolveOutbound(EventTopic topic, Set<ConnectionNode> fromNodes,
+      Set<ConnectionNode> toNodes, Target t) {
     return outboundConnections(t).filter(x -> matchesComponent(x, topic, fromNodes, toNodes));
   }
 
 
   /**
    * Gets the stream of connections that go from this target to its world.
+   *
    * @param target the target whose connections should be enumerated.
    * @return the stream of outbound connections.
    */
   private Stream<Connection> outboundConnections(Target target) {
     // We consider the connections from module elements to the platform to be 'outer', here.
-    if (target instanceof InModuleTarget m)
+    if (target instanceof InModuleTarget m) {
       return outboundModuleConnections(m.getModule());
-    if (target instanceof ModuleTarget m)
+    }
+    if (target instanceof ModuleTarget m) {
       return outboundModuleConnections(m.getModule());
+    }
 
-    if (target instanceof ControllerTarget c)
+    if (target instanceof InControllerTarget c) {
       return outboundControllerConnections(c.getController());
-    if (target instanceof StateMachineTarget s)
-      return outboundStateMachineBodyConnections(s.getStateMachine());
-    if (target instanceof OperationTarget o)
-      return outboundStateMachineBodyConnections(o.getOperation());
+    }
+    if (target instanceof ControllerTarget c) {
+      return outboundControllerConnections(c.getController());
+    }
 
-    throw new IllegalArgumentException("can't get outbound connections for target %s".formatted(target));
+    if (target instanceof StateMachineTarget s) {
+      return outboundStateMachineBodyConnections(s.getStateMachine());
+    }
+    if (target instanceof OperationTarget o) {
+      return outboundStateMachineBodyConnections(o.getOperation());
+    }
+
+    throw new IllegalArgumentException(
+        "can't get outbound connections for target %s".formatted(target));
   }
 
   private Set<ConnectionNode> actorNodes(Actor from) {
@@ -137,12 +160,15 @@ public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver 
     return actorResolver.resolveTarget(t).collect(Collectors.toUnmodifiableSet());
   }
 
-  private boolean matchesComponent(Connection c, EventTopic topic, Set<ConnectionNode> from, Set<ConnectionNode> to) {
-    if (!(nodesMatch(c, from, to) || (c.isBidirec() && nodesMatch(c, to, from))))
+  private boolean matchesComponent(Connection c, EventTopic topic, Set<ConnectionNode> from,
+      Set<ConnectionNode> to) {
+    if (!(nodesMatch(c, from, to) || (c.isBidirec() && nodesMatch(c, to, from)))) {
       return false;
+    }
     // TODO(@MattWindsor91): do we need reversibility here?
-    if (!EcoreUtil2.equals(topic.getEfrom(), c.getEfrom()))
+    if (!EcoreUtil2.equals(topic.getEfrom(), c.getEfrom())) {
       return false;
+    }
     final var eto = topic.getEto();
     return eto == null || EcoreUtil2.equals(topic.getEto(), c.getEto());
   }
@@ -153,14 +179,17 @@ public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver 
 
   /**
    * Gets the connections between components inside this target.
+   *
    * @param target the collection target whose connections we are searching.
    * @return the stream of connections defined between this target's components.
    */
   private Stream<Connection> innerConnections(CollectionTarget target) {
-    if (target instanceof InModuleTarget m)
+    if (target instanceof InModuleTarget m) {
       return moduleConnections(m.getModule()).filter(x -> !connectsPlatform(x));
-    if (target instanceof InControllerTarget c)
+    }
+    if (target instanceof InControllerTarget c) {
       return c.getController().getConnections().stream();
+    }
 
     throw new IllegalArgumentException("can't get inner connections of %s".formatted(target));
   }
@@ -184,11 +213,13 @@ public record EventResolver(ActorNodeResolver actorResolver, DefinitionResolver 
   private Stream<Connection> outboundControllerConnections(ControllerDef ctrl) {
     // An outbound controller connection is any connection in the module that goes to or from the
     // controller.
-    return defResolver.module(ctrl).stream().flatMap(this::moduleConnections).filter(c -> connectsController(c, ctrl));
+    return defResolver.module(ctrl).stream().flatMap(this::moduleConnections)
+        .filter(c -> connectsController(c, ctrl));
   }
 
   private Stream<Connection> outboundStateMachineBodyConnections(StateMachineBody smb) {
-    return defResolver.controller(smb).stream().flatMap(this::controllerConnections).filter(c -> connectsStateMachine(c, smb));
+    return defResolver.controller(smb).stream().flatMap(this::controllerConnections)
+        .filter(c -> connectsStateMachine(c, smb));
   }
 
   private boolean connectsController(Connection c, ControllerDef ctrl) {
