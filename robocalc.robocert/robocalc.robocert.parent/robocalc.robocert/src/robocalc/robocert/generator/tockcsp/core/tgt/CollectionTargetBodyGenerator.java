@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.xbase.lib.Pair;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.Renaming;
+import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
  * Generates CSP-M for the bodies of collection targets.
@@ -53,6 +54,8 @@ import robocalc.robocert.generator.tockcsp.ll.csp.Renaming;
  */
 public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends Context, T extends ConnectionNode> {
 
+  @Inject
+  protected DefinitionResolver defResolve;
   @Inject
   protected CSPStructureGenerator csp;
   @Inject
@@ -131,16 +134,9 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
   protected abstract String name(T comp);
 
   /**
-   * Renames connections from the perspective of a component, while also building a channel set.
-   *
-   * @param renaming the renaming being built.
-   * @param chanset  the synchronising channel set being built.
-   * @param ns       the root namespace of the
-   * @param comp     the component whose connection is being renamed.
-   * @param c        the connection being renamed.
+   * @return the class of {@code T}.
    */
-  protected abstract void renameConnection(Renaming renaming, LinkedList<String> chanset, String ns,
-      T comp, Connection c);
+  protected abstract Class<T> compClass();
 
   /**
    * Wraps the inner body of the target.
@@ -167,17 +163,21 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
     // The next bits of code use stacks and stack reversing quite a bit, so these comments are
     // examples of what the stack will look like at each stage.
 
+    final var conns = connections(element);
+    final var syncConns = conns.stream().filter(c -> !c.isAsync()).toList();
+
+    final var cs = new ComponentSynchroniser<>(csp, ns, this::name, compClass());
+
     // pairs = c1, c2, c3, c4, c5
-    final var pairs = components.stream()
-        .map(x -> renameAndBuildChanset(ns, x, connections(element), ctx))
+    final var syncs = components.stream().map(x -> cs.calculate(x, syncConns))
         .collect(Collectors.toCollection(LinkedList::new));
 
     // moved one stack onto another, so:
     // ctrls = c5[], c4[c5], c3[c4, c5], c2[c3, c4, c5], c1[c2, c3, c4, c5]
-    final var ctrls = makeIntersections(pairs);
+    final var ctrls = expandComponents(syncs, conns, ctx);
 
     final var cb = csp.bins();
-    final var cs = csp.sets();
+    final var sets = csp.sets();
 
     // It's ill-formed for there to be no controllers.
 
@@ -191,57 +191,44 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
 
       // We don't hide the intersection in this version of the semantics, as sequence diagrams
       // need to be able to inspect inter-controller communications.
-      output = cs.tuple(cb.genParallel(ctrl.body,
-          cs.enumeratedSet(ctrl.intersection.toArray(CharSequence[]::new)), output));
+      output = sets.tuple(cb.genParallel(ctrl.body,
+          sets.enumeratedSet(ctrl.intersection.toArray(CharSequence[]::new)), output));
     }
 
     return output;
   }
 
-  private LinkedList<Component> makeIntersections(
-      LinkedList<Pair<CharSequence, List<String>>> pairs) {
+  private LinkedList<Component> expandComponents(LinkedList<ComponentSynchroniser.Result<T>> syncs,
+      List<Connection> conns, C ctx) {
     final var ctrls = new LinkedList<Component>();
-    while (!pairs.isEmpty()) {
-      final var x = pairs.pop();
+    while (!syncs.isEmpty()) {
+      final var x = syncs.pop();
+      final var comp = x.comp();
+      final var compName = x.name();
+      final var compDef = definition(comp);
 
-      final var channels = new HashSet<>(x.getValue());
-      final var otherChannels = pairs.stream().flatMap(y -> y.getValue().stream())
-          .collect(Collectors.toSet());
+      final var mainBody =
+          csp.namespaced(compName, gu.getSuffix(false, true)).toString() + gu.parameterisation(
+              compDef, Collections.emptySet());
+      final var renamed = x.renaming().in(mainBody);
 
-      ctrls.push(new Component(x.getKey(), Sets.intersection(channels, otherChannels)));
+      final CharSequence[] unconnectedEvents = unconnectedEvents(comp, conns, compDef, compName);
+      final var hidden = unconnectedEvents.length == 0 ? renamed
+          : csp.bins().hide(renamed, csp.enumeratedSet(unconnectedEvents));
+
+      final var body = csp.let(constantDefs(comp, ctx, compDef)).within(hidden);
+
+      final var otherChannels = syncs.stream().flatMap(y -> y.channels().stream())
+          .collect(Collectors.toUnmodifiableSet());
+
+      ctrls.push(new Component(body, Sets.intersection(x.channels(), otherChannels)));
     }
     return ctrls;
   }
 
-  private Pair<CharSequence, List<String>> renameAndBuildChanset(String ns, T comp,
-      List<Connection> connections, C ctx) {
-    final var ctrlDef = definition(comp);
-    final var ctrlName = csp.namespaced(ns, name(comp));
-
-    final var renaming = csp.renaming();
-    final var chanset = new LinkedList<String>();
-
-    renameTerminate(renaming, chanset, ns, ctrlName);
-    connections.forEach(c -> renameConnection(renaming, chanset, ns, comp, c));
-
-    final var s =
-        csp.namespaced(ctrlName, gu.getSuffix(false, true)).toString() + gu.parameterisation(
-            ctrlDef, Collections.emptySet());
-    final var renamed = renaming.in(s);
-
-    final CharSequence[] unconnectedEvents = unconnectedEvents(comp, connections, ctrlDef,
-        ctrlName);
-    final var hidden = unconnectedEvents.length == 0 ? renamed
-        : csp.bins().hide(renamed, csp.enumeratedSet(unconnectedEvents));
-
-    final var body = csp.let(constantDefs(comp, ctx, ctrlDef)).within(hidden);
-
-    return new Pair<>(body, chanset);
-  }
-
-  private CharSequence[] unconnectedEvents(ConnectionNode comp, List<Connection> connections,
+  private CharSequence[] unconnectedEvents(ConnectionNode comp, List<Connection> conns,
       Context compDef, CharSequence compName) {
-    final var connectedEvents = connections.stream().mapMulti((x, c) -> {
+    final var connectedEvents = conns.stream().mapMulti((x, c) -> {
       if (x.getFrom() == comp) {
         c.accept(x.getEfrom());
       } else if (x.getTo() == comp) {
@@ -250,7 +237,7 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
     }).collect(Collectors.toSet());
 
     return gu.allEvents(compDef).stream().filter(e -> !(connectedEvents.contains(e)))
-        .map(e -> csp.namespaced(compName, gu.eventId(e))).toArray(CharSequence[]::new);
+        .map(e -> csp.namespaced(compName, e.getName())).toArray(CharSequence[]::new);
   }
 
   /**
@@ -304,13 +291,6 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
     final var priorities = cs.list(csp.namespaced(ns, "visibleMemoryEvents"), cs.set("tock"));
     final var prioritised = csp.function("prioritise", hidden, priorities);
     return csp.function("sbisim", prioritised);
-  }
-
-  protected void renameTerminate(Renaming renaming, LinkedList<String> chanset, String ns,
-      CharSequence ctrlName) {
-    // renamingPairs and chanset is guaranteed to contain at least one event, the termination event
-    renaming.rename(terminate(ctrlName), terminate(ns));
-    chanset.add(terminate(ns).toString());
   }
 
   protected CharSequence[] constantDefs(T ctrl, Context parentDef, Context compDef) {

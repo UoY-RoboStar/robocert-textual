@@ -17,11 +17,9 @@ package robocalc.robocert.generator.tockcsp.core.tgt;
 import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.StateMachine;
-import java.util.LinkedList;
 import java.util.List;
 
 import circus.robocalc.robochart.ControllerDef;
-import robocalc.robocert.generator.tockcsp.ll.csp.Renaming;
 
 /**
  * Generates bodies of in-controller targets.
@@ -33,7 +31,10 @@ public class InControllerTargetBodyGenerator extends
 
   @Override
   protected String namespace(ControllerDef element) {
-    return gu.ctrlName(element);
+    // TODO(@MattWindsor91): may need rethinking for controller references?
+    final var name = element.getName();
+    return defResolve.module(element).map(m -> csp.namespaced(m.getName(), name).toString())
+        .orElse(name);
   }
 
   @Override
@@ -62,9 +63,8 @@ public class InControllerTargetBodyGenerator extends
   }
 
   @Override
-  protected void renameConnection(Renaming renaming, LinkedList<String> chanset, String ns,
-      StateMachine comp, Connection c) {
-
+  protected Class<StateMachine> compClass() {
+    return StateMachine.class;
   }
 
   @Override

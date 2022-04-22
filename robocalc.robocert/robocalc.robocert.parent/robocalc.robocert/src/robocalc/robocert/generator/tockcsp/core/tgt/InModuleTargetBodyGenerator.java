@@ -15,7 +15,6 @@
 package robocalc.robocert.generator.tockcsp.core.tgt;
 
 import circus.robocalc.robochart.Context;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,8 +27,6 @@ import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedModuleGenerator;
-import robocalc.robocert.generator.tockcsp.ll.csp.Renaming;
-import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
  * Generates bodies of in-module targets.
@@ -38,9 +35,6 @@ import robocalc.robocert.model.robocert.util.DefinitionResolver;
  */
 public class InModuleTargetBodyGenerator extends
     CollectionTargetBodyGenerator<RCModule, RoboticPlatformDef, Controller> {
-  @Inject
-  protected DefinitionResolver defResolve;
-
   @Inject
   protected CTimedModuleGenerator modGen;
 
@@ -80,6 +74,11 @@ public class InModuleTargetBodyGenerator extends
   }
 
   @Override
+  protected Class<Controller> compClass() {
+    return Controller.class;
+  }
+
+  @Override
   protected CharSequence wrapInner(RCModule element, RoboticPlatformDef ctx, CharSequence body) {
     final Stream<CharSequence> vars = gu.allLocalVariables(ctx).stream().mapMulti((v, c) -> {
       final var init = v.getInitial();
@@ -93,6 +92,8 @@ public class InModuleTargetBodyGenerator extends
 
   @Override
   protected CharSequence wrapOuter(RCModule element, RoboticPlatformDef ctx, CharSequence body) {
+    // Controllers in a module can have async communications, so this sets up the buffers for them.
+
     final var async = element.getConnections().stream().filter(this::isAsyncConnection).toList();
     if (async.isEmpty()) {
       return body;
@@ -107,36 +108,6 @@ public class InModuleTargetBodyGenerator extends
         .genParallel(csp.sets().tuple(modGen.composeBuffers(async, bidirecAsync, element)),
             csp.enumeratedSet(syncset),
             csp.let(modGen.compileBuffers(async, bidirecAsync, element)).within(body));
-  }
-
-  @Override
-  protected void renameConnection(Renaming renaming, LinkedList<String> chanset, String ns,
-      Controller ctrl, Connection c) {
-    final var source = c.getFrom();
-    final var target = c.getTo();
-    final var esource = c.getEfrom();
-    final var etarget = c.getEto();
-
-    // Unlike the RoboChart semantics, we only rename to fuse synchronous connections.  We don't
-    // rename connections heading to the robotic platform.
-    if (c.isAsync()) {
-      return;
-    }
-
-    if (source instanceof Controller src) {
-      final var srcName = csp.namespaced(ns, gu.ctrlName(src), gu.eventId(esource)).toString();
-      if (src == ctrl) {
-        // this event needs to be added because we are using generalised parallelism
-        chanset.add(srcName);
-      } else if (target instanceof Controller tgt && tgt == ctrl) {
-        // synchronous inter-controller communication; swap in and out to match source
-        final var tgtName = csp.namespaced(ns, gu.ctrlName(tgt), gu.eventId(etarget)).toString();
-
-        renaming.rename(tgtName + ".in", srcName + ".out")
-            .rename(tgtName + ".out", srcName + ".in");
-        chanset.add(srcName);
-      }
-    }
   }
 }
 
