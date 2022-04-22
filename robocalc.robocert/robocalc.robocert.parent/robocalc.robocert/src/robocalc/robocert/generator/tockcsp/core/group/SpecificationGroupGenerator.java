@@ -30,6 +30,7 @@ import robocalc.robocert.generator.tockcsp.seq.ActorGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.NamedSetModuleGenerator;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
+import robocalc.robocert.model.robocert.CollectionTarget;
 import robocalc.robocert.model.robocert.ConstAssignment;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.SpecificationGroup;
@@ -106,11 +107,14 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     // Space here for expansion.
     final var specs = group.getInteractions();
 
-    final var optimisations = Stream.of("sbisim", "dbisim", "diamond").map(x -> "transparent " + x);
+    final var optimisations = Stream.of("sbisim", "dbisim").map(x -> "transparent " + x);
 
+    // Component targets are just invocations of the existing RoboChart processs semantics, and
+    // don't need to be wrapped in a timed section.  Collection targets are more involved, and do.
     final var target =
-        csp.definition(SpecGroupParametricField.TARGET.toString(),
-            targetGen.openDef(group.getTarget()));
+        csp.timedIf(group.getTarget() instanceof CollectionTarget,
+          csp.definition(SpecGroupParametricField.TARGET.toString(),
+              targetGen.openDef(group.getTarget())));
 
     final var elements = Streams.concat(
         optimisations,

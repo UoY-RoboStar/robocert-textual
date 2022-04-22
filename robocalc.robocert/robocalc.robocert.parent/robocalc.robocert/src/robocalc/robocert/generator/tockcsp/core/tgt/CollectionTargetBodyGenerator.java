@@ -25,7 +25,6 @@ import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -33,9 +32,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.xbase.lib.Pair;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.ll.csp.Renaming;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
@@ -286,11 +283,12 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
 
     final var terminate = cs.set(terminate(ns));
     final var terminated = cb.interrupt(csp.tuple(body), terminate, csp.skip());
+    // nb: this differs from the usual semantics of controllers - where termination is propagated
+    // up to the module level - but is in accordance with the usual semantics of modules.
     final var hidden = cb.hide(terminated, terminate);
 
-    final var priorities = cs.list(csp.namespaced(ns, "visibleMemoryEvents"), cs.set("tock"));
-    final var prioritised = csp.function("prioritise", hidden, priorities);
-    return csp.function("sbisim", prioritised);
+    final var visibleMemoryEvents = csp.namespaced(ns, "visibleMemoryEvents");
+    return csp.function("sbisim", csp.prioritise(hidden, visibleMemoryEvents, cs.set("tock")));
   }
 
   protected CharSequence[] constantDefs(T ctrl, Context parentDef, Context compDef) {

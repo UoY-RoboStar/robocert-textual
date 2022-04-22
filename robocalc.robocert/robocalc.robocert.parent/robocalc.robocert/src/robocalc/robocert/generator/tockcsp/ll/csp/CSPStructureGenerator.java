@@ -12,10 +12,8 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator.Let;
@@ -33,9 +31,9 @@ public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenera
   /**
    * Constructs a CSP structure generator.
    *
-   * @param bins sub-generator for binary operations.
+   * @param bins         sub-generator for binary operations.
    * @param letGenerator sub-generator for let expressions.
-   * @param sets sub-generator for set expressions.
+   * @param sets         sub-generator for set expressions.
    */
   @Inject
   public CSPStructureGenerator {
@@ -45,29 +43,8 @@ public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenera
   }
 
   /**
-   * Semi-intelligent enumerated set difference.
-   *
-   * @param lhs left-hand side of the set difference.
-   * @param rhs right-hand side of the set difference.
-   * @return the difference operator (which may be optimised out).
-   */
-  public CharSequence enumeratedDiff(Set<String> lhs, Set<String> rhs) {
-    // Try to optimise the difference first.
-    final var olhs = Sets.difference(lhs, rhs);
-    if (olhs.isEmpty()) {
-      return "{}";
-    }
-    final var clhs = enumeratedSet(olhs.toArray(String[]::new));
-    final var orhs = Sets.difference(rhs, olhs);
-    if (orhs.isEmpty()) {
-      return clhs;
-    }
-    final var crhs = enumeratedSet(orhs.toArray(String[]::new));
-    return function("diff", clhs, crhs);
-  }
-
-  /**
    * Shorthand for starting to build a renaming expression.
+   *
    * @return the renamer.
    */
   public Renaming renaming() {
@@ -140,6 +117,17 @@ public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenera
    */
   public CharSequence function(CharSequence name, CharSequence... args) {
     return args.length == 0 ? name : String.join("", name, tuple(args));
+  }
+
+  /**
+   * Generates a sequence-based prioritise construct.
+   *
+   * @param body the body on which the prioritise is taking effect.
+   * @param args the arguments to put into the sequence.
+   * @return CSP-M for the prioritise function.
+   */
+  public CharSequence prioritise(CharSequence body, CharSequence... args) {
+    return function("prioritise", body, sets.list(args));
   }
 
   /**

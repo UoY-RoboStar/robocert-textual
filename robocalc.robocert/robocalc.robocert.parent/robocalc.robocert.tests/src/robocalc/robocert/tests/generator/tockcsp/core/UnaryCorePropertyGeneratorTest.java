@@ -47,7 +47,7 @@ class CorePropertyGeneratorTest {
   @Test
   void testDeadlockFree() {
     assertGeneratesBody(
-        "prioritise( Test::Closed::Target[[tock<-tock,tock<-tock']], <diff(Events,{tock',tock}),{tock}> )\\{tock} :[divergence free [FD]]",
+        "prioritise( Test::Closed::Target[[ tock <- tock, tock <- tock' ]], <diff(Events, {tock', tock}), {tock}> ) \\ {tock} :[divergence free [FD]]",
         CorePropertyType.DEADLOCK_FREE);
   }
 

@@ -102,23 +102,35 @@ public record TopicGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu,
       final var fnode = f.getNode();
 
       return eventResolver.resolve(e, from, to).map(conn -> {
-        // TODO(@MattWindsor91): handle async and bidirec.
+        if (fnode != conn.getFrom() && fnode != conn.getTo()) {
+          throw new IllegalArgumentException(
+              "from-node of message didn't match either end of its connection");
+        }
 
         // Following rule 15 of the RoboChart semantics, we usually take the actor and event
         // representing the 'from' of the connection.
+        //
+        // If we matched the 'from' of the topic to the 'to' node of the connection, we have a
+        // bidirectional connection that matched backwards.  This bit of code reverses the actor
+        // and direction so that the event still names the from-node, which is important once we
+        // start fusing together synchronous channels.
+        //
+        // TODO(@MattWindsor91): handle async properly?.
 
-        if (fnode != conn.getFrom() && fnode != conn.getTo()) {
-          throw new IllegalArgumentException("from-node of message didn't match either end of its connection");
-        }
+        final var dir = fnode == conn.getFrom() ? Direction.OUT : Direction.IN;
+        assert (dir == Direction.OUT || conn.isBidirec());
+        final var base = dir == Direction.OUT ? from : to;
 
-        return new EventInfo(fnode == conn.getFrom() ? Direction.OUT : Direction.IN, f, conn.getEfrom());
+        return new EventInfo(dir, base, conn.getEfrom());
       }).findAny().orElseThrow();
     }
 
     throw new IllegalArgumentException("unsupported actors: %s, %s".formatted(from, to));
   }
 
-  private record EventInfo(Direction dir, Actor actor, Event event) {}
+  private record EventInfo(Direction dir, Actor actor, Event event) {
+
+  }
 
   private CharSequence generateOp(OperationTopic o, Actor from, Actor to) {
     if (!(to instanceof World)) {

@@ -63,8 +63,19 @@ public class Renaming {
       return subject;
     }
 
-    final var rename = pairs.stream().map(x -> CSPStructureGenerator.indentStrip(x.toString()))
-        .collect(Collectors.joining(",\n", "[[\n", "\n]]"));
+    final var rename = buildRenaming();
     return String.join("", subject, rename);
+  }
+
+  private String buildRenaming() {
+    // As usual, try to fit things on one line, and give up if it's excessively long.
+    final var shortTry = pairs.stream().map(Pair::toString)
+        .collect(Collectors.joining(", ", "[[ ", " ]]"));
+    if (shortTry.length() < 50) {
+      return shortTry;
+    }
+
+    return pairs.stream().map(x -> CSPStructureGenerator.indentStrip(x.toString()))
+        .collect(Collectors.joining(",\n", "[[\n", "\n]]"));
   }
 }

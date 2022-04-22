@@ -89,11 +89,11 @@ public class GeneratesCSPMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
     }
     final var different = result.substring(lpoint, rpoint);
 
-    mismatchDescription.appendText("got CSP-M ([[ ]] = difference): ");
+    mismatchDescription.appendText("got CSP-M («» = difference): ");
     mismatchDescription.appendText(prefix);
-    mismatchDescription.appendText("[[");
+    mismatchDescription.appendText("«");
     mismatchDescription.appendText(different);
-    mismatchDescription.appendText("]]");
+    mismatchDescription.appendText("»");
     mismatchDescription.appendText(suffix);
 
     return false;
