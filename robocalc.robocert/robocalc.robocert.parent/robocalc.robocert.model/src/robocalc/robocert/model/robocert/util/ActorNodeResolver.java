@@ -34,23 +34,27 @@ import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
+import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
 
 /**
  * Resolves actors into the connection nodes that can represent them.
  *
- * @param defResolver helper for resolving parts of the RoboChart object graph.
+ * @param ctrlRes helper for resolving aspects of RoboChart controllers.
+ * @param modRes helper for resolving aspects of RoboChart modules.
+ * @param defRes helper for resolving parts of the RoboChart object graph.
  */
-public record ActorNodeResolver(ControllerResolver ctrlResolver, DefinitionResolver defResolver) {
+public record ActorNodeResolver(ControllerResolver ctrlRes, ModuleResolver modRes, DefinitionResolver defRes) {
 
   /**
    * Constructs an actor resolver.
    *
-   * @param defResolver helper for resolving parts of the RoboChart object graph.
+   * @param defRes helper for resolving parts of the RoboChart object graph.
    */
   @Inject
   public ActorNodeResolver {
-    Objects.requireNonNull(ctrlResolver);
-    Objects.requireNonNull(defResolver);
+    Objects.requireNonNull(ctrlRes);
+    Objects.requireNonNull(modRes);
+    Objects.requireNonNull(defRes);
   }
 
   /**
@@ -166,13 +170,13 @@ public record ActorNodeResolver(ControllerResolver ctrlResolver, DefinitionResol
 
   private Stream<ConnectionNode> moduleWorld(RCModule m) {
     // The world of a module is just its platform (with some casting to ConnectionNode).
-    return defResolver.platform(m).stream().map(x -> x);
+    return modRes.platform(m).stream().map(x -> x);
   }
 
   private Stream<ConnectionNode> controllerWorld(ControllerDef c) {
     // The world of a controller is everything visible inside its module, except the controller
     // itself.
-    return ctrlResolver.module(c).stream().flatMap(m -> {
+    return ctrlRes.module(c).stream().flatMap(m -> {
       final var above = moduleWorld(m);
       final var local = m.getNodes().stream();
       return Stream.concat(above, local.filter(x -> x != c));
@@ -182,7 +186,7 @@ public record ActorNodeResolver(ControllerResolver ctrlResolver, DefinitionResol
   private Stream<ConnectionNode> stmBodyWorld(StateMachineBody s) {
     // The world of a state machine or operation is everything visible inside its controller,
     // except the state machine body itself.
-    return defResolver.controller(s).stream().flatMap(c -> {
+    return defRes.controller(s).stream().flatMap(c -> {
       final var above = StreamHelper.push(c, controllerWorld(c));
       final var local = Stream.concat(c.getLOperations().stream(), c.getMachines().stream());
       return Stream.concat(above, local.filter(x -> x != s));

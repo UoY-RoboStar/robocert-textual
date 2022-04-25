@@ -27,6 +27,7 @@ import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedModuleGenerator;
+import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
 
 /**
  * Generates bodies of in-module targets.
@@ -37,6 +38,9 @@ public class InModuleTargetBodyGenerator extends
     CollectionTargetBodyGenerator<RCModule, RoboticPlatformDef, Controller> {
   @Inject
   protected CTimedModuleGenerator modGen;
+
+  @Inject
+  protected ModuleResolver modRes;
 
   private boolean isAsyncConnection(Connection c) {
     return c.isAsync() && !(c.getTo() instanceof RoboticPlatform)
@@ -50,12 +54,12 @@ public class InModuleTargetBodyGenerator extends
 
   @Override
   protected RoboticPlatformDef context(RCModule element) {
-    return defResolve.platform(element).orElse(null);
+    return modRes.platform(element).orElse(null);
   }
 
   @Override
   protected List<Controller> components(RCModule element) {
-    return defResolve.controllers(element).toList();
+    return modRes.controllers(element).toList();
   }
 
   @Override
@@ -65,7 +69,7 @@ public class InModuleTargetBodyGenerator extends
 
   @Override
   protected Context definition(Controller comp) {
-    return defResolve.resolve(comp);
+    return defRes.resolve(comp);
   }
 
   @Override

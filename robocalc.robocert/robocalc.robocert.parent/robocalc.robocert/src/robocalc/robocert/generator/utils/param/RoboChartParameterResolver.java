@@ -26,26 +26,32 @@ import java.util.Set;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.model.robocert.util.DefinitionResolver;
+import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
 
 /**
  * Resolves parameterisations for RoboChart elements.
  * <p>
  * This is heavily based on the logic inherent to the RoboChart CSP generator's templates.
  *
+ * @param gu     upstream RoboChart generator utilities.
+ * @param defRes resolver for RoboChart definitions.
+ * @param modRes resolver for aspects of RoboChart modules.
  * @author Matt Windsor
  */
-public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionResolver defResolver) {
+public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionResolver defRes,
+                                         ModuleResolver modRes) {
 
   /**
    * Constructs a module parameter resolver.
    *
-   * @param gu          upstream RoboChart generator utilities.
-   * @param defResolver resolver for RoboChart definitions.
+   * @param gu     upstream RoboChart generator utilities.
+   * @param defRes resolver for RoboChart definitions.
+   * @param modRes resolver for aspects of RoboChart modules.
    */
   @Inject
   public RoboChartParameterResolver {
     Objects.requireNonNull(gu);
-    Objects.requireNonNull(defResolver);
+    Objects.requireNonNull(defRes);
   }
 
   //
@@ -61,8 +67,8 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
    * @return a stream over module parameters.
    */
   public Stream<Parameter> parameterisation(RCModule mod) {
-    final var platformParams = defResolver.platform(mod).stream().flatMap(this::localsOf);
-    final var ctrlParams = defResolver.controllers(mod).map(defResolver::resolve)
+    final var platformParams = modRes.platform(mod).stream().flatMap(this::localsOf);
+    final var ctrlParams = modRes.controllers(mod).map(defRes::resolve)
         .flatMap(this::moduleParameterisation);
     return Stream.concat(platformParams, ctrlParams);
   }
@@ -91,10 +97,9 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
    * for this controller.
    */
   private Stream<Parameter> moduleParameterisation(ControllerDef ctrl) {
-    final var localOpParams =
-        ctrl.getLOperations().stream().map(defResolver::resolve).flatMap(this::localsOf);
-    final var stmParams = ctrl.getMachines().stream().map(defResolver::resolve)
+    final var localOpParams = ctrl.getLOperations().stream().map(defRes::resolve)
         .flatMap(this::localsOf);
+    final var stmParams = ctrl.getMachines().stream().map(defRes::resolve).flatMap(this::localsOf);
     return Stream.concat(localsOf(ctrl), Stream.concat(stmParams, localOpParams));
   }
 

@@ -20,6 +20,8 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ComponentTarget;
 import robocalc.robocert.model.robocert.ControllerTarget;
+import robocalc.robocert.model.robocert.ModuleTarget;
+import robocalc.robocert.model.robocert.OperationTarget;
 import robocalc.robocert.model.robocert.util.StreamHelper;
 import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 
@@ -71,11 +73,17 @@ public record ComponentTargetBodyGenerator(ControllerResolver ctrlRes, CSPStruct
   public CharSequence generate(ComponentTarget t) {
     var body = generateCall(t);
 
-    if (t instanceof ControllerTarget c) {
-      // Component targets are mostly just references to the RoboChart semantics-generated processes,
-      // with one caveat: we have to hide the termination channel for controllers.
-      final var name = csp.namespaced(ctrlRes.name(c.getController()));
-      body = termGen.hideTerminate(name, body);
+    // Module targets hide their termination channel, but other targets do not.
+    // We need to hide it ourselves in those cases.
+    if (!(t instanceof ModuleTarget)) {
+      final var ns = namespace(t);
+
+      body = termGen.hideTerminate(ns, body);
+
+      // Operation targets also have an extra share-CSP channel that needs to be hidden.
+      if (t instanceof OperationTarget) {
+        body = csp.bins().hide(body, csp.sets().set(csp.namespaced(ns, "share__")));
+      }
     }
 
     return body;
@@ -100,5 +108,17 @@ public record ComponentTargetBodyGenerator(ControllerResolver ctrlRes, CSPStruct
         .toArray(CharSequence[]::new);
 
     return csp.function(name, args);
+  }
+
+  private CharSequence namespace(ComponentTarget t) {
+    // TODO(@MattWindsor91): this logic is repeated in several other places, I think.
+    if (t instanceof ModuleTarget m) {
+      return m.getModule().getName();
+    }
+    if (t instanceof ControllerTarget c) {
+      return csp.namespaced(ctrlRes.name(c.getController()));
+    }
+
+    throw new IllegalArgumentException("can't get namespace of target: %s".formatted(t));
   }
 }

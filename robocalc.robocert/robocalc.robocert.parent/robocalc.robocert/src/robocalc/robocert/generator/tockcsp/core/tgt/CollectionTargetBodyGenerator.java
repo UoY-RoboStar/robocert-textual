@@ -52,7 +52,7 @@ import robocalc.robocert.model.robocert.util.DefinitionResolver;
 public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends Context, T extends ConnectionNode> {
 
   @Inject
-  protected DefinitionResolver defResolve;
+  protected DefinitionResolver defRes;
   @Inject
   protected CSPStructureGenerator csp;
   @Inject

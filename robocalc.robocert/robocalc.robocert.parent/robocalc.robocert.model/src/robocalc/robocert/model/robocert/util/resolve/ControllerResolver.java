@@ -24,6 +24,7 @@ import org.eclipse.xtext.EcoreUtil2;
  * @author Matt Windsor
  */
 public class ControllerResolver implements NameResolver<ControllerDef> {
+  // TODO(@MattWindsor91): generalise to Controller?
 
   /**
    * Gets the enclosing module for a RoboChart controller.
