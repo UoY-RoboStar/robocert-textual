@@ -133,7 +133,7 @@ public record CorePropertyGenerator(SpecificationGroupElementFinder elementFinde
     final var cs = csp.sets();
     final var cb = csp.bins();
 
-    final var tockset = cs.set("tock");
+    final var tockset = cs.tock();
 
     final var body = csp.renaming().rename("tock", "tock").rename("tock", "tock'").in(proc);
     final var pproc = csp.prioritise(body, csp.function("diff", "Events", cs.set("tock'", "tock")),

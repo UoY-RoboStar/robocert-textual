@@ -48,14 +48,14 @@ import robocalc.robocert.model.robocert.util.ActorNodeResolver;
  *
  * @author Matt Windsor
  */
-public record EventResolverImpl(ActorNodeResolver actorResolver, ControllerResolver ctrlResolver,
-                                DefinitionResolver defResolver) implements EventResolver {
+public record EventResolverImpl(ActorNodeResolver actorRes, ControllerResolver ctrlRes,
+                                StateMachineResolver stmRes) implements EventResolver {
 
   @Inject
   public EventResolverImpl {
-    Objects.requireNonNull(actorResolver);
-    Objects.requireNonNull(ctrlResolver);
-    Objects.requireNonNull(defResolver);
+    Objects.requireNonNull(actorRes);
+    Objects.requireNonNull(ctrlRes);
+    Objects.requireNonNull(stmRes);
   }
 
   @Override
@@ -144,11 +144,11 @@ public record EventResolverImpl(ActorNodeResolver actorResolver, ControllerResol
   }
 
   private Set<ConnectionNode> actorNodes(Actor from) {
-    return actorResolver.resolve(from).collect(Collectors.toUnmodifiableSet());
+    return actorRes.resolve(from).collect(Collectors.toUnmodifiableSet());
   }
 
   private Set<ConnectionNode> targetNodes(Target t) {
-    return actorResolver.resolveTarget(t).collect(Collectors.toUnmodifiableSet());
+    return actorRes.resolveTarget(t).collect(Collectors.toUnmodifiableSet());
   }
 
   private boolean matchesComponent(Connection c, EventTopic topic, Set<ConnectionNode> from,
@@ -204,12 +204,12 @@ public record EventResolverImpl(ActorNodeResolver actorResolver, ControllerResol
   private Stream<Connection> outboundControllerConnections(ControllerDef ctrl) {
     // An outbound controller connection is any connection in the module that goes to or from the
     // controller.
-    return ctrlResolver.module(ctrl).stream().flatMap(this::moduleConnections)
+    return ctrlRes.module(ctrl).stream().flatMap(this::moduleConnections)
         .filter(c -> connectsController(c, ctrl));
   }
 
   private Stream<Connection> outboundStateMachineBodyConnections(StateMachineBody smb) {
-    return defResolver.controller(smb).stream().flatMap(this::controllerConnections)
+    return stmRes.controller(smb).stream().flatMap(this::controllerConnections)
         .filter(c -> connectsStateMachine(c, smb));
   }
 

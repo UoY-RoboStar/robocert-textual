@@ -59,6 +59,14 @@ public class SetGenerator {
   }
 
   /**
+   * Generates a singleton set containing the tock event.
+   * @return the tock set.
+   */
+  public CharSequence tock() {
+    return set("tock");
+  }
+
+  /**
    * Generates a list.
    *
    * @param args the contents of the list.

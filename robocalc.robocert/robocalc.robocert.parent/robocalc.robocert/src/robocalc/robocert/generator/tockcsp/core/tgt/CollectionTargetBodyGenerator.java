@@ -276,7 +276,7 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
 
     final var visibleMemoryEvents = csp.namespaced(ns, "visibleMemoryEvents");
     return csp.function("sbisim",
-        csp.prioritise(terminated, visibleMemoryEvents, csp.sets().set("tock")));
+        csp.prioritise(terminated, visibleMemoryEvents, csp.sets().tock()));
   }
 
   protected CharSequence[] constantDefs(T ctrl, Context parentDef, Context compDef) {

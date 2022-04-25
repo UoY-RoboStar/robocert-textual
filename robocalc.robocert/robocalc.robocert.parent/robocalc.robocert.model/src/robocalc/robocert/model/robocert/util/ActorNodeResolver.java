@@ -34,29 +34,31 @@ import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
-import robocalc.robocert.model.robocert.util.resolve.DefinitionResolver;
 import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
+import robocalc.robocert.model.robocert.util.resolve.StateMachineResolver;
 
 /**
  * Resolves actors into the connection nodes that can represent them.
  *
  * @param ctrlRes helper for resolving aspects of RoboChart controllers.
  * @param modRes  helper for resolving aspects of RoboChart modules.
- * @param defRes  helper for resolving parts of the RoboChart object graph.
+ * @param stmRes  helper for resolving aspects of RoboChart state machines and operations.
  */
 public record ActorNodeResolver(ControllerResolver ctrlRes, ModuleResolver modRes,
-                                DefinitionResolver defRes) {
+                                StateMachineResolver stmRes) {
 
   /**
    * Constructs an actor resolver.
    *
-   * @param defRes helper for resolving parts of the RoboChart object graph.
+   * @param ctrlRes helper for resolving aspects of RoboChart controllers.
+   * @param modRes  helper for resolving aspects of RoboChart modules.
+   * @param stmRes  helper for resolving aspects of RoboChart state machines and operations.
    */
   @Inject
   public ActorNodeResolver {
     Objects.requireNonNull(ctrlRes);
     Objects.requireNonNull(modRes);
-    Objects.requireNonNull(defRes);
+    Objects.requireNonNull(stmRes);
   }
 
   /**
@@ -189,7 +191,7 @@ public record ActorNodeResolver(ControllerResolver ctrlRes, ModuleResolver modRe
   private Stream<ConnectionNode> stmBodyWorld(StateMachineBody s) {
     // The world of a state machine or operation is everything visible inside its controller,
     // except the state machine body itself.
-    return defRes.controller(s).stream().flatMap(c -> {
+    return stmRes.controller(s).stream().flatMap(c -> {
       final var above = StreamHelper.push(c, controllerWorld(c));
       final var local = Stream.concat(c.getLOperations().stream(), c.getMachines().stream());
       return Stream.concat(above, local.filter(x -> x != s));

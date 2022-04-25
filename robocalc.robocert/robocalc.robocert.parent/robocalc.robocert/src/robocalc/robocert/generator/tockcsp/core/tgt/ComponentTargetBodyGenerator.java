@@ -22,8 +22,11 @@ import robocalc.robocert.model.robocert.ComponentTarget;
 import robocalc.robocert.model.robocert.ControllerTarget;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTarget;
+import robocalc.robocert.model.robocert.StateMachineTarget;
 import robocalc.robocert.model.robocert.util.StreamHelper;
 import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
+import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
+import robocalc.robocert.model.robocert.util.resolve.StateMachineResolver;
 
 /**
  * Handles generation of bodies of component targets (ModuleTarget, ControllerTarget, etc).
@@ -35,7 +38,9 @@ import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
  * @param termGen  generates CSP to hide termination channels.
  * @author Matt Windsor
  */
-public record ComponentTargetBodyGenerator(ControllerResolver ctrlRes, CSPStructureGenerator csp,
+public record ComponentTargetBodyGenerator(ModuleResolver modRes,
+                                           ControllerResolver ctrlRes, StateMachineResolver stmRes,
+                                           CSPStructureGenerator csp,
                                            CTimedGeneratorUtils gu,
                                            TargetParameterResolver paramRes,
                                            TerminationGenerator termGen) {
@@ -43,7 +48,9 @@ public record ComponentTargetBodyGenerator(ControllerResolver ctrlRes, CSPStruct
   /**
    * Constructs a component generator.
    *
+   * @param modRes  resolves aspects of modules, such as names.
    * @param ctrlRes  resolves aspects of controllers, such as names.
+   * @param stmRes  resolves aspects of state machine bodies, such as names.
    * @param gu       RoboChart generator utilities.
    * @param csp      low-level CSP generator.
    * @param paramRes resolves target parameterisations.
@@ -51,7 +58,9 @@ public record ComponentTargetBodyGenerator(ControllerResolver ctrlRes, CSPStruct
    */
   @Inject
   public ComponentTargetBodyGenerator {
+    Objects.requireNonNull(modRes);
     Objects.requireNonNull(ctrlRes);
+    Objects.requireNonNull(stmRes);
     Objects.requireNonNull(csp);
     Objects.requireNonNull(gu);
     Objects.requireNonNull(paramRes);
@@ -76,7 +85,7 @@ public record ComponentTargetBodyGenerator(ControllerResolver ctrlRes, CSPStruct
     // Module targets hide their termination channel, but other targets do not.
     // We need to hide it ourselves in those cases.
     if (!(t instanceof ModuleTarget)) {
-      final var ns = namespace(t);
+      final var ns = csp.namespaced(namespace(t));
 
       body = termGen.hideTerminate(ns, body);
 
@@ -110,15 +119,20 @@ public record ComponentTargetBodyGenerator(ControllerResolver ctrlRes, CSPStruct
     return csp.function(name, args);
   }
 
-  private CharSequence namespace(ComponentTarget t) {
+  private String[] namespace(ComponentTarget t) {
     // TODO(@MattWindsor91): this logic is repeated in several other places, I think.
     if (t instanceof ModuleTarget m) {
-      return m.getModule().getName();
+      return modRes.name(m.getModule());
     }
     if (t instanceof ControllerTarget c) {
-      return csp.namespaced(ctrlRes.name(c.getController()));
+      return ctrlRes.name(c.getController());
     }
-
+    if (t instanceof StateMachineTarget b) {
+      return stmRes.name(b.getStateMachine());
+    }
+    if (t instanceof OperationTarget o) {
+      return stmRes.name(o.getOperation());
+    }
     throw new IllegalArgumentException("can't get namespace of target: %s".formatted(t));
   }
 }
