@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.ComponentActor;
+import robocalc.robocert.model.robocert.util.resolve.DefinitionResolver;
 
 /**
  * Resolves RoboChart contexts related to actors.

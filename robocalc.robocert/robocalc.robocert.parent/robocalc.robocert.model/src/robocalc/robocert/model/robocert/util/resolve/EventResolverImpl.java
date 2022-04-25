@@ -38,12 +38,10 @@ import robocalc.robocert.model.robocert.InControllerTarget;
 import robocalc.robocert.model.robocert.InModuleTarget;
 import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTarget;
-import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.StateMachineTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.ActorNodeResolver;
-import robocalc.robocert.model.robocert.util.DefinitionResolver;
 
 /**
  * Resolves an event topic to a connection.

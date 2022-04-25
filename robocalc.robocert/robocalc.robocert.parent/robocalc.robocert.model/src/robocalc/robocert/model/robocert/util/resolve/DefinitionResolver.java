@@ -1,5 +1,5 @@
-/********************************************************************************
- * Copyright (c) 2021, 2022 University of York and others
+/*******************************************************************************
+ * Copyright (c) 2021-2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +9,8 @@
  *
  * Contributors:
  *   Matt Windsor - initial definition
- ********************************************************************************/
-package robocalc.robocert.model.robocert.util;
+ ******************************************************************************/
+package robocalc.robocert.model.robocert.util.resolve;
 
 import circus.robocalc.robochart.Operation;
 import circus.robocalc.robochart.OperationDef;
@@ -38,7 +38,6 @@ import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.OperationTarget;
 import robocalc.robocert.model.robocert.StateMachineTarget;
 import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 
 /**
  * Helper class for finding definitions of various RoboChart components.

@@ -16,7 +16,7 @@ import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
 import java.util.stream.Stream;
 import org.eclipse.emf.common.util.EList;
-import robocalc.robocert.model.robocert.util.DefinitionResolver;
+import robocalc.robocert.model.robocert.util.resolve.DefinitionResolver;
 import robocalc.robocert.model.robocert.util.StreamHelper;
 import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 

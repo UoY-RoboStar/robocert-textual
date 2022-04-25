@@ -22,7 +22,6 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import robocalc.robocert.model.robocert.util.DefinitionResolver;
 import robocalc.robocert.model.robocert.util.StreamHelper;
 
 /**

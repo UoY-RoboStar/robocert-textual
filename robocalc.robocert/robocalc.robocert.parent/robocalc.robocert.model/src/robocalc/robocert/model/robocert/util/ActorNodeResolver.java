@@ -34,16 +34,18 @@ import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.TargetActor;
 import robocalc.robocert.model.robocert.World;
 import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
+import robocalc.robocert.model.robocert.util.resolve.DefinitionResolver;
 import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
 
 /**
  * Resolves actors into the connection nodes that can represent them.
  *
  * @param ctrlRes helper for resolving aspects of RoboChart controllers.
- * @param modRes helper for resolving aspects of RoboChart modules.
- * @param defRes helper for resolving parts of the RoboChart object graph.
+ * @param modRes  helper for resolving aspects of RoboChart modules.
+ * @param defRes  helper for resolving parts of the RoboChart object graph.
  */
-public record ActorNodeResolver(ControllerResolver ctrlRes, ModuleResolver modRes, DefinitionResolver defRes) {
+public record ActorNodeResolver(ControllerResolver ctrlRes, ModuleResolver modRes,
+                                DefinitionResolver defRes) {
 
   /**
    * Constructs an actor resolver.
@@ -109,6 +111,7 @@ public record ActorNodeResolver(ControllerResolver ctrlRes, ModuleResolver modRe
     // Modules don't have a single connection node, as they are the top-level container for nodes.
     // Instead, we note that everything a module connects to the platform is effectively a
     // surrogate node for the module.
+    // TODO(@MattWindsor91): I don't think this behaviour is ever useful!?
     if (target instanceof ModuleTarget m) {
       return m.getModule().getNodes().stream().filter(x -> !(x instanceof RoboticPlatform));
     }
