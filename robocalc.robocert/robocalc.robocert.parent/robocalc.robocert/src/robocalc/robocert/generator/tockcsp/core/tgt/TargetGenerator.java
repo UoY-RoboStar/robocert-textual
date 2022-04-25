@@ -25,14 +25,10 @@ import robocalc.robocert.generator.utils.param.Parameter;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ComponentTarget;
 import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.ControllerTarget;
 import robocalc.robocert.model.robocert.InControllerTarget;
 import robocalc.robocert.model.robocert.InModuleTarget;
-import robocalc.robocert.model.robocert.ModuleTarget;
 import robocalc.robocert.model.robocert.Target;
 import robocalc.robocert.model.robocert.util.InstantiationHelper;
-import robocalc.robocert.model.robocert.util.StreamHelper;
-import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
 
 /**
  * Generates CSP-M for target definitions and parameterisations.
@@ -40,10 +36,13 @@ import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
  * @author Matt Windsor
  */
 public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen,
-                              InModuleTargetBodyGenerator modGen, ControllerResolver ctrlResolver,
+                              InModuleTargetBodyGenerator modGen,
+                              ComponentTargetBodyGenerator compGen,
                               CTimedGeneratorUtils gu, CSPStructureGenerator csp,
                               ExpressionGenerator eg, TargetParameterResolver paramRes,
                               InstantiationHelper instHelp) {
+
+  // TODO(@MattWindsor91): this class is doing three or so different things.
 
   /**
    * Hardcoded ID (may need to be changed if we support collections of robots).
@@ -52,16 +51,12 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen,
    */
   public static final String ID = "id__";
 
-  /**
-   * Eventually this should be exposed to the user.
-   */
-  private static final boolean USE_OPTIMISED_TARGETS = true;
 
   @Inject
   public TargetGenerator {
-    Objects.requireNonNull(ctrlResolver);
     Objects.requireNonNull(ctrlGen);
     Objects.requireNonNull(modGen);
+    Objects.requireNonNull(compGen);
     Objects.requireNonNull(gu);
     Objects.requireNonNull(csp);
     Objects.requireNonNull(eg);
@@ -89,47 +84,17 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen,
    * @return CSP-M for the target definition.
    */
   public CharSequence openDef(Target t) {
-    // These targets are more involved to generate, and we delegate them to a different generator.
     if (t instanceof InModuleTarget m) {
       return modGen.generate(m.getModule());
     }
     if (t instanceof InControllerTarget c) {
       return ctrlGen.generate(c.getController());
     }
-    // Component targets are mostly just references to the RoboChart semantics-generated processes,
-    // with one caveat: we have to hide the termination channel for controllers.
-    if (t instanceof ModuleTarget m) {
-      return componentTargetOpenDef(m);
-    }
-    if (t instanceof ControllerTarget c) {
-      // TODO(@MattWindsor91): deduplicate with in-controller.
-      final var name = csp.namespaced(ctrlResolver.name(c.getController()));
-      final var terminate = csp.namespaced(name, "terminate");
-      return csp.bins().hide(componentTargetOpenDef(c), csp.sets().set(terminate));
+    if (t instanceof ComponentTarget c) {
+      return compGen.generate(c);
     }
 
     throw new IllegalArgumentException("unsupported target type for generation: %s".formatted(t));
-  }
-
-  private CharSequence componentTargetOpenDef(ComponentTarget t) {
-    // We now assume that we have a component target; these are just references to the RoboChart
-    // semantics-generated processes.
-
-    final var params = paramRes.parameterisation(t).toList();
-    /*
-     * In email with Pedro (2021-08-04): the target of a refinement against a (simple)
-     * specification should usually be unoptimised (D__); model comparisons should
-     * usually be optimised (O__).  However, in practice c. 2022-03-28, it seems that O__ is
-     * outperforming D__ across the board and is safe to enable.  This might change gain in future.
-     *
-     * TODO(@MattWindsor91): eventually, we should be able to select the
-     * optimisation level.
-     */
-    final var name = gu.getFullProcessName(t.getElement(), false, USE_OPTIMISED_TARGETS);
-    final var args = StreamHelper.push(ID, params.stream().map(k -> k.cspId(gu)))
-        .toArray(CharSequence[]::new);
-
-    return csp.function(name, args);
   }
 
   /**

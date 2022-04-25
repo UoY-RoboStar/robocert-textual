@@ -61,6 +61,8 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
   protected CMemoryGenerator memGen;
   @Inject
   protected ExpressionGenerator exprGen;
+  @Inject
+  private TerminationGenerator termGen;
 
   /**
    * Generates CSP-M for a collection target.
@@ -237,16 +239,6 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
         .map(e -> csp.namespaced(compName, e.getName())).toArray(CharSequence[]::new);
   }
 
-  /**
-   * Constructs a reference to the termination channel.
-   *
-   * @param ns the namespace of the target element.
-   * @return the terminate channel (not in a set).
-   */
-  protected CharSequence terminate(CharSequence ns) {
-    return csp.namespaced(ns, "terminate");
-  }
-
   protected String intSet(Variable v) {
     return "set_" + gu.variableId(v);
   }
@@ -278,17 +270,13 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
   }
 
   private CharSequence handleTerminationAndOptimise(CharSequence ns, CharSequence body) {
-    final var cs = csp.sets();
-    final var cb = csp.bins();
-
-    final var terminate = cs.set(terminate(ns));
-    final var terminated = cb.interrupt(csp.tuple(body), terminate, csp.skip());
     // nb: this differs from the usual semantics of controllers - where termination is propagated
     // up to the module level - but is in accordance with the usual semantics of modules.
-    final var hidden = cb.hide(terminated, terminate);
+    final var terminated = termGen.handleTerminate(ns, body);
 
     final var visibleMemoryEvents = csp.namespaced(ns, "visibleMemoryEvents");
-    return csp.function("sbisim", csp.prioritise(hidden, visibleMemoryEvents, cs.set("tock")));
+    return csp.function("sbisim",
+        csp.prioritise(terminated, visibleMemoryEvents, csp.sets().set("tock")));
   }
 
   protected CharSequence[] constantDefs(T ctrl, Context parentDef, Context compDef) {

@@ -8,7 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Matt Windsor - initial definition
+ *   Alvaro Miyazawa and Pedro Ribeiro - initial definition in RoboChart
+ *   Matt Windsor - port to RoboCert
  ******************************************************************************/
 
 package robocalc.robocert.generator.tockcsp.core.tgt;
