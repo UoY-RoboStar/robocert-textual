@@ -72,7 +72,7 @@ class StateMachineResolverTest {
   void testName() {
     // TODO(@MattWindsor91): stm/op not in mod/ctrl
     assertThat(resolver.name(stm), is(arrayContaining("Mod", "Ctrl", "Stm")));
-    assertThat(resolver.name(op), is(arrayContaining("Mod", "Ctrl", "Op")));
+    assertThat(resolver.name(op), is(arrayContaining("Mod", "Ctrl", "OP_Op")));
   }
 
   /**

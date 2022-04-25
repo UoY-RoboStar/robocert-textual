@@ -76,7 +76,7 @@ public record StateMachineResolver(ControllerResolver ctrlRes) implements
       return d.getName();
     }
     if (b instanceof OperationDef d) {
-      return d.getName();
+      return "OP_" + d.getName();
     }
     throw new IllegalArgumentException("can't get name of state machine body %s".formatted(b));
   }

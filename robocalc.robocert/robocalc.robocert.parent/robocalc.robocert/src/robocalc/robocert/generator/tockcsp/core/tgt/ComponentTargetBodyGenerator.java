@@ -90,8 +90,8 @@ public record ComponentTargetBodyGenerator(ModuleResolver modRes,
       body = termGen.hideTerminate(ns, body);
 
       // Operation targets also have an extra share-CSP channel that needs to be hidden.
-      if (t instanceof OperationTarget) {
-        body = csp.bins().hide(body, csp.sets().set(csp.namespaced(ns, "share__")));
+      if (t instanceof OperationTarget o) {
+        body = csp.bins().hide(body, csp.sets().set("share__"));
       }
     }
 
