@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
@@ -52,6 +53,15 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
     Objects.requireNonNull(gu);
     Objects.requireNonNull(csp);
     Objects.requireNonNull(typeGen);
+  }
+
+  /**
+   * Checks whether we need a memory module for a variable list.
+   * @param xs the variable list to check.
+   * @return whether we need a memory module for {@code mem}.
+   */
+  public boolean needsMemory(VariableList xs) {
+      return xs != null && !xs.getVars().isEmpty();
   }
 
   /**

@@ -17,7 +17,14 @@
    It is intended to be auto-included into the output of the RoboCert CSP
    generator, and expects the RoboChart 'core_timed_defs' to be open. -}
 
--- This is the version of robocert_seq_defs.csp last updated on: 2022-02-03
+-- This is the version of robocert_seq_defs.csp last updated on: 2022-04-25
+
+{-
+ - Until fragment synchronisation
+ -}
+
+-- Direction of synchronisation with until-processes.
+datatype UntilSync = enter | leave
 
 {-
  - Memory

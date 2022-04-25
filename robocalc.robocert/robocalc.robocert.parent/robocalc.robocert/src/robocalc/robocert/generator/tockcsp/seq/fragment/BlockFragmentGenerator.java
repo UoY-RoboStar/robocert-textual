@@ -17,6 +17,7 @@ import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
+import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentHeaderGenerator;
 import robocalc.robocert.model.robocert.BlockFragment;
 import robocalc.robocert.model.robocert.DurationFragment;
 import robocalc.robocert.model.robocert.LoopFragment;

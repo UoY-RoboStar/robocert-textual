@@ -28,6 +28,7 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ActorGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
+import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentProcessGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.NamedSetModuleGenerator;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.CollectionTarget;
@@ -45,6 +46,9 @@ import robocalc.robocert.model.robocert.SpecificationGroup;
  */
 public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGroup> {
 
+  // TODO(@MattWindsor91): this class is getting very large and dependent on a lot of things.
+  // Maybe break up along subnotation lines.
+
   @Inject
   private CSPStructureGenerator csp;
   @Inject
@@ -53,6 +57,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   private InteractionGenerator interactionGen;
   @Inject
   private NamedSetModuleGenerator msgSetGen;
+  @Inject
+  private UntilFragmentProcessGenerator untilGen;
   @Inject
   private ModuleGenerator memoryGen;
   @Inject
@@ -109,7 +115,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
     final var optimisations = Stream.of("sbisim", "dbisim").map(x -> "transparent " + x);
 
-    // Component targets are just invocations of the existing RoboChart processs semantics, and
+    // Component targets are just invocations of the existing RoboChart process semantics, and
     // don't need to be wrapped in a timed section.  Collection targets are more involved, and do.
     final var target =
         csp.timedIf(group.getTarget() instanceof CollectionTarget,
@@ -119,7 +125,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     final var elements = Streams.concat(
         optimisations,
         Stream.of(target),
-        msgSetGen.generate(group).stream(), memModule(specs).stream(), specModule(specs).stream());
+        msgSetGen.generate(group).stream(), memModule(specs).stream(), channelModule(specs).stream(), specModule(specs).stream());
 
     return csp.innerJoin(elements);
   }
@@ -171,9 +177,16 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     return Stream.concat(Stream.of(overrides, universe), actorModule(group).stream());
   }
 
+  private Optional<CharSequence> channelModule(EList<Interaction> sequences) {
+    // TODO(@MattWindsor91): other channels?
+    return sequences.stream().flatMap(seq ->
+        untilGen.generateChannel(seq).stream()
+    ).collect(collectToModule(SpecGroupParametricField.CHANNEL_MODULE));
+  }
+
   private Optional<CharSequence> memModule(EList<Interaction> sequences) {
     return sequences.stream().map(Interaction::getVariables)
-        .filter(x -> x != null && !x.getVars().isEmpty()).map(memoryGen::generate)
+        .filter(memoryGen::needsMemory).map(memoryGen::generate)
         .collect(collectToModule(SpecGroupParametricField.MEMORY_MODULE));
   }
 

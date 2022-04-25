@@ -8,10 +8,10 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Matt Windsor - initial definition
+ *   $author - initial definition
  ******************************************************************************/
 
-package robocalc.robocert.generator.tockcsp.seq.fragment;
+package robocalc.robocert.generator.tockcsp.seq.fragment.until;
 
 import com.google.inject.Inject;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;

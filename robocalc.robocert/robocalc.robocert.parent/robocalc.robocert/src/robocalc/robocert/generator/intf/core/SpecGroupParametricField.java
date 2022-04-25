@@ -8,6 +8,10 @@ package robocalc.robocert.generator.intf.core;
  */
 public enum SpecGroupParametricField {
 	/**
+	 * The module in the specification group containing any control channel definitions.
+	 */
+	CHANNEL_MODULE,
+	/**
 	 * The module in the specification group containing any memory definitions.
 	 */
 	MEMORY_MODULE,	
@@ -23,6 +27,7 @@ public enum SpecGroupParametricField {
 	@Override
 	public String toString() {
 		return switch(this) {
+			case CHANNEL_MODULE -> "Channels";
 			case MEMORY_MODULE -> "Memory";
 			case SEQUENCE_MODULE -> "Seqs";
 			case TARGET -> "Target";

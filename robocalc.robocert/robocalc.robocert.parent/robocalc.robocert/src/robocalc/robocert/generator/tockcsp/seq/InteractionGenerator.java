@@ -61,18 +61,7 @@ public class InteractionGenerator {
     // TODO(@MattWindsor91): work out whether the memory is shared between
     // lifelines, or unique to each.
     final var inner = generateWithoutMemory(s);
-    return elideMemory(s) ? csp.tuple(inner) : mg.lift(s, inner);
-  }
-
-  /**
-   * Can we safely get away with not emitting a memory?
-   *
-   * @param s the interaction for which we are generating CSP-M.
-   * @return true if, and only if, there is no need to emit a memory for this interaction.
-   */
-  private boolean elideMemory(Interaction s) {
-    final var variables = s.getVariables();
-    return variables == null || variables.getVars().isEmpty();
+    return mg.needsMemory(s.getVariables()) ? mg.lift(s, inner) : csp.tuple(inner);
   }
 
   private CharSequence generateWithoutMemory(Interaction s) {
