@@ -55,7 +55,8 @@ class DurationFragmentHeaderGeneratorTest {
   void setUp() {
     final var act = factory.createComponentActor();
     act.setName("C");
-    final var ictx = new InteractionContext(List.of(act), List.of());
+
+    final var ictx = new InteractionContext(List.of(act), List.of(), "until");
     ctx = new LifelineContext(ictx, act, "x");
 
     final var inner = factory.createInteractionOperand();

@@ -15,8 +15,10 @@ package robocalc.robocert.generator.tockcsp.seq;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
+import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.seq.InteractionContext;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentProcessGenerator;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.Interaction;
@@ -26,23 +28,26 @@ import robocalc.robocert.model.robocert.World;
  * Creates, from a sequence, a series of lifeline contexts for use in generating individual
  * lifelines.
  *
+ * @param csp      low-level CSP generator.
  * @param actorGen used to get data constructor names for actors.
  * @param untilGen used to work out whether we need an until-process and, if so, which fragments
  *                 will go into it.
  * @author Matt Windsor
  */
-public record LifelineContextFactory(ActorGenerator actorGen,
+public record LifelineContextFactory(CSPStructureGenerator csp, ActorGenerator actorGen,
                                      UntilFragmentProcessGenerator untilGen) {
 
   /**
    * Constructs a lifeline context factory.
    *
+   * @param csp      low-level CSP generator.
    * @param actorGen used to get data constructor names for actors.
    * @param untilGen used to work out whether we need an until-process and, if so, which fragments
    *                 will go into it.
    */
   @Inject
   public LifelineContextFactory {
+    Objects.requireNonNull(csp);
     Objects.requireNonNull(actorGen);
     Objects.requireNonNull(untilGen);
   }
@@ -59,7 +64,9 @@ public record LifelineContextFactory(ActorGenerator actorGen,
   public List<LifelineContext> contexts(Interaction s) {
     final var visibleActors = s.getActors().stream().filter(this::actorVisibleInSemantics).toList();
     final var untils = untilGen.processFragments(s);
-    final var ctx = new InteractionContext(visibleActors, untils);
+    final var untilChannelName = csp.namespaced(SpecGroupField.CHANNEL_MODULE.toString(),
+        untilGen.channelName(s));
+    final var ctx = new InteractionContext(visibleActors, untils, untilChannelName);
 
     return ctx.visibleActors().parallelStream()
         .map(a -> new LifelineContext(ctx, a, actorGen.dataConstructor(a))).toList();

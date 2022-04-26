@@ -23,15 +23,19 @@ import robocalc.robocert.model.robocert.UntilFragment;
  *
  * <p>Each lifeline context contains a reference to this context.
  *
- * @param visibleActors all actors that are visible in the semantics.
- *
- * @param untils any UntilFragments found in the interaction that must be moved out of lifelines; if
- *               this is empty, UntilFragments are to be kept inline.
+ * @param visibleActors    all actors that are visible in the semantics.
+ * @param untils           any UntilFragments found in the interaction that must be moved out of
+ *                         lifelines; if this is empty, UntilFragments are to be kept inline.
+ * @param untilChannel the name of this interaction's until synchronisation channel name, if
+ *                         any.
  */
-public record InteractionContext(List<Actor> visibleActors, List<UntilFragment> untils) {
+public record InteractionContext(List<Actor> visibleActors, List<UntilFragment> untils,
+                                 CharSequence untilChannel) {
+
   public InteractionContext {
     Objects.requireNonNull(visibleActors);
     Objects.requireNonNull(untils);
+    Objects.requireNonNull(untilChannel);
   }
 
   /**

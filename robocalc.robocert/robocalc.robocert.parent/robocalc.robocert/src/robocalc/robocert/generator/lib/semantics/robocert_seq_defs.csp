@@ -17,14 +17,24 @@
    It is intended to be auto-included into the output of the RoboCert CSP
    generator, and expects the RoboChart 'core_timed_defs' to be open. -}
 
--- This is the version of robocert_seq_defs.csp last updated on: 2022-04-25
+-- This is the version of robocert_seq_defs.csp last updated on: 2022-04-26
 
 {-
  - Until fragment synchronisation
+ -
+ - These components are used when translating multi-lifeline sequences with UntilFragments.  For
+ - single-lifeline sequences, we emit `Until` instead.
  -}
 
 -- Direction of synchronisation with until-processes.
-datatype UntilSync = enter | leave
+datatype UntilSyncDir = enter | leave
+
+Timed(OneStep) {
+  -- Pauses the lifeline to hand over to an UntilFragment on the until-process.
+  -- Resumes once the body of the UntilFragment has finished.
+  UntilSync(chan, index__) = chan.index__.enter -> chan.index__.leave -> SKIP
+}
+
 
 {-
  - Memory

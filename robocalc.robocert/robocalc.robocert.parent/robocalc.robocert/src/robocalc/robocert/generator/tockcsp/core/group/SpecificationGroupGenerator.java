@@ -16,14 +16,13 @@ import com.google.common.collect.Streams;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.emf.common.util.EList;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.core.tgt.OverrideGenerator;
 import robocalc.robocert.generator.tockcsp.core.tgt.TargetGenerator;
+import robocalc.robocert.generator.tockcsp.ll.csp.CSPStreamHelper;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ActorGenerator;
@@ -51,6 +50,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
   @Inject
   private CSPStructureGenerator csp;
+  @Inject
+  private CSPStreamHelper cspStream;
   @Inject
   private TargetGenerator targetGen;
   @Inject
@@ -117,15 +118,12 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
     // Component targets are just invocations of the existing RoboChart process semantics, and
     // don't need to be wrapped in a timed section.  Collection targets are more involved, and do.
-    final var target =
-        csp.timedIf(group.getTarget() instanceof CollectionTarget,
-          csp.definition(SpecGroupParametricField.TARGET.toString(),
-              targetGen.openDef(group.getTarget())));
+    final var target = csp.timedIf(group.getTarget() instanceof CollectionTarget,
+        csp.definition(SpecGroupParametricField.TARGET.toString(),
+            targetGen.openDef(group.getTarget())));
 
-    final var elements = Streams.concat(
-        optimisations,
-        Stream.of(target),
-        msgSetGen.generate(group).stream(), memModule(specs).stream(), channelModule(specs).stream(), specModule(specs).stream());
+    final var elements = Streams.concat(optimisations, Stream.of(target),
+        msgSetGen.generate(group).stream(), channelModule(specs).stream(), specModule(specs).stream());
 
     return csp.innerJoin(elements);
   }
@@ -174,52 +172,30 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     final var universe = csp.definition(SpecGroupField.UNIVERSE.toString(),
         csp.namespaced(targetGen.semEvents(group.getTarget())));
 
-    return Stream.concat(Stream.of(overrides, universe), actorModule(group).stream());
+    final var specs = group.getInteractions();
+    return Streams.concat(Stream.of(overrides, universe), memModule(specs).stream(),
+        actorModule(group).stream());
   }
 
   private Optional<CharSequence> channelModule(EList<Interaction> sequences) {
     // TODO(@MattWindsor91): other channels?
-    return sequences.stream().flatMap(seq ->
-        untilGen.generateChannel(seq).stream()
-    ).collect(collectToModule(SpecGroupParametricField.CHANNEL_MODULE));
+    return sequences.stream().flatMap(seq -> untilGen.generateChannel(seq).stream()).collect(
+        cspStream.collectToModule(SpecGroupField.CHANNEL_MODULE.toString(), false));
   }
 
   private Optional<CharSequence> memModule(EList<Interaction> sequences) {
-    return sequences.stream().map(Interaction::getVariables)
-        .filter(memoryGen::needsMemory).map(memoryGen::generate)
-        .collect(collectToModule(SpecGroupParametricField.MEMORY_MODULE));
+    return sequences.stream().map(Interaction::getVariables).filter(memoryGen::needsMemory)
+        .map(memoryGen::generate).collect(
+            cspStream.collectToModule(SpecGroupParametricField.MEMORY_MODULE.toString(), false));
   }
 
   private Optional<CharSequence> specModule(EList<Interaction> sequences) {
-    return sequences.stream().map(this::specDef)
-        .collect(collectToModule(SpecGroupParametricField.SEQUENCE_MODULE));
+    return sequences.stream().map(this::specDef).collect(
+        cspStream.collectToModule(SpecGroupParametricField.SEQUENCE_MODULE.toString(), true));
   }
 
   private CharSequence specDef(Interaction i) {
     return csp.definition(i.getName(), interactionGen.generate(i));
   }
 
-  /**
-   * Joins a stream of character sequences with newlines, then wraps the result in a parametric
-   * field module only if the resulting sequence is non-empty.
-   *
-   * @param field the field corresponding to the module to produce.
-   * @return an empty Stream if there is no module; else, a singleton Stream containing the
-   * character sequence.
-   */
-  private Collector<CharSequence, ?, Optional<CharSequence>> collectToModule(
-      SpecGroupParametricField field) {
-    return Collectors.collectingAndThen(Collectors.joining("\n"), x -> moduleIfNonEmpty(x, field));
-  }
-
-  private Optional<CharSequence> moduleIfNonEmpty(CharSequence mod,
-      SpecGroupParametricField field) {
-    if (mod.isEmpty()) {
-      return Optional.empty();
-    }
-
-    final var name = field.toString();
-    final var isTimed = field == SpecGroupParametricField.SEQUENCE_MODULE;
-    return Optional.of(csp.module(name).withPublic(csp.timedIf(isTimed, mod)).end());
-  }
 }

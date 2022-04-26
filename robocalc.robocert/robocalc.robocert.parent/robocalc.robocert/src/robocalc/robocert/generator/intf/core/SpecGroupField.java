@@ -50,6 +50,11 @@ public enum SpecGroupField {
   //
 
   /**
+   * The module in the specification group containing any control channel definitions.
+   */
+  CHANNEL_MODULE,
+
+  /**
    * The enumeration of actors in the specification group.
    */
   ACTOR_ENUM,
@@ -62,6 +67,7 @@ public enum SpecGroupField {
   @Override
   public String toString() {
     return switch (this) {
+      case CHANNEL_MODULE -> "Channels";
       case ACTOR_ENUM -> "Actors";
       case MESSAGE_SET_MODULE -> "MsgSets";
       case PARAMETRIC_CLOSED -> "Closed";
