@@ -15,6 +15,7 @@ package robocalc.robocert.generator.intf.seq;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.UntilFragment;
 
@@ -51,5 +52,23 @@ public record InteractionContext(List<Actor> visibleActors, List<UntilFragment> 
    */
   public int untilIndex(UntilFragment frag) {
     return untils.indexOf(frag);
+  }
+
+  /**
+   * Gets whether this interaction will need a linearised until process in process algebras.
+   *
+   * @return whether an until process should be generated.
+   */
+  public boolean needsUntilProcess() {
+    return !untils.isEmpty();
+  }
+
+  /**
+   * Gets the until channel of this process, but only if it will actually be generated.
+   *
+   * @return the until channel if {@code needsUntilProcess()} is true; empty otherwise.
+   */
+  public Optional<CharSequence> untilChannelIfNeeded() {
+    return needsUntilProcess() ? Optional.of(untilChannel) : Optional.empty();
   }
 }

@@ -66,6 +66,9 @@ public class InteractionGenerator {
 
   private CharSequence generateWithoutMemory(Interaction s) {
     final var lines = lcf.contexts(s);
+
+    // Optimise single-lifeline processes by directly generating the body without trying to produce
+    // alphabets, until processes, etc.
     return switch (lines.size()) {
       case 0 -> csp.skip();
       case 1 -> sg.generate(s.getFragments(), lines.get(0));
@@ -79,10 +82,18 @@ public class InteractionGenerator {
     final var procs = defs(lines, LifelineContext::procCSP,
         x -> csp.tuple(sg.generate(s.getFragments(), x)));
 
-    final var body = csp.iterAlphaParallel(SpecGroupField.ACTOR_ENUM.toString(),
+    // It should be safe to get an arbitrary lifeline context for this.
+    final var until = lines.get(0).global().untilChannelIfNeeded();
+
+    final var main = csp.iterAlphaParallel(SpecGroupField.ACTOR_ENUM.toString(),
         LifelineContext.ALPHA_FUNCTION, LifelineContext.PROC_FUNCTION);
 
-    return lg.let(alphas, procs).within(body);
+    final var body = lg.let(alphas, procs).within(main);
+
+    // If we are using an until sync channel, we need to hide it, as it isn't part of the
+    // RoboChart process semantics.
+    return until.map(u -> csp.bins().hide(csp.sets().tuple(body), csp.sets().enumeratedSet(u)))
+        .orElse(body);
   }
 
   private CharSequence defs(List<LifelineContext> lines,
@@ -97,9 +108,17 @@ public class InteractionGenerator {
     // This means that the set of events handled directly by a lifeline is precisely that defined
     // by its messages.
     final var messages = EcoreUtil2.eAllOfType(s, Message.class);
-    final var sets = messages.stream()
+    final var msgSets = messages.stream()
         .filter(m -> ctx.isForAnyOf(Stream.of(m.getFrom(), m.getTo())))
-        .map(msgGen::generateCSPEventSet).toArray(CharSequence[]::new);
-    return csp.iteratedUnion(csp.set(sets));
+        .map(msgGen::generateCSPEventSet);
+
+    // Only add the until synchronisation channel if we expect it to be generated and used.
+    final Stream<CharSequence> untilSets = ctx.global().untilChannelIfNeeded().stream()
+        .map(csp::enumeratedSet);
+
+    // This bit is convoluted, but intended to reduce duplicates.
+    final var sets = Stream.concat(untilSets, msgSets).map(CharSequence::toString)
+        .collect(Collectors.toUnmodifiableSet());
+    return csp.iteratedUnion(csp.set(sets.toArray(CharSequence[]::new)));
   }
 }
