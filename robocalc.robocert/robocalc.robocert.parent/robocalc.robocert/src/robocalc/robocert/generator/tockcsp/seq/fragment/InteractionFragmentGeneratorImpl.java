@@ -30,70 +30,70 @@ import robocalc.robocert.model.robocert.OccurrenceFragment;
 /**
  * Generator for interaction fragments.
  * <p>
- * This generator mainly just delegates into lower-level generators, but also handles
- * variable loads.
+ * This generator mainly just delegates into lower-level generators, but also handles variable
+ * loads.
  *
  * @author Matt Windsor
  */
-public record InteractionFragmentGeneratorImpl(
-		OccurrenceFragmentGenerator ag,
-		BlockFragmentGenerator blockGen,
-		BranchFragmentGenerator branchGen,
-		LoadStoreGenerator ls) implements
-		InteractionFragmentGenerator {
+public record InteractionFragmentGeneratorImpl(OccurrenceFragmentGenerator ag,
+                                               BlockFragmentGenerator blockGen,
+                                               BranchFragmentGenerator branchGen,
+                                               LoadStoreGenerator ls) implements
+    InteractionFragmentGenerator {
 
-	@Inject
-	public InteractionFragmentGeneratorImpl {
-	}
+  @Inject
+  public InteractionFragmentGeneratorImpl {
+  }
 
-	@Override
-	public CharSequence generate(InteractionFragment f, LifelineContext ctx) {
-		return generateLoads(f) + generateAfterLoads(f, ctx);
-	}
+  @Override
+  public CharSequence generate(InteractionFragment f, LifelineContext ctx) {
+    return generateLoads(f) + generateAfterLoads(f, ctx);
+  }
 
-	private String generateLoads(InteractionFragment f) {
-		return ls.generateLoads(directlyReferencedVariables(f)).toString();
-	}
+  private String generateLoads(InteractionFragment f) {
+    return ls.generateLoads(directlyReferencedVariables(f)).toString();
+  }
 
-	private Stream<Variable> directlyReferencedVariables(InteractionFragment f) {
-		// TODO(@MattWindsor91): make this part of the metamodel?
-		if (f instanceof OccurrenceFragment a) {
-			return ls.getExprVariables(a);
-		}
-		if (f instanceof BranchFragment b) {
-			return branchVariables(b);
-		}
-		// Note that LoopFragments are a form of BlockFragment.
-		if (f instanceof LoopFragment l) {
-			// The loop may have a bound, whose expressions we'll need to load.
-			final var boundVars = Optional.ofNullable(l.getBound()).stream().flatMap(ls::getExprVariables);
-			return Stream.concat(boundVars, branchVariables(l.getBody()));
-		}
-		if (f instanceof BlockFragment b) {
-			return branchVariables(b.getBody());
-		}
-		return Stream.empty();
-	}
+  private Stream<Variable> directlyReferencedVariables(InteractionFragment f) {
+    // TODO(@MattWindsor91): make this part of the metamodel?
+    if (f instanceof OccurrenceFragment a) {
+      return ls.getExprVariables(a);
+    }
+    if (f instanceof BranchFragment b) {
+      return branchVariables(b);
+    }
+    // Note that LoopFragments are a form of BlockFragment.
+    if (f instanceof LoopFragment l) {
+      // The loop may have a bound, whose expressions we'll need to load.
+      final var boundVars = Optional.ofNullable(l.getBound()).stream()
+          .flatMap(ls::getExprVariables);
+      return Stream.concat(boundVars, branchVariables(l.getBody()));
+    }
+    if (f instanceof BlockFragment b) {
+      return branchVariables(b.getBody());
+    }
+    return Stream.empty();
+  }
 
-	private Stream<Variable> branchVariables(BranchFragment it) {
-		return it.getBranches().stream().flatMap(this::branchVariables);
-	}
+  private Stream<Variable> branchVariables(BranchFragment it) {
+    return it.getBranches().stream().flatMap(this::branchVariables);
+  }
 
-	private Stream<Variable> branchVariables(InteractionOperand x) {
-		return ls.getExprVariables(x.getGuard());
-	}
+  private Stream<Variable> branchVariables(InteractionOperand x) {
+    return ls.getExprVariables(x.getGuard());
+  }
 
-	private CharSequence generateAfterLoads(InteractionFragment f, LifelineContext ctx) {
-		// Remember to extend this with any new top-level fragment types added to the metamodel.
-		if (f instanceof OccurrenceFragment a) {
-			return ag.generate(a, ctx);
-		}
-		if (f instanceof BranchFragment b) {
-			return branchGen.generate(b, ctx);
-		}
-		if (f instanceof BlockFragment b) {
-			return blockGen.generate(b, ctx);
-		}
-		throw new IllegalArgumentException("unsupported fragment type: %s".formatted(f));
-	}
+  private CharSequence generateAfterLoads(InteractionFragment f, LifelineContext ctx) {
+    // Remember to extend this with any new top-level fragment types added to the metamodel.
+    if (f instanceof OccurrenceFragment a) {
+      return ag.generate(a, ctx);
+    }
+    if (f instanceof BranchFragment b) {
+      return branchGen.generate(b, ctx);
+    }
+    if (f instanceof BlockFragment b) {
+      return blockGen.generate(b, ctx);
+    }
+    throw new IllegalArgumentException("unsupported fragment type: %s".formatted(f));
+  }
 }

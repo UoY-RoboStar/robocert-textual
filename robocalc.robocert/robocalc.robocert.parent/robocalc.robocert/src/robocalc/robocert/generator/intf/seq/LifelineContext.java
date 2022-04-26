@@ -20,12 +20,13 @@ import robocalc.robocert.model.robocert.Actor;
 /**
  * A context used for a particular lifeline generation.
  *
+ * @param global          the global context of the interaction.
  * @param actor           the actor associated with the lifeline.
  * @param dataConstructor the actor's data constructor in the enumeration (if any).
- * @param isSingleton     true if this is the only lifeline in the diagram.
  * @author Matt Windsor
  */
-public record LifelineContext(Actor actor, CharSequence dataConstructor, boolean isSingleton) {
+public record LifelineContext(InteractionContext global, Actor actor,
+                              CharSequence dataConstructor) {
 
   /**
    * Constructs a reference to this lifeline's CSP alphabet.

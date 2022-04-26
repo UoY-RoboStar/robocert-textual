@@ -18,12 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static robocalc.robocert.tests.util.GeneratesCSPMatcher.generatesCSP;
 
 import com.google.inject.Inject;
+import java.util.List;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import robocalc.robocert.generator.intf.seq.InteractionContext;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.seq.fragment.DurationFragmentHeaderGenerator;
 import robocalc.robocert.model.robocert.DurationFragment;
@@ -53,7 +55,8 @@ class DurationFragmentHeaderGeneratorTest {
   void setUp() {
     final var act = factory.createComponentActor();
     act.setName("C");
-    ctx = new LifelineContext(act, "x", false);
+    final var ictx = new InteractionContext(List.of(act), List.of());
+    ctx = new LifelineContext(ictx, act, "x");
 
     final var inner = factory.createInteractionOperand();
     fragment = factory.createDurationFragment();

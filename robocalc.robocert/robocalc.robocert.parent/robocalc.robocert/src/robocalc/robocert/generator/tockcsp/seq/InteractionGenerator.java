@@ -65,7 +65,7 @@ public class InteractionGenerator {
   }
 
   private CharSequence generateWithoutMemory(Interaction s) {
-    final var lines = lcf.createContexts(s);
+    final var lines = lcf.contexts(s);
     return switch (lines.size()) {
       case 0 -> csp.skip();
       case 1 -> sg.generate(s.getFragments(), lines.get(0));
