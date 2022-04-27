@@ -19,11 +19,11 @@ import java.util.stream.Stream;
 import java.util.Optional;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.model.robocert.BlockFragment;
 import robocalc.robocert.model.robocert.BranchFragment;
 import robocalc.robocert.model.robocert.InteractionFragment;
-import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.OccurrenceFragment;
 
@@ -60,27 +60,19 @@ public record InteractionFragmentGeneratorImpl(OccurrenceFragmentGenerator ag,
       return ls.getExprVariables(a);
     }
     if (f instanceof BranchFragment b) {
-      return branchVariables(b);
+      return b.getBranches().stream().flatMap(x -> ls.getExprVariables(x.getGuard()));
     }
     // Note that LoopFragments are a form of BlockFragment.
     if (f instanceof LoopFragment l) {
       // The loop may have a bound, whose expressions we'll need to load.
       final var boundVars = Optional.ofNullable(l.getBound()).stream()
           .flatMap(ls::getExprVariables);
-      return Stream.concat(boundVars, branchVariables(l.getBody()));
+      return Stream.concat(boundVars, ls.getExprVariables(l.getBody().getGuard()));
     }
     if (f instanceof BlockFragment b) {
-      return branchVariables(b.getBody());
+      return ls.getExprVariables(b.getBody().getGuard());
     }
     return Stream.empty();
-  }
-
-  private Stream<Variable> branchVariables(BranchFragment it) {
-    return it.getBranches().stream().flatMap(this::branchVariables);
-  }
-
-  private Stream<Variable> branchVariables(InteractionOperand x) {
-    return ls.getExprVariables(x.getGuard());
   }
 
   private CharSequence generateAfterLoads(InteractionFragment f, LifelineContext ctx) {

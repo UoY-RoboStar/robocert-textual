@@ -24,8 +24,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
+import robocalc.robocert.generator.intf.seq.ActorContext;
 import robocalc.robocert.generator.intf.seq.InteractionContext;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.model.robocert.InteractionFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
@@ -56,7 +56,7 @@ class SubsequenceGeneratorTest {
 	private Matcher<List<InteractionFragment>> generates(String expected) {
 		final var ta = rc.createTargetActor();
 		final var ictx = new InteractionContext(List.of(ta), List.of(), "until");
-		final var ctx = new LifelineContext(ictx, rc.createTargetActor(), "a");
+		final var ctx = new ActorContext(ictx, rc.createTargetActor(), "a");
 		return generatesCSP(expected, s -> sg.generate(s, ctx));
 	}
 }

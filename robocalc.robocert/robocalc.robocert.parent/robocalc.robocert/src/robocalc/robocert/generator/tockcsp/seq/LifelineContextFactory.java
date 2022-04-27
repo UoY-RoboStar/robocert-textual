@@ -16,8 +16,8 @@ import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
+import robocalc.robocert.generator.intf.seq.ActorContext;
 import robocalc.robocert.generator.intf.seq.InteractionContext;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentProcessGenerator;
 import robocalc.robocert.model.robocert.Actor;
@@ -53,23 +53,31 @@ public record LifelineContextFactory(CSPStructureGenerator csp, ActorGenerator a
   }
 
   /**
-   * Creates contexts for each semantics-visible lifeline in the given sequence.
-   *
-   * <p>Not all lifelines are visible; any that form a context do not appear in the semantics as
-   * they are considered to be the CSP environment.
+   * Creates an interaction context.
    *
    * @param s the sequence for which we are creating contexts.
-   * @return the list of contexts.
+   * @return the interaction context.
    */
-  public List<LifelineContext> contexts(Interaction s) {
+  public InteractionContext context(Interaction s) {
     final var visibleActors = s.getActors().stream().filter(this::actorVisibleInSemantics).toList();
     final var untils = untilGen.processFragments(s);
     final var untilChannelName = csp.namespaced(SpecGroupField.CHANNEL_MODULE.toString(),
         untilGen.channelName(s));
-    final var ctx = new InteractionContext(visibleActors, untils, untilChannelName);
+    return new InteractionContext(visibleActors, untils, untilChannelName);
+  }
 
+  /**
+   * Creates contexts for each semantics-visible lifeline in the given interaction context.
+   *
+   * <p>Not all lifelines are visible; any that form a context do not appear in the semantics as
+   * they are considered to be the CSP environment.
+   *
+   * @param ctx the parent interaction context.
+   * @return the list of actor contexts.
+   */
+  public List<ActorContext> actors(InteractionContext ctx) {
     return ctx.visibleActors().parallelStream()
-        .map(a -> new LifelineContext(ctx, a, actorGen.dataConstructor(a))).toList();
+        .map(a -> new ActorContext(ctx, a, actorGen.dataConstructor(a))).toList();
   }
 
   private boolean actorVisibleInSemantics(Actor a) {

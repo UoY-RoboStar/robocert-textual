@@ -24,5 +24,8 @@ include "../../defs/robochart_defs.csp"
 -- Used to test for deadlock freedom.
 channel r__
 
+-- Generalised specification termination channel.
+channel terminate
+
 -- These files should have been copied by the RoboCert generator.
 include "../lib/robocert_seq_defs.csp"

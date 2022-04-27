@@ -57,7 +57,7 @@ public record DurationFragmentHeaderGenerator(CSPStructureGenerator csp,
     Objects.requireNonNull(frag);
 
     if (!ctx.isFor(frag.getActor())) {
-      return csp.commented("duration on %s".formatted(ctx.actor().getName()), "");
+      return csp.commented("duration on %s".formatted(ctx.actorName()), "");
     }
 
     final var bound = frag.getBound();

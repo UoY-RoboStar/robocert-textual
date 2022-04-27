@@ -12,6 +12,8 @@
  ******************************************************************************/
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
+import java.util.stream.Stream;
+
 /**
  * Handles production of CSP-M let-within code.
  * <p>
@@ -36,6 +38,17 @@ public class LetGenerator {
    * Helper class for producing let-within CSP.
    */
   public record Let(CharSequence... elements) {
+
+    /**
+     * Adds more elements to this let-within, producing a new one.
+     *
+     * @param newElements the new elements to add to this let-within.
+     * @return a new let-within with the concatenation of old and new elements.
+     */
+    public Let and(CharSequence... newElements) {
+      return new Let(
+          Stream.concat(Stream.of(elements), Stream.of(newElements)).toArray(CharSequence[]::new));
+    }
 
     /**
      * Finishes a let-within definition.

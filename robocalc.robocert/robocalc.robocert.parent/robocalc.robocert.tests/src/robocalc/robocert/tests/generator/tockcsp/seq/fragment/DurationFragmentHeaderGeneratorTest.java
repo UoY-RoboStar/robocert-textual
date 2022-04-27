@@ -25,8 +25,8 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import robocalc.robocert.generator.intf.seq.ActorContext;
 import robocalc.robocert.generator.intf.seq.InteractionContext;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.seq.fragment.DurationFragmentHeaderGenerator;
 import robocalc.robocert.model.robocert.DurationFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
@@ -49,7 +49,7 @@ class DurationFragmentHeaderGeneratorTest {
   @Inject private ExpressionFactory exprs;
 
   private DurationFragment fragment;
-  private LifelineContext ctx;
+  private ActorContext ctx;
 
   @BeforeEach
   void setUp() {
@@ -57,7 +57,7 @@ class DurationFragmentHeaderGeneratorTest {
     act.setName("C");
 
     final var ictx = new InteractionContext(List.of(act), List.of(), "until");
-    ctx = new LifelineContext(ictx, act, "x");
+    ctx = new ActorContext(ictx, act, "x");
 
     final var inner = factory.createInteractionOperand();
     fragment = factory.createDurationFragment();

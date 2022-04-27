@@ -15,34 +15,32 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 import java.util.Objects;
+import robocalc.robocert.generator.intf.seq.ContextualGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentHeaderGenerator;
 import robocalc.robocert.model.robocert.BlockFragment;
 import robocalc.robocert.model.robocert.DurationFragment;
+import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.OptFragment;
 import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
- * Top-level generator for {@link BlockFragment}s.
- * <p>
- * The CSP-M compilation strategy for most block fragments is to lower them to the form F(P), where
- * P is the subsequence for the block and F is a function (possibly partially applied) representing
- * the 'header' of the fragment.
- * <p>
- * We make an exception for {@link UntilFragment}s in a multi-visible lifeline context.  For these,
- * we instead emit a process that stalls the lifeline until the separate until-process can perform
- * the body of the fragment.
+ * Implementation of {@link BlockFragmentGenerator}.
+ *
+ * <p>There is a circular dependency between block fragment generators and themselves through
+ * until-fragment generators.
  */
-public record BlockFragmentGenerator
-    (CSPStructureGenerator csp, InteractionOperandGenerator operandGen,
+public record BlockFragmentGeneratorImpl
+    (CSPStructureGenerator csp, ContextualGenerator<InteractionOperand> operandGen,
      DurationFragmentHeaderGenerator durationHeaderGen, LoopFragmentHeaderGenerator loopHeaderGen,
-     UntilFragmentHeaderGenerator untilHeaderGen) {
+     UntilFragmentHeaderGenerator untilHeaderGen) implements BlockFragmentGenerator {
 
   @Inject
-  public BlockFragmentGenerator {
+  public BlockFragmentGeneratorImpl {
     Objects.requireNonNull(csp);
     Objects.requireNonNull(operandGen);
     Objects.requireNonNull(durationHeaderGen);
@@ -50,16 +48,13 @@ public record BlockFragmentGenerator
     Objects.requireNonNull(untilHeaderGen);
   }
 
-  /**
-   * Generates CSP-M for a block fragment.
-   *
-   * @param fragment the fragment to generate.
-   * @param ctx      the lifeline context for the current lifeline.
-   * @return generated CSP-M for the block fragment.
-   */
+  @Override
   public CharSequence generate(BlockFragment fragment, LifelineContext ctx) {
+    // Special case: if we are generating inside a lifeline attached to one of multiple generated
+    // actors, then we delegate UntilFragments to a separate process, and instead emit a
+    // synchronisation with that process .ereh
     if (fragment instanceof UntilFragment u) {
-      final var i = ctx.global().untilIndex(u);
+      final var i = ctx.untilIndex(u);
       if (0 <= i) {
         return csp.function("UntilSync", ctx.global().untilChannel(), Integer.toString(i));
       }

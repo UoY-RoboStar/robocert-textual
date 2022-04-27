@@ -62,6 +62,17 @@ public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenera
   }
 
   /**
+   * Constructs a CSP prefix.
+   * @param event the event to prefix.
+   * @param rest the process following the prefix.
+   * @return a prefix of event onto rest.
+   */
+  public CharSequence pre(CharSequence event, CharSequence rest) {
+    // TODO(@MattWindsor91): linebreak if not about to hit a tuple?
+    return "%s -> %s".formatted(event, rest);
+  }
+
+  /**
    * @return the RoboChart encoding of timestop.
    */
   public CharSequence timestop() {
@@ -321,6 +332,22 @@ public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenera
    */
   public CharSequence tauPrioritiseTock(CharSequence it) {
     return "%s :[tau priority]: {tock}".formatted(it);
+  }
+
+  /**
+   * Constructs a CSP channel.
+   *
+   * @param name  the name of the channel.
+   * @param types the types of the channel (to be dot-combined).
+   * @return the CSP channel with the given name and type set.
+   */
+  public CharSequence channel(CharSequence name, CharSequence... types) {
+    final var sb = new StringBuilder();
+    sb.append("channel ").append(name);
+    if (types.length != 0) {
+      sb.append(" : ").append(String.join(".", types));
+    }
+    return sb.toString();
   }
 
   public CharSequence innerJoin(Stream<CharSequence> elements) {

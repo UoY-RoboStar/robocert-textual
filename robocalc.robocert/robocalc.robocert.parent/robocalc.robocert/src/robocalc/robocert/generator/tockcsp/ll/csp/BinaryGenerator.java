@@ -16,6 +16,8 @@ package robocalc.robocert.generator.tockcsp.ll.csp;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Generator for binary operations in CSP-M.
@@ -45,6 +47,66 @@ public class BinaryGenerator {
    */
   public CharSequence hide(CharSequence lhs, CharSequence rhs) {
     return String.join(" \\ ", lhs, rhs);
+  }
+
+  /**
+   * Constructs a repeated internal choice.
+   *
+   * @param xs the processes to join with internal choice.
+   * @return the CSP-M internal choice operation.
+   */
+  public CharSequence intChoice(CharSequence... xs) {
+    return bin("|~|", "STOP", xs);
+  }
+
+  /**
+   * @return a collector that joins char sequences together with an internal choice operator.
+   */
+  public Collector<CharSequence, ?, String> toIntChoice() {
+    return toBin("|~|", "STOP");
+  }
+
+  /**
+   * Constructs a repeated external choice.
+   *
+   * @param xs the processes to join with external choice.
+   * @return the CSP-M external choice operation.
+   */
+  public CharSequence extChoice(CharSequence... xs) {
+    return bin("[]", "STOP", xs);
+  }
+
+  /**
+   * @return a collector that joins char sequences together with an external choice operator.
+   */
+  public Collector<CharSequence, ?, String> toExtChoice() {
+    return toBin("[]", "STOP");
+  }
+
+  /**
+   * Constructs a repeated interleaving.
+   *
+   * @param xs the processes to join with interleaving.
+   * @return the CSP-M interleave operation.
+   */
+  public CharSequence interleave(CharSequence... xs) {
+    return bin("|||", "SKIP", xs);
+  }
+
+  /**
+   * @return a collector that joins char sequences together with an interleave operator.
+   */
+  public Collector<CharSequence, ?, String> toInterleave() {
+    return toBin("|||", "SKIP");
+  }
+
+  private CharSequence bin(String op, String unit, CharSequence... xs) {
+    return xs.length == 0 ? unit : String.join(" " + op + " ", xs);
+  }
+
+  private Collector<CharSequence, ?, String> toBin(String op, String unit) {
+    return Collectors.collectingAndThen(Collectors.joining(" " + op + " "),
+        s -> s.isEmpty() ? unit : s);
   }
 
   /**

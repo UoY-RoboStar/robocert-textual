@@ -1,5 +1,5 @@
-/********************************************************************************
- * Copyright (c) 2021 University of York and others
+/*******************************************************************************
+ * Copyright (c) 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,48 +9,21 @@
  *
  * Contributors:
  *   Matt Windsor - initial definition
- ********************************************************************************/
+ ******************************************************************************/
+
 package robocalc.robocert.generator.intf.seq;
 
 import java.util.stream.Stream;
-import org.eclipse.xtext.EcoreUtil2;
-import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Actor;
+import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
- * A context used for a particular lifeline generation.
+ * Context related to the current lifeline being generated.
  *
- * @param global          the global context of the interaction.
- * @param actor           the actor associated with the lifeline.
- * @param dataConstructor the actor's data constructor in the enumeration (if any).
- * @author Matt Windsor
+ * <p>Depending on where we are in generation, this may be tied to a particular {@link Actor}, or
+ * a special linearised context representing an until-fragment.
  */
-public record LifelineContext(InteractionContext global, Actor actor,
-                              CharSequence dataConstructor) {
-
-  /**
-   * Constructs a reference to this lifeline's CSP alphabet.
-   * <p>
-   * This reference will only resolve within the sequence's let-within.
-   *
-   * @param csp a CSP-M structure generator.
-   * @return the resulting CSP.
-   */
-  public CharSequence alphaCSP(CSPStructureGenerator csp) {
-    return lifelineDef(csp, ALPHA_FUNCTION);
-  }
-
-  /**
-   * Constructs a reference to this lifeline's CSP process.
-   * <p>
-   * This reference will only resolve within the sequence's let-within.
-   *
-   * @param csp a CSP-M structure generator.
-   * @return the resulting CSP.
-   */
-  public CharSequence procCSP(CSPStructureGenerator csp) {
-    return lifelineDef(csp, PROC_FUNCTION);
-  }
+public interface LifelineContext {
 
   /**
    * Is this context for the given actor?
@@ -58,10 +31,7 @@ public record LifelineContext(InteractionContext global, Actor actor,
    * @param a the actor to check against.
    * @return true provided that this context is building the lifeline for {@code a}.
    */
-  public boolean isFor(Actor a) {
-    // TODO(@MattWindsor91): can we just use reference equality?
-    return EcoreUtil2.equals(a, actor);
-  }
+  boolean isFor(Actor a);
 
   /**
    * Is this context for any of the actors in the given stream?
@@ -69,21 +39,33 @@ public record LifelineContext(InteractionContext global, Actor actor,
    * @param actors the actors to check against.
    * @return true provided that this context is building the lifeline for one of {@code actors}.
    */
-  public boolean isForAnyOf(Stream<Actor> actors) {
+  default boolean isForAnyOf(Stream<Actor> actors) {
     return actors.anyMatch(this::isFor);
   }
 
-  private CharSequence lifelineDef(CSPStructureGenerator csp, String defName) {
-    return csp.function(defName, dataConstructor);
-  }
+  /**
+   * Gets the name of the actor, if any, to which this context belongs.
+   *
+   * @return the name (human-readable).
+   */
+  String actorName();
 
   /**
-   * Name of the function used in alphaCSP.
+   * Gets the parent interaction context of this lifeline context.
+   *
+   * @return the interaction context.
    */
-  public static final String ALPHA_FUNCTION = "alpha";
+  InteractionContext global();
 
   /**
-   * Name of the function used in procCSP.
+   * Gets the index of an until fragment with respect to this lifeline.
+   *
+   * <p>This differs from the index given by the global context in that, if we are generating
+   * inside an until-process, all until-fragments within will be emitted inline and this
+   * will return -1.
+   *
+   * @param frag the fragment whose index is required.
+   * @return -1 if this fragment does not have an index; the index of the fragment otherwise.
    */
-  public static final String PROC_FUNCTION = "proc";
+  int untilIndex(UntilFragment frag);
 }

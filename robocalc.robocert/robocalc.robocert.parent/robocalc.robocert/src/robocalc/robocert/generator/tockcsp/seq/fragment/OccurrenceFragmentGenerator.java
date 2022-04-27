@@ -15,8 +15,8 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 import com.google.inject.Inject;
 
 import java.util.stream.Stream;
-import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
@@ -64,7 +64,7 @@ public record OccurrenceFragmentGenerator(CSPStructureGenerator csp, OccurrenceG
 
     // The occurrence must be relevant to this lifeline to generate it at all.
     if (!ctx.isForAnyOf(occurrenceActors(occ))) {
-      return csp.commented("occurrence on %s".formatted(ctx.actor().getName()), csp.skip());
+      return csp.commented("occurrence on %s".formatted(ctx.actorName()), csp.skip());
     }
 
     final var body = occGen.generate(occ);

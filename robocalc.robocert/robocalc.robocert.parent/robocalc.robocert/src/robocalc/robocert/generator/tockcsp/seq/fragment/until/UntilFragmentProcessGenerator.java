@@ -18,7 +18,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.eclipse.xtext.EcoreUtil2;
+import robocalc.robocert.generator.intf.seq.InteractionContext;
+import robocalc.robocert.generator.intf.seq.UntilContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
+import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
+import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.UntilFragment;
 import robocalc.robocert.model.robocert.World;
@@ -36,16 +40,19 @@ import robocalc.robocert.model.robocert.World;
  *
  * @param csp the low-level CSP structure generator.
  */
-public record UntilFragmentProcessGenerator(CSPStructureGenerator csp) {
+public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
+                                            BlockFragmentGenerator blockGen) {
 
   /**
    * Constructs an until-fragment process generator.
    *
-   * @param csp the low-level CSP structure generator.
+   * @param csp      the low-level CSP structure generator.
+   * @param blockGen the block generator, used for expanding the individual until-fragments.
    */
   @Inject
   public UntilFragmentProcessGenerator {
     Objects.requireNonNull(csp);
+    Objects.requireNonNull(blockGen);
   }
 
   /**
@@ -85,9 +92,9 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp) {
       return Optional.empty();
     }
 
-    // UntilSync is defined in the RoboCert standard library.
+    // UntilSyncDir is defined in the RoboCert standard library.
     return Optional.of(
-        "channel %s : {0..%d}.UntilSyncDir".formatted(channelName(seq), untils.size() - 1));
+        csp.channel(channelName(seq), "{0..%d}".formatted(untils.size() - 1), "UntilSyncDir"));
   }
 
   /**
@@ -99,4 +106,35 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp) {
   public String channelName(Interaction seq) {
     return "until_" + seq.getName();
   }
+
+  /**
+   * Constructs an until-process.
+   *
+   * @param ctx the context for the interaction whose process we are producing.
+   * @return the CSP-M definition for the process.
+   */
+  public CharSequence process(InteractionContext ctx) {
+    final var ictx = new UntilContext(ctx);
+    final var fragments = ctx.untils();
+    final var cs = csp.sets();
+
+    var body = cs.tuple(csp.pre(InteractionGenerator.TERM_CHANNEL, csp.skip()));
+
+    for (var i = 0; i < fragments.size(); i++) {
+      final var chan = "%s.%d".formatted(ctx.untilChannel(), i);
+
+      final var fragBody = blockGen.generate(fragments.get(i), ictx);
+      // These should match the standard library definition of UntilSyncDir.
+      final var withChans = csp.seq(csp.pre("%s.enter".formatted(chan), fragBody),
+          csp.pre("%s!leave".formatted(chan), csp.skip()));
+      body = csp.bins().extChoice(body, cs.tuple(withChans));
+    }
+
+    return csp.definition(NAME, body);
+  }
+
+  /**
+   * The name of the generated process.
+   */
+  public static final String NAME = "until";
 }

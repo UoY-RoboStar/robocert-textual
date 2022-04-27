@@ -14,6 +14,11 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter;
 import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom;
 import circus.robocalc.robochart.RoboChartFactory;
+import robocalc.robocert.generator.intf.seq.ContextualGenerator;
+import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
+import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
+import robocalc.robocert.generator.tockcsp.seq.fragment.BlockFragmentGeneratorImpl;
+import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.tockcsp.seq.occurrence.OccurrenceGeneratorImpl;
@@ -50,10 +55,17 @@ public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
     return InteractionFragmentGeneratorImpl.class;
   }
 
+  public Class<? extends ContextualGenerator<InteractionOperand>> bindInteractionOperandGenerator() {
+    return InteractionOperandGenerator.class;
+  }
+
   public Class<? extends EventResolver> bindEventResolver() {
     return EventResolverImpl.class;
   }
 
+  public Class<? extends BlockFragmentGenerator> bindBlockFragmentGenerator() {
+    return BlockFragmentGeneratorImpl.class;
+  }
 
   /**
    * Binds the RoboChart name converter (so that qualified names are '::'-delimited).

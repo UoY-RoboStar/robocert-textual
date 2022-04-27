@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 University of York and others
+ * Copyright (c) 2021, 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,12 +13,15 @@
 package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
-import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.stream.Collector;
+
+import robocalc.robocert.generator.intf.seq.ContextualGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
 import robocalc.robocert.model.robocert.AltFragment;
 import robocalc.robocert.model.robocert.BranchFragment;
+import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.ParFragment;
 import robocalc.robocert.model.robocert.XAltFragment;
 
@@ -28,23 +31,12 @@ import robocalc.robocert.model.robocert.XAltFragment;
  * @author Matt Windsor
  */
 public record BranchFragmentGenerator(CSPStructureGenerator csp,
-                                      InteractionOperandGenerator bg) {
-
-  /**
-   * The CSP-M external choice operator.
-   */
-  private static final String EXT_CHOICE = "[]";
-  /**
-   * The CSP-M internal choice operator.
-   */
-  private static final String INT_CHOICE = "|~|";
-  /**
-   * The CSP-M interleave operator.
-   */
-  private static final String INTERLEAVE = "|||";
+                                      ContextualGenerator<InteractionOperand> bg) {
 
   @Inject
   public BranchFragmentGenerator {
+    Objects.requireNonNull(csp);
+    Objects.requireNonNull(bg);
   }
 
   /**
@@ -55,12 +47,10 @@ public record BranchFragmentGenerator(CSPStructureGenerator csp,
    * @return the generated CSP-M process.
    */
   public CharSequence generate(BranchFragment b, LifelineContext ctx) {
-    return csp.commented(comment(b), csp.tuple(body(b, ctx)));
-  }
+    final var body = b.getBranches().parallelStream().map(x -> csp.tuple(bg.generate(x, ctx)))
+        .collect(operator(b));
 
-  private CharSequence body(BranchFragment b, LifelineContext ctx) {
-    return b.getBranches().parallelStream().map(x -> csp.tuple(bg.generate(x, ctx)))
-        .collect(Collectors.joining(operator(b)));
+    return csp.commented(comment(b), csp.tuple(body));
   }
 
   /**
@@ -87,17 +77,18 @@ public record BranchFragmentGenerator(CSPStructureGenerator csp,
    * Gets the CSP-M operator corresponding to the branch step.
    *
    * @param b the step to generate.
-   * @return the corresponding CSP-M.
+   * @return the corresponding operator as a collector over branch bodies.
    */
-  private CharSequence operator(BranchFragment b) {
+  private Collector<CharSequence, ?, String> operator(BranchFragment b) {
+    final var cb = csp.bins();
     if (b instanceof ParFragment) {
-      return INTERLEAVE;
+      return cb.toInterleave();
     }
     if (b instanceof AltFragment) {
-      return INT_CHOICE;
+      return cb.toIntChoice();
     }
     if (b instanceof XAltFragment) {
-      return EXT_CHOICE;
+      return cb.toExtChoice();
     }
     throw new IllegalArgumentException("unsupported branch operator: %s".formatted(b));
   }

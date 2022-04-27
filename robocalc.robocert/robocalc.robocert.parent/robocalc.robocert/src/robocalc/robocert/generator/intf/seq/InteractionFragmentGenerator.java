@@ -28,5 +28,5 @@ public interface InteractionFragmentGenerator {
 	 *
 	 * @return code for the sequence step.
 	 */
-	public CharSequence generate(InteractionFragment f, LifelineContext ctx);
+	CharSequence generate(InteractionFragment f, LifelineContext ctx);
 }

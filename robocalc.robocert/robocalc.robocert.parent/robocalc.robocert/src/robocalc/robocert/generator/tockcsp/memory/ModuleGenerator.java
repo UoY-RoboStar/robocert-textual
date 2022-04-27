@@ -56,11 +56,12 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
 
   /**
    * Checks whether we need a memory module for a variable list.
+   *
    * @param xs the variable list to check.
    * @return whether we need a memory module for {@code mem}.
    */
   public boolean needsMemory(VariableList xs) {
-      return xs != null && !xs.getVars().isEmpty();
+    return xs != null && !xs.getVars().isEmpty();
   }
 
   /**
@@ -144,8 +145,7 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
   }
 
   private CharSequence generateChannelDefinition(Variable it) {
-    return "channel %s : %s.%s".formatted(it.getName(), MEM_OP_TYPE,
-        typeGen.compileType(it.getType()));
+    return csp.channel(it.getName(), MEM_OP_TYPE, typeGen.compileType(it.getType()));
   }
 
   private CharSequence generatePrivateBody(VariableList it) {
