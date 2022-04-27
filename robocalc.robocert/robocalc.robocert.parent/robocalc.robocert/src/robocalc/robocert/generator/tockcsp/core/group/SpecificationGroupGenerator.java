@@ -22,6 +22,7 @@ import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.core.tgt.OverrideGenerator;
 import robocalc.robocert.generator.tockcsp.core.tgt.TargetGenerator;
+import robocalc.robocert.generator.tockcsp.core.tgt.UniverseGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStreamHelper;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
@@ -54,6 +55,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   private CSPStreamHelper cspStream;
   @Inject
   private TargetGenerator targetGen;
+  @Inject
+  private UniverseGenerator univGen;
   @Inject
   private InteractionGenerator interactionGen;
   @Inject
@@ -170,7 +173,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
     // Put only things that don't need to be exposed publicly AND don't depend on the constant
     // instantiation here.
     final var universe = csp.definition(SpecGroupField.UNIVERSE.toString(),
-        csp.namespaced(targetGen.semEvents(group.getTarget())));
+        csp.namespaced(univGen.generate(group.getTarget())));
 
     final var specs = group.getInteractions();
     return Streams.concat(Stream.of(overrides, universe), memModule(specs).stream(),

@@ -144,12 +144,19 @@ public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenera
   /**
    * Generates a CSP union construct.
    *
-   * @param lhs CSP-M for the left-hand side.
-   * @param rhs CSP-M for the right-hand side.
+   * <p>This will be the empty set if given 0 sets, the given set if given 1 sets, a 'union'
+   * construct for two sets, and an iterated 'Union' for more than two.
+   *
+   * @param sets the sets to unite.
    * @return CSP-M for the union.
    */
-  public CharSequence union(CharSequence lhs, CharSequence rhs) {
-    return function("union", lhs, rhs);
+  public CharSequence union(CharSequence... sets) {
+    return switch (sets.length) {
+      case 0 -> "{}";
+      case 1 -> sets[0];
+      case 2 -> function("union", sets[0], sets[1]);
+      default -> iteratedUnion(sets().set(sets));
+    };
   }
 
   /**

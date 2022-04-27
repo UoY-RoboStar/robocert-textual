@@ -76,29 +76,4 @@ class TargetGeneratorTest {
         mod::O__(id__, const_mod_rp_foo, const_mod_rp_bar, const_mod_rp_baz)
         """, gen::openDef));
   }
-
-  /**
-   * Tests generation of sem-events for a specification group targeting a controller nested inside a
-   * module, but with no user-defined sets.
-   *
-   * <p>This is a regression test for GitHub issue #109.
-   */
-  @Test
-  void testSemEvents_NestedTarget() {
-    final var ctrl = chartFactory.createControllerDef();
-    ctrl.setName("Ctrl");
-
-    // nesting
-    final var mod = chartFactory.createRCModule();
-    mod.setName("Mod");
-    mod.getNodes().add(ctrl);
-
-    final var target = targetFactory.controller(ctrl);
-
-    final var grp = targetFactory.certFactory().createSpecificationGroup();
-    grp.setName("Specs");
-    grp.setTarget(target);
-
-    assertThat(grp.getTarget(), generatesCSP("Mod::Ctrl::sem__events", gen::semEvents));
-  }
 }

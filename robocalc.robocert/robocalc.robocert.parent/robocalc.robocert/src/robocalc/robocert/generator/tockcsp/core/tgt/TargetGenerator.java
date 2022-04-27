@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
-import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.param.Parameter;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.ComponentTarget;
@@ -38,7 +37,7 @@ import robocalc.robocert.model.robocert.util.InstantiationHelper;
 public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen,
                               InModuleTargetBodyGenerator modGen,
                               ComponentTargetBodyGenerator compGen,
-                              CTimedGeneratorUtils gu, CSPStructureGenerator csp,
+                              CTimedGeneratorUtils gu,
                               ExpressionGenerator eg, TargetParameterResolver paramRes,
                               InstantiationHelper instHelp) {
 
@@ -58,23 +57,9 @@ public record TargetGenerator(InControllerTargetBodyGenerator ctrlGen,
     Objects.requireNonNull(modGen);
     Objects.requireNonNull(compGen);
     Objects.requireNonNull(gu);
-    Objects.requireNonNull(csp);
     Objects.requireNonNull(eg);
     Objects.requireNonNull(paramRes);
     Objects.requireNonNull(instHelp);
-  }
-
-  /**
-   * Gets the semantic events set of the given target.
-   *
-   * <p>We currently use this as the universe set; technically it is an overapproximation as it
-   * doesn't account for directionality of events.
-   *
-   * @param t the target for which we want the event set.
-   * @return the CSP-M name of the semantic events set.
-   */
-  public CharSequence semEvents(Target t) {
-    return csp.namespaced(gu.processId(t.getElement()), "sem__events");
   }
 
   /**
