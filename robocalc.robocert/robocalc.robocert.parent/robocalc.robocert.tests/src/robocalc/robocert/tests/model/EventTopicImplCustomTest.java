@@ -41,8 +41,6 @@ import robocalc.robocert.tests.RoboCertInjectorProvider;
 @InjectWith(RoboCertInjectorProvider.class)
 class EventTopicImplCustomTest {
   @Inject
-  private RoboCertFactory certFactory;
-  @Inject
   private RoboChartFactory chartFactory;
   @Inject
   private TypeFactory typeFactory;

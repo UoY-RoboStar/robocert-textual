@@ -14,7 +14,7 @@
 package robocalc.robocert.generator.tockcsp.seq.fragment.until;
 
 import com.google.inject.Inject;
-import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
+import java.util.Objects;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
@@ -27,16 +27,17 @@ import robocalc.robocert.model.robocert.UntilFragment;
  *
  * @author Matt Windsor
  */
-public record UntilFragmentHeaderGenerator(
-    CSPStructureGenerator csp,
-    InitialSetBuilder initialSetBuilder,
-    MessageSetGenerator messageSetGen,
-    MessageGenerator MessageGen,
-    SubsequenceGenerator subsequenceGen)
- {
+public record UntilFragmentHeaderGenerator(CSPStructureGenerator csp,
+                                           InitialSetBuilder initialSetBuilder,
+                                           MessageSetGenerator messageSetGen,
+                                           MessageGenerator messageGen) {
 
   @Inject
   public UntilFragmentHeaderGenerator {
+    Objects.requireNonNull(csp);
+    Objects.requireNonNull(initialSetBuilder);
+    Objects.requireNonNull(messageSetGen);
+    Objects.requireNonNull(messageGen);
   }
 
   /**
@@ -59,7 +60,8 @@ public record UntilFragmentHeaderGenerator(
    * @return the generated CSP.
    */
   private CharSequence intraMessageSet(UntilFragment fragment) {
-    return messageSetGen.optimiseAndGenerate(fragment.getIntraMessages(), fragment::setIntraMessages);
+    return messageSetGen.optimiseAndGenerate(fragment.getIntraMessages(),
+        fragment::setIntraMessages);
   }
 
   /**
@@ -72,7 +74,7 @@ public record UntilFragmentHeaderGenerator(
    * @return the generated CSP sequence.
    */
   private CharSequence initialSet(InteractionOperand op) {
-    return MessageGen.generateBulkCSPEventSet(initialSetBuilder.initialSet(op).toList());
+    return messageGen.generateBulkCSPEventSet(initialSetBuilder.initialSet(op).toList());
   }
 
   /**

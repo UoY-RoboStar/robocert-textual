@@ -13,6 +13,7 @@
 package robocalc.robocert.generator.tockcsp.seq.occurrence;
 
 import com.google.inject.Inject;
+import java.util.Objects;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
@@ -42,14 +43,13 @@ public record OccurrenceGeneratorImpl(CSPStructureGenerator csp, ExpressionGener
    */
   @Inject
   public OccurrenceGeneratorImpl {
+    Objects.requireNonNull(csp);
+    Objects.requireNonNull(eg);
+    Objects.requireNonNull(lsg);
+    Objects.requireNonNull(msg);
   }
 
-  /**
-   * Generates CSP-M for an occurrence.
-   *
-   * @param occ the occurrence.
-   * @return the generated CSP.
-   */
+  @Override
   public CharSequence generate(Occurrence occ) {
     // We assume that the occurrence fragment generator has decided that this occurrence is
     // relevant to the lifeline.

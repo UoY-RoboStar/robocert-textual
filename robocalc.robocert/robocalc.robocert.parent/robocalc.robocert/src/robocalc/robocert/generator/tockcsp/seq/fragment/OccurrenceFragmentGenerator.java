@@ -18,8 +18,6 @@ import java.util.stream.Stream;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
-import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.LifelineOccurrence;
 import robocalc.robocert.model.robocert.MessageOccurrence;
@@ -31,8 +29,7 @@ import robocalc.robocert.model.robocert.OccurrenceFragment;
  *
  * @author Matt Windsor
  */
-public record OccurrenceFragmentGenerator(CSPStructureGenerator csp, OccurrenceGenerator occGen,
-                                          MessageSetGenerator msg, MessageGenerator mpg) {
+public record OccurrenceFragmentGenerator(CSPStructureGenerator csp, OccurrenceGenerator occGen) {
   // This generator handles the injection of loads for any possible
   // expressions in the action, as it is safe to do so at this level (no
   // Action recursively includes any more Steps or Actions).
@@ -45,8 +42,6 @@ public record OccurrenceFragmentGenerator(CSPStructureGenerator csp, OccurrenceG
    *
    * @param csp    CSP structure generator.
    * @param occGen occurrence generator.
-   * @param msg    message set generator.
-   * @param mpg    message spec generator.
    */
   @Inject
   public OccurrenceFragmentGenerator {

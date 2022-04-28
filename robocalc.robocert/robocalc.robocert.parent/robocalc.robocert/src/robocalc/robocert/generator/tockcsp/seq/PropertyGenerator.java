@@ -28,13 +28,12 @@ import robocalc.robocert.model.robocert.SequenceProperty;
  * @author Matt Windsor
  */
 public record PropertyGenerator(TickTockContextGenerator tt, CSPStructureGenerator csp,
-                                RoboCertFactory rf, SpecificationGroupElementFinder sf) {
+                                SpecificationGroupElementFinder sf) {
 
   @Inject
   public PropertyGenerator {
     Objects.requireNonNull(tt);
     Objects.requireNonNull(csp);
-    Objects.requireNonNull(rf);
     Objects.requireNonNull(sf);
   }
 

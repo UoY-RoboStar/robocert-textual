@@ -201,11 +201,12 @@ public class Main {
     }
 
     // can't use the stream directly because addResourceToSet throws
-    final var walk = Files.list(myPath);
-    for (final var it = walk.iterator(); it.hasNext(); ) {
-      addResourceToSet(set, it.next());
+    //noinspection LocalCanBeFinal
+    try (var walk = Files.list(myPath)) {
+      for (final var it = walk.iterator(); it.hasNext(); ) {
+        addResourceToSet(set, it.next());
+      }
     }
-    walk.close();
 
     if (fs != null) {
       fs.close();

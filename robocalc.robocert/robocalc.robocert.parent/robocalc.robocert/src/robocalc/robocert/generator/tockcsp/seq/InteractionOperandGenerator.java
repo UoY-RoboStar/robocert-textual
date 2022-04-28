@@ -12,6 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.generator.tockcsp.seq;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,7 +20,6 @@ import java.util.stream.Stream;
 import com.google.inject.Inject;
 
 import org.eclipse.xtext.EcoreUtil2;
-import robocalc.robocert.generator.intf.seq.ActorContext;
 import robocalc.robocert.generator.intf.seq.ContextualGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
@@ -37,30 +37,26 @@ import robocalc.robocert.model.robocert.util.StreamHelper;
  *
  * @author Matt Windsor
  */
-public record InteractionOperandGenerator(ExpressionGenerator eg,
-                                          SubsequenceGenerator sg) implements
+public record InteractionOperandGenerator(ExpressionGenerator exprGen,
+                                          SubsequenceGenerator subseqGen) implements
     ContextualGenerator<InteractionOperand> {
 
   /**
    * Constructs an interaction operand generator.
    *
-   * @param eg an expression generator.
-   * @param sg a subsequence generator.
+   * @param exprGen   an expression generator.
+   * @param subseqGen a subsequence generator.
    */
   @Inject
   public InteractionOperandGenerator {
+    Objects.requireNonNull(exprGen);
+    Objects.requireNonNull(subseqGen);
   }
 
-  /**
-   * Generates CSP-M for an interaction operand.
-   *
-   * @param b   operand for which we are generating CSP-M.
-   * @param ctx context of the lifeline for which we are generating CSP-M.
-   * @return the generated CSP-M.
-   */
+  @Override
   public CharSequence generate(InteractionOperand b, LifelineContext ctx) {
     // No whitespace because the empty guard should be a no-op on the body.
-    return String.join("", guard(b.getGuard()), sg.generate(b.getFragments(), ctx));
+    return String.join("", guard(b.getGuard()), subseqGen.generate(b.getFragments(), ctx));
   }
 
   private CharSequence guard(Guard g) {
@@ -68,7 +64,7 @@ public record InteractionOperandGenerator(ExpressionGenerator eg,
       return "";
     }
     if (g instanceof ExprGuard e) {
-      return "%s & ".formatted(eg.generate(e.getExpr()));
+      return "%s & ".formatted(exprGen.generate(e.getExpr()));
     }
     if (g instanceof ElseGuard l) {
       return "{- else -} not %s & ".formatted(elseGuard(l));
@@ -77,7 +73,7 @@ public record InteractionOperandGenerator(ExpressionGenerator eg,
   }
 
   private CharSequence elseGuard(ElseGuard l) {
-    return neighbourExprGuards(l).map(ExprGuard::getExpr).map(eg::generate)
+    return neighbourExprGuards(l).map(ExprGuard::getExpr).map(exprGen::generate)
         .collect(Collectors.joining(" and ", "(", ")"));
   }
 

@@ -40,6 +40,8 @@ public class GeneratesCSPMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
   }
 
   /**
+   * Shorthand for constructing a generates-CSP matcher.
+   *
    * @param <T> type of EObject being generated.
    * @param expected the expected value modulo light normalisation.
    * @param generator the generator to test.

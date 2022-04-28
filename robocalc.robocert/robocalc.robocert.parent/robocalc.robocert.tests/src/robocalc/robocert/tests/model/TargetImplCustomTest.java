@@ -57,17 +57,20 @@ public abstract class TargetImplCustomTest<T extends Target> {
 	}
 
 	/**
-	 * @return the expected string representation.
+	 * Gets the expected string representation.
+	 * @return the expected string.
 	 */
 	protected abstract String expectedString();
 	
 	/**
-	 * @return the expected components from the example.
+	 * Gets the expected components from the example.
+	 * @return the expected components.
 	 */
 	protected abstract ConnectionNode[] expectedComponents();
 
 	/**
-	 * @return the expected element of the example.
+	 * Gets the expected element of the example.
+	 * @return the expected element.
 	 */
 	protected abstract NamedElement expectedElement();
 	

@@ -24,14 +24,18 @@ import circus.robocalc.robochart.generator.csp.comp.untimed.CMemoryGenerator;
 import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
+import robocalc.robocert.generator.tockcsp.core.tgt.ComponentSynchroniser.Result;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.util.resolve.DefinitionResolver;
 
@@ -169,7 +173,7 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
 
     // pairs = c1, c2, c3, c4, c5
     final var syncs = components.stream().map(x -> cs.calculate(x, syncConns))
-        .collect(Collectors.toCollection(LinkedList::new));
+        .collect(Collectors.toCollection(ArrayDeque::new));
 
     // moved one stack onto another, so:
     // ctrls = c5[], c4[c5], c3[c4, c5], c2[c3, c4, c5], c1[c2, c3, c4, c5]
@@ -197,9 +201,8 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
     return output;
   }
 
-  private LinkedList<Component> expandComponents(LinkedList<ComponentSynchroniser.Result<T>> syncs,
-      List<Connection> conns, C ctx) {
-    final var ctrls = new LinkedList<Component>();
+  private Deque<Component> expandComponents(Deque<Result<T>> syncs, List<Connection> conns, C ctx) {
+    final var ctrls = new ArrayDeque<Component>();
     while (!syncs.isEmpty()) {
       final var x = syncs.pop();
       final var comp = x.comp();

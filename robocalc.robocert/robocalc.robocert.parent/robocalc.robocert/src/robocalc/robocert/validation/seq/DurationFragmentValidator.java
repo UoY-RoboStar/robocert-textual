@@ -13,6 +13,7 @@
 
 package robocalc.robocert.validation.seq;
 
+import com.google.inject.Inject;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
@@ -27,6 +28,7 @@ import robocalc.robocert.model.robocert.World;
  */
 public class DurationFragmentValidator extends AbstractDeclarativeValidator {
   @Override
+  @Inject
   public void register(EValidatorRegistrar registrar) {
     // per discussion in ComposedChecks annotation documentation
   }
