@@ -110,14 +110,9 @@ public record ActorNodeResolver(ControllerResolver ctrlRes, ModuleResolver modRe
    * @return a stream of connection nodes that can represent the target actor.
    */
   public Stream<ConnectionNode> resolveTarget(Target target) {
-    // Modules don't have a single connection node, as they are the top-level container for nodes.
-    // Instead, we note that everything a module connects to the platform is effectively a
-    // surrogate node for the module.
-    // TODO(@MattWindsor91): I don't think this behaviour is ever useful!?
     if (target instanceof ModuleTarget m) {
-      return m.getModule().getNodes().stream().filter(x -> !(x instanceof RoboticPlatform));
+      return moduleTarget(m.getModule());
     }
-
     if (target instanceof ControllerTarget c) {
       return Stream.of(c.getController());
     }
@@ -128,16 +123,26 @@ public record ActorNodeResolver(ControllerResolver ctrlRes, ModuleResolver modRe
       return Stream.of(o.getOperation());
     }
 
+    // TODO(@MattWindsor91): GitHub #124: these can likely be extended.
+
     // Despite WFC CGsA2, these can happen if we're resolving namespaces for subcomponent events,
     // operations etc.
     if (target instanceof InModuleTarget m) {
-      return m.getModule().getNodes().stream().filter(x -> !(x instanceof RoboticPlatform));
+      return moduleTarget(m.getModule());
     }
     if (target instanceof InControllerTarget c) {
       return Stream.of(c.getController());
     }
 
     throw new IllegalArgumentException("can't resolve actor for target %s".formatted(target));
+  }
+
+  private Stream<ConnectionNode> moduleTarget(RCModule m) {
+    // Modules don't have a single connection node, as they are the top-level container for nodes.
+    // Instead, we note that everything a module connects to the platform is effectively a
+    // surrogate node for the module.
+    // TODO(@MattWindsor91): I don't think this behaviour is ever useful!?
+    return m.getNodes().stream().filter(x -> !(x instanceof RoboticPlatform));
   }
 
   /**
