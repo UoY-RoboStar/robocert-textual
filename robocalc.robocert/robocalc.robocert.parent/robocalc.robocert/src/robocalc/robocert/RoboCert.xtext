@@ -332,7 +332,7 @@ ImplicitEmptyGuard returns EmptyGuard:
 InteractionFragment:
 	BlockFragment |
 	BranchFragment |
-	{OccurrenceFragment} occurrence=Occurrence OptTemperature;
+	{OccurrenceFragment} occurrence=Occurrence;
 
 //
 // Block fragments
@@ -390,7 +390,7 @@ AltOrXAltFragment returns BranchFragment:
  * An occurrence in a sequence diagram.
  */
 Occurrence:
-	{MessageOccurrence} message=Message |
+	{MessageOccurrence} message=Message OptTemperature |
 	LifelineOccurrence;
 
 LifelineOccurrence:

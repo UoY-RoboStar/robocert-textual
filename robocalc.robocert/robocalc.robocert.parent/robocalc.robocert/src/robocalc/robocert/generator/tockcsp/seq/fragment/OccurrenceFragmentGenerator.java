@@ -62,11 +62,7 @@ public record OccurrenceFragmentGenerator(CSPStructureGenerator csp, OccurrenceG
       return csp.commented("occurrence on %s".formatted(ctx.actorName()), csp.skip());
     }
 
-    final var body = occGen.generate(occ);
-    return switch (fragment.getTemperature()) {
-      case COLD -> csp.function(COLD_PROC, body);
-      case HOT -> body;
-    };
+    return occGen.generate(occ);
   }
 
   private Stream<Actor> occurrenceActors(Occurrence occ) {
@@ -78,9 +74,4 @@ public record OccurrenceFragmentGenerator(CSPStructureGenerator csp, OccurrenceG
     }
     throw new IllegalArgumentException("unsupported occurrence: %s".formatted(occ));
   }
-
-  /**
-   * Name of the process that implements cold temperature.
-   */
-  private static final String COLD_PROC = "Cold"; // in robocert_seq_defs
 }

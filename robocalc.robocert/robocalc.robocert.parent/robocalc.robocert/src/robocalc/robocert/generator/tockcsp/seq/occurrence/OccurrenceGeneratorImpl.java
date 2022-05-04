@@ -67,8 +67,12 @@ public record OccurrenceGeneratorImpl(CSPStructureGenerator csp, ExpressionGener
 
   private CharSequence generateMessage(MessageOccurrence m) {
     // TODO(@MattWindsor91): This should really be in the CSPStructureGenerator... somehow.
-    return "%s -> %sSKIP".formatted(msg.generatePrefix(m.getMessage()),
+    final var body = "%s -> %sSKIP".formatted(msg.generatePrefix(m.getMessage()),
         lsg.generateBindingStores(m));
+    return switch (m.getTemperature()) {
+      case COLD -> csp.function(COLD_PROC, body);
+      case HOT -> body;
+    };
   }
 
   private CharSequence generateWait(WaitOccurrence w) {
@@ -76,4 +80,8 @@ public record OccurrenceGeneratorImpl(CSPStructureGenerator csp, ExpressionGener
     return csp.function("WAIT", eg.generate(w.getUnits()));
   }
 
+  /**
+   * Name of the process that implements cold temperature.
+   */
+  private static final String COLD_PROC = "Cold"; // in robocert_seq_defs
 }

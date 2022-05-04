@@ -310,9 +310,6 @@ abstract class InteractionFragment {
 class OccurrenceFragment extends InteractionFragment {
 	@genmodel(documentation="The occurrence proper.")
 	val Occurrence[1]#fragment occurrence;
-	
-	@genmodel(documentation="The temperature of this occurrence.")
-	attr Temperature[1] temperature;
 }
 
 
@@ -452,6 +449,9 @@ Unlike UML, there is only one occurrence for both ends of the message.")
 class MessageOccurrence extends Occurrence {
 	@genmodel(documentation="The message itself.")
 	val Message[1] message;
+
+	@genmodel(documentation="The temperature of this message.")
+	attr Temperature[1] temperature;
 }
 
 @genmodel(documentation="Base class of occurrences on exactly one lifeline.")
