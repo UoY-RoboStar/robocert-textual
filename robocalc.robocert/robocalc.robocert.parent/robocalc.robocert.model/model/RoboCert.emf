@@ -337,13 +337,13 @@ abstract class BlockFragment extends CombinedFragment {
 class OptFragment extends BlockFragment {
 }
 
-@genmodel(documentation="Fragment imposing a duration constraint on a block.")
-class DurationFragment extends BlockFragment {	
+@genmodel(documentation="Fragment imposing a deadline constraint on a block.")
+class DeadlineFragment extends BlockFragment {
 	@genmodel(documentation="The lifeline to which we are attaching the constraint.")
 	ref Actor[1] actor;
 
-	@genmodel(documentation="The bound on the number of time units that can occur in this block.")
-	val DiscreteBound[1] bound;
+	@genmodel(documentation="The upper bound on the number of time units that can occur in this block.")
+	val robochart.Expression[1] units;
 }
 
 @genmodel(documentation="An interaction fragment blocking the diagram until any occurrence happens on the block.

@@ -17,7 +17,8 @@
    It is intended to be auto-included into the output of the RoboCert CSP
    generator, and expects the RoboChart 'core_timed_defs' to be open. -}
 
--- This is the version of robocert_seq_defs.csp last updated on: 2022-04-26
+-- This is the version of robocert_seq_defs.csp for version 0.1.0
+-- last updated on: 2022-05-04
 
 {-
  - Until fragment synchronisation
@@ -67,17 +68,9 @@ Timed(OneStep) {
   -- Semantics of an optionality fragment.
   Opt(P__) = P__ |~| SKIP
 
-  -- Semantics of a lower-bounded duration fragment.
-  DurationLB(lb__)(P__) = P__ ||| Cold(WAIT(lb__))
-
-  -- Semantics of an upper-bounded duration fragment.
-  DurationUB(ub__)(P__) = EndBy(P__, ub__)
-
-  -- Semantics of a both-bounded duration fragment.
-  DurationRange(lb__, ub__)(P__) = DurationUB(ub__)(DurationLB(lb__)(P__))
-
-  -- Semantics of an exact-bounded duration fragment.
-  Duration(b__) = DurationRange(b__, b__)
+  -- Semantics of a deadline fragment.
+  -- Can't be called Deadline; this name is taken by RoboChart's stdlib.
+  DeadlineF(ub__)(P__) = EndBy(P__, ub__)
 }
 
 -- Use the standard FDR loop function for infinite loops.

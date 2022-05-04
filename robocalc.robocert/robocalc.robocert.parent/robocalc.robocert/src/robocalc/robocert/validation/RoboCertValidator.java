@@ -4,10 +4,9 @@
 package robocalc.robocert.validation;
 
 import org.eclipse.xtext.validation.ComposedChecks;
-import robocalc.robocert.model.robocert.DurationFragment;
 import robocalc.robocert.validation.core.ExpressionValidator;
 import robocalc.robocert.validation.seq.DiscreteBoundValidator;
-import robocalc.robocert.validation.seq.DurationFragmentValidator;
+import robocalc.robocert.validation.seq.DeadlineFragmentValidator;
 import robocalc.robocert.validation.seq.LifelineOccurrenceValidator;
 
 /**
@@ -16,7 +15,7 @@ import robocalc.robocert.validation.seq.LifelineOccurrenceValidator;
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 @ComposedChecks(validators = {ActorValidator.class, DiscreteBoundValidator.class,
-    DurationFragmentValidator.class, ExpressionValidator.class, LifelineOccurrenceValidator.class,
+    DeadlineFragmentValidator.class, ExpressionValidator.class, LifelineOccurrenceValidator.class,
     MessageValidator.class, SequenceGroupValidator.class})
 public class RoboCertValidator extends AbstractRoboCertValidator {
 

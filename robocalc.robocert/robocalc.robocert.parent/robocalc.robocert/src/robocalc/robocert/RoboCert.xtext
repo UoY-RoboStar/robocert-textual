@@ -185,7 +185,7 @@ enum DoesCorePropertyType returns CorePropertyType:
  * A time unit expression.
  */
 TimeUnits returns Expression:
-	Expression 'time'? ('unit' | 'units');
+	'(' Expression 'time'? ('unit' | 'units')? ')';
 
 //
 // MODALITIES
@@ -341,14 +341,14 @@ InteractionFragment:
  * A block fragment.
  */
 BlockFragment:
-	(DurationFragment |
+	(DeadlineFragment |
 	('opt' | 'optional') {OptFragment} |
 	('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet 'until' |
 	'block' {UntilFragment} intraMessages=EmptySet |
 	'loop' {LoopFragment} ('(' bound=DiscreteBound 'times'? ')')?) (name=ID)? body=BlockInteractionOperand;
 
-DurationFragment:
-	'duration' '(' bound=DiscreteBound 'units'? ')' 'on' actor=[Actor];
+DeadlineFragment:
+	'deadline' units=TimeUnits 'on' actor=[Actor];
 
 //
 // Discrete bounds

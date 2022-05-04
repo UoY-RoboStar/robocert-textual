@@ -19,10 +19,9 @@ import robocalc.robocert.generator.intf.seq.ContextualGenerator;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentHeaderGenerator;
 import robocalc.robocert.model.robocert.BlockFragment;
-import robocalc.robocert.model.robocert.DurationFragment;
+import robocalc.robocert.model.robocert.DeadlineFragment;
 import robocalc.robocert.model.robocert.InteractionOperand;
 import robocalc.robocert.model.robocert.LoopFragment;
 import robocalc.robocert.model.robocert.OptFragment;
@@ -36,14 +35,14 @@ import robocalc.robocert.model.robocert.UntilFragment;
  */
 public record BlockFragmentGeneratorImpl
     (CSPStructureGenerator csp, ContextualGenerator<InteractionOperand> operandGen,
-     DurationFragmentHeaderGenerator durationHeaderGen, LoopFragmentHeaderGenerator loopHeaderGen,
+     DeadlineFragmentHeaderGenerator deadlineHeaderGen, LoopFragmentHeaderGenerator loopHeaderGen,
      UntilFragmentHeaderGenerator untilHeaderGen) implements BlockFragmentGenerator {
 
   @Inject
   public BlockFragmentGeneratorImpl {
     Objects.requireNonNull(csp);
     Objects.requireNonNull(operandGen);
-    Objects.requireNonNull(durationHeaderGen);
+    Objects.requireNonNull(deadlineHeaderGen);
     Objects.requireNonNull(loopHeaderGen);
     Objects.requireNonNull(untilHeaderGen);
   }
@@ -64,8 +63,8 @@ public record BlockFragmentGeneratorImpl
   }
 
   private CharSequence generateHeader(BlockFragment fragment, LifelineContext ctx) {
-    if (fragment instanceof DurationFragment d) {
-      return durationHeaderGen.generate(d, ctx);
+    if (fragment instanceof DeadlineFragment d) {
+      return deadlineHeaderGen.generate(d, ctx);
     }
     if (fragment instanceof LoopFragment l) {
       return loopHeaderGen.generate(l);

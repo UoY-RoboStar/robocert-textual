@@ -15,53 +15,51 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.DurationFragment;
+import robocalc.robocert.model.robocert.DeadlineFragment;
 
 /**
- * Generates CSP-M for the header part of {@link DurationFragment}s.
+ * Generates CSP-M for the header part of {@link DeadlineFragment}s.
  *
  * @author Matt Windsor
  */
-public record DurationFragmentHeaderGenerator(CSPStructureGenerator csp,
-                                              DiscreteBoundGenerator boundGen) {
+public record DeadlineFragmentHeaderGenerator(CSPStructureGenerator csp,
+                                              ExpressionGenerator exprGen) {
 
   /**
-   * Name of the process family that implements the bounded duration header. (See
-   * {@link DiscreteBoundGenerator} for information about the specific processes referenced.)
+   * Name of the process family that implements the deadline process.
    */
-  private static final String DURATION_PROC = "Duration"; // in robocert_seq_defs
+  private static final String DEADLINE_PROC = "DeadlineF"; // in robocert_seq_defs
 
   /**
    * Constructs a CSP-M deadline generator.
    *
-   * @param boundGen a discrete bound generator.
+   * @param exprGen an expression generator.
    */
   @Inject
-  public DurationFragmentHeaderGenerator {
-    Objects.requireNonNull(boundGen);
+  public DeadlineFragmentHeaderGenerator {
+    Objects.requireNonNull(exprGen);
   }
 
   /**
    * Generates CSP-M for the header of a deadline fragment.
    * <p>
-   * At the mathematical level, upper bounds becomes the 'deadline' tock-CSP operator, and lower
-   * bounds become interleaved waits.  This only occurs on the lifeline affected by the deadline.
+   * At the mathematical level, upper bounds becomes the 'deadline' tock-CSP operator.
+   * This only occurs on the lifeline affected by the deadline.
    *
    * @param frag duration fragment for which we are generating a header.
    * @param ctx  lifeline context, used to see if this is the correct lifeline for the duration to
    *             take effect.
    * @return the generated CSP-M.
    */
-  public CharSequence generate(DurationFragment frag, LifelineContext ctx) {
+  public CharSequence generate(DeadlineFragment frag, LifelineContext ctx) {
     Objects.requireNonNull(frag);
 
     if (!ctx.isFor(frag.getActor())) {
-      return csp.commented("duration on %s".formatted(ctx.actorName()), "");
+      return csp.commented("deadline on %s".formatted(ctx.actorName()), "");
     }
 
-    final var bound = frag.getBound();
-    Objects.requireNonNull(bound, "duration fragments must have bounds");
-    return boundGen.generate(bound, DURATION_PROC);
+    return csp.function(DEADLINE_PROC, exprGen.generate(frag.getUnits()));
   }
 }

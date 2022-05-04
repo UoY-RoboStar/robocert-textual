@@ -382,19 +382,19 @@
       <details key="documentation" value="An optional fragment."/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DurationFragment" eSuperTypes="#//BlockFragment">
+  <eClassifiers xsi:type="ecore:EClass" name="DeadlineFragment" eSuperTypes="#//BlockFragment">
     <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-      <details key="documentation" value="Fragment imposing a duration constraint on a block."/>
+      <details key="documentation" value="Fragment imposing a deadline constraint on a block."/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="actor" lowerBound="1" eType="#//Actor">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
         <details key="documentation" value="The lifeline to which we are attaching the constraint."/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="bound" lowerBound="1" eType="#//DiscreteBound"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="units" lowerBound="1" eType="ecore:EClass ../../circus.robocalc.robochart/model/robochart.ecore#//Expression"
         containment="true">
       <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
-        <details key="documentation" value="The bound on the number of time units that can occur in this block."/>
+        <details key="documentation" value="The upper bound on the number of time units that can occur in this block."/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
