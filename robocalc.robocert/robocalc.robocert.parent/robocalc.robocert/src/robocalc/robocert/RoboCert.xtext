@@ -394,7 +394,7 @@ Occurrence:
 	LifelineOccurrence;
 
 LifelineOccurrence:
-	('after' {WaitOccurrence} units=TimeUnits |
+	('wait' {WaitOccurrence} units=TimeUnits |
 	'deadlock' {DeadlockOccurrence}) 'on' actor=[Actor|QualifiedName];
 
 //
