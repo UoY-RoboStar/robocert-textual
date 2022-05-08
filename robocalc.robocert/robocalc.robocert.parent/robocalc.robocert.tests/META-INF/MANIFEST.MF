@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Automatic-Module-Name: robocalc.robocert.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: robocalc.robocert.tests
-Bundle-Vendor: My Company
-Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: RoboStar
+Bundle-Version: 0.1.0.qualifier
 Bundle-SymbolicName: robocalc.robocert.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: robocalc.robocert,
- robocalc.robocert.model,
+Require-Bundle: robocalc.robocert;bundle-version="0.1.0",
+ robocalc.robocert.model;bundle-version="0.1.0",
  org.junit.jupiter.api;bundle-version="[5.1.0,6.0.0)",
  org.hamcrest;bundle-version="2.2.0",
  org.eclipse.xtext.testing,
