@@ -13,6 +13,8 @@
 
 package robocalc.robocert.generator.intf.seq;
 
+import robocalc.robocert.generator.intf.seq.context.LifelineContext;
+
 /**
  * Interface for things that can generate code for sequence elements given a lifeline context.
  *

@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import org.eclipse.emf.common.util.EList;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
+import robocalc.robocert.generator.intf.seq.context.InteractionContext;
 import robocalc.robocert.generator.tockcsp.core.tgt.OverrideGenerator;
 import robocalc.robocert.generator.tockcsp.core.tgt.TargetGenerator;
 import robocalc.robocert.generator.tockcsp.core.tgt.UniverseGenerator;
@@ -28,6 +29,7 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ActorGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
+import robocalc.robocert.generator.tockcsp.seq.LifelineContextFactory;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentProcessGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.NamedSetModuleGenerator;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
@@ -71,6 +73,8 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   private OverrideGenerator overrideGen;
   @Inject
   private TargetParameterResolver paramRes;
+  @Inject
+  private LifelineContextFactory ctxFactory;
 
   @Override
   protected Stream<CharSequence> generateBodyElements(SpecificationGroup group) {
@@ -115,7 +119,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
    */
   private CharSequence openDefBody(SpecificationGroup group) {
     // Space here for expansion.
-    final var specs = group.getInteractions();
+    final var specs = group.getInteractions().stream().map(ctxFactory::context).toList();
 
     final var optimisations = Stream.of("sbisim", "dbisim").map(x -> "transparent " + x);
 
@@ -180,9 +184,9 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
         actorModule(group).stream());
   }
 
-  private Optional<CharSequence> channelModule(EList<Interaction> sequences) {
+  private Optional<CharSequence> channelModule(List<InteractionContext> seqContexts) {
     // TODO(@MattWindsor91): other channels?
-    return sequences.stream().flatMap(seq -> untilGen.generateChannel(seq).stream()).collect(
+    return seqContexts.stream().flatMap(seq -> untilGen.generateChannel(seq).stream()).collect(
         cspStream.collectToModule(SpecGroupField.CHANNEL_MODULE.toString(), false));
   }
 
@@ -192,13 +196,13 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
             cspStream.collectToModule(SpecGroupParametricField.MEMORY_MODULE.toString(), false));
   }
 
-  private Optional<CharSequence> specModule(EList<Interaction> sequences) {
+  private Optional<CharSequence> specModule(List<InteractionContext> sequences) {
     return sequences.stream().map(this::specDef).collect(
         cspStream.collectToModule(SpecGroupParametricField.SEQUENCE_MODULE.toString(), true));
   }
 
-  private CharSequence specDef(Interaction i) {
-    return csp.definition(i.getName(), interactionGen.generate(i));
+  private CharSequence specDef(InteractionContext i) {
+    return csp.definition(i.seq().getName(), interactionGen.generate(i));
   }
 
 }

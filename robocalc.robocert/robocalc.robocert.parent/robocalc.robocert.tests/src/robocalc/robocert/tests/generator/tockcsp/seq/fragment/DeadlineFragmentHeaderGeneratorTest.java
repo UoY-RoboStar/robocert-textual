@@ -24,11 +24,14 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.generator.intf.seq.ActorContext;
-import robocalc.robocert.generator.intf.seq.InteractionContext;
+import robocalc.robocert.generator.intf.seq.context.ActorContext;
+import robocalc.robocert.generator.intf.seq.context.InteractionContext;
+import robocalc.robocert.generator.intf.seq.context.Synchronisation;
 import robocalc.robocert.generator.tockcsp.seq.fragment.DeadlineFragmentHeaderGenerator;
 import robocalc.robocert.model.robocert.DeadlineFragment;
+import robocalc.robocert.model.robocert.ParFragment;
 import robocalc.robocert.model.robocert.RoboCertFactory;
+import robocalc.robocert.model.robocert.UntilFragment;
 import robocalc.robocert.model.robocert.util.ExpressionFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
@@ -55,7 +58,10 @@ class DeadlineFragmentHeaderGeneratorTest {
     final var act = factory.createComponentActor();
     act.setName("C");
 
-    final var ictx = new InteractionContext(List.of(act), List.of(), "until");
+    final var seq = factory.createInteraction();
+    final var untils = new Synchronisation<UntilFragment>(List.of(), "until");
+    final var pars = new Synchronisation<ParFragment>(List.of(), "par");
+    final var ictx = new InteractionContext(seq, List.of(act), untils, pars);
     ctx = new ActorContext(ictx, act, "x");
 
     final var inner = factory.createInteractionOperand();

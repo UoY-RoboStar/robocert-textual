@@ -12,6 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.generator.intf.seq;
 
+import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.model.robocert.InteractionFragment;
 
 /**

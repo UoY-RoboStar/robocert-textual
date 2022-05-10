@@ -16,7 +16,7 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.intf.seq.ContextualGenerator;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentHeaderGenerator;
@@ -51,11 +51,11 @@ public record BlockFragmentGeneratorImpl
   public CharSequence generate(BlockFragment fragment, LifelineContext ctx) {
     // Special case: if we are generating inside a lifeline attached to one of multiple generated
     // actors, then we delegate UntilFragments to a separate process, and instead emit a
-    // synchronisation with that process .ereh
+    // synchronisation with that process.
     if (fragment instanceof UntilFragment u) {
       final var i = ctx.untilIndex(u);
       if (0 <= i) {
-        return csp.function("UntilSync", ctx.global().untilChannel(), Integer.toString(i));
+        return csp.function("UntilSync", ctx.global().untils().channel(), Integer.toString(i));
       }
     }
 

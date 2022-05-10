@@ -15,13 +15,19 @@ package robocalc.robocert.generator.tockcsp.seq;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
+import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
-import robocalc.robocert.generator.intf.seq.ActorContext;
-import robocalc.robocert.generator.intf.seq.InteractionContext;
+import robocalc.robocert.generator.intf.seq.context.ActorContext;
+import robocalc.robocert.generator.intf.seq.context.InteractionContext;
+import robocalc.robocert.generator.intf.seq.context.Synchronisation;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentProcessGenerator;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.Interaction;
+import robocalc.robocert.model.robocert.InteractionFragment;
+import robocalc.robocert.model.robocert.ParFragment;
+import robocalc.robocert.model.robocert.UntilFragment;
 import robocalc.robocert.model.robocert.World;
 
 /**
@@ -60,10 +66,17 @@ public record LifelineContextFactory(CSPStructureGenerator csp, ActorGenerator a
    */
   public InteractionContext context(Interaction s) {
     final var visibleActors = s.getActors().stream().filter(this::actorVisibleInSemantics).toList();
-    final var untils = untilGen.processFragments(s);
-    final var untilChannelName = csp.namespaced(SpecGroupField.CHANNEL_MODULE.toString(),
-        untilGen.channelName(s));
-    return new InteractionContext(visibleActors, untils, untilChannelName);
+
+    final var untils = makeSynchronisation(s, untilGen::channelName, UntilFragment.class);
+    final var pars = makeSynchronisation(s, x -> "par_" + x.getName(), ParFragment.class);
+
+    return new InteractionContext(s, visibleActors, untils, pars);
+  }
+
+  private <T extends InteractionFragment> Synchronisation<T> makeSynchronisation(Interaction s,
+      Function<Interaction, CharSequence> makeName, Class<T> clazz) {
+    final var channel = csp.namespaced(SpecGroupField.CHANNEL_MODULE.toString(), makeName.apply(s));
+    return new Synchronisation<>(EcoreUtil2.eAllOfType(s, clazz), channel);
   }
 
   /**
@@ -76,7 +89,7 @@ public record LifelineContextFactory(CSPStructureGenerator csp, ActorGenerator a
    * @return the list of actor contexts.
    */
   public List<ActorContext> actors(InteractionContext ctx) {
-    return ctx.visibleActors().parallelStream()
+    return ctx.lifelines().parallelStream()
         .map(a -> new ActorContext(ctx, a, actorGen.dataConstructor(a))).toList();
   }
 

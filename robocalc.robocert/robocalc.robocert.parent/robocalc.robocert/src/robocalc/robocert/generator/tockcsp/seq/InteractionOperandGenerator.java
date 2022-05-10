@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.seq.ContextualGenerator;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.model.robocert.BranchFragment;

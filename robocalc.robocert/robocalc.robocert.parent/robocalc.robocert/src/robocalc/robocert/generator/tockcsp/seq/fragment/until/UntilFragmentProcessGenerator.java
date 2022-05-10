@@ -14,18 +14,15 @@
 package robocalc.robocert.generator.tockcsp.seq.fragment.until;
 
 import com.google.inject.Inject;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import org.eclipse.xtext.EcoreUtil2;
-import robocalc.robocert.generator.intf.seq.InteractionContext;
-import robocalc.robocert.generator.intf.seq.UntilContext;
+import robocalc.robocert.generator.intf.seq.context.InteractionContext;
+import robocalc.robocert.generator.intf.seq.context.UntilContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.UntilFragment;
-import robocalc.robocert.model.robocert.World;
 
 /**
  * Generates the various aspects of an {@link UntilFragment} construct within an interaction.
@@ -56,45 +53,22 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
   }
 
   /**
-   * Gets all until fragments in a sequence that need to be put into a process.
-   *
-   * <p>This will be empty if there are no fragments, or if there are not enough lifelines in the
-   * interaction to warrant a separate process.
-   *
-   * <p>This should be passed verbatim to each method accepting a list of until fragments, as the
-   * semantics is sensitive to the position of the fragments within the list.
-   *
-   * @param seq the sequence to inspect.
-   * @return the list of fragments within the sequence.
-   */
-  public List<UntilFragment> processFragments(Interaction seq) {
-    // If there is only one non-World actor, we don't need a process.
-    // TODO(@MattWindsor91): this duplicates InteractionContext.
-    if (seq.getActors().stream().filter(x -> !(x instanceof World)).count() < 2) {
-      return List.of();
-    }
-
-    return EcoreUtil2.eAllOfType(seq, UntilFragment.class);
-  }
-
-  /**
    * Generates the until-process channel definition for a sequence.
    *
-   * @param seq the sequence for which we are generating the channel.
+   * @param ctx context for the sequence for which we are generating the channel.
    * @return the until synchronisation channel definition (empty if the sequence doesn't need one).
    */
-  public Optional<CharSequence> generateChannel(Interaction seq) {
-    // TODO(@MattWindsor91): repeatedly generating this fragment list (since we do it here, and in
-    // context generation, and so on) might be slow.
-    final var untils = processFragments(seq);
+  public Optional<CharSequence> generateChannel(InteractionContext ctx) {
+    final var untils = ctx.untils();
 
-    if (untils.isEmpty()) {
+    if (!untils.mustSynchronise(ctx.numLifelines())) {
       return Optional.empty();
     }
 
     // UntilSyncDir is defined in the RoboCert standard library.
     return Optional.of(
-        csp.channel(channelName(seq), "{0..%d}".formatted(untils.size() - 1), "UntilSyncDir"));
+        csp.channel(untils.channel(), "{0..%d}".formatted(untils.fragments().size() - 1),
+            "UntilSyncDir"));
   }
 
   /**
@@ -115,18 +89,20 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
    */
   public CharSequence process(InteractionContext ctx) {
     final var ictx = new UntilContext(ctx);
-    final var fragments = ctx.untils();
     final var cs = csp.sets();
 
     var body = cs.tuple(csp.pre(InteractionGenerator.TERM_CHANNEL, csp.skip()));
 
+    final var chanBase = ctx.untils().channel();
+    final var fragments = ctx.untils().fragments();
     for (var i = 0; i < fragments.size(); i++) {
-      final var chan = "%s.%d".formatted(ctx.untilChannel(), i);
+      final var chan = "%s.%d".formatted(chanBase, i);
 
       final var fragBody = blockGen.generate(fragments.get(i), ictx);
       // These should match the standard library definition of UntilSyncDir.
-      final var withChans = csp.seq(csp.pre("%s.enter".formatted(chan), fragBody),
-          csp.pre("%s!leave".formatted(chan), NAME));
+      final var enter = "%s.enter".formatted(chan);
+      final var leave = "%s!leave".formatted(chan);
+      final var withChans = csp.seq(csp.pre(enter, fragBody), csp.pre(leave, NAME));
       body = csp.bins().extChoice(body, cs.tuple(withChans));
     }
 

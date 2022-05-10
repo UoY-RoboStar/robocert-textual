@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collector;
 
 import robocalc.robocert.generator.intf.seq.ContextualGenerator;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.AltFragment;
 import robocalc.robocert.model.robocert.BranchFragment;

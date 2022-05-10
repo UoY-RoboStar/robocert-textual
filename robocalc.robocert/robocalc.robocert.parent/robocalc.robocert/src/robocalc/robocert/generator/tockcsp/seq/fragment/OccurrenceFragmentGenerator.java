@@ -15,7 +15,7 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 import com.google.inject.Inject;
 
 import java.util.stream.Stream;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.model.robocert.Actor;

@@ -11,7 +11,7 @@
  *   Matt Windsor - initial definition
  ******************************************************************************/
 
-package robocalc.robocert.generator.intf.seq;
+package robocalc.robocert.generator.intf.seq.context;
 
 import java.util.stream.Stream;
 import robocalc.robocert.model.robocert.Actor;

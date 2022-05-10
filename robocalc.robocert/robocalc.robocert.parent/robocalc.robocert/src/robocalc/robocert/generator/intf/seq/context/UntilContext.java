@@ -11,7 +11,7 @@
  *   Matt Windsor - initial definition
  ******************************************************************************/
 
-package robocalc.robocert.generator.intf.seq;
+package robocalc.robocert.generator.intf.seq.context;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -22,7 +22,9 @@ import robocalc.robocert.model.robocert.UntilFragment;
  * A lifeline context that represents the situation while generating the body of an until-process.
  *
  * In such processes, there is no separation between lifelines, whose actions are fully linearised.
- * This means that any queries to check whether an actor is
+ * This means that any queries to check whether an actor is relevant come back true, and any
+ * attempts to expand another until fragment inside the body do so directly instead of referencing
+ * the until process.
  *
  * @param global the global interaction context.
  */

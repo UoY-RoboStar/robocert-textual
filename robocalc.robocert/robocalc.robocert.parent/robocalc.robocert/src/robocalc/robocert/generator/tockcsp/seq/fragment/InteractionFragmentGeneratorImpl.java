@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import java.util.stream.Stream;
 import java.util.Optional;
 import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
-import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.model.robocert.BlockFragment;

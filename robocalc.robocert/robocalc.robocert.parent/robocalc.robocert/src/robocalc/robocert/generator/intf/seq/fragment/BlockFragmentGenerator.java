@@ -13,7 +13,7 @@
 
 package robocalc.robocert.generator.intf.seq.fragment;
 
-import robocalc.robocert.generator.intf.seq.LifelineContext;
+import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.model.robocert.BlockFragment;
 import robocalc.robocert.model.robocert.UntilFragment;
 

@@ -1,5 +1,5 @@
-/********************************************************************************
- * Copyright (c) 2021 University of York and others
+/*******************************************************************************
+ * Copyright (c) 2021, 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +9,8 @@
  *
  * Contributors:
  *   Matt Windsor - initial definition
- ********************************************************************************/
-package robocalc.robocert.generator.intf.seq;
+ ******************************************************************************/
+package robocalc.robocert.generator.intf.seq.context;
 
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
@@ -65,7 +65,7 @@ public record ActorContext(InteractionContext global, Actor actor,
 
   @Override
   public int untilIndex(UntilFragment frag) {
-    return global.untilIndex(frag);
+    return global.untils().fragments().indexOf(frag);
   }
 
   private CharSequence lifelineDef(CSPStructureGenerator csp, String defName) {
