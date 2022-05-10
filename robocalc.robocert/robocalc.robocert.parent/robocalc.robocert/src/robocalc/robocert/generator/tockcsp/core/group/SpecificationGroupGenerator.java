@@ -30,7 +30,7 @@ import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ActorGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
 import robocalc.robocert.generator.tockcsp.seq.LifelineContextFactory;
-import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentProcessGenerator;
+import robocalc.robocert.generator.tockcsp.seq.SyncChannelGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.NamedSetModuleGenerator;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
 import robocalc.robocert.model.robocert.CollectionTarget;
@@ -64,7 +64,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   @Inject
   private NamedSetModuleGenerator msgSetGen;
   @Inject
-  private UntilFragmentProcessGenerator untilGen;
+  private SyncChannelGenerator syncGen;
   @Inject
   private ModuleGenerator memoryGen;
   @Inject
@@ -130,7 +130,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
             targetGen.openDef(group.getTarget())));
 
     final var elements = Streams.concat(optimisations, Stream.of(target),
-        msgSetGen.generate(group).stream(), channelModule(specs).stream(), specModule(specs).stream());
+        msgSetGen.generate(group).stream(), channelModule(specs).stream(), interactionModule(specs).stream());
 
     return csp.innerJoin(elements);
   }
@@ -186,7 +186,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
 
   private Optional<CharSequence> channelModule(List<InteractionContext> seqContexts) {
     // TODO(@MattWindsor91): other channels?
-    return seqContexts.stream().flatMap(seq -> untilGen.generateChannel(seq).stream()).collect(
+    return seqContexts.stream().flatMap(syncGen::generate).collect(
         cspStream.collectToModule(SpecGroupField.CHANNEL_MODULE.toString(), false));
   }
 
@@ -196,9 +196,9 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
             cspStream.collectToModule(SpecGroupParametricField.MEMORY_MODULE.toString(), false));
   }
 
-  private Optional<CharSequence> specModule(List<InteractionContext> sequences) {
-    return sequences.stream().map(this::specDef).collect(
-        cspStream.collectToModule(SpecGroupParametricField.SEQUENCE_MODULE.toString(), true));
+  private Optional<CharSequence> interactionModule(List<InteractionContext> seqs) {
+    return seqs.stream().map(this::specDef).collect(
+        cspStream.collectToModule(SpecGroupParametricField.INTERACTION_MODULE.toString(), true));
   }
 
   private CharSequence specDef(InteractionContext i) {

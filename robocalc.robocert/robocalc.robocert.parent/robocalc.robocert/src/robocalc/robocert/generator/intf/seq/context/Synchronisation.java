@@ -22,24 +22,31 @@ import robocalc.robocert.model.robocert.InteractionFragment;
  * Records information about a list of fragments in an interaction that must be synchronised with a
  * channel (if there is at least one such fragment, and at least two lifelines).
  *
- * @param fragments list of relevant fragments found in the interaction.
- * @param channel   name of the synchronisation channel.
- * @param <T>       type of fragments being synchronised by this context.
+ * @param fragments   list of relevant fragments found in the interaction.
+ * @param channel     fully qualified name of the synchronisation channel.
+ * @param channelBase base name of the synchronisation channel.
+ * @param <T>         type of fragments being synchronised by this context.
  */
 public record Synchronisation<T extends InteractionFragment>(List<T> fragments,
-                                                             CharSequence channel) {
+                                                             CharSequence channel,
+                                                             CharSequence channelBase) {
 
   /**
    * Constructs a fragment synchronisation record.
    *
-   * @param fragments list of relevant fragments found in the interaction.
-   * @param channel   name of the synchronisation channel.
+   * @param fragments   list of relevant fragments found in the interaction.
+   * @param channel     name of the synchronisation channel.
+   * @param channelBase base name of the synchronisation channel.
    */
   public Synchronisation {
     Objects.requireNonNull(fragments);
     Objects.requireNonNull(channel);
+    Objects.requireNonNull(channelBase);
     if (channel.isEmpty()) {
       throw new IllegalArgumentException("channel name must not be empty");
+    }
+    if (channelBase.isEmpty()) {
+      throw new IllegalArgumentException("channel base name must not be empty");
     }
   }
 

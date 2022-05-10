@@ -27,8 +27,12 @@
  - single-lifeline sequences, we emit `Until` instead.
  -}
 
--- Direction of synchronisation with until-processes.
-datatype UntilSyncDir = enter | leave
+-- Direction of synchronisation with until-processes and par-fragments.
+datatype SyncDir = enter | leave
+
+-- Synchronisation at the end of a par construct.
+-- Deliberately untimed; we don't want any errant tocks to occur here.
+ParSync(chan, index__)(P) = P; chan.index__.leave -> SKIP
 
 Timed(OneStep) {
   -- Pauses the lifeline to hand over to an UntilFragment on the until-process.

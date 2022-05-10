@@ -60,8 +60,8 @@ class SubsequenceGeneratorTest {
 		final var ta = rc.createTargetActor();
 
 		final var seq = rc.createInteraction();
-		final var untils = new Synchronisation<UntilFragment>(List.of(), "until");
-		final var pars = new Synchronisation<ParFragment>(List.of(), "par");
+		final var untils = new Synchronisation<UntilFragment>(List.of(), "until", "until");
+		final var pars = new Synchronisation<ParFragment>(List.of(), "par", "par");
 
 		final var ictx = new InteractionContext(seq, List.of(ta), untils, pars);
 		final var ctx = new ActorContext(ictx, rc.createTargetActor(), "a");

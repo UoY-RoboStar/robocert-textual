@@ -19,7 +19,6 @@ import robocalc.robocert.generator.tockcsp.core.group.SpecificationGroupElementF
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPRefinement;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.TickTockContextGenerator;
-import robocalc.robocert.model.robocert.RoboCertFactory;
 import robocalc.robocert.model.robocert.SequenceProperty;
 
 /**
@@ -97,7 +96,7 @@ public record PropertyGenerator(TickTockContextGenerator tt, CSPStructureGenerat
   private CharSequence sequenceRef(SequenceProperty it) {
     final var seq = it.getInteraction();
     return csp.namespaced(
-        sf.getFullCSPName(seq.getGroup(), SpecGroupParametricField.SEQUENCE_MODULE), seq.getName());
+        sf.getFullCSPName(seq.getGroup(), SpecGroupParametricField.INTERACTION_MODULE), seq.getName());
   }
 
   private CharSequence targetRef(SequenceProperty it) {

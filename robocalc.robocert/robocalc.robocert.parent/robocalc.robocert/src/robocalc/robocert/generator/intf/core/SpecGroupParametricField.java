@@ -15,7 +15,7 @@ public enum SpecGroupParametricField {
 	/**
 	 * The module in the specification group containing any sequences.
 	 */
-	SEQUENCE_MODULE,
+	INTERACTION_MODULE,
 	/**
 	 * The process in the specification group representing the target.
 	 */
@@ -25,7 +25,7 @@ public enum SpecGroupParametricField {
 	public String toString() {
 		return switch(this) {
 			case MEMORY_MODULE -> "Memory";
-			case SEQUENCE_MODULE -> "Seqs";
+			case INTERACTION_MODULE -> "Seqs";
 			case TARGET -> "Target";
 		};
 	}

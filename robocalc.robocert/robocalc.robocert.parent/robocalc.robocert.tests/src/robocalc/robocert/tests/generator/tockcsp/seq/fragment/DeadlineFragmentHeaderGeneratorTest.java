@@ -59,8 +59,8 @@ class DeadlineFragmentHeaderGeneratorTest {
     act.setName("C");
 
     final var seq = factory.createInteraction();
-    final var untils = new Synchronisation<UntilFragment>(List.of(), "until");
-    final var pars = new Synchronisation<ParFragment>(List.of(), "par");
+    final var untils = new Synchronisation<UntilFragment>(List.of(), "until", "until");
+    final var pars = new Synchronisation<ParFragment>(List.of(), "par", "par");
     final var ictx = new InteractionContext(seq, List.of(act), untils, pars);
     ctx = new ActorContext(ictx, act, "x");
 

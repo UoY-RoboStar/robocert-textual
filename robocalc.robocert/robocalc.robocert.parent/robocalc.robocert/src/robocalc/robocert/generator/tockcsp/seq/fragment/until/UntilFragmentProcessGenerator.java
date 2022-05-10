@@ -15,13 +15,11 @@ package robocalc.robocert.generator.tockcsp.seq.fragment.until;
 
 import com.google.inject.Inject;
 import java.util.Objects;
-import java.util.Optional;
 import robocalc.robocert.generator.intf.seq.context.InteractionContext;
 import robocalc.robocert.generator.intf.seq.context.UntilContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
-import robocalc.robocert.generator.tockcsp.seq.InteractionGenerator;
-import robocalc.robocert.model.robocert.Interaction;
+import robocalc.robocert.generator.tockcsp.seq.SyncChannelGenerator;
 import robocalc.robocert.model.robocert.UntilFragment;
 
 /**
@@ -53,35 +51,6 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
   }
 
   /**
-   * Generates the until-process channel definition for a sequence.
-   *
-   * @param ctx context for the sequence for which we are generating the channel.
-   * @return the until synchronisation channel definition (empty if the sequence doesn't need one).
-   */
-  public Optional<CharSequence> generateChannel(InteractionContext ctx) {
-    final var untils = ctx.untils();
-
-    if (!untils.mustSynchronise(ctx.numLifelines())) {
-      return Optional.empty();
-    }
-
-    // UntilSyncDir is defined in the RoboCert standard library.
-    return Optional.of(
-        csp.channel(untils.channel(), "{0..%d}".formatted(untils.fragments().size() - 1),
-            "UntilSyncDir"));
-  }
-
-  /**
-   * Gets the name of the channel used for synchronising the until-process.
-   *
-   * @param seq the sequence whose channel is to be named.
-   * @return the name of the synchronising channel for {@code seq}.
-   */
-  public String channelName(Interaction seq) {
-    return "until_" + seq.getName();
-  }
-
-  /**
    * Constructs an until-process.
    *
    * @param ctx the context for the interaction whose process we are producing.
@@ -91,7 +60,7 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
     final var ictx = new UntilContext(ctx);
     final var cs = csp.sets();
 
-    var body = cs.tuple(csp.pre(InteractionGenerator.TERM_CHANNEL, csp.skip()));
+    var body = cs.tuple(csp.pre(SyncChannelGenerator.TERM_CHANNEL, csp.skip()));
 
     final var chanBase = ctx.untils().channel();
     final var fragments = ctx.untils().fragments();

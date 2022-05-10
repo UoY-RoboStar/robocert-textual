@@ -17,12 +17,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import org.eclipse.xtext.EcoreUtil2;
-import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.seq.context.ActorContext;
 import robocalc.robocert.generator.intf.seq.context.InteractionContext;
 import robocalc.robocert.generator.intf.seq.context.Synchronisation;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentProcessGenerator;
 import robocalc.robocert.model.robocert.Actor;
 import robocalc.robocert.model.robocert.Interaction;
 import robocalc.robocert.model.robocert.InteractionFragment;
@@ -36,26 +34,25 @@ import robocalc.robocert.model.robocert.World;
  *
  * @param csp      low-level CSP generator.
  * @param actorGen used to get data constructor names for actors.
- * @param untilGen used to work out whether we need an until-process and, if so, which fragments
+ * @param syncGen  used to work out whether we need an until-process and, if so, which fragments
  *                 will go into it.
  * @author Matt Windsor
  */
 public record LifelineContextFactory(CSPStructureGenerator csp, ActorGenerator actorGen,
-                                     UntilFragmentProcessGenerator untilGen) {
+                                     SyncChannelGenerator syncGen) {
 
   /**
    * Constructs a lifeline context factory.
    *
    * @param csp      low-level CSP generator.
    * @param actorGen used to get data constructor names for actors.
-   * @param untilGen used to work out whether we need an until-process and, if so, which fragments
-   *                 will go into it.
+   * @param syncGen  used to get names for synchronisation channels.
    */
   @Inject
   public LifelineContextFactory {
     Objects.requireNonNull(csp);
     Objects.requireNonNull(actorGen);
-    Objects.requireNonNull(untilGen);
+    Objects.requireNonNull(syncGen);
   }
 
   /**
@@ -67,16 +64,18 @@ public record LifelineContextFactory(CSPStructureGenerator csp, ActorGenerator a
   public InteractionContext context(Interaction s) {
     final var visibleActors = s.getActors().stream().filter(this::actorVisibleInSemantics).toList();
 
-    final var untils = makeSynchronisation(s, untilGen::channelName, UntilFragment.class);
-    final var pars = makeSynchronisation(s, x -> "par_" + x.getName(), ParFragment.class);
+    final var untils = makeSynchronisation(s, syncGen::untilChannelName, UntilFragment.class);
+    final var pars = makeSynchronisation(s, syncGen::parChannelName, ParFragment.class);
 
     return new InteractionContext(s, visibleActors, untils, pars);
   }
 
   private <T extends InteractionFragment> Synchronisation<T> makeSynchronisation(Interaction s,
       Function<Interaction, CharSequence> makeName, Class<T> clazz) {
-    final var channel = csp.namespaced(SpecGroupField.CHANNEL_MODULE.toString(), makeName.apply(s));
-    return new Synchronisation<>(EcoreUtil2.eAllOfType(s, clazz), channel);
+    final var channelBase = makeName.apply(s);
+    // TODO(@MattWindsor91): make carrying this in the Synchronisation redundant?
+    final var channel = syncGen.qualified(channelBase);
+    return new Synchronisation<>(EcoreUtil2.eAllOfType(s, clazz), channel, channelBase);
   }
 
   /**
