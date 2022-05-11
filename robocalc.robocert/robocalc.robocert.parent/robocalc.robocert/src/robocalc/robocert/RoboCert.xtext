@@ -345,7 +345,7 @@ BlockFragment:
 	('opt' | 'optional') {OptFragment} |
 	('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet 'until' |
 	'block' {UntilFragment} intraMessages=EmptySet |
-	'loop' {LoopFragment} ('(' bound=DiscreteBound 'times'? ')')?) (name=ID)? body=BlockInteractionOperand;
+	'loop' {LoopFragment} ('(' bound=DiscreteBound ('time' | 'times')? ')')?) (name=ID)? body=BlockInteractionOperand;
 
 DeadlineFragment:
 	'deadline' units=TimeUnits 'on' actor=[Actor];
