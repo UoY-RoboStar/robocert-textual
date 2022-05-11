@@ -7,5 +7,5 @@
       <category name="robocert.source"/>
    </feature>
    <category-def name="robocert" label="RoboCert"/>
-   <category-def name="robocert" label="RoboCert (Source)"/>
+   <category-def name="robocert.source" label="RoboCert (Source)"/>
 </site>
