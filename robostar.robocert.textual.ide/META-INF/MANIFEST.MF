@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: robostar.robocert.textual.ide
+Bundle-ManifestVersion: 2
+Bundle-Name: robostar.robocert.textual.ide
+Bundle-Vendor: RoboStar
+Bundle-Version: 0.1.0.qualifier
+Bundle-SymbolicName: robostar.robocert.textual.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: robostar.robocert.textual,
+ robostar.robocert;bundle-version="0.1.0",
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ circus.robocalc.robochart.textual;bundle-version="2.0.0",
+ circus.robocalc.robochart.textual.ide;bundle-version="2.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Export-Package: robostar.robocert.textual.ide.contentassist.antlr,
+ robostar.robocert.textual.ide.contentassist.antlr.internal,
+ robostar.robocert.textual.ide.contentassist.antlr.lexer

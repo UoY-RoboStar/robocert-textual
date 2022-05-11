@@ -35,9 +35,9 @@ assertion Bar: Example::Seq holds
 
 Packages are subject to renaming and moving at any time.
 
-- `robocalc.robocert.model` is the metamodel for the sequence diagram language.
-- `robocalc.robocert` is the textual (Xtext) language for the above metamodel.
-- Everything else is, generally, artefacts derived from `robocalc.robocert`.
+- `robostar.robocert.textual.model` is the metamodel for the sequence diagram language.
+- `robostar.robocert.textual` is the textual (Xtext) language for the above metamodel.
+- Everything else is, generally, artefacts derived from `robostar.robocert.textual`.
 
 ## Dependencies
 
@@ -59,16 +59,16 @@ know how you get on.
   checked out this project.  There are some references in the `genmodel` that
   are path-relative, and I'm not yet sure how to make them more robust.
 - The authoritative source for the metamodel is the Emfatic file:
-  `robocalc.robocert.model/model/RoboCert.emf`.  Please generate the Ecore
+  `robostar.robocert.textual.model/model/RoboCert.emf`.  Please generate the Ecore
   model from this, not the other way round.
 - There is no automation for generating Ecore from Emfatic set up yet; in
   Eclipse, you can right-click the Emfatic file in the browser and select
   `Generate Ecore Model` for now.
-- There are two MWE2 workflows: one in `robocalc.robocert.model` generates the
+- There are two MWE2 workflows: one in `robostar.robocert.textual.model` generates the
   metamodel Java files from the Ecore (_not_ the Emfatic file), and another
-  in `robocalc.robocert` generates the Xtext artefacts from the grammar.
+  in `robostar.robocert.textual` generates the Xtext artefacts from the grammar.
 - Once everything has been generated, you should be able to run
-  `robocalc.robocert` as an Eclipse plugin.
+  `robostar.robocert.textual` as an Eclipse plugin.
 - For the tests, we need Hamcrest 2.2; at time of writing, Eclipse and JUnit
   tend to ship Hamcrest 1.3.  If using Eclipse, add the Eclipse Orbit
   repository (eg [2021-12](https://download.eclipse.org/tools/orbit/downloads/2021-12/))
