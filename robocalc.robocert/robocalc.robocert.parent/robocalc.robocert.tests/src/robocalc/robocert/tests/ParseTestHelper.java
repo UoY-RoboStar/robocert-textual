@@ -21,13 +21,13 @@ import com.google.inject.Inject;
 import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.testing.util.ParseHelper;
-import robocalc.robocert.model.robocert.CertPackage;
-import robocalc.robocert.model.robocert.ExpressionValueSpecification;
-import robocalc.robocert.model.robocert.InteractionFragment;
-import robocalc.robocert.model.robocert.MessageOccurrence;
-import robocalc.robocert.model.robocert.OccurrenceFragment;
-import robocalc.robocert.model.robocert.SpecificationGroup;
-import robocalc.robocert.model.robocert.util.StreamHelper;
+import robostar.robocert.CertPackage;
+import robostar.robocert.ExpressionValueSpecification;
+import robostar.robocert.InteractionFragment;
+import robostar.robocert.MessageOccurrence;
+import robostar.robocert.OccurrenceFragment;
+import robostar.robocert.SpecificationGroup;
+import robostar.robocert.util.StreamHelper;
 
 /** 
  * Boilerplate for doing parser tests.

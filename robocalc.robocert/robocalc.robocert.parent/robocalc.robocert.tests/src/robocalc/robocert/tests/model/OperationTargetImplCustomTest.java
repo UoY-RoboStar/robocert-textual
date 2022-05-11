@@ -21,8 +21,8 @@ import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.model.robocert.OperationTarget;
-import robocalc.robocert.model.robocert.RoboCertFactory;
+import robostar.robocert.OperationTarget;
+import robostar.robocert.RoboCertFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**

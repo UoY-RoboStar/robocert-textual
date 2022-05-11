@@ -13,10 +13,10 @@
  ********************************************************************************/
 package robocalc.robocert.scoping;
 
-import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.CONST_ASSIGNMENT__CONSTANTS;
-import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.EVENT_TOPIC__EFROM;
-import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.EVENT_TOPIC__ETO;
-import static robocalc.robocert.model.robocert.RoboCertPackage.Literals.OPERATION_TOPIC__OPERATION;
+import static robostar.robocert.RoboCertPackage.Literals.CONST_ASSIGNMENT__CONSTANTS;
+import static robostar.robocert.RoboCertPackage.Literals.EVENT_TOPIC__EFROM;
+import static robostar.robocert.RoboCertPackage.Literals.EVENT_TOPIC__ETO;
+import static robostar.robocert.RoboCertPackage.Literals.OPERATION_TOPIC__OPERATION;
 
 import circus.robocalc.robochart.RoboChartPackage.Literals;
 import circus.robocalc.robochart.TypeRef;
@@ -26,9 +26,9 @@ import com.google.inject.Inject;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
-import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.EventTopic;
-import robocalc.robocert.model.robocert.OperationTopic;
+import robostar.robocert.ConstAssignment;
+import robostar.robocert.EventTopic;
+import robostar.robocert.OperationTopic;
 
 /**
  * This class contains custom scoping description.

@@ -15,8 +15,8 @@ package robocalc.robocert.generator.utils.name;
 import com.google.common.io.Files;
 import java.util.Optional;
 import org.eclipse.emf.common.util.EList;
-import robocalc.robocert.model.robocert.CertPackage;
-import robocalc.robocert.model.robocert.Group;
+import robostar.robocert.CertPackage;
+import robostar.robocert.Group;
 
 /**
  * Determines a hopefully-unambigous name for {@link Group}s.

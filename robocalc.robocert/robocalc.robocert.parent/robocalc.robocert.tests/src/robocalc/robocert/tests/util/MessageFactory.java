@@ -18,11 +18,11 @@ import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
 import circus.robocalc.robochart.TypeRef;
 import com.google.inject.Inject;
-import robocalc.robocert.model.robocert.Interaction;
-import robocalc.robocert.model.robocert.MessageSet;
-import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.SpecificationGroup;
+import robostar.robocert.Interaction;
+import robostar.robocert.MessageSet;
+import robostar.robocert.ModuleTarget;
+import robostar.robocert.RoboCertFactory;
+import robostar.robocert.SpecificationGroup;
 
 /** Provides ways of creating dummy message specifications. */
 public class MessageFactory {
@@ -31,7 +31,7 @@ public class MessageFactory {
   // TODO(@MattWindsor91): reduce overlap with model MessageFactory;
   // the idea is that that will receive non-dummy factory operations.
 
-  @Inject robocalc.robocert.model.robocert.util.MessageFactory mf;
+  @Inject robostar.robocert.util.MessageFactory mf;
   @Inject RoboChartFactory rc;
   @Inject RoboCertFactory rcert;
 

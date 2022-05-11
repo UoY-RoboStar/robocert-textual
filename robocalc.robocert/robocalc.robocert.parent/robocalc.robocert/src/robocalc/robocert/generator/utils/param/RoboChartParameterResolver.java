@@ -25,8 +25,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
-import robocalc.robocert.model.robocert.util.resolve.DefinitionResolver;
-import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
+import robostar.robocert.util.resolve.DefinitionResolver;
+import robostar.robocert.util.resolve.ModuleResolver;
 
 /**
  * Resolves parameterisations for RoboChart elements.

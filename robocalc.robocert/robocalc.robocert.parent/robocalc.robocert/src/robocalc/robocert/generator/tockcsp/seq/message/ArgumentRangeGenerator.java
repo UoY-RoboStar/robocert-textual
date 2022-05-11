@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.xtext.xbase.lib.Pair;
 import robocalc.robocert.generator.tockcsp.core.TemporaryVariableGenerator;
-import robocalc.robocert.model.robocert.MessageTopic;
-import robocalc.robocert.model.robocert.WildcardValueSpecification;
+import robostar.robocert.MessageTopic;
+import robostar.robocert.WildcardValueSpecification;
 
 /**
  * Generates CSP for ranges of arguments, which will go into a set comprehension inside the

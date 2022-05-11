@@ -18,11 +18,11 @@ import java.util.stream.Stream;
 import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.LifelineOccurrence;
-import robocalc.robocert.model.robocert.MessageOccurrence;
-import robocalc.robocert.model.robocert.Occurrence;
-import robocalc.robocert.model.robocert.OccurrenceFragment;
+import robostar.robocert.Actor;
+import robostar.robocert.LifelineOccurrence;
+import robostar.robocert.MessageOccurrence;
+import robostar.robocert.Occurrence;
+import robostar.robocert.OccurrenceFragment;
 
 /**
  * Generates CSP-M for action steps.

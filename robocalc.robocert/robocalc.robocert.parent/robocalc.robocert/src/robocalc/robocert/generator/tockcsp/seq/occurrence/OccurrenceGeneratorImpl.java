@@ -19,10 +19,10 @@ import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
-import robocalc.robocert.model.robocert.DeadlockOccurrence;
-import robocalc.robocert.model.robocert.MessageOccurrence;
-import robocalc.robocert.model.robocert.Occurrence;
-import robocalc.robocert.model.robocert.WaitOccurrence;
+import robostar.robocert.DeadlockOccurrence;
+import robostar.robocert.MessageOccurrence;
+import robostar.robocert.Occurrence;
+import robostar.robocert.WaitOccurrence;
 
 /**
  * Top-level CSP generator for sequence actions.

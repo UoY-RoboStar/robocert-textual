@@ -22,12 +22,12 @@ import java.util.Optional;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.utils.param.Parameter;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
-import robocalc.robocert.model.robocert.ComponentTarget;
-import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.InControllerTarget;
-import robocalc.robocert.model.robocert.InModuleTarget;
-import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.util.InstantiationHelper;
+import robostar.robocert.ComponentTarget;
+import robostar.robocert.ConstAssignment;
+import robostar.robocert.InControllerTarget;
+import robostar.robocert.InModuleTarget;
+import robostar.robocert.Target;
+import robostar.robocert.util.InstantiationHelper;
 
 /**
  * Generates CSP-M for target definitions and parameterisations.

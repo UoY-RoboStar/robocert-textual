@@ -14,15 +14,15 @@
 package robocalc.robocert.generator.utils;
 
 import java.util.stream.Stream;
-import robocalc.robocert.model.robocert.BlockFragment;
-import robocalc.robocert.model.robocert.BranchFragment;
-import robocalc.robocert.model.robocert.InteractionOperand;
-import robocalc.robocert.model.robocert.MessageOccurrence;
-import robocalc.robocert.model.robocert.InteractionFragment;
-import robocalc.robocert.model.robocert.Message;
-import robocalc.robocert.model.robocert.OccurrenceFragment;
-import robocalc.robocert.model.robocert.Occurrence;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.BlockFragment;
+import robostar.robocert.BranchFragment;
+import robostar.robocert.InteractionOperand;
+import robostar.robocert.MessageOccurrence;
+import robostar.robocert.InteractionFragment;
+import robostar.robocert.Message;
+import robostar.robocert.OccurrenceFragment;
+import robostar.robocert.Occurrence;
+import robostar.robocert.UntilFragment;
 
 /**
  * Handles the construction of initial message sets for until-fragments.

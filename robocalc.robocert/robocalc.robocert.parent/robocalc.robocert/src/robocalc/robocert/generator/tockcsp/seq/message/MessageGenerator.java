@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 import org.eclipse.xtext.xbase.lib.Pair;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.ArgumentGenerator;
-import robocalc.robocert.model.robocert.Message;
-import robocalc.robocert.model.robocert.WildcardValueSpecification;
+import robostar.robocert.Message;
+import robostar.robocert.WildcardValueSpecification;
 
 /**
  * Generates CSP for various aspects of message specs.

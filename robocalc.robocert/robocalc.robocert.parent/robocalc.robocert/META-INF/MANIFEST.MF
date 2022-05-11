@@ -7,7 +7,7 @@ Bundle-Vendor: RoboStar
 Bundle-Version: 0.1.0.qualifier
 Bundle-SymbolicName: robocalc.robocert; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: robocalc.robocert.model,
+Require-Bundle: robostar.robocert,
  org.eclipse.xtext,
  org.eclipse.xtext.xbase,
  org.eclipse.core.runtime;bundle-version="3.15.200",

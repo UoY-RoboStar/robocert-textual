@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.EventTopic;
-import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.OperationTopic;
-import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.util.ActorContextFinder;
+import robostar.robocert.Actor;
+import robostar.robocert.EventTopic;
+import robostar.robocert.ModuleTarget;
+import robostar.robocert.OperationTopic;
+import robostar.robocert.World;
+import robostar.robocert.util.ActorContextFinder;
 
 /**
  * Scoping logic for message topics.

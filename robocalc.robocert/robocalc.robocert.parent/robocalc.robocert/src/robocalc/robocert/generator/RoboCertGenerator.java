@@ -14,7 +14,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.CertPackageGenerator;
 import robocalc.robocert.generator.utils.name.GroupNamer;
-import robocalc.robocert.model.robocert.CertPackage;
+import robostar.robocert.CertPackage;
 
 /**
  * Generates code from your model files on save.

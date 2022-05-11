@@ -17,9 +17,9 @@ import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 
-import robocalc.robocert.model.robocert.CollectionTarget;
-import robocalc.robocert.model.robocert.ComponentActor;
-import robocalc.robocert.model.robocert.RoboCertPackage;
+import robostar.robocert.CollectionTarget;
+import robostar.robocert.ComponentActor;
+import robostar.robocert.RoboCertPackage;
 
 /**
  * Validates aspects of actors.

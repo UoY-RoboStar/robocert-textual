@@ -18,8 +18,8 @@ import robocalc.robocert.generator.intf.seq.ContextualGenerator;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.seq.InteractionOperandGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.BlockFragmentGeneratorImpl;
-import robocalc.robocert.model.robocert.InteractionOperand;
-import robocalc.robocert.model.robocert.RoboCertFactory;
+import robostar.robocert.InteractionOperand;
+import robostar.robocert.RoboCertFactory;
 import robocalc.robocert.generator.intf.seq.OccurrenceGenerator;
 import robocalc.robocert.generator.tockcsp.seq.occurrence.OccurrenceGeneratorImpl;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
@@ -28,9 +28,9 @@ import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import robocalc.robocert.generator.tockcsp.seq.SubsequenceGeneratorImpl;
 import robocalc.robocert.generator.tockcsp.seq.fragment.InteractionFragmentGeneratorImpl;
-import robocalc.robocert.model.robocert.impl.RoboCertFactoryImpl;
-import robocalc.robocert.model.robocert.util.resolve.EventResolver;
-import robocalc.robocert.model.robocert.util.resolve.EventResolverImpl;
+import robostar.robocert.impl.RoboCertFactoryImpl;
+import robostar.robocert.util.resolve.EventResolver;
+import robostar.robocert.util.resolve.EventResolverImpl;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension

@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.resource.Resource;
 import robocalc.robocert.generator.utils.PackageFinder;
-import robocalc.robocert.model.robocert.CertPackage;
-import robocalc.robocert.model.robocert.SpecificationGroup;
-import robocalc.robocert.model.robocert.util.StreamHelper;
+import robostar.robocert.CertPackage;
+import robostar.robocert.SpecificationGroup;
+import robostar.robocert.util.StreamHelper;
 
 /**
  * A generator that expands out imports for a top-level resource.

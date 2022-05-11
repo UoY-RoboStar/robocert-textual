@@ -19,8 +19,8 @@ import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageSetGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
 import robocalc.robocert.generator.utils.InitialSetBuilder;
-import robocalc.robocert.model.robocert.InteractionOperand;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.InteractionOperand;
+import robostar.robocert.UntilFragment;
 
 /**
  * Generates CSP-M for the header part of {@code UntilFragment}s.

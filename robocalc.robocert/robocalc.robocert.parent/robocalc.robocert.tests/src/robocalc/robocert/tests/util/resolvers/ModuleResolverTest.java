@@ -21,7 +21,7 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
+import robostar.robocert.util.resolve.ModuleResolver;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 import static org.hamcrest.MatcherAssert.assertThat;

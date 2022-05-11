@@ -19,7 +19,7 @@ import robocalc.robocert.generator.tockcsp.core.group.SpecificationGroupElementF
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPRefinement;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.TickTockContextGenerator;
-import robocalc.robocert.model.robocert.SequenceProperty;
+import robostar.robocert.SequenceProperty;
 
 /**
  * Generates CSP-M for sequence properties.

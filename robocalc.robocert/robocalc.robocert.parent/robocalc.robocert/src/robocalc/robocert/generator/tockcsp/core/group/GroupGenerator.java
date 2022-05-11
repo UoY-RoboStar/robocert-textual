@@ -19,7 +19,7 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.name.GroupNamer;
-import robocalc.robocert.model.robocert.Group;
+import robostar.robocert.Group;
 
 /**
  * Abstract base for things that generate groups.

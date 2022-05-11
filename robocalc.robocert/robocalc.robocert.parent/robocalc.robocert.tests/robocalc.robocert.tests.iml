@@ -28,5 +28,6 @@
     <orderEntry type="library" scope="TEST" name="hamcrest" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202105071032" level="project" />
     <orderEntry type="library" scope="TEST" name="circus.robocalc.robochart.generator.csp_3.0.0.202110151017" level="project" />
+    <orderEntry type="library" name="robostar.robocert_0.1.0.202205111239" level="project" />
   </component>
 </module>

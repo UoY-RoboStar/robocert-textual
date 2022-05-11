@@ -13,7 +13,7 @@
 package robocalc.robocert.generator.intf.seq;
 
 import robocalc.robocert.generator.intf.seq.context.LifelineContext;
-import robocalc.robocert.model.robocert.InteractionFragment;
+import robostar.robocert.InteractionFragment;
 
 /**
  * A top-level generator for interaction fragments.

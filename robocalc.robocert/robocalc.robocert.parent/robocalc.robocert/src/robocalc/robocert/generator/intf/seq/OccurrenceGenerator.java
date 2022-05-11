@@ -12,7 +12,7 @@
  ********************************************************************************/
 package robocalc.robocert.generator.intf.seq;
 
-import robocalc.robocert.model.robocert.Occurrence;
+import robostar.robocert.Occurrence;
 
 /**
  * A generator for occurrences.

@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.generator.tockcsp.core.tgt.ComponentSynchroniser.Result;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.util.resolve.DefinitionResolver;
+import robostar.robocert.util.resolve.DefinitionResolver;
 
 /**
  * Generates CSP-M for the bodies of collection targets.

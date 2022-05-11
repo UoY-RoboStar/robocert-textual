@@ -21,9 +21,9 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.core.CorePropertyGenerator;
-import robocalc.robocert.model.robocert.CorePropertyType;
-import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.RoboCertFactory;
+import robostar.robocert.CorePropertyType;
+import robostar.robocert.ModuleTarget;
+import robostar.robocert.RoboCertFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**

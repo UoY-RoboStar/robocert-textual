@@ -20,7 +20,7 @@ import robocalc.robocert.generator.intf.seq.context.UntilContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.seq.SyncChannelGenerator;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.UntilFragment;
 
 /**
  * Generates the various aspects of an {@link UntilFragment} construct within an interaction.

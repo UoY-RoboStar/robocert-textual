@@ -21,11 +21,11 @@ import robocalc.robocert.generator.intf.seq.InteractionFragmentGenerator;
 import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.memory.LoadStoreGenerator;
-import robocalc.robocert.model.robocert.BlockFragment;
-import robocalc.robocert.model.robocert.BranchFragment;
-import robocalc.robocert.model.robocert.InteractionFragment;
-import robocalc.robocert.model.robocert.LoopFragment;
-import robocalc.robocert.model.robocert.OccurrenceFragment;
+import robostar.robocert.BlockFragment;
+import robostar.robocert.BranchFragment;
+import robostar.robocert.InteractionFragment;
+import robostar.robocert.LoopFragment;
+import robostar.robocert.OccurrenceFragment;
 
 /**
  * Generator for interaction fragments.

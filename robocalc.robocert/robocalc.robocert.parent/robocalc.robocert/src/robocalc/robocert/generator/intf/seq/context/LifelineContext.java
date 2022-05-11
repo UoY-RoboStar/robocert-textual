@@ -14,8 +14,8 @@
 package robocalc.robocert.generator.intf.seq.context;
 
 import java.util.stream.Stream;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.Actor;
+import robostar.robocert.UntilFragment;
 
 /**
  * Context related to the current lifeline being generated.

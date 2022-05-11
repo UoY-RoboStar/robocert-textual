@@ -18,12 +18,12 @@ import java.util.function.Consumer;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.MessageSetOptimiser;
-import robocalc.robocert.model.robocert.BinaryMessageSet;
-import robocalc.robocert.model.robocert.BinarySetOperator;
-import robocalc.robocert.model.robocert.ExtensionalMessageSet;
-import robocalc.robocert.model.robocert.MessageSet;
-import robocalc.robocert.model.robocert.RefMessageSet;
-import robocalc.robocert.model.robocert.UniverseMessageSet;
+import robostar.robocert.BinaryMessageSet;
+import robostar.robocert.BinarySetOperator;
+import robostar.robocert.ExtensionalMessageSet;
+import robostar.robocert.MessageSet;
+import robostar.robocert.RefMessageSet;
+import robostar.robocert.UniverseMessageSet;
 
 /**
  * CSP generator for message sets.

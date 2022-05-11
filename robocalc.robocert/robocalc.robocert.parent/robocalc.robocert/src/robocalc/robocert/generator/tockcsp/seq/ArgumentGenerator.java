@@ -13,11 +13,11 @@
 package robocalc.robocert.generator.tockcsp.seq;
 
 import com.google.inject.Inject;
-import robocalc.robocert.model.robocert.ExpressionValueSpecification;
-import robocalc.robocert.model.robocert.ValueSpecification;
+import robostar.robocert.ExpressionValueSpecification;
+import robostar.robocert.ValueSpecification;
 import robocalc.robocert.generator.tockcsp.core.TemporaryVariableGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
-import robocalc.robocert.model.robocert.WildcardValueSpecification;
+import robostar.robocert.WildcardValueSpecification;
 
 /**
  * Generates fragments of CSP prefixes and event sets relating to value specifications.

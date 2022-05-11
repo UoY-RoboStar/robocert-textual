@@ -17,9 +17,9 @@ import com.google.inject.Inject;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-import robocalc.robocert.model.robocert.DeadlineFragment;
-import robocalc.robocert.model.robocert.RoboCertPackage.Literals;
-import robocalc.robocert.model.robocert.World;
+import robostar.robocert.DeadlineFragment;
+import robostar.robocert.RoboCertPackage.Literals;
+import robostar.robocert.World;
 
 /**
  * Validates the well-formedness conditions on {@link DeadlineFragment} elements.

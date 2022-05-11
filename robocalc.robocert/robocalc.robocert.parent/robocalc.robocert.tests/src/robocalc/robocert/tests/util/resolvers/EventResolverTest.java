@@ -27,15 +27,15 @@ import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.util.resolve.EventResolver;
-import robocalc.robocert.model.robocert.util.resolve.EventResolverImpl;
-import robocalc.robocert.model.robocert.util.MessageFactory;
-import robocalc.robocert.model.robocert.util.TargetFactory;
+import robostar.robocert.Actor;
+import robostar.robocert.RoboCertFactory;
+import robostar.robocert.Target;
+import robostar.robocert.TargetActor;
+import robostar.robocert.World;
+import robostar.robocert.util.resolve.EventResolver;
+import robostar.robocert.util.resolve.EventResolverImpl;
+import robostar.robocert.util.MessageFactory;
+import robostar.robocert.util.TargetFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**

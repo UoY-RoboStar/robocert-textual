@@ -5,9 +5,9 @@ package robocalc.robocert.formatting2;
 
 import circus.robocalc.robochart.textual.formatting2.RoboChartFormatter;
 import org.eclipse.xtext.formatting2.IFormattableDocument;
-import robocalc.robocert.model.robocert.CertPackage;
-import robocalc.robocert.model.robocert.Group;
-import robocalc.robocert.model.robocert.SpecificationGroup;
+import robostar.robocert.CertPackage;
+import robostar.robocert.Group;
+import robostar.robocert.SpecificationGroup;
 
 @SuppressWarnings("unused")
 public class RoboCertFormatter extends RoboChartFormatter {

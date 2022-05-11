@@ -15,12 +15,12 @@ package robocalc.robocert.generator.utils;
 import com.google.inject.Inject;
 import java.util.Objects;
 import org.eclipse.xtext.EcoreUtil2;
-import robocalc.robocert.model.robocert.BinaryMessageSet;
-import robocalc.robocert.model.robocert.BinarySetOperator;
-import robocalc.robocert.model.robocert.ExtensionalMessageSet;
-import robocalc.robocert.model.robocert.MessageSet;
-import robocalc.robocert.model.robocert.RefMessageSet;
-import robocalc.robocert.model.robocert.util.SetFactory;
+import robostar.robocert.BinaryMessageSet;
+import robostar.robocert.BinarySetOperator;
+import robostar.robocert.ExtensionalMessageSet;
+import robostar.robocert.MessageSet;
+import robostar.robocert.RefMessageSet;
+import robostar.robocert.util.SetFactory;
 
 /**
  * Functionality for optimising message sets.

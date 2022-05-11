@@ -15,8 +15,8 @@ package robocalc.robocert.generator.intf.seq.context;
 
 import java.util.Objects;
 import java.util.stream.Stream;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.Actor;
+import robostar.robocert.UntilFragment;
 
 /**
  * A lifeline context that represents the situation while generating the body of an until-process.

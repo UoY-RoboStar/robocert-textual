@@ -19,11 +19,11 @@ import java.util.stream.Collector;
 import robocalc.robocert.generator.intf.seq.ContextualGenerator;
 import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.AltFragment;
-import robocalc.robocert.model.robocert.BranchFragment;
-import robocalc.robocert.model.robocert.InteractionOperand;
-import robocalc.robocert.model.robocert.ParFragment;
-import robocalc.robocert.model.robocert.XAltFragment;
+import robostar.robocert.AltFragment;
+import robostar.robocert.BranchFragment;
+import robostar.robocert.InteractionOperand;
+import robostar.robocert.ParFragment;
+import robostar.robocert.XAltFragment;
 
 /**
  * Generator for branch fragments.

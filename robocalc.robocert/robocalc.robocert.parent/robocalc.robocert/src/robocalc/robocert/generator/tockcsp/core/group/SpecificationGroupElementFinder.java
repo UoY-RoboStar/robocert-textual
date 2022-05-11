@@ -18,7 +18,7 @@ import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.name.GroupNamer;
-import robocalc.robocert.model.robocert.SpecificationGroup;
+import robostar.robocert.SpecificationGroup;
 
 /**
  * Abstracts over the act of getting CSP names for specification group components.

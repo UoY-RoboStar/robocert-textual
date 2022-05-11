@@ -23,7 +23,7 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
-import robocalc.robocert.model.robocert.util.ExpressionFactory;
+import robostar.robocert.util.ExpressionFactory;
 import robocalc.robocert.tests.util.DummyVariableFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 

@@ -24,8 +24,8 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-import robocalc.robocert.model.robocert.DiscreteBound;
-import robocalc.robocert.model.robocert.RoboCertPackage.Literals;
+import robostar.robocert.DiscreteBound;
+import robostar.robocert.RoboCertPackage.Literals;
 
 /**
  * Validates the well-formedness conditions on {@link DiscreteBound} elements.

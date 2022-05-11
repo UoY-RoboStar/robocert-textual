@@ -19,11 +19,11 @@ import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.stream.Stream;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ComponentActor;
-import robocalc.robocert.model.robocert.EventTopic;
-import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.util.resolve.EventResolver;
+import robostar.robocert.Actor;
+import robostar.robocert.ComponentActor;
+import robostar.robocert.EventTopic;
+import robostar.robocert.World;
+import robostar.robocert.util.resolve.EventResolver;
 
 public record DummyEventResolver(RoboChartFactory chart) implements EventResolver {
   @Inject

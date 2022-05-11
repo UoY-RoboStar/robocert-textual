@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.Interaction;
+import robostar.robocert.Interaction;
 
 /**
  * Generates memory modules for sequences.

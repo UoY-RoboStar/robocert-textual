@@ -22,11 +22,11 @@ import robocalc.robocert.generator.tockcsp.core.group.AssertionGroupGenerator;
 import robocalc.robocert.generator.tockcsp.core.ImportGenerator;
 import robocalc.robocert.generator.tockcsp.core.group.SpecificationGroupGenerator;
 import robocalc.robocert.generator.utils.name.GroupNamer;
-import robocalc.robocert.model.robocert.AssertionGroup;
-import robocalc.robocert.model.robocert.CSPGroup;
-import robocalc.robocert.model.robocert.CertPackage;
-import robocalc.robocert.model.robocert.Group;
-import robocalc.robocert.model.robocert.SpecificationGroup;
+import robostar.robocert.AssertionGroup;
+import robostar.robocert.CSPGroup;
+import robostar.robocert.CertPackage;
+import robostar.robocert.Group;
+import robostar.robocert.SpecificationGroup;
 
 /**
  * Generates CSP-M for {@link CertPackage}s.

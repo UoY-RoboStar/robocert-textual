@@ -24,9 +24,9 @@ import java.util.stream.Stream;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.param.Parameter;
-import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.util.InstantiationHelper;
-import robocalc.robocert.model.robocert.util.StreamHelper;
+import robostar.robocert.ConstAssignment;
+import robostar.robocert.util.InstantiationHelper;
+import robostar.robocert.util.StreamHelper;
 
 /**
  * Generates overrides of constants from RoboChart and RoboCert instantiations.

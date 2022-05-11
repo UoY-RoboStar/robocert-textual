@@ -14,8 +14,8 @@
 package robocalc.robocert.generator.intf.seq.fragment;
 
 import robocalc.robocert.generator.intf.seq.context.LifelineContext;
-import robocalc.robocert.model.robocert.BlockFragment;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.BlockFragment;
+import robostar.robocert.UntilFragment;
 
 /**
  * Top-level generator for {@link BlockFragment}s.

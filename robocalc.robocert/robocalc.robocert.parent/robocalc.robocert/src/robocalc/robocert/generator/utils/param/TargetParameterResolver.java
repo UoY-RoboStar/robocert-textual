@@ -20,15 +20,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import robocalc.robocert.generator.utils.VariableHelper;
-import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.ControllerTarget;
-import robocalc.robocert.model.robocert.InControllerTarget;
-import robocalc.robocert.model.robocert.InModuleTarget;
-import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.OperationTarget;
-import robocalc.robocert.model.robocert.StateMachineTarget;
-import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.util.InstantiationHelper;
+import robostar.robocert.ConstAssignment;
+import robostar.robocert.ControllerTarget;
+import robostar.robocert.InControllerTarget;
+import robostar.robocert.InModuleTarget;
+import robostar.robocert.ModuleTarget;
+import robostar.robocert.OperationTarget;
+import robostar.robocert.StateMachineTarget;
+import robostar.robocert.Target;
+import robostar.robocert.util.InstantiationHelper;
 
 /**
  * Deduces the correct parameterisation for {@link Target}s, and handles

@@ -20,7 +20,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.DiscreteBound;
+import robostar.robocert.DiscreteBound;
 
 /**
  * Generates CSP-M for a discrete bound set.

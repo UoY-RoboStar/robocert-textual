@@ -28,10 +28,10 @@ import robocalc.robocert.generator.intf.seq.context.ActorContext;
 import robocalc.robocert.generator.intf.seq.context.InteractionContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.intf.seq.context.Synchronisation;
-import robocalc.robocert.model.robocert.InteractionFragment;
-import robocalc.robocert.model.robocert.ParFragment;
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.InteractionFragment;
+import robostar.robocert.ParFragment;
+import robostar.robocert.RoboCertFactory;
+import robostar.robocert.UntilFragment;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**

@@ -15,13 +15,13 @@ package robocalc.robocert.validation;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ComponentActor;
-import robocalc.robocert.model.robocert.ComponentTarget;
-import robocalc.robocert.model.robocert.RoboCertPackage;
-import robocalc.robocert.model.robocert.SpecificationGroup;
-import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.World;
+import robostar.robocert.Actor;
+import robostar.robocert.ComponentActor;
+import robostar.robocert.ComponentTarget;
+import robostar.robocert.RoboCertPackage;
+import robostar.robocert.SpecificationGroup;
+import robostar.robocert.TargetActor;
+import robostar.robocert.World;
 
 /**
  * Validates aspects of sequence groups.

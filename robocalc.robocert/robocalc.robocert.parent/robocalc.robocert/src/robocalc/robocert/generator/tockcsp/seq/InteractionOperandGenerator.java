@@ -24,13 +24,13 @@ import robocalc.robocert.generator.intf.seq.ContextualGenerator;
 import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.intf.seq.SubsequenceGenerator;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
-import robocalc.robocert.model.robocert.BranchFragment;
-import robocalc.robocert.model.robocert.ElseGuard;
-import robocalc.robocert.model.robocert.EmptyGuard;
-import robocalc.robocert.model.robocert.ExprGuard;
-import robocalc.robocert.model.robocert.Guard;
-import robocalc.robocert.model.robocert.InteractionOperand;
-import robocalc.robocert.model.robocert.util.StreamHelper;
+import robostar.robocert.BranchFragment;
+import robostar.robocert.ElseGuard;
+import robostar.robocert.EmptyGuard;
+import robostar.robocert.ExprGuard;
+import robostar.robocert.Guard;
+import robostar.robocert.InteractionOperand;
+import robostar.robocert.util.StreamHelper;
 
 /**
  * Generates CSP-M for interaction operands and guards.

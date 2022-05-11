@@ -16,7 +16,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.intf.core.SpecGroupField;
 import robocalc.robocert.generator.tockcsp.core.group.SpecificationGroupElementFinder;
-import robocalc.robocert.model.robocert.SpecificationGroup;
+import robostar.robocert.SpecificationGroup;
 
 /**
  * Generates the appropriate tick-tock 'context' (minimal covering set of all events in a process)

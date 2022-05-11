@@ -18,12 +18,12 @@ import com.google.inject.Inject;
 
 import robocalc.robocert.generator.tockcsp.core.CorePropertyGenerator;
 import robocalc.robocert.generator.tockcsp.seq.PropertyGenerator;
-import robocalc.robocert.model.robocert.Assertion;
-import robocalc.robocert.model.robocert.AssertionGroup;
-import robocalc.robocert.model.robocert.CSPProperty;
-import robocalc.robocert.model.robocert.CoreProperty;
-import robocalc.robocert.model.robocert.Property;
-import robocalc.robocert.model.robocert.SequenceProperty;
+import robostar.robocert.Assertion;
+import robostar.robocert.AssertionGroup;
+import robostar.robocert.CSPProperty;
+import robostar.robocert.CoreProperty;
+import robostar.robocert.Property;
+import robostar.robocert.SequenceProperty;
 
 /**
  * Generates CSP for assertion groups.

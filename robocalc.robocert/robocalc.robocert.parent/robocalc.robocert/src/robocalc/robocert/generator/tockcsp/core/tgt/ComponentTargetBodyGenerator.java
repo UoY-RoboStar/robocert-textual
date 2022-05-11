@@ -18,15 +18,15 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
-import robocalc.robocert.model.robocert.ComponentTarget;
-import robocalc.robocert.model.robocert.ControllerTarget;
-import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.OperationTarget;
-import robocalc.robocert.model.robocert.StateMachineTarget;
-import robocalc.robocert.model.robocert.util.StreamHelper;
-import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
-import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
-import robocalc.robocert.model.robocert.util.resolve.StateMachineResolver;
+import robostar.robocert.ComponentTarget;
+import robostar.robocert.ControllerTarget;
+import robostar.robocert.ModuleTarget;
+import robostar.robocert.OperationTarget;
+import robostar.robocert.StateMachineTarget;
+import robostar.robocert.util.StreamHelper;
+import robostar.robocert.util.resolve.ControllerResolver;
+import robostar.robocert.util.resolve.ModuleResolver;
+import robostar.robocert.util.resolve.StateMachineResolver;
 
 /**
  * Handles generation of bodies of component targets (ModuleTarget, ControllerTarget, etc).

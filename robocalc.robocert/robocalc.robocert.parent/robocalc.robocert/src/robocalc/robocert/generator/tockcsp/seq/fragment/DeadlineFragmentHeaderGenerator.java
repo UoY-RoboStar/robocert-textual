@@ -17,7 +17,7 @@ import java.util.Objects;
 import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.tockcsp.core.ExpressionGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.DeadlineFragment;
+import robostar.robocert.DeadlineFragment;
 
 /**
  * Generates CSP-M for the header part of {@link DeadlineFragment}s.

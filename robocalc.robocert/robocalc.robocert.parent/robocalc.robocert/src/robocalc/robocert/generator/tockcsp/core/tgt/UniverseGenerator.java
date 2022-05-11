@@ -19,9 +19,9 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.CollectionTarget;
-import robocalc.robocert.model.robocert.ComponentTarget;
-import robocalc.robocert.model.robocert.Target;
+import robostar.robocert.CollectionTarget;
+import robostar.robocert.ComponentTarget;
+import robostar.robocert.Target;
 
 /**
  * Generates references to the universe sets for targets.

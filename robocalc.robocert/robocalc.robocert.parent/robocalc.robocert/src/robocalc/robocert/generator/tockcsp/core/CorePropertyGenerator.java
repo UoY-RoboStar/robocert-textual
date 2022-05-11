@@ -18,8 +18,8 @@ import java.util.Objects;
 import robocalc.robocert.generator.intf.core.SpecGroupParametricField;
 import robocalc.robocert.generator.tockcsp.core.group.SpecificationGroupElementFinder;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.CoreProperty;
-import robocalc.robocert.model.robocert.CorePropertyType;
+import robostar.robocert.CoreProperty;
+import robostar.robocert.CorePropertyType;
 
 /**
  * Generates unary 'core assertions': high level assertions such as divergence and deadlock

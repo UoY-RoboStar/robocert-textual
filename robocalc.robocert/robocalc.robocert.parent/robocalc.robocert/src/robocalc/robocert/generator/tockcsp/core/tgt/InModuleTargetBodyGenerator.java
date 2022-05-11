@@ -27,7 +27,7 @@ import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboticPlatform;
 import circus.robocalc.robochart.RoboticPlatformDef;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedModuleGenerator;
-import robocalc.robocert.model.robocert.util.resolve.ModuleResolver;
+import robostar.robocert.util.resolve.ModuleResolver;
 
 /**
  * Generates bodies of in-module targets.

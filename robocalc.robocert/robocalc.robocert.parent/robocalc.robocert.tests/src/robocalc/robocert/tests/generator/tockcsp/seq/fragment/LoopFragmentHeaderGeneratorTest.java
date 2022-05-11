@@ -25,9 +25,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.seq.fragment.LoopFragmentHeaderGenerator;
-import robocalc.robocert.model.robocert.LoopFragment;
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.util.ExpressionFactory;
+import robostar.robocert.LoopFragment;
+import robostar.robocert.RoboCertFactory;
+import robostar.robocert.util.ExpressionFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**

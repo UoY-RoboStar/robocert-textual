@@ -20,5 +20,6 @@
     <orderEntry type="library" name="eclipse.platform.core.runtime" level="project" />
     <orderEntry type="library" name="google.inject.guice" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart.assertions_2.0.0.202112021113" level="project" />
+    <orderEntry type="library" name="robostar.robocert_0.1.0.202205111239" level="project" />
   </component>
 </module>

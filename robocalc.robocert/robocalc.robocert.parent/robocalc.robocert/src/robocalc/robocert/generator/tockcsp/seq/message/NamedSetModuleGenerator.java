@@ -18,7 +18,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.Optional;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.SpecificationGroup;
+import robostar.robocert.SpecificationGroup;
 
 /**
  * Generates the named sets module for a specification group.

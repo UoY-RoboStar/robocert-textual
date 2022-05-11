@@ -7,7 +7,7 @@ Bundle-Version: 0.1.0.qualifier
 Bundle-SymbolicName: robocalc.robocert.ui.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: robocalc.robocert.ui;bundle-version="0.1.0",
- robocalc.robocert.model;bundle-version="0.1.0",
+ robostar.robocert;bundle-version="0.1.0",
  org.junit.jupiter.api;bundle-version="[5.1.0,6.0.0)",
  org.eclipse.xtext.testing,
  org.eclipse.xtext.xbase.testing,

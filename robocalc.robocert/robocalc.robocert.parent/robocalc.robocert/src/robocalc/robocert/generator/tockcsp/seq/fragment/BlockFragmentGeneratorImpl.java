@@ -20,12 +20,12 @@ import robocalc.robocert.generator.intf.seq.context.LifelineContext;
 import robocalc.robocert.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentHeaderGenerator;
-import robocalc.robocert.model.robocert.BlockFragment;
-import robocalc.robocert.model.robocert.DeadlineFragment;
-import robocalc.robocert.model.robocert.InteractionOperand;
-import robocalc.robocert.model.robocert.LoopFragment;
-import robocalc.robocert.model.robocert.OptFragment;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.BlockFragment;
+import robostar.robocert.DeadlineFragment;
+import robostar.robocert.InteractionOperand;
+import robostar.robocert.LoopFragment;
+import robostar.robocert.OptFragment;
+import robostar.robocert.UntilFragment;
 
 /**
  * Implementation of {@link BlockFragmentGenerator}.

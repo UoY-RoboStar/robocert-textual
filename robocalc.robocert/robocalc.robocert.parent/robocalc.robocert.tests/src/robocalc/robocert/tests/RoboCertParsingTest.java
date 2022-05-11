@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @InjectWith(RoboCertInjectorProvider.class)
 class RoboCertParsingTest {
 	@Inject
-	ParseHelper<robocalc.robocert.model.robocert.CertPackage> parseHelper;
+	ParseHelper<robostar.robocert.CertPackage> parseHelper;
 	
 	// TODO(@MattWindsor91): find out how on earth to use the validation helper here;
 	// the problem is that it's impossible to construct a valid and meaningful

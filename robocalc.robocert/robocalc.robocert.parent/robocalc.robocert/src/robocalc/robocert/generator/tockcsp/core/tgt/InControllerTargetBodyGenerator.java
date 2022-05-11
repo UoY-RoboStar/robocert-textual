@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import java.util.List;
 
 import circus.robocalc.robochart.ControllerDef;
-import robocalc.robocert.model.robocert.util.resolve.ControllerResolver;
+import robostar.robocert.util.resolve.ControllerResolver;
 
 /**
  * Generates bodies of in-controller targets.

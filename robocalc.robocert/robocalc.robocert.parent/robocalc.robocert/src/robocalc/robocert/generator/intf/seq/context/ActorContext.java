@@ -14,8 +14,8 @@ package robocalc.robocert.generator.intf.seq.context;
 
 import org.eclipse.xtext.EcoreUtil2;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.Actor;
+import robostar.robocert.UntilFragment;
 
 /**
  * A lifeline context tied to a particular actor.

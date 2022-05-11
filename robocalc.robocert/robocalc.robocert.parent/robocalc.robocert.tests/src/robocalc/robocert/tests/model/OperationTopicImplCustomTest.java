@@ -33,9 +33,9 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robocalc.robocert.model.robocert.OperationTopic;
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.util.TypeFactory;
+import robostar.robocert.OperationTopic;
+import robostar.robocert.RoboCertFactory;
+import robostar.robocert.util.TypeFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**

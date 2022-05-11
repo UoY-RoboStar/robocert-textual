@@ -14,8 +14,8 @@
 package robocalc.robocert.generator.tockcsp.ll.csp;
 
 import java.util.Objects;
-import robocalc.robocert.model.robocert.SemanticModel;
-import robocalc.robocert.model.robocert.SpecificationGroup;
+import robostar.robocert.SemanticModel;
+import robostar.robocert.SpecificationGroup;
 
 /**
  * Holds information about a CSP refinement.

@@ -18,17 +18,17 @@ import java.util.Objects;
 import javax.inject.Inject;
 import org.eclipse.emf.ecore.EObject;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.ComponentActor;
-import robocalc.robocert.model.robocert.EventTopic;
-import robocalc.robocert.model.robocert.MessageTopic;
-import robocalc.robocert.model.robocert.ModuleTarget;
-import robocalc.robocert.model.robocert.OperationTopic;
-import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.util.ActorContextFinder;
-import robocalc.robocert.model.robocert.util.ActorNodeResolver;
-import robocalc.robocert.model.robocert.util.resolve.EventResolver;
+import robostar.robocert.Actor;
+import robostar.robocert.ComponentActor;
+import robostar.robocert.EventTopic;
+import robostar.robocert.MessageTopic;
+import robostar.robocert.ModuleTarget;
+import robostar.robocert.OperationTopic;
+import robostar.robocert.TargetActor;
+import robostar.robocert.World;
+import robostar.robocert.util.ActorContextFinder;
+import robostar.robocert.util.ActorNodeResolver;
+import robostar.robocert.util.resolve.EventResolver;
 
 /**
  * Generates CSP-M for message channels using message topics.

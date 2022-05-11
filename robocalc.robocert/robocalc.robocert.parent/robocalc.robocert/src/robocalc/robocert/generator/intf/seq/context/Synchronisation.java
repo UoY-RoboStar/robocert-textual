@@ -16,7 +16,7 @@ package robocalc.robocert.generator.intf.seq.context;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import robocalc.robocert.model.robocert.InteractionFragment;
+import robostar.robocert.InteractionFragment;
 
 /**
  * Records information about a list of fragments in an interaction that must be synchronised with a

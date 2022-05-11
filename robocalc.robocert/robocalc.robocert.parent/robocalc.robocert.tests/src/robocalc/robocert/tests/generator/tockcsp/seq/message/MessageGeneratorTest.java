@@ -26,14 +26,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
-import robocalc.robocert.model.robocert.Message;
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.TargetActor;
-import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.util.EventFactory;
-import robocalc.robocert.model.robocert.util.MessageFactory;
-import robocalc.robocert.model.robocert.util.TargetFactory;
-import robocalc.robocert.model.robocert.util.ValueSpecificationFactory;
+import robostar.robocert.Message;
+import robostar.robocert.RoboCertFactory;
+import robostar.robocert.TargetActor;
+import robostar.robocert.World;
+import robostar.robocert.util.EventFactory;
+import robostar.robocert.util.MessageFactory;
+import robostar.robocert.util.TargetFactory;
+import robostar.robocert.util.ValueSpecificationFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 
 /**

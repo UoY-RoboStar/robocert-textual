@@ -14,7 +14,7 @@ package robocalc.robocert.generator.intf.seq;
 
 import java.util.List;
 import robocalc.robocert.generator.intf.seq.context.LifelineContext;
-import robocalc.robocert.model.robocert.InteractionFragment;
+import robostar.robocert.InteractionFragment;
 
 /**
  * A generator for subsequences.

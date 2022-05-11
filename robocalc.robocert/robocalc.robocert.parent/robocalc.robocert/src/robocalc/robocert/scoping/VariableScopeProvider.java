@@ -27,10 +27,10 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import robocalc.robocert.generator.utils.param.ConstantParameter;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
-import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.Interaction;
-import robocalc.robocert.model.robocert.SpecificationGroup;
-import robocalc.robocert.model.robocert.util.StreamHelper;
+import robostar.robocert.ConstAssignment;
+import robostar.robocert.Interaction;
+import robostar.robocert.SpecificationGroup;
+import robostar.robocert.util.StreamHelper;
 
 /**
  * Provides scopes for variables.

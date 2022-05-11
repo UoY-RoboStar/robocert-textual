@@ -23,8 +23,8 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.core.tgt.TargetGenerator;
-import robocalc.robocert.model.robocert.util.ExpressionFactory;
-import robocalc.robocert.model.robocert.util.TargetFactory;
+import robostar.robocert.util.ExpressionFactory;
+import robostar.robocert.util.TargetFactory;
 import robocalc.robocert.tests.util.DummyVariableFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 

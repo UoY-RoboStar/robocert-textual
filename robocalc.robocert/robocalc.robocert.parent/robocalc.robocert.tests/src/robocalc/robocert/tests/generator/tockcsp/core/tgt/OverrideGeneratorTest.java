@@ -26,11 +26,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robocalc.robocert.generator.tockcsp.core.tgt.OverrideGenerator;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
-import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.Target;
-import robocalc.robocert.model.robocert.util.ExpressionFactory;
-import robocalc.robocert.model.robocert.util.TargetFactory;
+import robostar.robocert.ConstAssignment;
+import robostar.robocert.RoboCertFactory;
+import robostar.robocert.Target;
+import robostar.robocert.util.ExpressionFactory;
+import robostar.robocert.util.TargetFactory;
 import robocalc.robocert.tests.util.DummyVariableFactory;
 import robocalc.robocert.tests.util.RoboCertCustomInjectorProvider;
 

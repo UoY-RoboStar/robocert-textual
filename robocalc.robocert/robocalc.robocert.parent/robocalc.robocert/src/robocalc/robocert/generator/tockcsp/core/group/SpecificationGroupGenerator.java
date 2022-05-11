@@ -33,10 +33,10 @@ import robocalc.robocert.generator.tockcsp.seq.LifelineContextFactory;
 import robocalc.robocert.generator.tockcsp.seq.SyncChannelGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.NamedSetModuleGenerator;
 import robocalc.robocert.generator.utils.param.TargetParameterResolver;
-import robocalc.robocert.model.robocert.CollectionTarget;
-import robocalc.robocert.model.robocert.ConstAssignment;
-import robocalc.robocert.model.robocert.Interaction;
-import robocalc.robocert.model.robocert.SpecificationGroup;
+import robostar.robocert.CollectionTarget;
+import robostar.robocert.ConstAssignment;
+import robostar.robocert.Interaction;
+import robostar.robocert.SpecificationGroup;
 
 /**
  * Generator for specification groups.

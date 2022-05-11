@@ -14,7 +14,7 @@ package robocalc.robocert.generator.tockcsp.seq.fragment;
 
 import com.google.inject.Inject;
 import java.util.Objects;
-import robocalc.robocert.model.robocert.LoopFragment;
+import robostar.robocert.LoopFragment;
 
 /**
  * Generates CSP-M for the header part of {@link LoopFragment}s.

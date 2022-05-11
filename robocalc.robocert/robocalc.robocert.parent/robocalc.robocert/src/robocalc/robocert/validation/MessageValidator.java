@@ -18,13 +18,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.EventTopic;
-import robocalc.robocert.model.robocert.Message;
-import robocalc.robocert.model.robocert.OperationTopic;
-import robocalc.robocert.model.robocert.RoboCertPackage.Literals;
-import robocalc.robocert.model.robocert.World;
-import robocalc.robocert.model.robocert.util.resolve.EventResolver;
+import robostar.robocert.Actor;
+import robostar.robocert.EventTopic;
+import robostar.robocert.Message;
+import robostar.robocert.OperationTopic;
+import robostar.robocert.RoboCertPackage.Literals;
+import robostar.robocert.World;
+import robostar.robocert.util.resolve.EventResolver;
 
 /**
  * Validates aspects of message specifications.

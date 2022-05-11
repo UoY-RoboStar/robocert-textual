@@ -21,12 +21,12 @@ import robocalc.robocert.generator.intf.seq.context.ActorContext;
 import robocalc.robocert.generator.intf.seq.context.InteractionContext;
 import robocalc.robocert.generator.intf.seq.context.Synchronisation;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.Interaction;
-import robocalc.robocert.model.robocert.InteractionFragment;
-import robocalc.robocert.model.robocert.ParFragment;
-import robocalc.robocert.model.robocert.UntilFragment;
-import robocalc.robocert.model.robocert.World;
+import robostar.robocert.Actor;
+import robostar.robocert.Interaction;
+import robostar.robocert.InteractionFragment;
+import robostar.robocert.ParFragment;
+import robostar.robocert.UntilFragment;
+import robostar.robocert.World;
 
 /**
  * Creates, from a sequence, a series of lifeline contexts for use in generating individual

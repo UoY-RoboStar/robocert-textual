@@ -22,9 +22,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.google.inject.Inject;
 
-import robocalc.robocert.model.robocert.ExtensionalMessageSet;
-import robocalc.robocert.model.robocert.RoboCertFactory;
-import robocalc.robocert.model.robocert.util.SetFactory;
+import robostar.robocert.ExtensionalMessageSet;
+import robostar.robocert.RoboCertFactory;
+import robostar.robocert.util.SetFactory;
 import robocalc.robocert.tests.RoboCertInjectorProvider;
 
 /**

@@ -18,8 +18,8 @@ import java.util.Objects;
 import java.util.Optional;
 import org.eclipse.emf.common.util.EList;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.World;
+import robostar.robocert.Actor;
+import robostar.robocert.World;
 
 /**
  * Generates various auxiliary definitions related to actors.

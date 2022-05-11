@@ -16,7 +16,7 @@ import org.eclipse.emf.common.util.EList;
 
 import com.google.common.base.Strings;
 
-import robocalc.robocert.model.robocert.OptionallyNamedElement;
+import robostar.robocert.OptionallyNamedElement;
 
 /**
  * Implements a fallback naming scheme for providing names to things that may

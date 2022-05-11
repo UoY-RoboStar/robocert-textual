@@ -30,9 +30,9 @@ import robocalc.robocert.generator.tockcsp.ll.csp.LetGenerator;
 import robocalc.robocert.generator.tockcsp.memory.ModuleGenerator;
 import robocalc.robocert.generator.tockcsp.seq.fragment.until.UntilFragmentProcessGenerator;
 import robocalc.robocert.generator.tockcsp.seq.message.MessageGenerator;
-import robocalc.robocert.model.robocert.Interaction;
-import robocalc.robocert.model.robocert.Message;
-import robocalc.robocert.model.robocert.util.StreamHelper;
+import robostar.robocert.Interaction;
+import robostar.robocert.Message;
+import robostar.robocert.util.StreamHelper;
 
 /**
  * Generates the top-level CSP-M infrastructure for {@link Interaction}s.

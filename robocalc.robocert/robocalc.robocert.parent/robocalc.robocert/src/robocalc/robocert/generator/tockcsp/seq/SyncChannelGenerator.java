@@ -22,9 +22,9 @@ import robocalc.robocert.generator.intf.seq.context.InteractionContext;
 import robocalc.robocert.generator.intf.seq.context.Synchronisation;
 import robocalc.robocert.generator.tockcsp.core.group.SpecificationGroupElementFinder;
 import robocalc.robocert.generator.tockcsp.ll.csp.CSPStructureGenerator;
-import robocalc.robocert.model.robocert.Interaction;
-import robocalc.robocert.model.robocert.InteractionFragment;
-import robocalc.robocert.model.robocert.util.StreamHelper;
+import robostar.robocert.Interaction;
+import robostar.robocert.InteractionFragment;
+import robostar.robocert.util.StreamHelper;
 
 /**
  * Generates synchronisation channel definitions for an interaction context.

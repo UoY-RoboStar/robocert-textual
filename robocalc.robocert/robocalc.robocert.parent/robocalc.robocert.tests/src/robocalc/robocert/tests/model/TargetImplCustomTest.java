@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.NamedElement;
-import robocalc.robocert.model.robocert.CollectionTarget;
-import robocalc.robocert.model.robocert.Target;
+import robostar.robocert.CollectionTarget;
+import robostar.robocert.Target;
 
 /**
  * Abstract skeleton of tests that check target implementations.

@@ -16,10 +16,10 @@ package robocalc.robocert.generator.intf.seq.context;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import robocalc.robocert.model.robocert.Actor;
-import robocalc.robocert.model.robocert.Interaction;
-import robocalc.robocert.model.robocert.ParFragment;
-import robocalc.robocert.model.robocert.UntilFragment;
+import robostar.robocert.Actor;
+import robostar.robocert.Interaction;
+import robostar.robocert.ParFragment;
+import robostar.robocert.UntilFragment;
 
 /**
  * Context required for generating an interaction.

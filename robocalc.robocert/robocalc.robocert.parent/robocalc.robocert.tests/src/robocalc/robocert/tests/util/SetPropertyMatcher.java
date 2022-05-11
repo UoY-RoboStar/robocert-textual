@@ -14,7 +14,7 @@ package robocalc.robocert.tests.util;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import robocalc.robocert.model.robocert.MessageSet;
+import robostar.robocert.MessageSet;
 
 public class SetPropertyMatcher extends TypeSafeDiagnosingMatcher<MessageSet> {
   private Boolean isUniversal;

@@ -16,7 +16,7 @@ package robocalc.robocert.generator.utils;
 import circus.robocalc.robochart.BasicPackage;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.resource.Resource;
-import robocalc.robocert.model.robocert.util.StreamHelper;
+import robostar.robocert.util.StreamHelper;
 
 /**
  * Extensions for finding RoboStar packages in resources.
