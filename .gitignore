@@ -50,5 +50,7 @@ bin/
 *.fdb_latexmk
 *.synctex.gz
 
+.settings
+
 # IDEA
 workspace.xml
