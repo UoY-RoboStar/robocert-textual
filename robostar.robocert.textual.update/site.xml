@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature id="robostar.robocert.textual.feature" version="0.0.0">
+      <category name="robocert"/>
+   </feature>
+   <feature id="robostar.robocert.textual.feature.source" version="0.0.0">
+      <category name="robocert.source"/>
+   </feature>
+   <category-def name="robocert" label="RoboCert"/>
+   <category-def name="robocert" label="RoboCert (Source)"/>
+</site>
