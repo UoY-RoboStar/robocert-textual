@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="circus.robocalc.robochart_2.0.0.202105071032">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Documents/robochart/circus.robocalc.robochart_2.0.0.202105071032.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../robochart/circus.robocalc.robochart_2.0.0.202105071032.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

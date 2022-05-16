@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/robostar.robocert.textual/robostar.robocert.textual.parent/robostar.robocert.textual/robostar.robocert.textual.iml" filepath="$PROJECT_DIR$/robostar.robocert.textual/robostar.robocert.textual.parent/robostar.robocert.textual/robostar.robocert.textual.iml" />
-      <module fileurl="file://$PROJECT_DIR$/robostar.robocert.textual/robostar.robocert.textual.parent/robostar.robocert.textual.model/robostar.robocert.textual.model.iml" filepath="$PROJECT_DIR$/robostar.robocert.textual/robostar.robocert.textual.parent/robostar.robocert.textual.model/robostar.robocert.textual.model.iml" />
-      <module fileurl="file://$PROJECT_DIR$/robostar.robocert.textual/robostar.robocert.textual.parent/robostar.robocert.textual.tests/robostar.robocert.textual.tests.iml" filepath="$PROJECT_DIR$/robostar.robocert.textual/robostar.robocert.textual.parent/robostar.robocert.textual.tests/robostar.robocert.textual.tests.iml" />
+      <module fileurl="file://$PROJECT_DIR$/robostar.robocert.textual/robostar.robocert.textual.iml" filepath="$PROJECT_DIR$/robostar.robocert.textual/robostar.robocert.textual.iml" />
+      <module fileurl="file://$PROJECT_DIR$/robostar.robocert.textual.tests/robostar.robocert.textual.tests.iml" filepath="$PROJECT_DIR$/robostar.robocert.textual.tests/robostar.robocert.textual.tests.iml" />
     </modules>
   </component>
 </project>

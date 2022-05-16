@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="eclipse.emf.ecore" type="repository">
-    <properties maven-id="org.eclipse.emf:org.eclipse.emf.ecore:2.25.0" />
+    <properties maven-id="org.eclipse.emf:org.eclipse.emf.ecore:2.26.0" />
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/emf/org.eclipse.emf.ecore/2.25.0/org.eclipse.emf.ecore-2.25.0.jar!/" />
-      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/emf/org.eclipse.emf.common/2.23.0/org.eclipse.emf.common-2.23.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/emf/org.eclipse.emf.ecore/2.26.0/org.eclipse.emf.ecore-2.26.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/emf/org.eclipse.emf.common/2.24.0/org.eclipse.emf.common-2.24.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
