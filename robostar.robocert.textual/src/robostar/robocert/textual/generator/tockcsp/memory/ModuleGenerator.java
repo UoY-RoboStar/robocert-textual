@@ -91,6 +91,8 @@ public record ModuleGenerator(CTimedGeneratorUtils gu, CSPStructureGenerator csp
    * @return process, lifted into seq's memory context.
    */
   public CharSequence lift(Interaction seq, CharSequence process) {
+    // This indirectly performs the lifting described at the top level of the manual's semantic
+    // rule for interactions.
     return csp.function(csp.namespaced(generateMemoryModuleRef(seq), LIFT_PROCESS), process);
   }
 
