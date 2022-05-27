@@ -1,5 +1,6 @@
 package robostar.robocert.textual.generator.tockcsp.memory;
 
+import circus.robocalc.robochart.Expression;
 import circus.robocalc.robochart.RefExp;
 import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.VariableModifier;
@@ -21,6 +22,18 @@ import robostar.robocert.textual.generator.tockcsp.core.TemporaryVariableGenerat
 public class LoadStoreGenerator {
   @Inject private TemporaryVariableGenerator bg;
   @Inject private ModuleGenerator mg;
+
+  /**
+   * Generates a memory load prefix for a set of referenced expressions.
+   *
+   * <p>This should be inserted before whatever CSP process is going to reference the bindings.
+   *
+   * @param references the referenced expressions.
+   * @return the CSP-M prefix.
+   */
+  public CharSequence generateExprLoads(Stream<Expression> references) {
+    return generateLoads(references.flatMap(this::getExprVariables));
+  }
 
   /**
    * Generates a memory load prefix for a set of referenced variables.
