@@ -68,6 +68,8 @@ public record TopicGenerator(CSPStructureGenerator csp, CTimedGeneratorUtils gu,
    * @return the resulting CSP-M.
    */
   public CharSequence generate(MessageTopic topic, Actor from, Actor to) {
+    // SEMANTICS: [[-]]
+
     if (topic instanceof EventTopic e) {
       return generateEvent(e, from, to);
     }

@@ -60,12 +60,16 @@ public record InteractionFragmentGeneratorImpl(OccurrenceFragmentGenerator fragG
 
   @Override
   public CharSequence generate(InteractionFragment f, LifelineContext ctx) {
+    // SEMANTICS: [[ ]]frag
+
     final var loads = loadStoreGen.generateExprLoads(fragmentExprs(f)).toString();
 
-    return loads + generateAfterLoads(f, ctx);
+    return loads + generateBody(f, ctx);
   }
 
   private Stream<Expression> fragmentExprs(InteractionFragment f) {
+    // SEMANTICS: fexprs
+
     final var ownExprs = directFragmentExprs(f);
     final var guardExprs = operands(f).flatMap(this::guardExprs);
 
@@ -77,6 +81,8 @@ public record InteractionFragmentGeneratorImpl(OccurrenceFragmentGenerator fragG
   }
 
   private Stream<Expression> directFragmentExprs(InteractionFragment f) {
+    // SEMANTICS: fdexprs
+
     // TODO(@MattWindsor91): make this part of the metamodel?
     if (f instanceof OccurrenceFragment o) {
       return directlyReferencedExprs(o.getOccurrence());
@@ -89,10 +95,14 @@ public record InteractionFragmentGeneratorImpl(OccurrenceFragmentGenerator fragG
   }
 
   private Stream<Expression> boundExprs(DiscreteBound b) {
+    // SEMANTICS: bexprs
+
     return Stream.of(b.getLower(), b.getUpper()).filter(Objects::nonNull);
   }
 
   private Stream<InteractionOperand> operands(InteractionFragment f) {
+    // SEMANTICS: fops
+
     // TODO(@MattWindsor91): move to metamodel?
     if (f instanceof BranchFragment b) {
       return b.getBranches().stream();
@@ -118,7 +128,9 @@ public record InteractionFragmentGeneratorImpl(OccurrenceFragmentGenerator fragG
         "unsupported occurrence for expression traversal: %s".formatted(occ));
   }
 
-  private CharSequence generateAfterLoads(InteractionFragment f, LifelineContext ctx) {
+  private CharSequence generateBody(InteractionFragment f, LifelineContext ctx) {
+    // SEMANTICS: fragBody
+
     // Remember to extend this with any new top-level fragment types added to the metamodel.
     if (f instanceof OccurrenceFragment a) {
       return fragGen.generate(a, ctx);
