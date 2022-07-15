@@ -18,8 +18,7 @@ Require-Bundle: robostar.robocert;bundle-version="0.1.0",
  circus.robocalc.robochart.textual;bundle-version="3.0.0",
  circus.robocalc.robochart;bundle-version="2.0.0",
  org.eclipse.xtend.lib;bundle-version="2.14.0",
- circus.robocalc.robochart.generator.csp;bundle-version="3.0.0",
- circus.robocalc.robochart.assertions;bundle-version="2.0.0"
+ circus.robocalc.robochart.generator.csp;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: robostar.robocert.textual,
  robostar.robocert.textual.formatting2,

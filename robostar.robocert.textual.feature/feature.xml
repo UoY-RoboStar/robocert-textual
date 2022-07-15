@@ -314,7 +314,6 @@ version(s), and exceptions or additional permissions here}.&quot;
       <import plugin="circus.robocalc.robochart" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.xtend.lib" version="2.14.0" match="greaterOrEqual"/>
       <import plugin="circus.robocalc.robochart.generator.csp" version="3.0.0" match="greaterOrEqual"/>
-      <import plugin="circus.robocalc.robochart.assertions" version="2.0.0" match="greaterOrEqual"/>
       <import plugin="org.apache.log4j"/>
       <import plugin="circus.robocalc.robochart.textual.ide" version="3.0.0" match="greaterOrEqual"/>
       <import plugin="circus.robocalc.robochart.textual.ui" version="3.0.0" match="greaterOrEqual"/>
