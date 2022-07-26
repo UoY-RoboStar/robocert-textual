@@ -27,7 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.ComponentActor;
-import robostar.robocert.EventTopic;
 import robostar.robocert.RoboCertFactory;
 import robostar.robocert.TargetActor;
 import robostar.robocert.World;
@@ -42,7 +41,7 @@ import robostar.robocert.textual.tests.RoboCertInjectorProvider;
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-class MessageImplCustomTest {
+class MessageImplTest {
   @Inject
   private MessageFactory msgFactory;
   @Inject
@@ -55,7 +54,6 @@ class MessageImplCustomTest {
   private World comWorld;
   private TargetActor comTarget;
 
-  private World collWorld;
   private ComponentActor c1;
   private ComponentActor c2;
 
@@ -93,7 +91,7 @@ class MessageImplCustomTest {
     collGrp.setName("CollGroup");
     collGrp.setTarget(collTgt);
 
-    collWorld = msgFactory.world();
+    World collWorld = msgFactory.world();
     collWorld.setName("W");
     c1 = certFactory.createComponentActor();
     c1.setName("C1");

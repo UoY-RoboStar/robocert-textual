@@ -28,6 +28,7 @@ import robostar.robocert.textual.generator.utils.PackageFinder;
 import robostar.robocert.CertPackage;
 import robostar.robocert.SpecificationGroup;
 import robostar.robocert.util.StreamHelper;
+import robostar.robocert.util.resolve.TargetElementResolver;
 
 /**
  * A generator that expands out imports for a top-level resource.
@@ -36,7 +37,8 @@ import robostar.robocert.util.StreamHelper;
  */
 public record ImportGenerator(PathSet ps,
                               PackageFinder pf,
-                              CTimedGeneratorUtils gu) {
+                              CTimedGeneratorUtils gu,
+                              TargetElementResolver targetElementResolver) {
   // TODO(@MattWindsor91): try merge this with upstream. We can't easily
   // just take upstream directly, as it doesn't directly pick up everything
   // that generates an import in robocert. However, this version of the
@@ -98,10 +100,12 @@ public record ImportGenerator(PathSet ps,
   }
 
   private Stream<String> targetImports(CertPackage p) {
-    return specificationGroups(p).flatMap(x -> elementImports(x.getTarget().getElement()));
+    return specificationGroups(p).flatMap(this::specificationGroupImports);
   }
 
-  private Stream<String> elementImports(NamedElement elt) {
+  private Stream<String> specificationGroupImports(SpecificationGroup sg) {
+    final var elt = targetElementResolver.resolve(sg.getTarget());
+
     // This is basically the same as the analogous code in GeneratorUtils
     final var resource = elt.eResource();
     return rcPackages(resource).flatMap(p -> elementImportsInPackage(resource, elt, p));

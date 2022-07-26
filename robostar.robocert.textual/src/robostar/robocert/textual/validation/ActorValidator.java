@@ -12,6 +12,7 @@
  ********************************************************************************/
 package robostar.robocert.textual.validation;
 
+import com.google.inject.Inject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
@@ -20,6 +21,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar;
 import robostar.robocert.CollectionTarget;
 import robostar.robocert.ComponentActor;
 import robostar.robocert.RoboCertPackage;
+import robostar.robocert.util.resolve.TargetComponentsResolver;
 
 /**
  * Validates aspects of actors.
@@ -27,6 +29,9 @@ import robostar.robocert.RoboCertPackage;
  * @author Matt Windsor
  */
 public class ActorValidator extends AbstractDeclarativeValidator {
+	@Inject
+	private TargetComponentsResolver targetCompRes;
+
 	@Override
 	public void register(EValidatorRegistrar registrar) {
 		// per discussion in ComposedChecks annotation documentation
@@ -45,8 +50,10 @@ public class ActorValidator extends AbstractDeclarativeValidator {
 		final var target = c.getGroup().getTarget();
 		final var node = c.getNode();
 
+
 		if (target instanceof CollectionTarget ct) {
-			if (ct.getComponents().stream().noneMatch(x -> EcoreUtil.equals(node, x)))
+			final var components = targetCompRes.resolve(ct);
+			if (components.noneMatch(x -> EcoreUtil.equals(node, x)))
 				error("Component must be a member of the target", RoboCertPackage.Literals.COMPONENT_ACTOR__NODE,
 						 NOT_A_COMPONENT);
 		}

@@ -15,12 +15,14 @@ package robostar.robocert.textual.generator.tockcsp.seq.message;
 
 import circus.robocalc.robochart.generator.csp.untimed.TypeGenerator;
 import com.google.inject.Inject;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.eclipse.xtext.xbase.lib.Pair;
 import robostar.robocert.textual.generator.tockcsp.core.TemporaryVariableGenerator;
 import robostar.robocert.MessageTopic;
 import robostar.robocert.WildcardValueSpecification;
+import robostar.robocert.util.resolve.ParamTypeResolver;
 
 /**
  * Generates CSP for ranges of arguments, which will go into a set comprehension inside the
@@ -29,10 +31,15 @@ import robostar.robocert.WildcardValueSpecification;
  * @author Matt Windsor
  */
 public record ArgumentRangeGenerator(TemporaryVariableGenerator bg,
-																		 TypeGenerator tg) {
+																		 TypeGenerator tg,
+                                     ParamTypeResolver paramTypeRes
+                                     ) {
 
   @Inject
   public ArgumentRangeGenerator {
+    Objects.requireNonNull(bg);
+    Objects.requireNonNull(tg);
+    Objects.requireNonNull(paramTypeRes);
   }
 
   /**
@@ -52,7 +59,8 @@ public record ArgumentRangeGenerator(TemporaryVariableGenerator bg,
 
   private CharSequence generateRange(MessageTopic t, WildcardValueSpecification arg, long index) {
     final var name = bg.generateArgumentName(arg.getDestination(), index);
-    final var ty = tg.compileType(t.getParamTypes().get((int) index));
-    return "%s <- %s".formatted(name, ty);
+    final var type = paramTypeRes.resolve(t).skip(index).findFirst().orElseThrow();
+    final var typeStr = tg.compileType(type);
+    return "%s <- %s".formatted(name, typeStr);
   }
 }

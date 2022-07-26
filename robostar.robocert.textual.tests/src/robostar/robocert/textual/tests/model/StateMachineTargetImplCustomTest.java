@@ -33,7 +33,7 @@ import robostar.robocert.textual.tests.RoboCertInjectorProvider;
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class StateMachineTargetImplCustomTest extends TargetImplCustomTest<StateMachineTarget> {
+public class StateMachineTargetImplCustomTest extends TargetTest<StateMachineTarget> {
   @Inject private RoboCertFactory rf;
   @Inject private RoboChartFactory cf;
 

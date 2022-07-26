@@ -13,53 +13,68 @@
 package robostar.robocert.textual.tests.model;
 
 import circus.robocalc.robochart.ConnectionNode;
-import circus.robocalc.robochart.ControllerDef;
+import circus.robocalc.robochart.Controller;
 import circus.robocalc.robochart.NamedElement;
+import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
+import java.util.List;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robostar.robocert.ControllerTarget;
+import robostar.robocert.InControllerTarget;
+import robostar.robocert.InModuleTarget;
+import robostar.robocert.ModuleTarget;
 import robostar.robocert.RoboCertFactory;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link ControllerTarget}s, and also tests that the factory
- * resolves them correctly.
+ * Tests basic resolution and stringifying functionality on {@link ModuleTarget}s.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class ControllerTargetImplCustomTest extends TargetImplCustomTest<ControllerTarget> {
+public class InModuleTargetImplTest extends TargetTest<InModuleTarget> {
   @Inject private RoboCertFactory rf;
   @Inject private RoboChartFactory cf;
 
-  private ControllerDef def;
+  private Controller ctrl1;
+  private Controller ctrl2;
+  private RCModule module;
 
   @BeforeEach
   void setUp() {
-    example = rf.createControllerTarget();
+    ctrl1 = cf.createControllerDef();
+    ctrl1.setName("ctrl1");
 
-    def = cf.createControllerDef();
-    def.setName("foo");
-    example.setController(def);
+    ctrl2 = cf.createControllerDef();
+    ctrl2.setName("ctrl2");
+
+    final var rp = cf.createRoboticPlatformDef();
+    rp.setName("rp");
+
+    module = cf.createRCModule();
+    module.setName("foo");
+    module.getNodes().addAll(List.of(ctrl1, ctrl2, rp));
+
+    example = rf.createInModuleTarget();
+    example.setModule(module);
   }
 
   @Override
   protected ConnectionNode[] expectedComponents() {
-    return new ConnectionNode[] {};
+    return new ConnectionNode[] {ctrl1, ctrl2};
   }
 
   @Override
   protected NamedElement expectedElement() {
-    return def;
+    return module;
   }
 
   @Override
   protected String expectedString() {
-    return "controller foo";
+    return "components of module foo";
   }
 }

@@ -22,25 +22,34 @@ import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robostar.robocert.CollectionTarget;
 import robostar.robocert.ComponentTarget;
 import robostar.robocert.Target;
+import robostar.robocert.util.resolve.TargetComponentsResolver;
+import robostar.robocert.util.resolve.TargetElementResolver;
 
 /**
  * Generates references to the universe sets for targets.
  *
- * @param csp low-level CSP generator.
- * @param gu  RoboChart generator utilities.
+ * @param csp     low-level CSP generator.
+ * @param gu      RoboChart generator utilities.
+ * @param elemRes resolves elements of targets.
+ * @param compRes resolves components of targets.
  */
-public record UniverseGenerator(CSPStructureGenerator csp, CGeneratorUtils gu) {
+public record UniverseGenerator(CSPStructureGenerator csp, CGeneratorUtils gu,
+                                TargetElementResolver elemRes, TargetComponentsResolver compRes) {
 
   /**
    * Constructs a universe generator.
    *
-   * @param csp low-level CSP generator.
-   * @param gu  RoboChart generator utilities.
+   * @param csp     low-level CSP generator.
+   * @param gu      RoboChart generator utilities.
+   * @param elemRes resolves elements of targets.
+   * @param compRes resolves components of targets.
    */
   @Inject
   public UniverseGenerator {
     Objects.requireNonNull(csp);
     Objects.requireNonNull(gu);
+    Objects.requireNonNull(elemRes);
+    Objects.requireNonNull(compRes);
   }
 
   /**
@@ -61,10 +70,11 @@ public record UniverseGenerator(CSPStructureGenerator csp, CGeneratorUtils gu) {
 
   private Stream<EObject> processes(Target t) {
     if (t instanceof ComponentTarget c) {
-      return Stream.of(c.getElement());
+      return Stream.of(elemRes.resolve(c));
     }
     if (t instanceof CollectionTarget c) {
-      return c.getComponents().stream().map(x -> x);
+      // This map is needed to upcast to EObject.
+      return compRes.resolve(c).map(x -> x);
     }
     throw new IllegalArgumentException("can't get processes of target %s".formatted(t));
   }

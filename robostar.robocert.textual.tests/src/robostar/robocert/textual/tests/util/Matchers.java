@@ -22,8 +22,9 @@ import robostar.robocert.textual.tests.util.matchers.HasScope;
  * @author Matt Windsor
  */
 public class Matchers {
+
   /**
-   * Constructs a matcher with the given expected objects.
+   * Constructs a has-scope matcher with the given expected objects.
    *
    * @param expected the objects to test against.
    */

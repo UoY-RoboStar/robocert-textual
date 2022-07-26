@@ -12,36 +12,37 @@
  ********************************************************************************/
 package robostar.robocert.textual.tests.model;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static robostar.robocert.textual.tests.util.SetPropertyMatcher.universal;
+import static org.hamcrest.CoreMatchers.*;
 
-import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import com.google.inject.Inject;
+
 import robostar.robocert.RoboCertFactory;
+import robostar.robocert.World;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on UniversalMessageSets, and also tests that the factory resolves
- * it correctly.
+ * Tests the string representation for target actors, and also tests that
+ * the factory resolves them correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-class UniverseMessageSetImplCustomTest {
+public class TargetActorImplTest {
+	@Inject
+	private RoboCertFactory rf;
 
-  @Inject
-  protected RoboCertFactory rf;
-
-  /**
-   * Tests to make sure universe gap message sets are active and universal.
-   */
-  @Test
-  void testProperties() {
-    assertThat(rf.createUniverseMessageSet(), is(universal().andActive()));
-  }
+	@Test
+	void testToString() {
+		final var actor = rf.createTargetActor();
+		assertThat(actor.toString(), is(equalTo("<<target>> (untitled)")));
+		actor.setName("test");
+		assertThat(actor.toString(), is(equalTo("<<target>> test")));
+	}
 }

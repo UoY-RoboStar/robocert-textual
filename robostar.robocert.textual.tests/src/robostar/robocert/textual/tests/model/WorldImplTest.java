@@ -28,25 +28,25 @@ import robostar.robocert.RoboCertFactory;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link World}s, and also tests that
+ * Tests the string representation for {@link World}s, and also tests that
  * the factory resolves them correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class WorldImplCustomTest {
+public class WorldImplTest {
 	@Inject
 	private RoboCertFactory rf;
 
 	/**
-	 * Tests that stringifying a context actor works as expected.
+	 * Tests that stringifying a world works as expected.
 	 */
 	@Test
 	void testToString() {
 		final var world = rf.createWorld();
-		assertThat(world.toString(), is(equalTo("<<context>> (untitled)")));
+		assertThat(world.toString(), is(equalTo("<<world>> (untitled)")));
 		world.setName("test");
-		assertThat(world.toString(), is(equalTo("<<context>> test")));
+		assertThat(world.toString(), is(equalTo("<<world>> test")));
 	}
 }

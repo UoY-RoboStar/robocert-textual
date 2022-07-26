@@ -27,6 +27,7 @@ import robostar.robocert.util.StreamHelper;
 import robostar.robocert.util.resolve.ControllerResolver;
 import robostar.robocert.util.resolve.ModuleResolver;
 import robostar.robocert.util.resolve.StateMachineResolver;
+import robostar.robocert.util.resolve.TargetElementResolver;
 
 /**
  * Handles generation of bodies of component targets (ModuleTarget, ControllerTarget, etc).
@@ -42,6 +43,7 @@ public record ComponentTargetBodyGenerator(ModuleResolver modRes,
                                            ControllerResolver ctrlRes, StateMachineResolver stmRes,
                                            CSPStructureGenerator csp,
                                            CTimedGeneratorUtils gu,
+                                           TargetElementResolver elemRes,
                                            TargetParameterResolver paramRes,
                                            TerminationGenerator termGen) {
 
@@ -53,6 +55,7 @@ public record ComponentTargetBodyGenerator(ModuleResolver modRes,
    * @param stmRes  resolves aspects of state machine bodies, such as names.
    * @param gu       RoboChart generator utilities.
    * @param csp      low-level CSP generator.
+   * @param elemRes  resolves target elements.
    * @param paramRes resolves target parameterisations.
    * @param termGen  generates CSP to hide termination channels.
    */
@@ -63,6 +66,7 @@ public record ComponentTargetBodyGenerator(ModuleResolver modRes,
     Objects.requireNonNull(stmRes);
     Objects.requireNonNull(csp);
     Objects.requireNonNull(gu);
+    Objects.requireNonNull(elemRes);
     Objects.requireNonNull(paramRes);
     Objects.requireNonNull(termGen);
   }
@@ -90,7 +94,7 @@ public record ComponentTargetBodyGenerator(ModuleResolver modRes,
       body = termGen.hideTerminate(ns, body);
 
       // Operation targets also have an extra share-CSP channel that needs to be hidden.
-      if (t instanceof OperationTarget o) {
+      if (t instanceof OperationTarget) {
         body = csp.bins().hide(body, csp.sets().set("share__"));
       }
     }
@@ -112,7 +116,8 @@ public record ComponentTargetBodyGenerator(ModuleResolver modRes,
      * TODO(@MattWindsor91): eventually, we should be able to select the
      * optimisation level.
      */
-    final var name = gu.getFullProcessName(t.getElement(), false, USE_OPTIMISED_TARGETS);
+    final var elem = elemRes.resolve(t);
+    final var name = gu.getFullProcessName(elem, false, USE_OPTIMISED_TARGETS);
     final var args = StreamHelper.push(TargetGenerator.ID, params.stream().map(k -> k.cspId(gu)))
         .toArray(CharSequence[]::new);
 

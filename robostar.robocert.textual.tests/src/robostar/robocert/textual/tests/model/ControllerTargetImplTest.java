@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021, 2022 University of York and others
+ * Copyright (c) 2021 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,39 +13,39 @@
 package robostar.robocert.textual.tests.model;
 
 import circus.robocalc.robochart.ConnectionNode;
+import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.NamedElement;
-import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import robostar.robocert.ControllerTarget;
 import robostar.robocert.ModuleTarget;
 import robostar.robocert.RoboCertFactory;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link ModuleTarget}s, and also tests that the factory resolves
- * them correctly.
+ * Tests basic resolution and stringifying functionality on {@link ControllerTarget}s.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-public class ModuleTargetImplCustomTest extends TargetImplCustomTest<ModuleTarget> {
+public class ControllerTargetImplTest extends TargetTest<ControllerTarget> {
   @Inject private RoboCertFactory rf;
   @Inject private RoboChartFactory cf;
 
-  private RCModule module;
+  private ControllerDef def;
 
   @BeforeEach
   void setUp() {
-    module = cf.createRCModule();
-    module.setName("foo");
+    example = rf.createControllerTarget();
 
-    example = rf.createModuleTarget();
-    example.setModule(module);
+    def = cf.createControllerDef();
+    def.setName("foo");
+    example.setController(def);
   }
 
   @Override
@@ -55,11 +55,11 @@ public class ModuleTargetImplCustomTest extends TargetImplCustomTest<ModuleTarge
 
   @Override
   protected NamedElement expectedElement() {
-    return module;
+    return def;
   }
 
   @Override
   protected String expectedString() {
-    return "module foo";
+    return "controller foo";
   }
 }

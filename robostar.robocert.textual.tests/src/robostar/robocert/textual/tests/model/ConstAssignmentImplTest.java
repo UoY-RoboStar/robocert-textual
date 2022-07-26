@@ -31,14 +31,14 @@ import robostar.robocert.util.ExpressionFactory;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 
 /**
- * Tests any custom functionality on {@link ConstAssignment}s, and also tests that the factory
+ * Tests any derived functionality on {@link ConstAssignment}s, and also tests that the factory
  * resolves it correctly.
  *
  * @author Matt Windsor
  */
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
-class ConstAssignmentImplCustomTest {
+class ConstAssignmentImplTest {
 
   @Inject
   protected ExpressionFactory ef;
