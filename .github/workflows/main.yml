@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Setup java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build with Maven
+        run: mvn clean install
+        
+      # SSH Setup
+      - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.1
+        with:
+          # Private key required to access the host
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+      - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        name: Add SSH known hosts
+        run: echo "${ROBOSTAR_WEB_HOST} ${ROBOSTAR_WEB_SSH_FINGERPRINT_TYPE} ${ROBOSTAR_WEB_SSH_FINGERPRINT}" >> ~/.ssh/known_hosts
+        env:
+          ROBOSTAR_WEB_HOST: ${{ secrets.ROBOSTAR_WEB_HOST }}
+          ROBOSTAR_WEB_SSH_FINGERPRINT: ${{ secrets.ROBOSTAR_WEB_SSH_FINGERPRINT }}
+          ROBOSTAR_WEB_SSH_FINGERPRINT_TYPE: ${{ secrets.ROBOSTAR_WEB_SSH_FINGERPRINT_TYPE }}
+
+      - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: deploy
+        name: Deploy
+        uses: UoY-RoboStar/ga-eclipse-deploy@master
+        with:
+          remote-host: ${{ secrets.ROBOSTAR_WEB_HOST }}
+          remote-user: ${{ secrets.ROBOSTAR_WEB_USER }}
+          remote-root: ${{ secrets.ROBOSTAR_WEB_ROOT }}
+          remote-baseurl: 'https://robostar.cs.york.ac.uk'
+          remote-relative-path: 'robotool/robocert-textual/'
+          maven-target: 'robostar.robocert.textual.update/target/repository/'
+          
+      - if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/comp') && github.event_name == 'push'
+        name: Create commit comment
+        uses: peter-evans/commit-comment@v1
+        with:
+          body: 'Successfully deployed at: https://robostar.cs.york.ac.uk/robotool/robocert-textual/${{ steps.deploy.outputs.dest }}'
