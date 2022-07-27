@@ -28,8 +28,8 @@
 		<module>robostar.robocert.textual.target</module>
 		<module>robostar.robocert.textual.tests</module>
 		<module>robostar.robocert.textual.ui.tests</module>
-			<module>robostar.robocert.textual.feature</module>
-			<module>robostar.robocert.textual.update</module>
+		<module>robostar.robocert.textual.feature</module>
+		<module>robostar.robocert.textual.update</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
