@@ -45,7 +45,8 @@ jobs:
       - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: deploy
         name: Deploy
-        uses: UoY-RoboStar/ga-eclipse-deploy@master
+        # TODO(@MattWindsor91): replace with UoY-RoboStar when it can handle 'main'
+        uses: MattWindsor91/ga-eclipse-deploy@master
         with:
           remote-host: ${{ secrets.ROBOSTAR_WEB_HOST }}
           remote-user: ${{ secrets.ROBOSTAR_WEB_USER }}
