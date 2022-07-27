@@ -46,7 +46,7 @@ jobs:
         id: deploy
         name: Deploy
         # TODO(@MattWindsor91): replace with UoY-RoboStar when it can handle 'main'
-        uses: MattWindsor91/ga-eclipse-deploy@master
+        uses: UoY-RoboStar/ga-eclipse-deploy@add_main
         with:
           remote-host: ${{ secrets.ROBOSTAR_WEB_HOST }}
           remote-user: ${{ secrets.ROBOSTAR_WEB_USER }}
