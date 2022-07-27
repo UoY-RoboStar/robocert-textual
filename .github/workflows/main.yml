@@ -45,7 +45,7 @@ jobs:
       - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: deploy
         name: Deploy
-        # TODO(@MattWindsor91): replace with UoY-RoboStar when it can handle 'main'
+        # TODO(@MattWindsor91): replace with master when it can handle 'main'
         uses: UoY-RoboStar/ga-eclipse-deploy@add_main
         with:
           remote-host: ${{ secrets.ROBOSTAR_WEB_HOST }}
@@ -55,7 +55,7 @@ jobs:
           remote-relative-path: 'robotool/robocert-textual/'
           maven-target: 'robostar.robocert.textual.update/target/repository/'
           
-      - if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/comp') && github.event_name == 'push'
+      - if: (github.ref == 'refs/heads/main') && github.event_name == 'push'
         name: Create commit comment
         uses: peter-evans/commit-comment@v1
         with:
