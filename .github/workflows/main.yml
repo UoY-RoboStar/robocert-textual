@@ -5,8 +5,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
   workflow_dispatch:
+    types: [ rebuild ] 
 
 jobs:
   build-and-deploy:
