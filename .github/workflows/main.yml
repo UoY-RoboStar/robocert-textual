@@ -12,6 +12,10 @@ on:
   repository_dispatch:
     types: [ rebuild ] 
 
+env:
+  # Are we performing a full deploy cycle?
+  deploy: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'rebuild' || github.event_name == 'workflow_dispatch') }}
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -30,15 +34,13 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
         
-      # SSH Setup
-      - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      - if: env.deploy == 'true'
         name: Setup SSH
         uses: webfactory/ssh-agent@v0.5.1
         with:
-          # Private key required to access the host
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           
-      - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      - if: env.deploy == 'true'
         name: Add SSH known hosts
         run: echo "${ROBOSTAR_WEB_HOST} ${ROBOSTAR_WEB_SSH_FINGERPRINT_TYPE} ${ROBOSTAR_WEB_SSH_FINGERPRINT}" >> ~/.ssh/known_hosts
         env:
@@ -46,7 +48,7 @@ jobs:
           ROBOSTAR_WEB_SSH_FINGERPRINT: ${{ secrets.ROBOSTAR_WEB_SSH_FINGERPRINT }}
           ROBOSTAR_WEB_SSH_FINGERPRINT_TYPE: ${{ secrets.ROBOSTAR_WEB_SSH_FINGERPRINT_TYPE }}
 
-      - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      - if: env.deploy == 'true'
         id: deploy
         name: Deploy
         # TODO(@MattWindsor91): replace with master when it can handle 'main'
@@ -59,7 +61,7 @@ jobs:
           remote-relative-path: 'robotool/robocert-textual/'
           maven-target: 'robostar.robocert.textual.update/target/repository/'
           
-      - if: (github.ref == 'refs/heads/main') && github.event_name == 'push'
+      - if: env.deploy == 'true'
         name: Create commit comment
         uses: peter-evans/commit-comment@v1
         with:
