@@ -61,18 +61,10 @@
 							<goal>plugin-source</goal>
 						</goals>
 					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-source-feature-plugin</artifactId>
-				<version>${tycho-version}</version>
-				<executions>
 					<execution>
-						<id>source-feature</id>
-						<phase>package</phase>
+						<id>feature-source</id>
 						<goals>
-							<goal>source-feature</goal>
+							<goal>feature-source</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -273,6 +265,7 @@
 			<url>${eclipse-repo.url}</url>
 			<layout>p2</layout>
 		</repository>
+		<!-- Used for picking up hamcrest 2 -->
 		<repository>
 		  <id>eclipse-orbit</id>
 		  <url>https://download.eclipse.org/tools/orbit/downloads/drops/R20210825222808/repository/</url>
