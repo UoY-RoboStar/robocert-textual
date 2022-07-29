@@ -11,10 +11,9 @@
  *   Matt Windsor - initial definition
  ******************************************************************************/
 
-package robostar.robocert.textual.tests.util;
+package robostar.robocert.textual.tests.matchers;
 
 import org.eclipse.emf.ecore.EObject;
-import robostar.robocert.textual.tests.util.matchers.HasScope;
 
 /**
  * Hamcrest matchers for RoboCert tests.

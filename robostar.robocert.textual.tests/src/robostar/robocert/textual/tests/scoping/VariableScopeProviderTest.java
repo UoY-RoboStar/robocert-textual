@@ -14,7 +14,7 @@
 package robostar.robocert.textual.tests.scoping;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static robostar.robocert.textual.tests.util.Matchers.hasScope;
+import static robostar.robocert.textual.tests.matchers.Matchers.hasScope;
 
 import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.RoboChartFactory;

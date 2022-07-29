@@ -11,7 +11,7 @@
  *   Matt Windsor - initial definition
  ******************************************************************************/
 
-package robostar.robocert.textual.tests.util.matchers;
+package robostar.robocert.textual.tests.matchers;
 
 import java.util.ArrayList;
 import java.util.List;
