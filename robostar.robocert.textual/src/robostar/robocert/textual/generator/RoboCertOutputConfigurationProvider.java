@@ -35,9 +35,10 @@ public class RoboCertOutputConfigurationProvider implements IOutputConfiguration
 		// TODO: is this the right thing to do?
 		// TODO: PRISM gen
 
-		var set = new HashSet<OutputConfiguration>(2);
+		final var set = new HashSet<OutputConfiguration>(3);
 		set.add(buildConfig(IFileSystemAccess.DEFAULT_OUTPUT, "tock-CSP folder", ps.CSP_PACKAGE_PATH));
 		set.add(buildConfig(CSP_LIBRARY_OUTPUT, "tock-CSP standard library", ps.CSP_LIBRARY_PATH));
+		set.add(buildConfig(TIKZ_OUTPUT, "TikZ folder", ps.TIKZ_PATH));
 		return set;
 	}
 
@@ -46,8 +47,13 @@ public class RoboCertOutputConfigurationProvider implements IOutputConfiguration
 	 */
 	public static final String CSP_LIBRARY_OUTPUT = "CSP_LIBRARY_OUTPUT";
 
+	/**
+	 * Key of the TikZ output configuration.
+	 */
+	public static final String TIKZ_OUTPUT = "TIKZ_OUTPUT";
+
 	private OutputConfiguration buildConfig(String name, String descr, String dir) {
-		var result = new OutputConfiguration(name);
+		final var result = new OutputConfiguration(name);
 		result.setDescription(descr);
 		result.setOutputDirectory(dir);
 		result.setOverrideExistingResources(true);

@@ -3,66 +3,71 @@
  */
 package robostar.robocert.textual.generator;
 
+import java.util.List;
+import java.util.function.Consumer;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
+import org.eclipse.xtext.generator.IGenerator2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 
-import com.google.common.collect.Iterators;
 import com.google.inject.Inject;
 
-import robostar.robocert.textual.generator.tockcsp.CertPackageGenerator;
-import robostar.robocert.textual.generator.utils.name.GroupNamer;
-import robostar.robocert.CertPackage;
+import robostar.robocert.textual.generator.tikz.TikzGenerator;
+import robostar.robocert.textual.generator.tockcsp.TockCspGenerator;
 
 /**
- * Generates code from your model files on save.
- *
+ * Generates code from model files on save.
+ * <p>
  * See
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 public class RoboCertGenerator extends AbstractGenerator {
+	// TODO(@MattWindsor91): make this open-ended in the same way that the RoboChart generator is.
+
+	private final TockCspGenerator csp;
+	private final TikzGenerator tikz;
+
 	@Inject
-	private CertPackageGenerator csp;
-	@Inject
-	private GroupNamer gn;
+	public RoboCertGenerator(TockCspGenerator csp, TikzGenerator tikz) {
+			this.csp = csp;
+			this.tikz = tikz;
+	}
 
 	@Override
-	public void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		EcoreUtil.resolveAll(resource.getResourceSet());
+	public void beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		// Workaround for resolution errors.
+		EcoreUtil.resolveAll(input.getResourceSet());
 
-		final var isCanceled = generateCSPStandardLibrary(fsa, context);
-		if (isCanceled)
-			return;
-
-		generateCSPPackages(resource, fsa, context);
+		forEachGenerator(gen -> gen.beforeGenerate(input, fsa, context), context);
 	}
 
-	private boolean generateCSPStandardLibrary(IFileSystemAccess2 fsa, IGeneratorContext context) {
-		for (var filename : CSP_LIBRARY_FILES) {
-			generateCSPStandardLibraryFile(fsa, filename);
+	@Override
+	public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		// Workaround for resolution errors.
+		EcoreUtil.resolveAll(input.getResourceSet());
+
+		forEachGenerator(gen -> SafeRunner.run(() -> gen.doGenerate(input, fsa, context)), context);
+	}
+
+	@Override
+	public void afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		forEachGenerator(gen -> gen.afterGenerate(input, fsa, context), context);
+	}
+
+	/**
+	 * Applies the consumer to each registered generator, returning early on cancellation.
+	 * @param f function to apply to each generator.
+	 * @param context context used to check cancellation.
+	 */
+	private void forEachGenerator(Consumer<IGenerator2> f, IGeneratorContext context) {
+		for (IGenerator2 gen: List.of(csp, tikz)) {
 			if (context.getCancelIndicator().isCanceled())
-				return true;
-		}
-		return false;
-	}
-
-	private void generateCSPStandardLibraryFile(IFileSystemAccess2 fsa, String filename) {
-		final var stream = RoboCertGenerator.class.getResourceAsStream("lib/semantics/" + filename);
-		fsa.generateFile(filename, RoboCertOutputConfigurationProvider.CSP_LIBRARY_OUTPUT, stream);
-	}
-
-	private void generateCSPPackages(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		Iterators.filter(EcoreUtil.getAllContents(resource, true), CertPackage.class).forEachRemaining(x -> {
-			if (context.getCancelIndicator().isCanceled()) {
 				return;
-			}
-
-			// TODO(@MattWindsor91): multiple packages in one resource?
-			fsa.generateFile(gn.getPackageName(x) + ".csp", csp.generate(x));
-		});
+			f.accept(gen);
+		}
 	}
-
-	private static final String[] CSP_LIBRARY_FILES = new String[] { "robocert_defs.csp", "robocert_seq_defs.csp" };
 }

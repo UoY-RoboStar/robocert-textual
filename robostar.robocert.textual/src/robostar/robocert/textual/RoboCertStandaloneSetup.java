@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EPackage;
 
 import com.google.inject.Injector;
 
+import robostar.robocert.RoboCertFactory;
 import robostar.robocert.RoboCertPackage;
 import robostar.robocert.impl.RoboCertFactoryImpl;
 
@@ -42,7 +43,7 @@ public class RoboCertStandaloneSetup extends RoboCertStandaloneSetupGenerated {
 
 				@Override
 				public EFactory getEFactory() {
-					return new RoboCertFactoryImpl();
+					return RoboCertFactory.eINSTANCE;
 				}
 
 			});

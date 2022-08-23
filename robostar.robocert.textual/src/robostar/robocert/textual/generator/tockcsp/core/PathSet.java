@@ -50,6 +50,12 @@ public class PathSet {
    */
   public final String CSP_LIBRARY_PATH = CSP_BASE_PATH + LIBRARY_EXT;
 
+  /**
+   * Directory, relative to the RoboStar modelling project, in which we copy TikZ
+   * files.
+   */
+  public final String TIKZ_PATH = "./tikz-gen";
+
   //
   // Relative to package path
   //
