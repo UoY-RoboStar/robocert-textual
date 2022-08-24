@@ -15,6 +15,7 @@ package robostar.robocert.textual.generator.tikz;
 
 
 import com.google.inject.Inject;
+
 import robostar.robocert.textual.generator.RoboCertOutputConfigurationProvider;
 import robostar.robocert.textual.generator.utils.PackageGenerator;
 import robostar.robocert.textual.generator.utils.StandardLibraryGenerator;

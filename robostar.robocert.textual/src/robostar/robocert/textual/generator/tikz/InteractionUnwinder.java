@@ -15,11 +15,12 @@ package robostar.robocert.textual.generator.tikz;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
+
 import robostar.robocert.BlockFragment;
 import robostar.robocert.BranchFragment;
 import robostar.robocert.Interaction;
-import robostar.robocert.InteractionFragment;
 import robostar.robocert.InteractionOperand;
 import robostar.robocert.OccurrenceFragment;
 import robostar.robocert.util.RoboCertSwitch;

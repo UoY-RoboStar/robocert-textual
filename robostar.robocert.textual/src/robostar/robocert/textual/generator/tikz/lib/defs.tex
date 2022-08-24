@@ -4,24 +4,24 @@
 % Last updated: 2022-08-24
 %
 
-\newcommand{\gkeywordfont}{\sffamily\bfseries}
-\newcommand{\gkeyword}[1]{{\gkeywordfont #1}}
-\newcommand{\osigil}{\gkeyword{op}}
-\newcommand{\esigil}{\gkeyword{event}}
+\newcommand{\rckeywordfont}{\sffamily\bfseries}
+\newcommand{\rckeyword}[1]{{\rckeywordfont #1}}
+\newcommand{\rcosigil}{\rckeyword{op}}
+\newcommand{\rcesigil}{\rckeyword{event}}
 
 % Shading used for various parts of the graphical notation.
 % Colour to be used very sparingly here.
-\colorlet{gshading}{black!20}
+\colorlet{rcshading}{black!20}
 
 \usetikzlibrary{arrows.meta,matrix,shapes,calc,fit}
 \tikzset{
     rcseq/.style={row sep=2.2em, column sep=8em},
 % Actors
-    actor/.style={draw, rectangle, minimum width=4em, align=center, minimum height=1.7em, fill={gshading}, font={\footnotesize\sffamily}},
+    actor/.style={draw, rectangle, minimum width=4em, align=center, minimum height=1.7em, fill={rcshading}, font={\footnotesize\sffamily}},
 % Control flow
     lifeline/.style={thick},
     cfbox/.style={draw, solid},
-    cfheader/.style={chamfered rectangle, draw, font={\scriptsize\sffamily}, fill={gshading}, chamfered rectangle corners=south east, inner sep=0.1em},
+    cfheader/.style={chamfered rectangle, draw, font={\scriptsize\sffamily}, fill={rcshading}, chamfered rectangle corners=south east, inner sep=0.1em},
     branchdiv/.style={draw, thick, dotted},
     guard/.style={font={\scriptsize\sffamily}, anchor=north east, align=right, inner sep=0.2em},
 % Deadlines
@@ -39,7 +39,7 @@
 
 % pseudo-UML stereotype name
 % #1: name of the stereotype
-\newcommand{\gstereotype}[1]{\gkeyword{\(\langle\!\langle\)\,#1\,\(\rangle\!\rangle\)}}
+\newcommand{\gstereotype}[1]{\rckeyword{\(\langle\!\langle\)\,#1\,\(\rangle\!\rangle\)}}
 
 % Target actor
 \newcommand{\gtarget}{\gstereotype{target}}
@@ -47,17 +47,6 @@
 % Component actor
 % #1: name of the type
 \newcommand{\gcomponent}[1]{\gstereotype{component} #1}
-
-% Below are the versions that explicitly mention the aliases, in case we want them back:
-
-%% Target actor
-%% #1: name of the actor
-%\newcommand{\gtarget}[1]{\gstereotype{target} #1}
-
-%% Component actor
-%% #1: name of the type
-%% #2: name of the actor
-%\newcommand{\gcomponent}[2]{\gstereotype{component}\\#2 : #1}
 
 \newcommand{\gdiff}[2]{#1\setminus#2}
 \newcommand{\guniverse}{\ast}
@@ -84,15 +73,15 @@
 }
 
 % Sequence diagram
-% #1: top-left (module)
+% #1: top-left
 % #2: bottom-right
 % #3: target name
 % #4: sequence name
-\newcommand{\gseq}[4]{
+\newcommand{\rcseqframe}[4]{
   % Slightly eccentric definition here to line the world up with the RHS,
   % and leave room for the top 'sd' line.
   \draw ($(#1) + (0, 3em)$) rectangle (#2);
-  \node[cfheader, anchor=north west] at ($(#1) + (0, 3em)$) {\footnotesize \gkeyword{sd} #4 (\lstinline{#3})};
+  \node[cfheader, anchor=north west] at ($(#1) + (0, 3em)$) {\footnotesize \rckeyword{sd} #4 (#3)};
 }
 
 % Guard
@@ -102,8 +91,8 @@
 \NewDocumentCommand{\gguard}{m m m}{\node[guard] (#1) at (#2) {[#3]};}
 
 % Wildcard with an optional binding
-\NewDocumentCommand{\gwildcard}{o}{\gkeyword{any}\IfValueT{#1}{ \gkeyword{as} #1}}
-\NewDocumentCommand{\gusebinding}{m}{\gkeyword{@}#1}
+\NewDocumentCommand{\gwildcard}{o}{\rckeyword{any}\IfValueT{#1}{ \rckeyword{as} #1}}
+\NewDocumentCommand{\gusebinding}{m}{\rckeyword{@}#1}
 
 % The 'otherwise' guard
 \NewDocumentCommand{\gotherwise}{}{otherwise}
@@ -114,7 +103,7 @@
 % #3: loop header
 % (#4: inner sep)
 % (#5: horizontal inner sep)
-\NewDocumentCommand{\gloop}{m m m O{0.4em} O{0}}{\gcfrag{#1}{#4}{\gkeyword{loop}#3 #2}{loop#2}[cfbox][#5]}
+\NewDocumentCommand{\gloop}{m m m O{0.4em} O{0}}{\gcfrag{#1}{#4}{\rckeyword{loop}#3 #2}{loop#2}[cfbox][#5]}
 
 % Gap
 % #1: top-left
@@ -122,7 +111,7 @@
 % #3: set
 % (#4: inner sep)
 % (#5: horizontal inner sep)
-\NewDocumentCommand{\guntil}{m m m O{0.3em} O{1.1em}}{\gcfrag{#1}{#4}{\gkeyword{any}(\(#3\)) \gkeyword{until} }{#2}[cfbox][#5]}
+\NewDocumentCommand{\guntil}{m m m O{0.3em} O{1.1em}}{\gcfrag{#1}{#4}{\rckeyword{any}(\(#3\)) \rckeyword{until} }{#2}[cfbox][#5]}
 
 % Branch division
 % #1: name of branch
@@ -141,13 +130,13 @@
 \NewDocumentCommand{\gbranch}{m m m}{\gcfrag{#1}{0.1em}{#3 #2}{branch#2}}
 
 % Alternative branch header
-\NewDocumentCommand{\galternative}{}{\gkeyword{alt}}
+\NewDocumentCommand{\galternative}{}{\rckeyword{alt}}
 % X-Alternative branch header
-\NewDocumentCommand{\gxalternative}{}{\gkeyword{xalt}}
+\NewDocumentCommand{\gxalternative}{}{\rckeyword{xalt}}
 % Parallel branch header
-\NewDocumentCommand{\gparallel}{}{\gkeyword{par}}
+\NewDocumentCommand{\gparallel}{}{\rckeyword{par}}
 % Optional block header
-\NewDocumentCommand{\gopt}{}{\gkeyword{opt}}
+\NewDocumentCommand{\gopt}{}{\rckeyword{opt}}
 
 
 % Loop bounds
@@ -183,7 +172,7 @@
 % #2: LHS
 % #3: RHS
 % #4: units expression
-\NewDocumentCommand{\gwait}{s m m m}{\draw (#2) edge[wait, \IfBooleanTF{#1}{hot}{cold}] node[arrowlabel] {\gkeyword{wait}(#4)} (#3);}
+\NewDocumentCommand{\gwait}{s m m m}{\draw (#2) edge[wait, \IfBooleanTF{#1}{hot}{cold}] node[arrowlabel] {\rckeyword{wait}(#4)} (#3);}
 
 \newcommand{\gdeadlinehoffset}{0.6em}
 \newcommand{\gdeadlinevoffset}{0.5em}
