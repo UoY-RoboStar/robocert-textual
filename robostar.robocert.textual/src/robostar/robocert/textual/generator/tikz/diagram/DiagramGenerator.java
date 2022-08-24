@@ -13,6 +13,7 @@
 
 package robostar.robocert.textual.generator.tikz.diagram;
 
+import circus.robocalc.robochart.NamedElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,9 @@ import java.util.stream.Stream;
 import com.google.common.collect.Streams;
 
 import robostar.robocert.Actor;
+import robostar.robocert.ComponentActor;
 import robostar.robocert.Interaction;
+import robostar.robocert.TargetActor;
 import robostar.robocert.World;
 import robostar.robocert.textual.generator.tikz.InteractionUnwinder;
 import robostar.robocert.textual.generator.tikz.InteractionUnwinder.Entry;
@@ -44,8 +47,7 @@ public class DiagramGenerator {
     // We treat the World separately -- it always appears at the end of a row.
     final var actors = it.getActors().stream().filter(x -> !(x instanceof World)).toList();
 
-    final State state = generateState(it,
-        actors);
+    final State state = generateState(it, actors);
 
     final var heading = """
         %% Remember to \\input or import the baseline definitions for RoboCert TikZ files.
@@ -91,13 +93,37 @@ public class DiagramGenerator {
   }
 
   private Stream<String> diagramBoundaryRowCells(List<Actor> actors, EntryType type) {
-    return Streams.concat(Stream.of(diagramBoundary(false, type)), actors.stream().map(_a -> ""),
+    // Construct the actor nodes on the top row of the diagram.
+    final var actorCells = actors.stream()
+        .map(type == EntryType.Entered ? this::actorNode : _a -> "");
+
+    return Streams.concat(Stream.of(diagramBoundary(false, type)), actorCells,
         Stream.of(diagramBoundary(true, type)));
+  }
+
+  private String actorNode(Actor actor) {
+    final var text = "%s %s".formatted(actorStereotype(actor), actor.getName());
+    return node("rcactor", "actor_" + actor.getName(), text);
+  }
+
+  private static String actorStereotype(Actor actor) {
+    if (actor instanceof TargetActor) {
+      return "\\rctarget{}";
+    } else if (actor instanceof ComponentActor c) {
+      final var cnode = c.getNode();
+      final var cname = cnode instanceof NamedElement n ? n.getName() : cnode.toString();
+      return "\\rccomponent{%s}".formatted(cname);
+    }
+    return "(unknown)";
   }
 
   private String diagramBoundary(boolean isWorld, EntryType type) {
     final var actor = isWorld ? "w" : "b";
     return coordinate("diagram_%s_%s".formatted(actor, type.toString()));
+  }
+
+  private String node(String style, String name, String content) {
+    return "\\node[%s](%s){%s};".formatted(style, name, content);
   }
 
   private String coordinate(String name) {

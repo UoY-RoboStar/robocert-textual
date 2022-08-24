@@ -17,7 +17,7 @@
 \tikzset{
     rcseq/.style={row sep=2.2em, column sep=8em},
 % Actors
-    actor/.style={draw, rectangle, minimum width=4em, align=center, minimum height=1.7em, fill={rcshading}, font={\footnotesize\sffamily}},
+    rcactor/.style={draw, rectangle, minimum width=4em, align=center, minimum height=1.7em, fill={rcshading}, font={\footnotesize\sffamily}},
 % Control flow
     lifeline/.style={thick},
     cfbox/.style={draw, solid},
@@ -39,14 +39,14 @@
 
 % pseudo-UML stereotype name
 % #1: name of the stereotype
-\newcommand{\gstereotype}[1]{\rckeyword{\(\langle\!\langle\)\,#1\,\(\rangle\!\rangle\)}}
+\newcommand{\rcstereotype}[1]{\rckeyword{\(\langle\!\langle\)\,#1\,\(\rangle\!\rangle\)}}
 
 % Target actor
-\newcommand{\gtarget}{\gstereotype{target}}
+\newcommand{\rctarget}{\rcstereotype{target}}
 
 % Component actor
 % #1: name of the type
-\newcommand{\gcomponent}[1]{\gstereotype{component} #1}
+\newcommand{\rccomponent}[1]{\rcstereotype{component} #1}
 
 \newcommand{\gdiff}[2]{#1\setminus#2}
 \newcommand{\guniverse}{\ast}
