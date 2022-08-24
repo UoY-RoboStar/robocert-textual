@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
@@ -9,75 +9,50 @@
  *
  * Contributors:
  *   Matt Windsor - initial definition
- ******************************************************************************/
+ */
 package robostar.robocert.textual.generator.tockcsp;
 
 import com.google.inject.Inject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.generator.AbstractGenerator;
-import org.eclipse.xtext.generator.IFileSystemAccess2;
-import org.eclipse.xtext.generator.IGeneratorContext;
 import robostar.robocert.textual.generator.RoboCertOutputConfigurationProvider;
-import robostar.robocert.textual.generator.utils.GeneratorUtil;
-import robostar.robocert.textual.generator.utils.name.GroupNamer;
+import robostar.robocert.textual.generator.utils.PackageGenerator;
+import robostar.robocert.textual.generator.utils.StandardLibraryGenerator;
+import robostar.robocert.textual.generator.utils.param.AbstractRoboCertGenerator;
 
 /**
  * Generates tock-CSP from RoboCert specifications.
  *
  * @author Matt Windsor
  */
-public class TockCspGenerator extends AbstractGenerator {
+public class TockCspGenerator extends AbstractRoboCertGenerator {
 
-  private final CertPackageGenerator csp;
-  private final GroupNamer gn;
+  private final CertPackageGenerator pkgGen;
+  private final StandardLibraryGenerator libGen;
 
   /**
    * Constructs a tock-CSP generator.
    *
-   * @param csp generator for CertPackage file content.
-   * @param gn  synthesises names for CertPackages.
+   * @param pkgGen generator for CertPackage file content.
+   * @param libGen generator for the tock-CSP standard library.
    */
   @Inject
-  public TockCspGenerator(CertPackageGenerator csp, GroupNamer gn) {
+  public TockCspGenerator(CertPackageGenerator pkgGen, StandardLibraryGenerator libGen) {
     super();
 
-    this.csp = csp;
-    this.gn = gn;
+    libGen.setOutputConfiguration(RoboCertOutputConfigurationProvider.CSP_LIBRARY_OUTPUT);
+    libGen.setInputDirectory("lib/semantics");
+    libGen.addFiles("robocert_defs.csp", "robocert_seq_defs.csp");
+
+    this.pkgGen = pkgGen;
+    this.libGen = libGen;
   }
 
   @Override
-  public void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-    final var isCanceled = generateCSPStandardLibrary(fsa, context);
-    if (isCanceled) {
-      return;
-    }
-
-    generateCSPPackages(resource, fsa, context);
+  protected PackageGenerator pkgGenerator() {
+    return pkgGen;
   }
 
-  private boolean generateCSPStandardLibrary(IFileSystemAccess2 fsa, IGeneratorContext context) {
-    for (var filename : CSP_LIBRARY_FILES) {
-      generateCSPStandardLibraryFile(fsa, filename);
-      if (context.getCancelIndicator().isCanceled()) {
-        return true;
-      }
-    }
-    return false;
+  @Override
+  protected StandardLibraryGenerator libGenerator() {
+    return libGen;
   }
-
-  private void generateCSPStandardLibraryFile(IFileSystemAccess2 fsa, String filename) {
-    final var stream = TockCspGenerator.class.getResourceAsStream("lib/semantics/" + filename);
-    fsa.generateFile(filename, RoboCertOutputConfigurationProvider.CSP_LIBRARY_OUTPUT, stream);
-  }
-
-  private void generateCSPPackages(Resource resource, IFileSystemAccess2 fsa,
-      IGeneratorContext context) {
-    GeneratorUtil.forEachPackage(resource, context, x -> {
-      // TODO(@MattWindsor91): multiple packages in one resource?
-      fsa.generateFile(gn.getPackageName(x) + ".csp", csp.generate(x));
-    });
-  }
-
-  private static final String[] CSP_LIBRARY_FILES = new String[]{"robocert_defs.csp",
-      "robocert_seq_defs.csp"};
 }

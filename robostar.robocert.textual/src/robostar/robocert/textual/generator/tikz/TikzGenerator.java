@@ -15,61 +15,46 @@ package robostar.robocert.textual.generator.tikz;
 
 
 import com.google.inject.Inject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.generator.AbstractGenerator;
-import org.eclipse.xtext.generator.IFileSystemAccess2;
-import org.eclipse.xtext.generator.IGeneratorContext;
-import robostar.robocert.Interaction;
-import robostar.robocert.SpecificationGroup;
 import robostar.robocert.textual.generator.RoboCertOutputConfigurationProvider;
-import robostar.robocert.textual.generator.utils.GeneratorUtil;
-import robostar.robocert.textual.generator.utils.name.GroupNamer;
+import robostar.robocert.textual.generator.utils.PackageGenerator;
+import robostar.robocert.textual.generator.utils.StandardLibraryGenerator;
+import robostar.robocert.textual.generator.utils.param.AbstractRoboCertGenerator;
 
 /**
  * Generates TikZ diagrams from RoboCert interaction diagrams.
  *
  * @author Matt Windsor
  */
-public class TikzGenerator extends AbstractGenerator {
+public class TikzGenerator extends AbstractRoboCertGenerator {
 
-  private final GroupNamer gn;
+  private final StandardLibraryGenerator libGen;
+  private final CertPackageGenerator pkgGen;
 
   /**
-   * Constructs a tock-CSP generator.
+   * Constructs a TikZ generator.
    *
-   * @param gn synthesises names for CertPackages.
+   * @param libGen copies the TikZ standard definitions to the output directory.
+   * @param pkgGen generates TikZ for the packages in a resource.
    */
   @Inject
-  public TikzGenerator(GroupNamer gn) {
+  public TikzGenerator(StandardLibraryGenerator libGen, CertPackageGenerator pkgGen) {
     super();
 
-    this.gn = gn;
+    libGen.setOutputConfiguration(RoboCertOutputConfigurationProvider.TIKZ_LIBRARY_OUTPUT);
+    libGen.setInputDirectory("lib");
+    libGen.addFiles("defs.tex");
+
+    this.libGen = libGen;
+    this.pkgGen = pkgGen;
   }
 
   @Override
-  public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-    GeneratorUtil.forEachPackage(input, context, pkg -> {
-      final var pkgName = gn.getPackageName(pkg);
-
-      for (var cgroup : pkg.getGroups()) {
-        if (!(cgroup instanceof SpecificationGroup group)) {
-          continue;
-        }
-
-        final var groupName = gn.getOrSynthesiseName(group);
-
-        for (var diagram : group.getInteractions()) {
-          final var path = "diagrams/%s/%s/%s.tikz".formatted(pkgName, groupName,
-              diagram.getName());
-          fsa.generateFile(path, RoboCertOutputConfigurationProvider.TIKZ_OUTPUT,
-              generate(diagram));
-        }
-      }
-    });
+  protected PackageGenerator pkgGenerator() {
+    return pkgGen;
   }
 
-
-  private CharSequence generate(Interaction x) {
-    return "% TODO";
+  @Override
+  protected StandardLibraryGenerator libGenerator() {
+    return libGen;
   }
 }

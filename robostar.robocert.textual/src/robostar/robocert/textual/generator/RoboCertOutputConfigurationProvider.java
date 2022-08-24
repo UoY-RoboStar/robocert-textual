@@ -21,29 +21,38 @@ import org.eclipse.xtext.generator.OutputConfiguration;
 
 import com.google.inject.Inject;
 
-import robostar.robocert.textual.generator.tockcsp.core.PathSet;
+import robostar.robocert.textual.generator.tikz.TikzPathSet;
+import robostar.robocert.textual.generator.tockcsp.core.TockCspPathSet;
 
 /**
  * Overrides output configuration to save CSP to csp-gen.
  */
 public class RoboCertOutputConfigurationProvider implements IOutputConfigurationProvider {
+
 	@Inject
-	private PathSet ps;
+	private TockCspPathSet tockCspPathSet;
+
+
+	@Inject
+	private TikzPathSet tikzPathSet;
 
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations() {
 		// TODO: is this the right thing to do?
 		// TODO: PRISM gen
 
-		final var set = new HashSet<OutputConfiguration>(3);
-		set.add(buildConfig(IFileSystemAccess.DEFAULT_OUTPUT, "tock-CSP folder", ps.CSP_PACKAGE_PATH));
-		set.add(buildConfig(CSP_LIBRARY_OUTPUT, "tock-CSP standard library", ps.CSP_LIBRARY_PATH));
-		set.add(buildConfig(TIKZ_OUTPUT, "TikZ folder", ps.TIKZ_PATH));
+		final var set = new HashSet<OutputConfiguration>(4);
+
+		set.add(buildConfig(IFileSystemAccess.DEFAULT_OUTPUT, "tock-CSP folder", tockCspPathSet.PACKAGE_PATH));
+		set.add(buildConfig(CSP_LIBRARY_OUTPUT, "tock-CSP standard library", tockCspPathSet.LIBRARY_PATH));
+
+		set.add(buildConfig(TIKZ_OUTPUT, "TikZ folder", tikzPathSet.DIAGRAM_PATH));
+		set.add(buildConfig(TIKZ_LIBRARY_OUTPUT, "TikZ standard library", tikzPathSet.LIBRARY_PATH));
 		return set;
 	}
 
 	/**
-	 * Key of the standard library output configuration.
+	 * Key of the CSP standard library output configuration.
 	 */
 	public static final String CSP_LIBRARY_OUTPUT = "CSP_LIBRARY_OUTPUT";
 
@@ -51,6 +60,11 @@ public class RoboCertOutputConfigurationProvider implements IOutputConfiguration
 	 * Key of the TikZ output configuration.
 	 */
 	public static final String TIKZ_OUTPUT = "TIKZ_OUTPUT";
+
+	/**
+	 * Key of the TikZ standard library output configuration.
+	 */
+	public static final String TIKZ_LIBRARY_OUTPUT = "TIKZ_LIBRARY_OUTPUT";
 
 	private OutputConfiguration buildConfig(String name, String descr, String dir) {
 		final var result = new OutputConfiguration(name);

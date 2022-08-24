@@ -1,0 +1,205 @@
+%
+% RoboCert Graphical notation (using TikZ)
+%
+% Last updated: 2022-08-24
+%
+
+\newcommand{\gkeywordfont}{\sffamily\bfseries}
+\newcommand{\gkeyword}[1]{{\gkeywordfont #1}}
+\newcommand{\osigil}{\gkeyword{op}}
+\newcommand{\esigil}{\gkeyword{event}}
+
+% Shading used for various parts of the graphical notation.
+% Colour to be used very sparingly here.
+\colorlet{gshading}{black!20}
+
+\usetikzlibrary{arrows.meta,matrix,shapes,calc,fit}
+\tikzset{
+    rcseq/.style={row sep=2.2em, column sep=8em},
+% Actors
+    actor/.style={draw, rectangle, minimum width=4em, align=center, minimum height=1.7em, fill={gshading}, font={\footnotesize\sffamily}},
+% Control flow
+    lifeline/.style={thick},
+    cfbox/.style={draw, solid},
+    cfheader/.style={chamfered rectangle, draw, font={\scriptsize\sffamily}, fill={gshading}, chamfered rectangle corners=south east, inner sep=0.1em},
+    branchdiv/.style={draw, thick, dotted},
+    guard/.style={font={\scriptsize\sffamily}, anchor=north east, align=right, inner sep=0.2em},
+% Deadlines
+    deadline/.style={solid, font={\scriptsize}},
+    deadlinespan/.style={latex-latex},
+% Temperature modalities
+    cold/.style={thick, solid},
+    hot/.style={cold, double},
+% Occurrences
+    arrow/.style={->, cold},
+    arrowlabel/.style={fill=white, font={\scriptsize\sffamily}, inner sep=0.2em},
+    wait/.style={cold, font={\scriptsize}},
+    end/.style={fill, very thick, rectangle, minimum height=3pt, minimum width=15pt, inner sep=0em}
+}
+
+% pseudo-UML stereotype name
+% #1: name of the stereotype
+\newcommand{\gstereotype}[1]{\gkeyword{\(\langle\!\langle\)\,#1\,\(\rangle\!\rangle\)}}
+
+% Target actor
+\newcommand{\gtarget}{\gstereotype{target}}
+
+% Component actor
+% #1: name of the type
+\newcommand{\gcomponent}[1]{\gstereotype{component} #1}
+
+% Below are the versions that explicitly mention the aliases, in case we want them back:
+
+%% Target actor
+%% #1: name of the actor
+%\newcommand{\gtarget}[1]{\gstereotype{target} #1}
+
+%% Component actor
+%% #1: name of the type
+%% #2: name of the actor
+%\newcommand{\gcomponent}[2]{\gstereotype{component}\\#2 : #1}
+
+\newcommand{\gdiff}[2]{#1\setminus#2}
+\newcommand{\guniverse}{\ast}
+\newcommand{\gextset}[1]{\{#1\}}
+\newcommand{\gemptyset}{\gextset{}}
+\newcommand{\grefset}[1]{\textsf{#1}}
+
+% Combined fragment
+% #1: coordinates to fit
+% #2: pad factor
+% #3: fragment header
+% #4: node name
+% #5: style
+% #6: horizontal pad factor
+\NewDocumentCommand{\gcfrag}{m m m m O{cfbox} O{#2}} {
+  % Calculate an invisible bounding box
+  \node[fit={#1}] (bb#4) {};
+  % Then draw the header to the left of it
+  \node[cfheader, #5, anchor=north east] at ($(bb#4.north west) + (-#6, #2)$) (#4) {#3};
+  % And work out the bottom-right
+  \node at ($(bb#4.south east) + (#6, -#2)$) (br#4) {};
+  % Now draw the full bounding box
+  \node[#5, fit={(#4) (br#4)}, inner sep=0] {};
+}
+
+% Sequence diagram
+% #1: top-left (module)
+% #2: bottom-right
+% #3: target name
+% #4: sequence name
+\newcommand{\gseq}[4]{
+  % Slightly eccentric definition here to line the world up with the RHS,
+  % and leave room for the top 'sd' line.
+  \draw ($(#1) + (0, 3em)$) rectangle (#2);
+  \node[cfheader, anchor=north west] at ($(#1) + (0, 3em)$) {\footnotesize \gkeyword{sd} #4 (\lstinline{#3})};
+}
+
+% Guard
+% #1: name
+% #2: position (right edge of box)
+% #3: expression
+\NewDocumentCommand{\gguard}{m m m}{\node[guard] (#1) at (#2) {[#3]};}
+
+% Wildcard with an optional binding
+\NewDocumentCommand{\gwildcard}{o}{\gkeyword{any}\IfValueT{#1}{ \gkeyword{as} #1}}
+\NewDocumentCommand{\gusebinding}{m}{\gkeyword{@}#1}
+
+% The 'otherwise' guard
+\NewDocumentCommand{\gotherwise}{}{otherwise}
+
+% Loop
+% #1: coordinates to fit
+% #2: loop name
+% #3: loop header
+% (#4: inner sep)
+% (#5: horizontal inner sep)
+\NewDocumentCommand{\gloop}{m m m O{0.4em} O{0}}{\gcfrag{#1}{#4}{\gkeyword{loop}#3 #2}{loop#2}[cfbox][#5]}
+
+% Gap
+% #1: top-left
+% #2: name
+% #3: set
+% (#4: inner sep)
+% (#5: horizontal inner sep)
+\NewDocumentCommand{\guntil}{m m m O{0.3em} O{1.1em}}{\gcfrag{#1}{#4}{\gkeyword{any}(\(#3\)) \gkeyword{until} }{#2}[cfbox][#5]}
+
+% Branch division
+% #1: name of branch
+% #2: right
+\NewDocumentCommand{\gbranchdiv}{m m}{
+  \draw (#2 -| brbranch#1)
+        edge[branchdiv]
+        (#2 -| branch#1.west)
+  ;
+}
+
+% Branch
+% #1: fit
+% #2: branch name
+% #3: branch header
+\NewDocumentCommand{\gbranch}{m m m}{\gcfrag{#1}{0.1em}{#3 #2}{branch#2}}
+
+% Alternative branch header
+\NewDocumentCommand{\galternative}{}{\gkeyword{alt}}
+% X-Alternative branch header
+\NewDocumentCommand{\gxalternative}{}{\gkeyword{xalt}}
+% Parallel branch header
+\NewDocumentCommand{\gparallel}{}{\gkeyword{par}}
+% Optional block header
+\NewDocumentCommand{\gopt}{}{\gkeyword{opt}}
+
+
+% Loop bounds
+% These follow UML for now.
+\newcommand{\gloopinfinite}{}
+\newcommand{\gloopdefinite}[1]{(#1)}
+\newcommand{\glooprange}[2]{(#1, #2)}
+\newcommand{\glooplower}[1]{\glooprange{#1}{\(\ast\)}}
+
+% Generic message command
+% #1: LHS
+% #2: RHS
+% #3: sigil
+% #4: label
+% #5: temperature
+\NewDocumentCommand{\gmessage}{m m m m m}{\draw (#1) edge[arrow, \IfBooleanTF{#5}{hot}{cold}] node[arrowlabel] {#3\(\;\)#4} (#2);}
+
+% #1: temperature (star)
+% #2: LHS
+% #3: RHS
+% #4: label
+% #5: argument(s)
+\NewDocumentCommand{\goperation}{s m m m m}{\gmessage{#2}{#3}{\osigil}{#4(#5)}{#1}}
+
+% #1: temperature (star)
+% #2: LHS
+% #3: RHS
+% #4: label
+% #5: return value (optional)
+\NewDocumentCommand{\gevent}{s m m m o}{\gmessage{#2}{#3}{\esigil}{#4\IfValueT{#5}{(#5)}}{#1}}
+
+% #1: temperature (star)
+% #2: LHS
+% #3: RHS
+% #4: units expression
+\NewDocumentCommand{\gwait}{s m m m}{\draw (#2) edge[wait, \IfBooleanTF{#1}{hot}{cold}] node[arrowlabel] {\gkeyword{wait}(#4)} (#3);}
+
+\newcommand{\gdeadlinehoffset}{0.6em}
+\newcommand{\gdeadlinevoffset}{0.5em}
+% #1: Top
+% #2: Bottom
+% #3: Bounds set
+% #4: Lower bound
+\NewDocumentCommand{\gdeadline}{m m m}{
+  \draw[deadline]
+    ($(#1) + (0, \gdeadlinevoffset)$)
+      --
+    ($(#1) + (-\gdeadlinehoffset, \gdeadlinevoffset)$);
+  \draw
+    ($(#2) + (-\gdeadlinehoffset, -\gdeadlinevoffset)$)
+      edge[deadlinespan] node[font=\scriptsize, anchor=east, inner sep=0.2em] {#3}
+    ($(#1) + (-\gdeadlinehoffset, \gdeadlinevoffset)$)
+      edge[deadline]
+    ($(#2) + (0, -\gdeadlinevoffset)$);
+}

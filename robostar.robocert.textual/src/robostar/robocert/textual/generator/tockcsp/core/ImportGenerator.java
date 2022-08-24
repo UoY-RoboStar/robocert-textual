@@ -35,7 +35,7 @@ import robostar.robocert.util.resolve.TargetElementResolver;
  *
  * @author Matt Windsor
  */
-public record ImportGenerator(PathSet ps,
+public record ImportGenerator(TockCspPathSet ps,
                               PackageFinder pf,
                               CTimedGeneratorUtils gu,
                               TargetElementResolver targetElementResolver) {
