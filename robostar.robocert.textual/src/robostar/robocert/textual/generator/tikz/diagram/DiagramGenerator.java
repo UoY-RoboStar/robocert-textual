@@ -57,19 +57,22 @@ public class DiagramGenerator {
     final var matrix = state.matrixRows.stream()
         .collect(Collectors.joining("\n", "\\matrix[rcseq]{\n", "\n};"));
 
-    final var lifelines = actors.stream().map(DiagramGenerator::lifeline).collect(Collectors.joining("\n"));
+    final var lifelines = actors.stream().map(DiagramGenerator::lifeline)
+        .collect(Collectors.joining("\n"));
 
     final var targetName = String.join("::", it.getGroup().getName(),
         it.getGroup().getTarget().toString());
-    final var frame = "\\rcseqframe{diagram_b_enter}{diagram_w_exit}{%s}{%s}".formatted(targetName,
-        it.getName());
+    final var frame = "\\rcseqframe{%d}{diagram_b_enter}{diagram_w_exit}{%s}{%s}".formatted(
+        state.outerDepthScale, targetName, it.getName());
 
     return String.join("\n\n", heading, matrix, frame, lifelines);
   }
 
   private State generateState(Interaction it, List<Actor> actors) {
-    final var state = new State(new ArrayList<>());
-    for (var entry : new InteractionUnwinder(it).unwind()) {
+    final var unwound = new InteractionUnwinder(it).unwind();
+
+    final var state = new State(new ArrayList<>(), unwound.maxDepth());
+    for (var entry : unwound.entries()) {
       final var row = matrixRow(actors, entry);
       if (row != null) {
         state.matrixRows.add(row);
@@ -155,7 +158,7 @@ public class DiagramGenerator {
     return "\\coordinate(%s);".formatted(name);
   }
 
-  private record State(List<String> matrixRows) {
+  private record State(List<String> matrixRows, int outerDepthScale) {
 
   }
 }

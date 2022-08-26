@@ -9,6 +9,12 @@
 \newcommand{\rcosigil}{\rckeyword{op}}
 \newcommand{\rcesigil}{\rckeyword{event}}
 
+\newlength{\rctopmargin}
+\setlength{\rctopmargin}{3em}
+
+\newlength{\rcstepmargin}
+\setlength{\rcstepmargin}{.2em}
+
 % Shading used for various parts of the graphical notation.
 % Colour to be used very sparingly here.
 \colorlet{rcshading}{black!20}
@@ -73,15 +79,16 @@
 }
 
 % Sequence diagram
-% #1: top-left
-% #2: bottom-right
-% #3: target name
-% #4: sequence name
-\newcommand{\rcseqframe}[4]{
+% #1: 
+% #2: top-left
+% #3: bottom-right
+% #4: target name
+% #5: sequence name
+\newcommand{\rcseqframe}[5]{
   % Slightly eccentric definition here to line the world up with the RHS,
   % and leave room for the top 'sd' line.
-  \draw ($(#1) + (0, 3em)$) rectangle (#2);
-  \node[cfheader, anchor=north west] at ($(#1) + (0, 3em)$) {\footnotesize \rckeyword{sd} #4 (#3)};
+  \draw ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) rectangle ($(#3) + (#1*\the\rcstepmargin, -#1*\the\rcstepmargin)$);
+  \node[cfheader, anchor=north west] at ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) {\footnotesize \rckeyword{sd} #5 (#4)};
 }
 
 % Guard

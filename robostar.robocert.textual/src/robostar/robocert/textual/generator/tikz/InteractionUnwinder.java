@@ -26,27 +26,38 @@ import robostar.robocert.OccurrenceFragment;
 import robostar.robocert.util.RoboCertSwitch;
 
 /**
- * Traverses an interaction, flattening its events.
+ * Traverses an interaction, flattening its structure into a single linear stream of events and
+ * recording information about depth.
+ * <p>
+ * This is mostly useful for things like the TikZ generator, but is designed for generality.
+ *
+ * @author Matt Windsor
  */
 public class InteractionUnwinder {
+
   private final Interaction subject;
+  private int currentDepth = 0;
+  private int maxDepth = 0;
+
   private List<Entry> entries = null;
 
   public InteractionUnwinder(Interaction subject) {
     this.subject = subject;
   }
 
-  public List<Entry> unwind() {
+  public Result unwind() {
     entries = new ArrayList<>();
+    maxDepth = currentDepth = 0;
     new Switch().doSwitch(subject);
-    return entries;
+    return new Result(entries, maxDepth);
   }
 
   private class Switch extends RoboCertSwitch<Boolean> {
+
     @Override
     public Boolean caseInteraction(Interaction object) {
       add(object, EntryType.Entered);
-      for (var frag: object.getFragments()) {
+      for (var frag : object.getFragments()) {
         doSwitch(frag);
       }
       add(object, EntryType.Exited);
@@ -57,9 +68,11 @@ public class InteractionUnwinder {
     @Override
     public Boolean caseBranchFragment(BranchFragment object) {
       add(object, EntryType.Entered);
+
       for (var branch : object.getBranches()) {
         doSwitch(branch);
       }
+
       add(object, EntryType.Exited);
 
       return Boolean.TRUE;
@@ -67,20 +80,20 @@ public class InteractionUnwinder {
 
     @Override
     public Boolean caseBlockFragment(BlockFragment object) {
-      add(object, EntryType.Entered);
+      enter(object);
       doSwitch(object.getBody());
-      add(object, EntryType.Exited);
+      exit(object);
 
       return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseInteractionOperand(InteractionOperand object) {
-      add(object, EntryType.Entered);
+      enter(object);
       for (var inner : object.getFragments()) {
         doSwitch(inner);
       }
-      add(object, EntryType.Exited);
+      exit(object);
 
       return Boolean.TRUE;
     }
@@ -93,11 +106,34 @@ public class InteractionUnwinder {
     }
   }
 
-  private boolean add(EObject object, EntryType etype) {
-    return entries.add(new Entry(etype, entries.size(), object));
+  private void enter(EObject object) {
+    add(object, EntryType.Entered);
+    currentDepth++;
+    maxDepth = Integer.max(currentDepth, maxDepth);
   }
 
-  public record Entry(EntryType type, int position, EObject subject) {}
+  private void exit(EObject object) {
+    currentDepth--;
+    add(object, EntryType.Exited);
+  }
+
+  private void add(EObject object, EntryType etype) {
+    entries.add(new Entry(etype, entries.size(), currentDepth, object));
+  }
+
+  /**
+   * The result of an interaction unwinding.
+   *
+   * @param entries  list of all entries in occurrence order.
+   * @param maxDepth maximum nesting depth (0 = top level only).
+   */
+  public record Result(List<Entry> entries, int maxDepth) {
+
+  }
+
+  public record Entry(EntryType type, int position, int depth, EObject subject) {
+
+  }
 
   public enum EntryType {
     /**
