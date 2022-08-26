@@ -57,12 +57,14 @@ public class DiagramGenerator {
     final var matrix = state.matrixRows.stream()
         .collect(Collectors.joining("\n", "\\matrix[rcseq]{\n", "\n};"));
 
+    final var lifelines = actors.stream().map(DiagramGenerator::lifeline).collect(Collectors.joining("\n"));
+
     final var targetName = String.join("::", it.getGroup().getName(),
         it.getGroup().getTarget().toString());
     final var frame = "\\rcseqframe{diagram_b_enter}{diagram_w_exit}{%s}{%s}".formatted(targetName,
         it.getName());
 
-    return String.join("\n\n", heading, matrix, frame);
+    return String.join("\n\n", heading, matrix, frame, lifelines);
   }
 
   private State generateState(Interaction it, List<Actor> actors) {
@@ -94,16 +96,39 @@ public class DiagramGenerator {
 
   private Stream<String> diagramBoundaryRowCells(List<Actor> actors, EntryType type) {
     // Construct the actor nodes on the top row of the diagram.
-    final var actorCells = actors.stream()
-        .map(type == EntryType.Entered ? this::actorNode : _a -> "");
+    final var actorCells = actors.stream().map(x -> actorNode(x, type));
 
     return Streams.concat(Stream.of(diagramBoundary(false, type)), actorCells,
         Stream.of(diagramBoundary(true, type)));
   }
 
-  private String actorNode(Actor actor) {
+  private String actorNode(Actor actor, EntryType type) {
+    final var nodeName = actorNodeName(actor, type);
+    if (type == EntryType.Entered) {
+      return actorEntryNode(actor, nodeName);
+    }
+    return coordinate(nodeName);
+  }
+
+  /**
+   * Constructs the TikZ command for drawing an actor's lifeline.
+   *
+   * @param actor actor for which we are drawing a lifeline.
+   * @return TikZ for the lifeline, a line between the actor start and actor end.
+   */
+  private static String lifeline(Actor actor) {
+    final var start = actorNodeName(actor, EntryType.Entered);
+    final var end = actorNodeName(actor, EntryType.Exited);
+    return "\\draw[rclifeline] (%s) -- (%s);".formatted(start, end);
+  }
+
+  private static String actorNodeName(Actor actor, EntryType type) {
+    return "actor_n%s_%s".formatted(actor.getName(), type.toString());
+  }
+
+  private String actorEntryNode(Actor actor, String nodeName) {
     final var text = "%s %s".formatted(actorStereotype(actor), actor.getName());
-    return node("rcactor", "actor_" + actor.getName(), text);
+    return node("rcactor", nodeName, text);
   }
 
   private static String actorStereotype(Actor actor) {
