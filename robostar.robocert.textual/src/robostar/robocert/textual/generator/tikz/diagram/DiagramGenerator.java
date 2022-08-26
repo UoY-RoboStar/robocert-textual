@@ -13,29 +13,37 @@
 
 package robostar.robocert.textual.generator.tikz.diagram;
 
-import circus.robocalc.robochart.NamedElement;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.inject.Inject;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.google.common.collect.Streams;
 
 import robostar.robocert.Actor;
-import robostar.robocert.ComponentActor;
 import robostar.robocert.Interaction;
-import robostar.robocert.TargetActor;
 import robostar.robocert.World;
-import robostar.robocert.textual.generator.tikz.InteractionUnwinder;
-import robostar.robocert.textual.generator.tikz.InteractionUnwinder.Entry;
 import robostar.robocert.textual.generator.tikz.InteractionUnwinder.EntryType;
+import robostar.robocert.textual.generator.tikz.TikzNodeNamer;
+import robostar.robocert.textual.generator.tikz.TikzStructureGenerator;
 
 /**
  * Generates TikZ for one diagram.
  *
+ * @param tikz TikZ structure generator.
+ * @param nodeNamer TikZ node namer.
+ *
  * @author Matt Windsor
  */
-public class DiagramGenerator {
+public record DiagramGenerator(TikzStructureGenerator tikz, TikzNodeNamer nodeNamer) {
+
+  public static final String HEADING = """
+      % Remember to \\input or import the baseline definitions for RoboCert TikZ files.
+      % See the standalone .tex file for an example.
+      """;
+
+  @Inject
+  public DiagramGenerator {
+    Objects.requireNonNull(tikz);
+    Objects.requireNonNull(nodeNamer);
+  }
 
   /**
    * Generates TikZ for a diagram.
@@ -47,70 +55,20 @@ public class DiagramGenerator {
     // We treat the World separately -- it always appears at the end of a row.
     final var actors = it.getActors().stream().filter(x -> !(x instanceof World)).toList();
 
-    final State state = generateState(it, actors);
+    final var state = new DiagramStateBuilder(tikz, nodeNamer, it, actors).build();
 
-    final var heading = """
-        %% Remember to \\input or import the baseline definitions for RoboCert TikZ files.
-        %% See the standalone .tex file for an example.
-        """;
-
-    final var matrix = state.matrixRows.stream()
+    final var matrix = state.matrixRows().stream()
         .collect(Collectors.joining("\n", "\\matrix[rcseq]{\n", "\n};"));
 
-    final var lifelines = actors.stream().map(DiagramGenerator::lifeline)
+    final var lifelines = actors.stream().map(this::lifeline)
         .collect(Collectors.joining("\n"));
 
     final var targetName = String.join("::", it.getGroup().getName(),
         it.getGroup().getTarget().toString());
     final var frame = "\\rcseqframe{%d}{diagram_b_enter}{diagram_w_exit}{%s}{%s}".formatted(
-        state.outerDepthScale, targetName, it.getName());
+        state.outerDepthScale(), targetName, it.getName());
 
-    return String.join("\n\n", heading, matrix, frame, lifelines);
-  }
-
-  private State generateState(Interaction it, List<Actor> actors) {
-    final var unwound = new InteractionUnwinder(it).unwind();
-
-    final var state = new State(new ArrayList<>(), unwound.maxDepth());
-    for (var entry : unwound.entries()) {
-      final var row = matrixRow(actors, entry);
-      if (row != null) {
-        state.matrixRows.add(row);
-      }
-    }
-    return state;
-  }
-
-  private String matrixRow(List<Actor> actors, Entry entry) {
-    final var cells = matrixRowCells(actors, entry);
-    return cells == null ? null : cells.collect(Collectors.joining(" & ", "  ", " \\\\"));
-  }
-
-  private Stream<String> matrixRowCells(List<Actor> actors, Entry entry) {
-    final var subject = entry.subject();
-    final var type = entry.type();
-
-    if (subject instanceof Interaction) {
-      return diagramBoundaryRowCells(actors, type);
-    }
-
-    return null;
-  }
-
-  private Stream<String> diagramBoundaryRowCells(List<Actor> actors, EntryType type) {
-    // Construct the actor nodes on the top row of the diagram.
-    final var actorCells = actors.stream().map(x -> actorNode(x, type));
-
-    return Streams.concat(Stream.of(diagramBoundary(false, type)), actorCells,
-        Stream.of(diagramBoundary(true, type)));
-  }
-
-  private String actorNode(Actor actor, EntryType type) {
-    final var nodeName = actorNodeName(actor, type);
-    if (type == EntryType.Entered) {
-      return actorEntryNode(actor, nodeName);
-    }
-    return coordinate(nodeName);
+    return String.join("\n\n", HEADING, matrix, frame, lifelines);
   }
 
   /**
@@ -119,46 +77,9 @@ public class DiagramGenerator {
    * @param actor actor for which we are drawing a lifeline.
    * @return TikZ for the lifeline, a line between the actor start and actor end.
    */
-  private static String lifeline(Actor actor) {
-    final var start = actorNodeName(actor, EntryType.Entered);
-    final var end = actorNodeName(actor, EntryType.Exited);
+  private String lifeline(Actor actor) {
+    final var start = nodeNamer.actor(actor, EntryType.Entered);
+    final var end = nodeNamer.actor(actor, EntryType.Exited);
     return "\\draw[rclifeline] (%s) -- (%s);".formatted(start, end);
-  }
-
-  private static String actorNodeName(Actor actor, EntryType type) {
-    return "actor_n%s_%s".formatted(actor.getName(), type.toString());
-  }
-
-  private String actorEntryNode(Actor actor, String nodeName) {
-    final var text = "%s %s".formatted(actorStereotype(actor), actor.getName());
-    return node("rcactor", nodeName, text);
-  }
-
-  private static String actorStereotype(Actor actor) {
-    if (actor instanceof TargetActor) {
-      return "\\rctarget{}";
-    } else if (actor instanceof ComponentActor c) {
-      final var cnode = c.getNode();
-      final var cname = cnode instanceof NamedElement n ? n.getName() : cnode.toString();
-      return "\\rccomponent{%s}".formatted(cname);
-    }
-    return "(unknown)";
-  }
-
-  private String diagramBoundary(boolean isWorld, EntryType type) {
-    final var actor = isWorld ? "w" : "b";
-    return coordinate("diagram_%s_%s".formatted(actor, type.toString()));
-  }
-
-  private String node(String style, String name, String content) {
-    return "\\node[%s](%s){%s};".formatted(style, name, content);
-  }
-
-  private String coordinate(String name) {
-    return "\\coordinate(%s);".formatted(name);
-  }
-
-  private record State(List<String> matrixRows, int outerDepthScale) {
-
   }
 }
