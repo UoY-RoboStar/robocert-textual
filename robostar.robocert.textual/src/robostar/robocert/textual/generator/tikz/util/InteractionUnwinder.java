@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
@@ -6,12 +6,9 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   $author - initial definition
- ******************************************************************************/
+ */
 
-package robostar.robocert.textual.generator.tikz;
+package robostar.robocert.textual.generator.tikz.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +24,7 @@ import robostar.robocert.util.RoboCertSwitch;
 
 /**
  * Traverses an interaction, flattening its structure into a single linear stream of events and
- * recording information about depth.
+ * recording information about depth, while also giving each item a unique sequential ID.
  * <p>
  * This is mostly useful for things like the TikZ generator, but is designed for generality.
  *
@@ -38,6 +35,7 @@ public class InteractionUnwinder {
   private final Interaction subject;
   private int currentDepth = 0;
   private int maxDepth = 0;
+  private int currentId = 0;
 
   private List<Entry> entries = null;
 
@@ -56,69 +54,90 @@ public class InteractionUnwinder {
 
     @Override
     public Boolean caseInteraction(Interaction object) {
-      add(object, EntryType.Entered);
+      final var id = enter(object);
       for (var frag : object.getFragments()) {
         doSwitch(frag);
       }
-      add(object, EntryType.Exited);
+      exit(object, id);
 
       return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseBranchFragment(BranchFragment object) {
-      add(object, EntryType.Entered);
-
+      final var id = enter(object);
       for (var branch : object.getBranches()) {
         doSwitch(branch);
       }
-
-      add(object, EntryType.Exited);
+      exit(object, id);
 
       return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseBlockFragment(BlockFragment object) {
-      enter(object);
+      final var id = enter(object);
       doSwitch(object.getBody());
-      exit(object);
+      exit(object, id);
 
       return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseInteractionOperand(InteractionOperand object) {
-      enter(object);
+      final var id = enter(object);
       for (var inner : object.getFragments()) {
         doSwitch(inner);
       }
-      exit(object);
+      exit(object, id);
 
       return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseOccurrenceFragment(OccurrenceFragment object) {
-      add(object, EntryType.Happened);
+      add(object, currentId, EntryType.Happened);
+      currentId++;
 
       return Boolean.TRUE;
     }
   }
 
-  private void enter(EObject object) {
-    add(object, EntryType.Entered);
+  /**
+   * Marks entry of a compound object.
+   *
+   * @param object object to enter
+   * @return ID assigned to the object (to use with exit).
+   */
+  private int enter(EObject object) {
+    final var id = currentId;
+    currentId++;
+
+    add(object, id, EntryType.Entered);
+
     currentDepth++;
     maxDepth = Integer.max(currentDepth, maxDepth);
+
+    return id;
   }
 
-  private void exit(EObject object) {
+  /**
+   * Marks exit of a compound object.
+   *
+   * @param object object to exit.
+   * @param id ID assigned to the object by enter.
+   */
+  private void exit(EObject object, int id) {
+    assert(0 < currentDepth);
+    assert(currentDepth <= maxDepth);
+    assert(id < currentId);
+
     currentDepth--;
-    add(object, EntryType.Exited);
+    add(object, id, EntryType.Exited);
   }
 
-  private void add(EObject object, EntryType etype) {
-    entries.add(new Entry(etype, entries.size(), currentDepth, object));
+  private void add(EObject object, int id, EntryType etype) {
+    entries.add(new Entry(etype, id, currentDepth, object));
   }
 
   /**
@@ -131,10 +150,15 @@ public class InteractionUnwinder {
 
   }
 
-  public record Entry(EntryType type, int position, int depth, EObject subject) {
+  public record Entry(EntryType type, int id, int depth, EObject subject) {
 
   }
 
+  /**
+   * Types of entry in an unwound interaction.
+   *
+   * @author Matt Windsor
+   */
   public enum EntryType {
     /**
      * Entered an interaction fragment.

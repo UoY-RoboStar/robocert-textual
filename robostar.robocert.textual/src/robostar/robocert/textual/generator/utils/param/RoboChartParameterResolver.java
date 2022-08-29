@@ -1,16 +1,12 @@
-/*******************************************************************************
- * Copyright (c) 2021, 2022 University of York and others
+/*
+ * Copyright (c) 2021-2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Alvaro Miyazawa and Pedro Ribeiro - initial definition in RoboChart
- *   Matt Windsor - porting to RoboCert
- ******************************************************************************/
+ */
 package robostar.robocert.textual.generator.utils.param;
 
 import circus.robocalc.robochart.Context;
@@ -36,7 +32,9 @@ import robostar.robocert.util.resolve.ModuleResolver;
  * @param gu     upstream RoboChart generator utilities.
  * @param defRes resolver for RoboChart definitions.
  * @param modRes resolver for aspects of RoboChart modules.
- * @author Matt Windsor
+ * @author Alvaro Miyazawa (initial definition in RoboChart)
+ * @author Pedro Ribeiro (initial definition in RoboChart)
+ * @author Matt Windsor (port to RoboCert)
  */
 public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionResolver defRes,
                                          ModuleResolver modRes) {

@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
@@ -6,11 +6,7 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Alvaro Miyazawa and Pedro Ribeiro - initial definition in RoboChart
- *   Matt Windsor - port to RoboCert
- ******************************************************************************/
+ */
 
 package robostar.robocert.textual.generator.tockcsp.core.tgt;
 
@@ -25,12 +21,15 @@ import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
  * <p>This class exists because lots of different parts of the target generation logic need it.
  *
  * @param csp the low-level CSP generator.
- * @author Matt Windsor
+ * @author Alvaro Miyazawa (initial definition in RoboChart)
+ * @author Pedro Ribeiro (initial definition in RoboChart)
+ * @author Matt Windsor (port to RoboCert)
  */
 public record TerminationGenerator(CSPStructureGenerator csp) {
 
   /**
    * Constructs a termination generator.
+   *
    * @param csp the low-level CSP generator.
    */
   @Inject

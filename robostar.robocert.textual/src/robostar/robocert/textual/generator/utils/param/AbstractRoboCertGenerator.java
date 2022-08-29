@@ -6,9 +6,6 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Matt Windsor - initial definition
  */
 
 package robostar.robocert.textual.generator.utils.param;

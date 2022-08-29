@@ -6,9 +6,6 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Matt Windsor - initial definition
  */
 
 package robostar.robocert.textual.generator.tikz.diagram;
@@ -20,21 +17,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import robostar.robocert.Actor;
+import robostar.robocert.CombinedFragment;
 import robostar.robocert.ComponentActor;
 import robostar.robocert.Interaction;
 import robostar.robocert.TargetActor;
-import robostar.robocert.textual.generator.tikz.InteractionUnwinder;
-import robostar.robocert.textual.generator.tikz.InteractionUnwinder.Entry;
-import robostar.robocert.textual.generator.tikz.InteractionUnwinder.EntryType;
-import robostar.robocert.textual.generator.tikz.TikzNodeNamer;
-import robostar.robocert.textual.generator.tikz.TikzStructureGenerator;
+import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder;
+import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.Entry;
+import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EntryType;
+import robostar.robocert.textual.generator.tikz.util.NodeNamer;
+import robostar.robocert.textual.generator.tikz.util.NodeNamer.ActorColumn;
+import robostar.robocert.textual.generator.tikz.util.NodeNamer.Diagram;
+import robostar.robocert.textual.generator.tikz.util.NodeNamer.Edge;
+import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
+import robostar.robocert.util.RoboCertSwitch;
 
 /**
  * Assembles an intermediate form of the TikZ diagram, ready to be turned into code.
  *
  * @author Matt Windsor
  */
-public record DiagramStateBuilder(TikzStructureGenerator tikz, TikzNodeNamer nodeNamer,
+public record DiagramStateBuilder(TikzStructureGenerator tikz, NodeNamer nodeNamer,
                                   Interaction it, List<Actor> actors) {
   // TODO: decouple this more from the formatting of the code.
 
@@ -63,28 +65,49 @@ public record DiagramStateBuilder(TikzStructureGenerator tikz, TikzNodeNamer nod
   }
 
   private Stream<String> matrixRowCells(Entry entry) {
-    final var subject = entry.subject();
-    final var type = entry.type();
+    return new RowSwitch(entry.type(), entry.id()).doSwitch(entry.subject());
+  }
 
-    if (subject instanceof Interaction) {
-      return diagramBoundaryRowCells(type);
+  private class RowSwitch extends RoboCertSwitch<Stream<String>> {
+
+    private final EntryType type;
+    private final int id;
+
+    public RowSwitch(EntryType type, int id) {
+      super();
+      this.type = type;
+      this.id = id;
     }
 
-    return null;
+    @Override
+    public Stream<String> caseInteraction(Interaction object) {
+      final var row = new NodeNamer.Diagram(type);
+
+      // Construct the actor nodes on the top row of the diagram.
+      final var actorCells = actors.stream().map(x -> actorNode(x, row));
+
+      final var left = tikz.coordinate(nodeNamer.node(row, Edge.Gutter));
+      final var right = tikz.coordinate(nodeNamer.node(row, Edge.World));
+
+      return Streams.concat(Stream.of(left), actorCells, Stream.of(right));
+    }
+
+    @Override
+    public Stream<String> caseCombinedFragment(CombinedFragment object) {
+      final var row = new NodeNamer.CombinedFragment(type, id);
+
+      final var actorCells = actors.stream().map(_x -> "");
+
+      final var left = tikz.coordinate(nodeNamer.node(row, Edge.Gutter));
+      final var right = tikz.coordinate(nodeNamer.node(row, Edge.World));
+
+      return Streams.concat(Stream.of(left), actorCells, Stream.of(right));
+    }
   }
 
-  private Stream<String> diagramBoundaryRowCells(EntryType type) {
-    // Construct the actor nodes on the top row of the diagram.
-    final var actorCells = actors.stream().map(x -> actorNode(x, type));
-
-    final var left = tikz.coordinate(nodeNamer.diagramCorner(false, type));
-    final var right = tikz.coordinate(nodeNamer.diagramCorner(true, type));
-    return Streams.concat(Stream.of(left), actorCells, Stream.of(right));
-  }
-
-  private String actorNode(Actor actor, EntryType type) {
-    final var nodeName = nodeNamer.actor(actor, type);
-    return (type == EntryType.Entered) ? actorEntryNode(actor, nodeName)
+  private String actorNode(Actor actor, Diagram row) {
+    final var nodeName = nodeNamer.node(row, new ActorColumn(actor));
+    return (row.type() == EntryType.Entered) ? actorEntryNode(actor, nodeName)
         : tikz.coordinate(nodeName);
   }
 

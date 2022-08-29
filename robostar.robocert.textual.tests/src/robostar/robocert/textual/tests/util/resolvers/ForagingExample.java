@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
@@ -6,13 +6,7 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Edgar Buchanan, Andrew Pomfret, and Jon Timmis - initial case study
- *   Alvaro Miyazawa, Pedro Ribeiro, Wei Li, and Ana Cavalcanti -
- *     RoboChart conversion
- *   Matt Windsor - this encoding
- ******************************************************************************/
+ */
 
 package robostar.robocert.textual.tests.util.resolvers;
 
@@ -28,6 +22,9 @@ import com.google.inject.Inject;
 
 /**
  * Programmatic encoding of a simplified version of the Buchanan foraging robot case study.
+ * <p>
+ * This encodes a case study due to Edgar Buchanan, Andrew Pomfret, and Jon Timmis, and initially
+ * converted to RoboChart by Alvaro Miyazawa, Pedro Ribeiro, Wei Li, and Ana Cavalcanti.
  *
  * @author Matt Windsor
  */

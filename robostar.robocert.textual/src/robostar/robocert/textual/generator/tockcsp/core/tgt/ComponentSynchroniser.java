@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
@@ -6,11 +6,7 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Alvaro Miyazawa and Pedro Ribeiro - initial definition in RoboChart
- *   Matt Windsor - port to RoboCert
- ******************************************************************************/
+ */
 
 package robostar.robocert.textual.generator.tockcsp.core.tgt;
 
@@ -34,6 +30,9 @@ import robostar.robocert.textual.generator.tockcsp.ll.csp.Renaming;
  * @param compNamer function for naming components (must include the root namespace).
  * @param clazz     used to cast connection nodes into the expected type.
  * @param <T>       type of components.
+ * @author Alvaro Miyazawa (initial definition in RoboChart)
+ * @author Pedro Ribeiro (initial definition in RoboChart)
+ * @author Matt Windsor (port to RoboCert)
  */
 public record ComponentSynchroniser<T>(CSPStructureGenerator csp, String namespace,
                                        Function<T, String> compNamer, Class<T> clazz) {

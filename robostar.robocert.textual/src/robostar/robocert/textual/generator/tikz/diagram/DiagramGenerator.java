@@ -6,9 +6,6 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Matt Windsor - initial definition
  */
 
 package robostar.robocert.textual.generator.tikz.diagram;
@@ -20,19 +17,20 @@ import java.util.stream.Collectors;
 import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
 import robostar.robocert.World;
-import robostar.robocert.textual.generator.tikz.InteractionUnwinder.EntryType;
-import robostar.robocert.textual.generator.tikz.TikzNodeNamer;
-import robostar.robocert.textual.generator.tikz.TikzStructureGenerator;
+import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EntryType;
+import robostar.robocert.textual.generator.tikz.util.NodeNamer;
+import robostar.robocert.textual.generator.tikz.util.NodeNamer.ActorColumn;
+import robostar.robocert.textual.generator.tikz.util.NodeNamer.Edge;
+import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
  * Generates TikZ for one diagram.
  *
- * @param tikz TikZ structure generator.
+ * @param tikz      TikZ structure generator.
  * @param nodeNamer TikZ node namer.
- *
  * @author Matt Windsor
  */
-public record DiagramGenerator(TikzStructureGenerator tikz, TikzNodeNamer nodeNamer) {
+public record DiagramGenerator(TikzStructureGenerator tikz, NodeNamer nodeNamer) {
 
   public static final String HEADING = """
       % Remember to \\input or import the baseline definitions for RoboCert TikZ files.
@@ -60,13 +58,15 @@ public record DiagramGenerator(TikzStructureGenerator tikz, TikzNodeNamer nodeNa
     final var matrix = state.matrixRows().stream()
         .collect(Collectors.joining("\n", "\\matrix[rcseq]{\n", "\n};"));
 
-    final var lifelines = actors.stream().map(this::lifeline)
-        .collect(Collectors.joining("\n"));
+    final var lifelines = actors.stream().map(this::lifeline).collect(Collectors.joining("\n"));
 
     final var targetName = String.join("::", it.getGroup().getName(),
         it.getGroup().getTarget().toString());
-    final var frame = "\\rcseqframe{%d}{diagram_b_enter}{diagram_w_exit}{%s}{%s}".formatted(
-        state.outerDepthScale(), targetName, it.getName());
+
+    final var frame = tikz.command("rcseqframe").argument(Integer.toString(state.outerDepthScale()))
+        .argument(nodeNamer.diagram(EntryType.Entered, Edge.Gutter))
+        .argument(nodeNamer.diagram(EntryType.Exited, Edge.World)).argument(targetName)
+        .argument(it.getName()).build();
 
     return String.join("\n\n", HEADING, matrix, frame, lifelines);
   }
@@ -78,8 +78,9 @@ public record DiagramGenerator(TikzStructureGenerator tikz, TikzNodeNamer nodeNa
    * @return TikZ for the lifeline, a line between the actor start and actor end.
    */
   private String lifeline(Actor actor) {
-    final var start = nodeNamer.actor(actor, EntryType.Entered);
-    final var end = nodeNamer.actor(actor, EntryType.Exited);
+    final var col = new ActorColumn(actor);
+    final var start = nodeNamer.diagram(EntryType.Entered, col);
+    final var end = nodeNamer.diagram(EntryType.Exited, col);
     return "\\draw[rclifeline] (%s) -- (%s);".formatted(start, end);
   }
 }

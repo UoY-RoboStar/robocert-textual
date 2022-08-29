@@ -1,17 +1,12 @@
-/********************************************************************************
- * Copyright (c) 2019-2021 University of York and others
+/*
+ * Copyright (c) 2019-2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Alvaro Miyazawa - original code in RoboChart CSP generator
- *   Pedro Ribeiro - original code in RoboChart CSP Generator
- *   Matt Windsor - initial definition in RoboCert
- ********************************************************************************/
+ */
 package robostar.robocert.textual.generator;
 
 import com.google.inject.Inject;
@@ -49,7 +44,9 @@ import robostar.robocert.textual.generator.utils.FilenameHelper;
  *
  * <p>While this is currently parallel to the RoboChart CSP generator, this may change later on.
  *
- * @author Matt Windsor
+ * @author Alvaro Miyazawa (original code in RoboChart CSP generator)
+ * @author Pedro Ribeiro (original code in RoboChart CSP generator)
+ * @author Matt Windsor (initial definition in RoboCert)
  */
 public class Main {
 
@@ -238,11 +235,8 @@ public class Main {
   //
 
   private long validateResources(List<Resource> resources) {
-    return resources.stream()
-        .flatMap(this::validate)
-        .filter(this::isError)
-        .peek(this::printValidationError)
-        .count();
+    return resources.stream().flatMap(this::validate).filter(this::isError)
+        .peek(this::printValidationError).count();
   }
 
   private Stream<Issue> validate(Resource r) {

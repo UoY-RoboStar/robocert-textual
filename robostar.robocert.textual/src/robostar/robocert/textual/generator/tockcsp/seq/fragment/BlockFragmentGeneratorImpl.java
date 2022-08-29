@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright (c) 2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
@@ -6,10 +6,7 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Matt Windsor - initial definition
- ******************************************************************************/
+ */
 
 package robostar.robocert.textual.generator.tockcsp.seq.fragment;
 

@@ -1,17 +1,12 @@
-/********************************************************************************
- * Copyright (c) 2019-2021 University of York and others
+/*
+ * Copyright (c) 2019-2022 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Alvaro Miyazawa - initial implementation in RoboChart CSP generator
- *   Pedro Ribeiro - initial implementation in RoboChart CSP generator
- *   Matt Windsor - port to RoboCert
- ********************************************************************************/
+ */
 package robostar.robocert.textual.generator.tockcsp.core;
 
 import circus.robocalc.robochart.BasicPackage;
@@ -33,11 +28,11 @@ import robostar.robocert.util.resolve.TargetElementResolver;
 /**
  * A generator that expands out imports for a top-level resource.
  *
+ * @author Alvaro Miyazawa (initial implementation in RoboChart CSP generator)
+ * @author Pedro Ribeiro (initial implementation in RoboChart CSP generator)
  * @author Matt Windsor
  */
-public record ImportGenerator(TockCspPathSet ps,
-                              PackageFinder pf,
-                              CTimedGeneratorUtils gu,
+public record ImportGenerator(TockCspPathSet ps, PackageFinder pf, CTimedGeneratorUtils gu,
                               TargetElementResolver targetElementResolver) {
   // TODO(@MattWindsor91): try merge this with upstream. We can't easily
   // just take upstream directly, as it doesn't directly pick up everything
@@ -81,8 +76,7 @@ public record ImportGenerator(TockCspPathSet ps,
     // robocert_defs is included by this generator, and transitively
     // includes most of the RoboChart prelude.
     return Stream.of(ps.LIBRARY_FROM_PACKAGE_PATH + "/robocert_defs.csp",
-        ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp"
-        );
+        ps.ROBOCHART_FROM_PACKAGE_PATH + "/instantiations.csp");
   }
 
   private Stream<String> anonymousImports(Resource r) {
@@ -112,10 +106,7 @@ public record ImportGenerator(TockCspPathSet ps,
   }
 
   private Stream<String> elementImportsInPackage(Resource r, NamedElement elt, RCPackage p) {
-    final var directs = Stream.of(
-        defsInclude(r),
-        ps.include(gu.calculateTopModule(elt))
-    );
+    final var directs = Stream.of(defsInclude(r), ps.include(gu.calculateTopModule(elt)));
     return Stream.concat(directs, namedImports(p));
   }
 

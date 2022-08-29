@@ -6,12 +6,9 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Matt Windsor - initial definition
  */
 
-package robostar.robocert.textual.generator.tikz;
+package robostar.robocert.textual.generator.tikz.util;
 
 /**
  * Handles generation of pieces of low-level TikZ code.
@@ -29,7 +26,7 @@ public class TikzStructureGenerator {
    * @return a string representing the TikZ node code.
    */
   public String node(String style, String name, String content) {
-    return "\\node[%s](%s){%s};".formatted(style, name, content);
+    return command("node").optional(style).node(name).argument(content).build();
   }
 
   /**
@@ -39,7 +36,16 @@ public class TikzStructureGenerator {
    * @return a string representing the TikZ coordinate code.
    */
   public String coordinate(String name) {
-    return "\\coordinate(%s);".formatted(name);
+    return command("coordinate").node(name).build();
   }
 
+  /**
+   * Opens a command builder for creating a command.
+   *
+   * @param name name of the command.
+   * @return a command builder.
+   */
+  public CommandBuilder command(String name) {
+    return new CommandBuilder(name);
+  }
 }
