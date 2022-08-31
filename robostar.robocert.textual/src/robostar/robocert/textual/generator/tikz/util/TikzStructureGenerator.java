@@ -26,7 +26,7 @@ public class TikzStructureGenerator {
    * @return a string representing the TikZ node code.
    */
   public String node(String style, String name, String content) {
-    return command("node").optional(style).node(name).argument(content).build();
+    return command("node").optional(style).node(name).argument(content).render();
   }
 
   /**
@@ -36,7 +36,7 @@ public class TikzStructureGenerator {
    * @return a string representing the TikZ coordinate code.
    */
   public String coordinate(String name) {
-    return command("coordinate").node(name).build();
+    return command("coordinate").node(name).render();
   }
 
   /**
@@ -45,7 +45,7 @@ public class TikzStructureGenerator {
    * @param name name of the command.
    * @return a command builder.
    */
-  public CommandBuilder command(String name) {
-    return new CommandBuilder(name);
+  public Command command(String name) {
+    return new Command(name);
   }
 }

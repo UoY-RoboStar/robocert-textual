@@ -21,16 +21,17 @@ import robostar.robocert.CombinedFragment;
 import robostar.robocert.ComponentActor;
 import robostar.robocert.Interaction;
 import robostar.robocert.TargetActor;
+import robostar.robocert.textual.generator.tikz.frame.FrameGenerator;
+import robostar.robocert.textual.generator.tikz.frame.NestedFrame;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.CellLocation.ActorColumn;
 import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Diagram;
 import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Edge;
 import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Row;
 import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.Entry;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EntryType;
+import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.Event;
+import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EventType;
 import robostar.robocert.textual.generator.tikz.matrix.CellLocation;
-import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 import robostar.robocert.util.RoboCertSwitch;
 
 /**
@@ -38,7 +39,7 @@ import robostar.robocert.util.RoboCertSwitch;
  *
  * @author Matt Windsor
  */
-public record DiagramStateBuilder(TikzStructureGenerator tikz, Interaction it, List<Actor> actors) {
+public record DiagramStateBuilder(FrameGenerator frameGen, Interaction it, List<Actor> actors) {
   // TODO: decouple this more from the formatting of the code.
 
   /**
@@ -50,23 +51,25 @@ public record DiagramStateBuilder(TikzStructureGenerator tikz, Interaction it, L
     final var unwound = new InteractionUnwinder(it).unwind();
 
     final var matrixRows = new ArrayList<List<Cell>>();
+    final var frames = new ArrayList<NestedFrame>();
 
     for (var entry : unwound.entries()) {
       matrixRowCells(entry).map(Stream::toList).ifPresent(matrixRows::add);
+      frameGen.generate(entry).ifPresent(frames::add);
     }
-    return new State(matrixRows, unwound.maxDepth());
+    return new State(matrixRows, frames, unwound.maxDepth());
   }
 
-  private Optional<Stream<Cell>> matrixRowCells(Entry entry) {
+  private Optional<Stream<Cell>> matrixRowCells(Event entry) {
     return Optional.ofNullable(new RowSwitch(entry.type(), entry.id()).doSwitch(entry.subject()));
   }
 
   private class RowSwitch extends RoboCertSwitch<Stream<Cell>> {
 
-    private final EntryType type;
+    private final EventType type;
     private final int id;
 
-    public RowSwitch(EntryType type, int id) {
+    public RowSwitch(EventType type, int id) {
       super();
       this.type = type;
       this.id = id;
@@ -102,7 +105,7 @@ public record DiagramStateBuilder(TikzStructureGenerator tikz, Interaction it, L
     final var cell = Cell.at(row, new ActorColumn(actor));
 
     // TODO: push this logic inwards.
-    if (row instanceof Diagram d && d.type() == EntryType.Entered) {
+    if (row instanceof Diagram d && d.type() == EventType.Entered) {
       return cell.setBodyFunction(_tikz -> actorText(actor)).setStyleFunction(_tikz -> "rcactor");
     }
 
@@ -130,9 +133,10 @@ public record DiagramStateBuilder(TikzStructureGenerator tikz, Interaction it, L
    * Diagram state produced by this intermediate step.
    *
    * @param matrixRows      rows to place in the diagram's matrix.
+   * @param frames          frames to render on top of the diagram's matrix.
    * @param outerDepthScale amount by which we should scale the outer frame's margin.
    */
-  public record State(List<List<Cell>> matrixRows, int outerDepthScale) {
+  public record State(List<List<Cell>> matrixRows, List<NestedFrame> frames, int outerDepthScale) {
 
   }
 }

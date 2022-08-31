@@ -11,7 +11,7 @@
 package robostar.robocert.textual.generator.tikz.matrix;
 
 import robostar.robocert.Actor;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EntryType;
+import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EventType;
 
 /**
  * Represents a cell location in a TikZ sequence diagram matrix.
@@ -36,7 +36,7 @@ public record CellLocation(Row row, Column column) {
    * @param column column of the node.
    * @return constructed name of the node or coordinate.
    */
-  public static CellLocation diagram(EntryType type, Column column) {
+  public static CellLocation diagram(EventType type, Column column) {
     return new CellLocation(new Diagram(type), column);
   }
 
@@ -71,10 +71,10 @@ public record CellLocation(Row row, Column column) {
    * @param id   numeric ID of this combined fragment.
    * @author Matt Windsor
    */
-  public record CombinedFragment(EntryType type, int id) implements Row {
+  public record CombinedFragment(EventType type, int id) implements Row {
 
     public CombinedFragment {
-      if (type != EntryType.Entered && type != EntryType.Exited) {
+      if (type != EventType.Entered && type != EventType.Exited) {
         throw new IllegalArgumentException(
             "unexpected entry type in diagram row: %s".formatted(type));
       }
@@ -92,10 +92,10 @@ public record CellLocation(Row row, Column column) {
    * @param type whether this entry into or exit out of a diagram (other types are not permitted).
    * @author Matt Windsor
    */
-  public record Diagram(EntryType type) implements Row {
+  public record Diagram(EventType type) implements Row {
 
     public Diagram {
-      if (type != EntryType.Entered && type != EntryType.Exited) {
+      if (type != EventType.Entered && type != EventType.Exited) {
         throw new IllegalArgumentException(
             "unexpected entry type in diagram row: %s".formatted(type));
       }

@@ -19,7 +19,7 @@ import java.util.Objects;
  *
  * @author Matt Windsor
  */
-public class CommandBuilder {
+public class Command {
 
   /**
    * List of arguments to append to the command.
@@ -41,7 +41,7 @@ public class CommandBuilder {
    *
    * @param name name of the command.
    */
-  public CommandBuilder(String name) {
+  public Command(String name) {
     Objects.requireNonNull(name);
     this.name = name;
   }
@@ -51,7 +51,7 @@ public class CommandBuilder {
    *
    * @return LaTeX code for this command.
    */
-  public String build() {
+  public String render() {
     final var sb = new StringBuilder();
 
     sb.append('\\'); // LaTeX escape code
@@ -72,11 +72,11 @@ public class CommandBuilder {
   // Arguments
   //
 
-  public CommandBuilder optional(String name) {
+  public Command optional(String name) {
     return innerArgument(new OptionalArgument(name));
   }
 
-  public CommandBuilder node(String name) {
+  public Command node(String name) {
     if (isNode) {
       throw new UnsupportedOperationException("cannot set a command as a node twice");
     }
@@ -84,11 +84,11 @@ public class CommandBuilder {
     return innerArgument(new NodeArgument(name));
   }
 
-  public CommandBuilder argument(String name) {
+  public Command argument(String name) {
     return innerArgument(new RegularArgument(name));
   }
 
-  private CommandBuilder innerArgument(Argument arg) {
+  private Command innerArgument(Argument arg) {
     arguments.add(arg);
     return this;
   }

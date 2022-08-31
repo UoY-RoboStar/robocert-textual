@@ -60,35 +60,22 @@
 \newcommand{\gemptyset}{\gextset{}}
 \newcommand{\grefset}[1]{\textsf{#1}}
 
-% Combined fragment
-% #1: coordinates to fit
-% #2: pad factor
-% #3: fragment header
-% #4: node name
-% #5: style
-% #6: horizontal pad factor
-\NewDocumentCommand{\gcfrag}{m m m m O{cfbox} O{#2}} {
-  % Calculate an invisible bounding box
-  \node[fit={#1}] (bb#4) {};
-  % Then draw the header to the left of it
-  \node[cfheader, #5, anchor=north east] at ($(bb#4.north west) + (-#6, #2)$) (#4) {#3};
-  % And work out the bottom-right
-  \node at ($(bb#4.south east) + (#6, -#2)$) (br#4) {};
-  % Now draw the full bounding box
-  \node[#5, fit={(#4) (br#4)}, inner sep=0] {};
-}
+% Header for sequence diagrams
+%
+% #1: name of diagram
+% #2: name of target
+\newcommand{\rcseq}[2]{\rckeyword{sd} #1 (#2)}
 
-% Sequence diagram
-% #1: 
+% Combined fragment or diagram frame
+% #1: padding factor
 % #2: top-left
 % #3: bottom-right
-% #4: target name
-% #5: sequence name
-\newcommand{\rcseqframe}[5]{
+% #4: header
+\newcommand{\rcframe}[4]{
   % Slightly eccentric definition here to line the world up with the RHS,
   % and leave room for the top 'sd' line.
   \draw ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) rectangle ($(#3) + (#1*\the\rcstepmargin, -#1*\the\rcstepmargin)$);
-  \node[cfheader, anchor=north west] at ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) {\footnotesize \rckeyword{sd} #5 (#4)};
+  \node[cfheader, anchor=north west] at ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) {\footnotesize #4};
 }
 
 % Guard

@@ -18,20 +18,21 @@ import java.util.stream.Collectors;
 import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
 import robostar.robocert.World;
+import robostar.robocert.textual.generator.tikz.frame.FrameGenerator;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.CellLocation;
 import robostar.robocert.textual.generator.tikz.matrix.CellLocation.ActorColumn;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Edge;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EntryType;
+import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EventType;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
  * Generates TikZ for one diagram.
  *
  * @param tikz TikZ structure generator.
+ * @param frameGen frame generator.
  * @author Matt Windsor
  */
-public record DiagramGenerator(TikzStructureGenerator tikz) {
+public record DiagramGenerator(TikzStructureGenerator tikz, FrameGenerator frameGen) {
 
   public static final String HEADING = """
       % Remember to \\input or import the baseline definitions for RoboCert TikZ files.
@@ -53,22 +54,17 @@ public record DiagramGenerator(TikzStructureGenerator tikz) {
     // We treat the World separately -- it always appears at the end of a row.
     final var actors = it.getActors().stream().filter(x -> !(x instanceof World)).toList();
 
-    final var state = new DiagramStateBuilder(tikz, it, actors).build();
+    final var state = new DiagramStateBuilder(frameGen, it, actors).build();
 
     final var matrix = state.matrixRows().stream().map(this::generateMatrixRow)
         .collect(Collectors.joining("\n", "\\matrix[rcseq]{\n", "\n};"));
 
     final var lifelines = actors.stream().map(this::lifeline).collect(Collectors.joining("\n"));
 
-    final var targetName = String.join("::", it.getGroup().getName(),
-        it.getGroup().getTarget().toString());
+    final var frames = state.frames().stream().map(x -> x.render(tikz, state.outerDepthScale())).collect(
+        Collectors.joining("\n"));
 
-    final var frame = tikz.command("rcseqframe").argument(Integer.toString(state.outerDepthScale()))
-        .argument(CellLocation.diagram(EntryType.Entered, Edge.Gutter).name())
-        .argument(CellLocation.diagram(EntryType.Exited, Edge.World).name()).argument(targetName)
-        .argument(it.getName()).build();
-
-    return String.join("\n\n", HEADING, matrix, frame, lifelines);
+    return String.join("\n\n", HEADING, matrix, frames, lifelines);
   }
 
   private String generateMatrixRow(List<Cell> row) {
@@ -84,8 +80,8 @@ public record DiagramGenerator(TikzStructureGenerator tikz) {
    */
   private String lifeline(Actor actor) {
     final var col = new ActorColumn(actor);
-    final var start = CellLocation.diagram(EntryType.Entered, col).name();
-    final var end = CellLocation.diagram(EntryType.Exited, col).name();
+    final var start = CellLocation.diagram(EventType.Entered, col).name();
+    final var end = CellLocation.diagram(EventType.Exited, col).name();
     return "\\draw[rclifeline] (%s) -- (%s);".formatted(start, end);
   }
 }

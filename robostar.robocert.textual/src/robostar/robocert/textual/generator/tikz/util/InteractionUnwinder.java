@@ -37,7 +37,7 @@ public class InteractionUnwinder {
   private int maxDepth = 0;
   private int currentId = 0;
 
-  private List<Entry> entries = null;
+  private List<Event> entries = null;
 
   public InteractionUnwinder(Interaction subject) {
     this.subject = subject;
@@ -96,7 +96,8 @@ public class InteractionUnwinder {
 
     @Override
     public Boolean caseOccurrenceFragment(OccurrenceFragment object) {
-      add(object, currentId, EntryType.Happened);
+      // This is not 'enter' because we do not increase the depth.
+      add(object, currentId, EventType.Entered);
       currentId++;
 
       return Boolean.TRUE;
@@ -113,7 +114,7 @@ public class InteractionUnwinder {
     final var id = currentId;
     currentId++;
 
-    add(object, id, EntryType.Entered);
+    add(object, id, EventType.Entered);
 
     currentDepth++;
     maxDepth = Integer.max(currentDepth, maxDepth);
@@ -125,19 +126,19 @@ public class InteractionUnwinder {
    * Marks exit of a compound object.
    *
    * @param object object to exit.
-   * @param id ID assigned to the object by enter.
+   * @param id     ID assigned to the object by enter.
    */
   private void exit(EObject object, int id) {
-    assert(0 < currentDepth);
-    assert(currentDepth <= maxDepth);
-    assert(id < currentId);
+    assert (0 < currentDepth);
+    assert (currentDepth <= maxDepth);
+    assert (id < currentId);
 
     currentDepth--;
-    add(object, id, EntryType.Exited);
+    add(object, id, EventType.Exited);
   }
 
-  private void add(EObject object, int id, EntryType etype) {
-    entries.add(new Entry(etype, id, currentDepth, object));
+  private void add(EObject object, int id, EventType etype) {
+    entries.add(new Event(etype, id, currentDepth, object));
   }
 
   /**
@@ -146,11 +147,11 @@ public class InteractionUnwinder {
    * @param entries  list of all entries in occurrence order.
    * @param maxDepth maximum nesting depth (0 = top level only).
    */
-  public record Result(List<Entry> entries, int maxDepth) {
+  public record Result(List<Event> entries, int maxDepth) {
 
   }
 
-  public record Entry(EntryType type, int id, int depth, EObject subject) {
+  public record Event(EventType type, int id, int depth, EObject subject) {
 
   }
 
@@ -159,27 +160,21 @@ public class InteractionUnwinder {
    *
    * @author Matt Windsor
    */
-  public enum EntryType {
+  public enum EventType {
     /**
-     * Entered an interaction fragment.
+     * Entered an interaction fragment, or visited an occurrence fragment.
      */
     Entered,
     /**
-     * Exited an interaction fragment.
+     * Exited an interaction fragment (this is never emitted for occurrence fragments).
      */
-    Exited,
-    /**
-     * An occurrence fragment occurred.
-     */
-    Happened,
-    ;
+    Exited;
 
     @Override
     public String toString() {
       return switch (this) {
         case Exited -> "exit";
         case Entered -> "enter";
-        case Happened -> "occ";
       };
     }
   }
