@@ -11,26 +11,27 @@
 package robostar.robocert.textual.generator.tikz.diagram;
 
 import com.google.inject.Inject;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
 import robostar.robocert.World;
+import robostar.robocert.textual.generator.tikz.matrix.Cell;
+import robostar.robocert.textual.generator.tikz.matrix.CellLocation;
+import robostar.robocert.textual.generator.tikz.matrix.CellLocation.ActorColumn;
+import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Edge;
 import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EntryType;
-import robostar.robocert.textual.generator.tikz.util.NodeNamer;
-import robostar.robocert.textual.generator.tikz.util.NodeNamer.ActorColumn;
-import robostar.robocert.textual.generator.tikz.util.NodeNamer.Edge;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
  * Generates TikZ for one diagram.
  *
- * @param tikz      TikZ structure generator.
- * @param nodeNamer TikZ node namer.
+ * @param tikz TikZ structure generator.
  * @author Matt Windsor
  */
-public record DiagramGenerator(TikzStructureGenerator tikz, NodeNamer nodeNamer) {
+public record DiagramGenerator(TikzStructureGenerator tikz) {
 
   public static final String HEADING = """
       % Remember to \\input or import the baseline definitions for RoboCert TikZ files.
@@ -40,7 +41,6 @@ public record DiagramGenerator(TikzStructureGenerator tikz, NodeNamer nodeNamer)
   @Inject
   public DiagramGenerator {
     Objects.requireNonNull(tikz);
-    Objects.requireNonNull(nodeNamer);
   }
 
   /**
@@ -53,9 +53,9 @@ public record DiagramGenerator(TikzStructureGenerator tikz, NodeNamer nodeNamer)
     // We treat the World separately -- it always appears at the end of a row.
     final var actors = it.getActors().stream().filter(x -> !(x instanceof World)).toList();
 
-    final var state = new DiagramStateBuilder(tikz, nodeNamer, it, actors).build();
+    final var state = new DiagramStateBuilder(tikz, it, actors).build();
 
-    final var matrix = state.matrixRows().stream()
+    final var matrix = state.matrixRows().stream().map(this::generateMatrixRow)
         .collect(Collectors.joining("\n", "\\matrix[rcseq]{\n", "\n};"));
 
     final var lifelines = actors.stream().map(this::lifeline).collect(Collectors.joining("\n"));
@@ -64,11 +64,16 @@ public record DiagramGenerator(TikzStructureGenerator tikz, NodeNamer nodeNamer)
         it.getGroup().getTarget().toString());
 
     final var frame = tikz.command("rcseqframe").argument(Integer.toString(state.outerDepthScale()))
-        .argument(nodeNamer.diagram(EntryType.Entered, Edge.Gutter))
-        .argument(nodeNamer.diagram(EntryType.Exited, Edge.World)).argument(targetName)
+        .argument(CellLocation.diagram(EntryType.Entered, Edge.Gutter).name())
+        .argument(CellLocation.diagram(EntryType.Exited, Edge.World).name()).argument(targetName)
         .argument(it.getName()).build();
 
     return String.join("\n\n", HEADING, matrix, frame, lifelines);
+  }
+
+  private String generateMatrixRow(List<Cell> row) {
+    return row.stream().map(x -> x.generate(tikz))
+        .collect(Collectors.joining(" & ", "  ", " \\\\"));
   }
 
   /**
@@ -79,8 +84,8 @@ public record DiagramGenerator(TikzStructureGenerator tikz, NodeNamer nodeNamer)
    */
   private String lifeline(Actor actor) {
     final var col = new ActorColumn(actor);
-    final var start = nodeNamer.diagram(EntryType.Entered, col);
-    final var end = nodeNamer.diagram(EntryType.Exited, col);
+    final var start = CellLocation.diagram(EntryType.Entered, col).name();
+    final var end = CellLocation.diagram(EntryType.Exited, col).name();
     return "\\draw[rclifeline] (%s) -- (%s);".formatted(start, end);
   }
 }

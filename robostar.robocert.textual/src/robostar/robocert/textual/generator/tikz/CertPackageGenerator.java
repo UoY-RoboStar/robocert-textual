@@ -28,12 +28,13 @@ import robostar.robocert.textual.generator.utils.name.GroupNamer;
 /**
  * Generates TikZ diagrams for a single {@link CertPackage}.
  *
- * @param gn synthesises names for CertPackages.
+ * @param gn   synthesises names for CertPackages.
  * @param dGen generates TikZ for diagrams.
- *
  * @author Matt Windsor
  */
-public record CertPackageGenerator(GroupNamer gn, DiagramGenerator dGen) implements PackageGenerator {
+public record CertPackageGenerator(GroupNamer gn, DiagramGenerator dGen) implements
+    PackageGenerator {
+
   /**
    * Constructs a tock-CSP generator.
    *

@@ -14,20 +14,22 @@ import circus.robocalc.robochart.NamedElement;
 import com.google.common.collect.Streams;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import java.util.stream.Stream;
 import robostar.robocert.Actor;
 import robostar.robocert.CombinedFragment;
 import robostar.robocert.ComponentActor;
 import robostar.robocert.Interaction;
 import robostar.robocert.TargetActor;
+import robostar.robocert.textual.generator.tikz.matrix.Cell;
+import robostar.robocert.textual.generator.tikz.matrix.CellLocation.ActorColumn;
+import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Diagram;
+import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Edge;
+import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Row;
 import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder;
 import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.Entry;
 import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EntryType;
-import robostar.robocert.textual.generator.tikz.util.NodeNamer;
-import robostar.robocert.textual.generator.tikz.util.NodeNamer.ActorColumn;
-import robostar.robocert.textual.generator.tikz.util.NodeNamer.Diagram;
-import robostar.robocert.textual.generator.tikz.util.NodeNamer.Edge;
+import robostar.robocert.textual.generator.tikz.matrix.CellLocation;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 import robostar.robocert.util.RoboCertSwitch;
 
@@ -36,8 +38,7 @@ import robostar.robocert.util.RoboCertSwitch;
  *
  * @author Matt Windsor
  */
-public record DiagramStateBuilder(TikzStructureGenerator tikz, NodeNamer nodeNamer,
-                                  Interaction it, List<Actor> actors) {
+public record DiagramStateBuilder(TikzStructureGenerator tikz, Interaction it, List<Actor> actors) {
   // TODO: decouple this more from the formatting of the code.
 
   /**
@@ -48,27 +49,19 @@ public record DiagramStateBuilder(TikzStructureGenerator tikz, NodeNamer nodeNam
   public State build() {
     final var unwound = new InteractionUnwinder(it).unwind();
 
-    final var matrixRows = new ArrayList<String>();
+    final var matrixRows = new ArrayList<List<Cell>>();
 
     for (var entry : unwound.entries()) {
-      final var row = matrixRow(entry);
-      if (row != null) {
-        matrixRows.add(row);
-      }
+      matrixRowCells(entry).map(Stream::toList).ifPresent(matrixRows::add);
     }
-    return new State(List.copyOf(matrixRows), unwound.maxDepth());
+    return new State(matrixRows, unwound.maxDepth());
   }
 
-  private String matrixRow(Entry entry) {
-    final var cells = matrixRowCells(entry);
-    return cells == null ? null : cells.collect(Collectors.joining(" & ", "  ", " \\\\"));
+  private Optional<Stream<Cell>> matrixRowCells(Entry entry) {
+    return Optional.ofNullable(new RowSwitch(entry.type(), entry.id()).doSwitch(entry.subject()));
   }
 
-  private Stream<String> matrixRowCells(Entry entry) {
-    return new RowSwitch(entry.type(), entry.id()).doSwitch(entry.subject());
-  }
-
-  private class RowSwitch extends RoboCertSwitch<Stream<String>> {
+  private class RowSwitch extends RoboCertSwitch<Stream<Cell>> {
 
     private final EntryType type;
     private final int id;
@@ -80,41 +73,45 @@ public record DiagramStateBuilder(TikzStructureGenerator tikz, NodeNamer nodeNam
     }
 
     @Override
-    public Stream<String> caseInteraction(Interaction object) {
-      final var row = new NodeNamer.Diagram(type);
+    public Stream<Cell> caseInteraction(Interaction object) {
+      final var row = new CellLocation.Diagram(type);
 
       // Construct the actor nodes on the top row of the diagram.
-      final var actorCells = actors.stream().map(x -> actorNode(x, row));
+      final var actorCells = actors.stream().map(x -> actorCell(x, row));
 
-      final var left = tikz.coordinate(nodeNamer.node(row, Edge.Gutter));
-      final var right = tikz.coordinate(nodeNamer.node(row, Edge.World));
+      final var left = Cell.at(row, Edge.Gutter);
+      final var right = Cell.at(row, Edge.World);
 
       return Streams.concat(Stream.of(left), actorCells, Stream.of(right));
     }
 
     @Override
-    public Stream<String> caseCombinedFragment(CombinedFragment object) {
-      final var row = new NodeNamer.CombinedFragment(type, id);
+    public Stream<Cell> caseCombinedFragment(CombinedFragment object) {
+      final var row = new CellLocation.CombinedFragment(type, id);
 
-      final var actorCells = actors.stream().map(_x -> "");
+      final var actorCells = actors.stream().map(a -> Cell.at(row, new ActorColumn(a)));
 
-      final var left = tikz.coordinate(nodeNamer.node(row, Edge.Gutter));
-      final var right = tikz.coordinate(nodeNamer.node(row, Edge.World));
+      final var left = Cell.at(row, Edge.Gutter);
+      final var right = Cell.at(row, Edge.World);
 
       return Streams.concat(Stream.of(left), actorCells, Stream.of(right));
     }
   }
 
-  private String actorNode(Actor actor, Diagram row) {
-    final var nodeName = nodeNamer.node(row, new ActorColumn(actor));
-    return (row.type() == EntryType.Entered) ? actorEntryNode(actor, nodeName)
-        : tikz.coordinate(nodeName);
+  private Cell actorCell(Actor actor, Row row) {
+    final var cell = Cell.at(row, new ActorColumn(actor));
+
+    // TODO: push this logic inwards.
+    if (row instanceof Diagram d && d.type() == EntryType.Entered) {
+      return cell.setBodyFunction(_tikz -> actorText(actor)).setStyleFunction(_tikz -> "rcactor");
+    }
+
+    return cell;
   }
 
 
-  private String actorEntryNode(Actor actor, String nodeName) {
-    final var text = "%s %s".formatted(actorStereotype(actor), actor.getName());
-    return tikz.node("rcactor", nodeName, text);
+  private String actorText(Actor actor) {
+    return "%s %s".formatted(actorStereotype(actor), actor.getName());
   }
 
   private static String actorStereotype(Actor actor) {
@@ -135,7 +132,7 @@ public record DiagramStateBuilder(TikzStructureGenerator tikz, NodeNamer nodeNam
    * @param matrixRows      rows to place in the diagram's matrix.
    * @param outerDepthScale amount by which we should scale the outer frame's margin.
    */
-  public record State(List<String> matrixRows, int outerDepthScale) {
+  public record State(List<List<Cell>> matrixRows, int outerDepthScale) {
 
   }
 }

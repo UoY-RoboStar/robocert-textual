@@ -8,23 +8,26 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package robostar.robocert.textual.generator.tikz.util;
+package robostar.robocert.textual.generator.tikz.matrix;
 
 import robostar.robocert.Actor;
 import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EntryType;
 
 /**
- * Handles the naming conventions used in RoboCert TikZ diagrams for nodes.
+ * Represents a cell location in a TikZ sequence diagram matrix.
  * <p>
  * Connections between nodes, as well as relative positioning thereof, requires common conventions
- * for node naming, which this class enforces.
+ * for cell node naming, which this class enforces.
  * <p>
- * Node names have two components: one for the row of the node in the matrix, another for the
+ * Locations have two components: one for the row of the node in the matrix, another for the
  * column.  Different types of row and column exist to accommodate different types of node.
+ *
+ * @param row    row of the node.
+ * @param column column of the node.
  *
  * @author Matt Windsor
  */
-public class NodeNamer {
+public record CellLocation(Row row, Column column) {
 
   /**
    * Shorthand for constructing a diagram node.
@@ -33,18 +36,16 @@ public class NodeNamer {
    * @param column column of the node.
    * @return constructed name of the node or coordinate.
    */
-  public String diagram(EntryType type, Column column) {
-    return node(new Diagram(type), column);
+  public static CellLocation diagram(EntryType type, Column column) {
+    return new CellLocation(new Diagram(type), column);
   }
 
   /**
    * Constructs a node or coordinate name for a given row and column.
    *
-   * @param row    row of the node.
-   * @param column column of the node.
    * @return constructed name of the node or coordinate.
    */
-  public String node(Row row, Column column) {
+  public String name() {
     return String.join("_", row.rowName(), column.columnName());
   }
 
@@ -146,8 +147,7 @@ public class NodeNamer {
   }
 
   /**
-   * Encapsulates an {@link Actor} in a {@link Column}, allowing the {@link NodeNamer} to handle
-   * it.
+   * Encapsulates an {@link Actor} in a {@link Column}.
    *
    * @param actor actor to be wrapped.
    */
