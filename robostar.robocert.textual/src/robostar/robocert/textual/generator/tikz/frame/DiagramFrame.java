@@ -13,9 +13,9 @@ package robostar.robocert.textual.generator.tikz.frame;
 import java.util.Objects;
 
 import robostar.robocert.Interaction;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Diagram;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Row;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EventType;
+import robostar.robocert.textual.generator.tikz.matrix.DiagramRow;
+import robostar.robocert.textual.generator.tikz.matrix.Row;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
@@ -27,7 +27,7 @@ public record DiagramFrame(Interaction diagram) implements Frame {
 
   @Override
   public Row row(EventType type) {
-    return new Diagram(type);
+    return new DiagramRow(type);
   }
 
   @Override

@@ -24,14 +24,14 @@ import robostar.robocert.TargetActor;
 import robostar.robocert.textual.generator.tikz.frame.FrameGenerator;
 import robostar.robocert.textual.generator.tikz.frame.NestedFrame;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.ActorColumn;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Diagram;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Edge;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Row;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.Event;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EventType;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation;
+import robostar.robocert.textual.generator.tikz.matrix.ActorColumn;
+import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
+import robostar.robocert.textual.generator.tikz.matrix.DiagramRow;
+import robostar.robocert.textual.generator.tikz.matrix.EdgeColumn;
+import robostar.robocert.textual.generator.tikz.matrix.Row;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.Event;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.util.RoboCertSwitch;
 
 /**
@@ -48,12 +48,12 @@ public record DiagramStateBuilder(FrameGenerator frameGen, Interaction it, List<
    * @return the built state, ready to be formatted into TikZ code.
    */
   public State build() {
-    final var unwound = new InteractionUnwinder(it).unwind();
+    final var unwound = new InteractionFlattener(it).unwind();
 
     final var matrixRows = new ArrayList<List<Cell>>();
     final var frames = new ArrayList<NestedFrame>();
 
-    for (var entry : unwound.entries()) {
+    for (var entry : unwound.events()) {
       matrixRowCells(entry).map(Stream::toList).ifPresent(matrixRows::add);
       frameGen.generate(entry).ifPresent(frames::add);
     }
@@ -77,25 +77,25 @@ public record DiagramStateBuilder(FrameGenerator frameGen, Interaction it, List<
 
     @Override
     public Stream<Cell> caseInteraction(Interaction object) {
-      final var row = new CellLocation.Diagram(type);
+      final var row = new DiagramRow(type);
 
       // Construct the actor nodes on the top row of the diagram.
       final var actorCells = actors.stream().map(x -> actorCell(x, row));
 
-      final var left = Cell.at(row, Edge.Gutter);
-      final var right = Cell.at(row, Edge.World);
+      final var left = Cell.at(row, EdgeColumn.Gutter);
+      final var right = Cell.at(row, EdgeColumn.World);
 
       return Streams.concat(Stream.of(left), actorCells, Stream.of(right));
     }
 
     @Override
     public Stream<Cell> caseCombinedFragment(CombinedFragment object) {
-      final var row = new CellLocation.CombinedFragment(type, id);
+      final var row = new CombinedFragmentRow(type, id);
 
       final var actorCells = actors.stream().map(a -> Cell.at(row, new ActorColumn(a)));
 
-      final var left = Cell.at(row, Edge.Gutter);
-      final var right = Cell.at(row, Edge.World);
+      final var left = Cell.at(row, EdgeColumn.Gutter);
+      final var right = Cell.at(row, EdgeColumn.World);
 
       return Streams.concat(Stream.of(left), actorCells, Stream.of(right));
     }
@@ -105,7 +105,7 @@ public record DiagramStateBuilder(FrameGenerator frameGen, Interaction it, List<
     final var cell = Cell.at(row, new ActorColumn(actor));
 
     // TODO: push this logic inwards.
-    if (row instanceof Diagram d && d.type() == EventType.Entered) {
+    if (row instanceof DiagramRow d && d.type() == EventType.Entered) {
       return cell.setBodyFunction(_tikz -> actorText(actor)).setStyleFunction(_tikz -> "rcactor");
     }
 

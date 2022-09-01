@@ -10,8 +10,8 @@
 
 package robostar.robocert.textual.generator.tikz.frame;
 
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Row;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EventType;
+import robostar.robocert.textual.generator.tikz.matrix.Row;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**

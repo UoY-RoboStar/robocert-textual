@@ -1,7 +1,7 @@
 %
 % RoboCert Graphical notation (using TikZ)
 %
-% Last updated: 2022-08-26
+% Last updated: 2022-09-01
 %
 
 \newcommand{\rckeywordfont}{\sffamily\bfseries}
@@ -21,7 +21,8 @@
 
 \usetikzlibrary{arrows.meta,matrix,shapes,calc,fit}
 \tikzset{
-    rcseq/.style={row sep=2.2em, column sep=8em},
+    % Row sep is set by the diagram
+    rcseq/.style={column sep=8em},
 % Actors
     rcactor/.style={draw, rectangle, minimum width=4em, align=center, minimum height=1.7em, fill={rcshading}, font={\footnotesize\sffamily}},
 % Control flow

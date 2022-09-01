@@ -11,9 +11,10 @@
 package robostar.robocert.textual.generator.tikz.frame;
 
 import java.util.Optional;
+import robostar.robocert.CombinedFragment;
 import robostar.robocert.Interaction;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.Event;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EventType;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.Event;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.util.RoboCertSwitch;
 
 /**
@@ -22,7 +23,7 @@ import robostar.robocert.util.RoboCertSwitch;
 public class FrameGenerator {
 
   /**
-   * Generates frames from entries in an unrolled diagram.
+   * Generates frames from events in an unrolled diagram.
    *
    * @param event event from which we are generating frames; only entry events generate frames.
    * @return an optional frame with depth information produced from the event given.
@@ -33,11 +34,23 @@ public class FrameGenerator {
       return Optional.empty();
     }
 
-    return Optional.ofNullable(new Switch().doSwitch(event.subject()))
+    return Optional.ofNullable(new Switch(event.id()).doSwitch(event.subject()))
         .map(x -> new NestedFrame(x, event.depth()));
   }
 
   private static class Switch extends RoboCertSwitch<Frame> {
+
+    private final int id;
+
+    private Switch(int id) {
+      this.id = id;
+    }
+
+    @Override
+    public Frame caseCombinedFragment(CombinedFragment object) {
+      // Catch-all canary for if we don't support the fragment directly.
+      return new MissingFrame(object, id);
+    }
 
     @Override
     public Frame caseInteraction(Interaction object) {

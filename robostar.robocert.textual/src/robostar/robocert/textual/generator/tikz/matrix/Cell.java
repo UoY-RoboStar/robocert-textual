@@ -12,8 +12,6 @@ package robostar.robocert.textual.generator.tikz.matrix;
 
 import java.util.Objects;
 import java.util.function.Function;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Column;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.Row;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**

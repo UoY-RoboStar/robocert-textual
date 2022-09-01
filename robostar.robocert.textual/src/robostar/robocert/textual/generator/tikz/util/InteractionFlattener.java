@@ -30,7 +30,7 @@ import robostar.robocert.util.RoboCertSwitch;
  *
  * @author Matt Windsor
  */
-public class InteractionUnwinder {
+public class InteractionFlattener {
 
   private final Interaction subject;
   private int currentDepth = 0;
@@ -39,7 +39,7 @@ public class InteractionUnwinder {
 
   private List<Event> entries = null;
 
-  public InteractionUnwinder(Interaction subject) {
+  public InteractionFlattener(Interaction subject) {
     this.subject = subject;
   }
 
@@ -54,37 +54,40 @@ public class InteractionUnwinder {
 
     @Override
     public Boolean caseInteraction(Interaction object) {
-      final var id = enter(object);
+      final var id = enterNested(object);
       for (var frag : object.getFragments()) {
         doSwitch(frag);
       }
-      exit(object, id);
+      exitNested(object, id);
 
       return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseBranchFragment(BranchFragment object) {
-      final var id = enter(object);
+      final var id = enterNested(object);
       for (var branch : object.getBranches()) {
         doSwitch(branch);
       }
-      exit(object, id);
+      exitNested(object, id);
 
       return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseBlockFragment(BlockFragment object) {
-      final var id = enter(object);
+      final var id = enterNested(object);
       doSwitch(object.getBody());
-      exit(object, id);
+      exitNested(object, id);
 
       return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseInteractionOperand(InteractionOperand object) {
+      // Don't create a separate nesting level for interaction operands.
+      // If we ever need to make it possible to distinguish these by nesting level, we'll have to
+      // make it a variable of the flattener, I think.
       final var id = enter(object);
       for (var inner : object.getFragments()) {
         doSwitch(inner);
@@ -105,7 +108,22 @@ public class InteractionUnwinder {
   }
 
   /**
-   * Marks entry of a compound object.
+   * Marks entry of a nested object (combined fragment or diagram), increasing the depth level.
+   *
+   * @param object object to enter
+   * @return ID assigned to the object (to use with exitNested).
+   */
+  private int enterNested(EObject object) {
+    final int id = enter(object);
+
+    currentDepth++;
+    maxDepth = Integer.max(currentDepth, maxDepth);
+
+    return id;
+  }
+
+  /**
+   * Marks entry of an object without increasing the depth level.
    *
    * @param object object to enter
    * @return ID assigned to the object (to use with exit).
@@ -115,25 +133,31 @@ public class InteractionUnwinder {
     currentId++;
 
     add(object, id, EventType.Entered);
-
-    currentDepth++;
-    maxDepth = Integer.max(currentDepth, maxDepth);
-
     return id;
   }
 
   /**
-   * Marks exit of a compound object.
+   * Marks exit of a nested object, decreasing the depth level.
+   *
+   * @param object object to exit.
+   * @param id     ID assigned to the object by enter.
+   */
+  private void exitNested(EObject object, int id) {
+    assert (0 < currentDepth);
+    assert (currentDepth <= maxDepth);
+    currentDepth--;
+
+    exit(object, id);
+  }
+
+  /**
+   * Marks exit of an object, assigning the exit event the given ID.
    *
    * @param object object to exit.
    * @param id     ID assigned to the object by enter.
    */
   private void exit(EObject object, int id) {
-    assert (0 < currentDepth);
-    assert (currentDepth <= maxDepth);
     assert (id < currentId);
-
-    currentDepth--;
     add(object, id, EventType.Exited);
   }
 
@@ -142,12 +166,12 @@ public class InteractionUnwinder {
   }
 
   /**
-   * The result of an interaction unwinding.
+   * The result of an interaction flattening.
    *
-   * @param entries  list of all entries in occurrence order.
+   * @param events   list of all events in occurrence order.
    * @param maxDepth maximum nesting depth (0 = top level only).
    */
-  public record Result(List<Event> entries, int maxDepth) {
+  public record Result(List<Event> events, int maxDepth) {
 
   }
 
@@ -156,7 +180,7 @@ public class InteractionUnwinder {
   }
 
   /**
-   * Types of entry in an unwound interaction.
+   * Types of event in a flattened interaction.
    *
    * @author Matt Windsor
    */

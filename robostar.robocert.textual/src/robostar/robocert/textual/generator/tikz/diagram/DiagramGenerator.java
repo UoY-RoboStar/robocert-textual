@@ -21,8 +21,8 @@ import robostar.robocert.World;
 import robostar.robocert.textual.generator.tikz.frame.FrameGenerator;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.CellLocation;
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation.ActorColumn;
-import robostar.robocert.textual.generator.tikz.util.InteractionUnwinder.EventType;
+import robostar.robocert.textual.generator.tikz.matrix.ActorColumn;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
@@ -56,15 +56,18 @@ public record DiagramGenerator(TikzStructureGenerator tikz, FrameGenerator frame
 
     final var state = new DiagramStateBuilder(frameGen, it, actors).build();
 
+    final var matrixStyle = "rcseq, row sep=(\\the\\rctopmargin + (%d*\\the\\rcstepmargin))".formatted(state.outerDepthScale());
+    final var matrixPrefix = "\\matrix[%s]{\n".formatted(matrixStyle);
+
     final var matrix = state.matrixRows().stream().map(this::generateMatrixRow)
-        .collect(Collectors.joining("\n", "\\matrix[rcseq]{\n", "\n};"));
+        .collect(Collectors.joining("\n", matrixPrefix, "\n};"));
 
     final var lifelines = actors.stream().map(this::lifeline).collect(Collectors.joining("\n"));
 
     final var frames = state.frames().stream().map(x -> x.render(tikz, state.outerDepthScale())).collect(
         Collectors.joining("\n"));
 
-    return String.join("\n\n", HEADING, matrix, frames, lifelines);
+    return String.join("\n\n", HEADING, matrix, lifelines, frames);
   }
 
   private String generateMatrixRow(List<Cell> row) {
