@@ -10,93 +10,53 @@
 
 package robostar.robocert.textual.generator.tikz.matrix;
 
-import java.util.Objects;
-import java.util.function.Function;
+import java.util.Optional;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
- * Builder for RoboCert sequence matrix cells.
+ * A cell in a RoboCert sequence diagram matrix.
  *
  * @author Matt Windsor
  */
-public class Cell {
-
-  private final CellLocation location;
-  private Function<TikzStructureGenerator, String> styleFunction = Cell::dummyStyleFunction;
-  private Function<TikzStructureGenerator, String> bodyFunction = null;
-
+public record Cell(Row row, Column column) {
   /**
-   * Constructs a cell.
-   * <p>
-   * This cell is a coordinate until and unless its body function is set.
+   * Shorthand for constructing a cell then immediately taking its name.
    *
-   * @param location location of the cell.
+   * @param row row of the node.
+   * @param column column of the node.
+   * @return constructed name of the node or coordinate.
    */
-  public Cell(CellLocation location) {
-    this.location = location;
+  public static String nameOf(Row row, Column column) {
+    return new Cell(row, column).name();
   }
 
-  /**
-   * Shorthand for constructing a cell at a row/column location.
-   *
-   * @param row    row of the cell.
-   * @param column column of the cell.
-   * @return the resulting coordinate cell.
-   */
-  public static Cell at(Row row, Column column) {
-    return new Cell(new CellLocation(row, column));
-  }
-
-  /**
-   * Sets the function to be used to create this cell's body.
-   *
-   * <p>
-   * Setting this to non-null makes the cell generate a node rather than a coordinate.
-   *
-   * @param f function to use to generate the body.
-   * @return this object.
-   */
-  public Cell setBodyFunction(Function<TikzStructureGenerator, String> f) {
-    bodyFunction = f;
-    return this;
-  }
-
-  /**
-   * Sets the function to be used to create this cell's style.
-   *
-   * <p>
-   * If the cell has no body, this function is ignored.
-   *
-   * @param f function to use to generate the style.
-   * @return this object.
-   */
-  public Cell setStyleFunction(Function<TikzStructureGenerator, String> f) {
-    styleFunction = Objects.requireNonNullElse(f, Cell::dummyStyleFunction);
-    return this;
-  }
-
-  private static String dummyStyleFunction(TikzStructureGenerator tikz) {
-    return "";
-  }
 
   /**
    * Generates TikZ for this matrix cell.
+   * <p>
+   *   If either the location or the body is null, we don't generate any cell code.
    *
    * @param tikz low-level TikZ structure generator.
-   * @return TikZ code for the cell (either a node or a coordinate).
+   * @return TikZ code for the cell (either a node or a coordinate), if one has been generated.
    */
-  public String generate(TikzStructureGenerator tikz) {
-    if (location == null) {
-      return "";
-    }
-    final var locName = location.name();
+  public Optional<String> render(TikzStructureGenerator tikz) {
+    return row.generateBody(column).map(body -> {
+      final var locName = name();
 
-    if (bodyFunction == null) {
-      return tikz.coordinate(locName);
-    }
+      final var label = body.renderLabel(tikz);
+      if (label.isEmpty()) {
+        return tikz.coordinate(locName);
+      }
+      final var style = body.renderStyle(tikz).orElse("");
+      return tikz.node(style, locName, label.get());
+    });
+  }
 
-    final var style = styleFunction.apply(tikz);
-    final var body = bodyFunction.apply(tikz);
-    return tikz.node(style, locName, body);
+  /**
+   * Gets the name of this cell.
+   * @return programmatically generated name based on row and column names.
+   */
+  public String name() {
+    return String.join("_", row.rowName(), column.columnName());
   }
 }

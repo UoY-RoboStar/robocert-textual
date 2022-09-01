@@ -10,6 +10,7 @@
 
 package robostar.robocert.textual.generator.tikz.matrix;
 
+import java.util.Optional;
 import robostar.robocert.Actor;
 
 /**
@@ -22,5 +23,10 @@ public record ActorColumn(Actor actor) implements Column {
   @Override
   public String columnName() {
     return "a" + actor.getName();
+  }
+
+  @Override
+  public Optional<Actor> getActor() {
+    return Optional.of(actor);
   }
 }

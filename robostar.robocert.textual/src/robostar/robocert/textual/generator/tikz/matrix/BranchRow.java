@@ -10,26 +10,19 @@
 
 package robostar.robocert.textual.generator.tikz.matrix;
 
-import java.util.Objects;
 import java.util.Optional;
-import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 
 /**
- * A row in a matrix that represents the start or end of a combined fragment.
+ * A row in a matrix that represents a division between two branches.
  *
- * @param type whether this entry into or exit out of a diagram (other types are not permitted).
- * @param id   numeric ID of this combined fragment.
+ * @param id   numeric ID of the lower branch.
  * @author Matt Windsor
  */
-public record CombinedFragmentRow(EventType type, int id) implements Row {
-
-  public CombinedFragmentRow {
-    Objects.requireNonNull(type);
-  }
+public record BranchRow(int id) implements Row {
 
   @Override
   public String rowName() {
-    return "cf_%d_%s".formatted(id, type.toString());
+    return "branch_%d".formatted(id);
   }
 
   @Override

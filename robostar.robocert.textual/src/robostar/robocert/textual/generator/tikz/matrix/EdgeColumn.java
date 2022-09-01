@@ -10,6 +10,9 @@
 
 package robostar.robocert.textual.generator.tikz.matrix;
 
+import java.util.Optional;
+import robostar.robocert.Actor;
+
 /**
  * Represents one of the edge columns in a TikZ sequence diagram matrix.
  *
@@ -31,5 +34,10 @@ public enum EdgeColumn implements Column {
       case Gutter -> "g";
       case World -> "w";
     };
+  }
+
+  @Override
+  public Optional<Actor> getActor() {
+    return Optional.empty();
   }
 }

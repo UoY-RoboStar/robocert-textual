@@ -10,9 +10,13 @@
 
 package robostar.robocert.textual.generator.tikz.util;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 
 import robostar.robocert.BlockFragment;
@@ -33,9 +37,16 @@ import robostar.robocert.util.RoboCertSwitch;
 public class InteractionFlattener {
 
   private final Interaction subject;
-  private int currentDepth = 0;
   private int maxDepth = 0;
   private int currentId = 0;
+
+  private int currentRelativeId = 0;
+  private final Deque<Integer> relativeIdStack = new ArrayDeque<>();
+  private final Map<Integer, Integer> relativeIdMap = new HashMap<>();
+
+  private int getCurrentDepth() {
+    return relativeIdStack.size();
+  }
 
   private List<Event> entries = null;
 
@@ -45,7 +56,7 @@ public class InteractionFlattener {
 
   public Result unwind() {
     entries = new ArrayList<>();
-    maxDepth = currentDepth = 0;
+    maxDepth = 0;
     new Switch().doSwitch(subject);
     return new Result(entries, maxDepth);
   }
@@ -99,10 +110,7 @@ public class InteractionFlattener {
 
     @Override
     public Boolean caseOccurrenceFragment(OccurrenceFragment object) {
-      // This is not 'enter' because we do not increase the depth.
-      add(object, currentId, EventType.Entered);
-      currentId++;
-
+      enter(object);
       return Boolean.TRUE;
     }
   }
@@ -116,8 +124,10 @@ public class InteractionFlattener {
   private int enterNested(EObject object) {
     final int id = enter(object);
 
-    currentDepth++;
-    maxDepth = Integer.max(currentDepth, maxDepth);
+    relativeIdStack.push(currentRelativeId);
+    currentRelativeId = 0;
+
+    maxDepth = Integer.max(getCurrentDepth(), maxDepth);
 
     return id;
   }
@@ -132,6 +142,11 @@ public class InteractionFlattener {
     final var id = currentId;
     currentId++;
 
+    final var rid = currentId;
+    currentRelativeId++;
+
+    relativeIdMap.put(id, rid);
+
     add(object, id, EventType.Entered);
     return id;
   }
@@ -143,9 +158,11 @@ public class InteractionFlattener {
    * @param id     ID assigned to the object by enter.
    */
   private void exitNested(EObject object, int id) {
+    final var currentDepth = getCurrentDepth();
     assert (0 < currentDepth);
     assert (currentDepth <= maxDepth);
-    currentDepth--;
+
+    currentRelativeId = relativeIdStack.pop();
 
     exit(object, id);
   }
@@ -162,7 +179,7 @@ public class InteractionFlattener {
   }
 
   private void add(EObject object, int id, EventType etype) {
-    entries.add(new Event(etype, id, currentDepth, object));
+    entries.add(new Event(etype, id, relativeIdMap.get(id), getCurrentDepth(), object));
   }
 
   /**
@@ -175,7 +192,16 @@ public class InteractionFlattener {
 
   }
 
-  public record Event(EventType type, int id, int depth, EObject subject) {
+  /**
+   * An element of a flattened interaction.
+   *
+   * @param type       whether we are entering or exiting the element.
+   * @param id         global sequential ID of the element.
+   * @param relativeId relative ID within this element's parent.
+   * @param depth      depth of the element within the interaction.
+   * @param subject    element body.
+   */
+  public record Event(EventType type, int id, int relativeId, int depth, EObject subject) {
 
   }
 

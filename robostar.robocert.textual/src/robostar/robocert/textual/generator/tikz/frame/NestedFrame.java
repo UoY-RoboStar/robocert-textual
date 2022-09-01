@@ -10,7 +10,7 @@
 
 package robostar.robocert.textual.generator.tikz.frame;
 
-import robostar.robocert.textual.generator.tikz.matrix.CellLocation;
+import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.EdgeColumn;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
@@ -34,8 +34,8 @@ public record NestedFrame(Frame frame, int depth) {
   public String render(TikzStructureGenerator tikz, int topLevel) {
     final var label = frame.generateLabel(tikz);
     return tikz.command("rcframe").argument(Integer.toString(topLevel - depth))
-        .argument(new CellLocation(frame.row(EventType.Entered), EdgeColumn.Gutter).name())
-        .argument(new CellLocation(frame.row(EventType.Exited), EdgeColumn.World).name()).argument(label)
+        .argument(new Cell(frame.row(EventType.Entered), EdgeColumn.Gutter).name())
+        .argument(new Cell(frame.row(EventType.Exited), EdgeColumn.World).name()).argument(label)
         .render();
   }
 }

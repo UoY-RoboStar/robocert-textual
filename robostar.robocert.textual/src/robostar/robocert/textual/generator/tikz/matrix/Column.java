@@ -10,6 +10,9 @@
 
 package robostar.robocert.textual.generator.tikz.matrix;
 
+import java.util.Optional;
+import robostar.robocert.Actor;
+
 /**
  * Interface of things that represent columns in a TikZ sequence diagram matrix.
  *
@@ -25,4 +28,11 @@ public interface Column {
    * @return generated name.
    */
   String columnName();
+
+  /**
+   * Gets the actor associated with this column if any.
+   *
+   * @return optional actor.
+   */
+  Optional<Actor> getActor();
 }

@@ -11,6 +11,8 @@
 package robostar.robocert.textual.generator.tikz.matrix;
 
 import java.util.Objects;
+import java.util.Optional;
+import robostar.robocert.Actor;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 
 /**
@@ -28,5 +30,16 @@ public record DiagramRow(EventType type) implements Row {
   @Override
   public String rowName() {
     return "diagram_" + type.toString();
+  }
+
+  @Override
+  public Optional<CellBody> generateBody(Column column) {
+    // Generate actor heads.
+    final var actor = column.getActor();
+    if (type == EventType.Entered && actor.isPresent()) {
+      return Optional.of(new ActorHeadCellBody(actor.get()));
+    }
+
+    return Optional.of(new CoordinateCellBody());
   }
 }

@@ -10,6 +10,9 @@
 
 package robostar.robocert.textual.generator.tikz.matrix;
 
+import java.util.Optional;
+import robostar.robocert.Actor;
+
 /**
  * Interface of things that represent rows in a TikZ sequence diagram matrix.
  *
@@ -25,4 +28,12 @@ public interface Row {
    * @return generated name.
    */
   String rowName();
+
+  /**
+   * Constructs the cell body for this row, given that it is appearing in a particular column.
+   *
+   * @param column the column for this row.
+   * @return the expected cell body, which may be empty if we don't want to generate a cell.
+   */
+  Optional<CellBody> generateBody(Column column);
 }
