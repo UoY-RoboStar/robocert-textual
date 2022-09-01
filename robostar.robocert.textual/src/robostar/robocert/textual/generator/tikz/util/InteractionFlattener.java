@@ -203,6 +203,13 @@ public class InteractionFlattener {
    */
   public record Event(EventType type, int id, int relativeId, int depth, EObject subject) {
 
+    /**
+     * Is this a split between branches?
+     * @return true if this event is an interaction operand, is not the first event inside its parent, and is an entry event.
+     */
+    public boolean isBranchSplit() {
+      return subject instanceof InteractionOperand && type == EventType.Entered && 0 < relativeId;
+    }
   }
 
   /**

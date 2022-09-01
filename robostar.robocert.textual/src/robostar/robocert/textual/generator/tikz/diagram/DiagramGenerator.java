@@ -26,11 +26,12 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 /**
  * Generates TikZ for one diagram.
  *
- * @param tikz TikZ structure generator.
+ * @param tikz        TikZ structure generator.
  * @param contentsGen diagram contents generator.
  * @author Matt Windsor
  */
 public record DiagramGenerator(TikzStructureGenerator tikz, DiagramContentsGenerator contentsGen) {
+
   @Inject
   public DiagramGenerator {
     Objects.requireNonNull(tikz);
@@ -41,7 +42,6 @@ public record DiagramGenerator(TikzStructureGenerator tikz, DiagramContentsGener
       % Remember to \\input or import the baseline definitions for RoboCert TikZ files.
       % See the standalone .tex file for an example.
       """;
-
 
 
   /**
@@ -55,18 +55,23 @@ public record DiagramGenerator(TikzStructureGenerator tikz, DiagramContentsGener
 
     final var state = contentsGen.generate(it);
 
-    final var matrixStyle = "rcseq, row sep=(\\the\\rctopmargin + (%d*\\the\\rcstepmargin))".formatted(state.outerDepthScale());
+    final var matrixStyle = "rcseq, row sep=(\\the\\rctopmargin + (%d*\\the\\rcstepmargin))".formatted(
+        state.outerDepthScale());
     final var matrixPrefix = "\\matrix[%s]{\n".formatted(matrixStyle);
 
     final var matrix = state.matrixRows().stream().map(this::generateMatrixRow)
         .collect(Collectors.joining("\n", matrixPrefix, "\n};"));
 
-    final var lifelines = state.lifelines().stream().map(this::lifeline).collect(Collectors.joining("\n"));
+    final var lifelines = state.lifelines().stream().map(this::lifeline)
+        .collect(Collectors.joining("\n"));
 
-    final var frames = state.frames().stream().map(x -> x.render(tikz, state.outerDepthScale())).collect(
-        Collectors.joining("\n"));
+    final var branchSplits = state.branchSplits().stream()
+        .map(x -> x.render(tikz, state.outerDepthScale())).collect(Collectors.joining("\n"));
 
-    return String.join("\n\n", HEADING, matrix, lifelines, frames);
+    final var frames = state.frames().stream().map(x -> x.render(tikz, state.outerDepthScale()))
+        .collect(Collectors.joining("\n"));
+
+    return String.join("\n\n", HEADING, matrix, lifelines, branchSplits, frames);
   }
 
   private String generateMatrixRow(List<Cell> row) {
@@ -84,6 +89,6 @@ public record DiagramGenerator(TikzStructureGenerator tikz, DiagramContentsGener
     final var col = new ActorColumn(actor);
     final var start = Cell.nameOf(new DiagramRow(EventType.Entered), col);
     final var end = Cell.nameOf(new DiagramRow(EventType.Exited), col);
-    return "\\draw[rclifeline] (%s) -- (%s);".formatted(start, end);
+    return tikz.draw("rclifeline").to(start).to(end).render();
   }
 }

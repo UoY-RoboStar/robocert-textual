@@ -19,11 +19,16 @@ import robostar.robocert.CombinedFragment;
 import robostar.robocert.Interaction;
 import robostar.robocert.InteractionOperand;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.Event;
-import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.util.RoboCertSwitch;
 
 /**
  * Generates matrix rows from flattened interaction events.
+ * <p>
+ * Generally, matrix rows capture the start of a combined fragment, the end of a combined fragment,
+ * a branching spot between two interaction operands, or an occurrence fragment.  Of these, only
+ * certain occurrences (and the actor lifeline headings produced at the start of an interaction)
+ * generate nodes in the matrix; others generate coordinates from which we produce frames and other
+ * adornments.
  *
  * @author Matt Windsor
  */
@@ -37,41 +42,36 @@ public class RowGenerator {
    * @return the row, if one is indeed generatable for this event.
    */
   public Optional<List<Cell>> generate(Event entry, List<Actor> actors) {
-    return Optional.ofNullable(
-        new Switch(entry.type(), entry.id(), entry.relativeId(), actors).doSwitch(entry.subject())).map(Stream::toList);
+    return Optional.ofNullable(new Switch(entry, actors).doSwitch(entry.subject()))
+        .map(Stream::toList);
   }
 
   private static class Switch extends RoboCertSwitch<Stream<Cell>> {
 
-    private final EventType type;
-    private final int id;
-    private final int relativeId;
+    private final Event event;
     private final List<Actor> actors;
 
-    public Switch(EventType type, int id, int relativeId, List<Actor> actors) {
+    public Switch(Event event, List<Actor> actors) {
       super();
-      this.type = type;
-      this.id = id;
-      this.relativeId = relativeId;
+      this.event = event;
       this.actors = actors;
     }
 
     @Override
     public Stream<Cell> caseInteraction(Interaction object) {
-      return makeRow(new DiagramRow(type));
+      return makeRow(new DiagramRow(event.type()));
     }
 
     @Override
     public Stream<Cell> caseCombinedFragment(CombinedFragment object) {
-      return makeRow(new CombinedFragmentRow(type, id));
+      return makeRow(new CombinedFragmentRow(event.type(), event.id()));
     }
 
     @Override
     public Stream<Cell> caseInteractionOperand(InteractionOperand object) {
       // Emit branch separators if this is an entry into an interaction operand that is not the
       // first such operand in its parent.
-      final var isBranchSep = type == EventType.Entered && 0 < relativeId;
-      return isBranchSep ? makeRow(new BranchRow(id)) : null;
+      return event.isBranchSplit() ? makeRow(new BranchRow(event.id())) : null;
     }
 
     private Stream<Cell> makeRow(Row row) {

@@ -40,12 +40,22 @@ public class TikzStructureGenerator {
   }
 
   /**
-   * Opens a command builder for creating a command.
+   * Opens a builder for creating a command.
    *
    * @param name name of the command.
    * @return a command builder.
    */
   public Command command(String name) {
     return new Command(name);
+  }
+
+  /**
+   * Opens a builder for creating a path.
+   *
+   * @param style style of the path.
+   * @return a path builder.
+   */
+  public Path draw(String style) {
+    return new Path(this, style);
   }
 }

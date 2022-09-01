@@ -50,12 +50,17 @@ public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator row
 
     final var matrixRows = new ArrayList<List<Cell>>();
     final var frames = new ArrayList<NestedFrame>();
+    final var branchSplits = new ArrayList<BranchSplit>();
 
     for (var entry : unwound.events()) {
       rowGen.generate(entry, actors).ifPresent(matrixRows::add);
       frameGen.generate(entry).ifPresent(frames::add);
+
+      if (entry.isBranchSplit()) {
+        branchSplits.add(new BranchSplit(entry.id(), entry.depth()));
+      }
     }
-    return new State(actors, matrixRows, frames, unwound.maxDepth());
+    return new State(actors, matrixRows, frames, branchSplits, unwound.maxDepth());
   }
 
 
@@ -65,10 +70,11 @@ public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator row
    * @param lifelines       actors forming lifelines in this diagram.
    * @param matrixRows      rows to place in the diagram's matrix.
    * @param frames          frames to render on top of the diagram's matrix.
+   * @param branchSplits    rows on which two branches split from each other.
    * @param outerDepthScale amount by which we should scale the outer frame's margin.
    */
   public record State(List<Actor> lifelines, List<List<Cell>> matrixRows, List<NestedFrame> frames,
-                      int outerDepthScale) {
+                      List<BranchSplit> branchSplits, int outerDepthScale) {
 
   }
 }
