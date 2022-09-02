@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
+import robostar.robocert.textual.generator.tikz.diagram.DiagramContentsGenerator.State;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.ActorColumn;
 import robostar.robocert.textual.generator.tikz.matrix.DiagramRow;
@@ -55,12 +56,7 @@ public record DiagramGenerator(TikzStructureGenerator tikz, DiagramContentsGener
 
     final var state = contentsGen.generate(it);
 
-    final var matrixStyle = "rcseq, row sep=(\\the\\rctopmargin + (%d*\\the\\rcstepmargin))".formatted(
-        state.outerDepthScale());
-    final var matrixPrefix = "\\matrix[%s]{\n".formatted(matrixStyle);
-
-    final var matrix = state.matrixRows().stream().map(this::generateMatrixRow)
-        .collect(Collectors.joining("\n", matrixPrefix, "\n};"));
+    final String matrix = renderMatrix(state);
 
     final var lifelines = state.lifelines().stream().map(this::lifeline)
         .collect(Collectors.joining("\n"));
@@ -74,7 +70,16 @@ public record DiagramGenerator(TikzStructureGenerator tikz, DiagramContentsGener
     return String.join("\n\n", HEADING, matrix, lifelines, branchSplits, frames);
   }
 
-  private String generateMatrixRow(List<Cell> row) {
+  private String renderMatrix(State state) {
+    final var style = "rcseq, row sep=(\\the\\rctopmargin + (%d*\\the\\rcstepmargin))".formatted(
+        state.outerDepthScale());
+    final var prefix = "\\matrix[%s]{\n".formatted(style);
+
+    return state.matrixRows().stream().map(this::renderMatrixRow)
+        .collect(Collectors.joining("\n", prefix, "\n};"));
+  }
+
+  private String renderMatrixRow(List<Cell> row) {
     return row.stream().map(x -> x.render(tikz).orElse(""))
         .collect(Collectors.joining(" & ", "  ", " \\\\"));
   }

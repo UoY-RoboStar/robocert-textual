@@ -11,8 +11,12 @@
 package robostar.robocert.textual.generator.tikz.frame;
 
 import java.util.Optional;
+import robostar.robocert.AltFragment;
 import robostar.robocert.CombinedFragment;
 import robostar.robocert.Interaction;
+import robostar.robocert.OptFragment;
+import robostar.robocert.XAltFragment;
+import robostar.robocert.textual.generator.tikz.frame.BasicFrame.Type;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.Event;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.util.RoboCertSwitch;
@@ -47,14 +51,29 @@ public class FrameGenerator {
     }
 
     @Override
+    public Frame caseInteraction(Interaction object) {
+      return new DiagramFrame(object);
+    }
+
+    @Override
     public Frame caseCombinedFragment(CombinedFragment object) {
       // Catch-all canary for if we don't support the fragment directly.
       return new MissingFrame(object, id);
     }
 
     @Override
-    public Frame caseInteraction(Interaction object) {
-      return new DiagramFrame(object);
+    public Frame caseAltFragment(AltFragment object) {
+      return new BasicFrame(Type.Alt, id);
+    }
+
+    @Override
+    public Frame caseOptFragment(OptFragment object) {
+      return new BasicFrame(Type.Opt, id);
+    }
+
+    @Override
+    public Frame caseXAltFragment(XAltFragment object) {
+      return new BasicFrame(Type.XAlt, id);
     }
   }
 }
