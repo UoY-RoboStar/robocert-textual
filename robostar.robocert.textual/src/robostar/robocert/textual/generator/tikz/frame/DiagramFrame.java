@@ -32,7 +32,8 @@ public record DiagramFrame(Interaction diagram) implements Frame {
 
   @Override
   public String generateLabel(TikzStructureGenerator tikz) {
-    return tikz.command("rcseq").argument(diagram.getName()).argument(targetName()).render();
+    return tikz.command("rcseq").argument(sanitise(diagram.getName())).argument(targetName())
+        .render();
   }
 
   private String targetName() {
@@ -41,6 +42,11 @@ public record DiagramFrame(Interaction diagram) implements Frame {
       return "(orphaned)";
     }
     final var targetBaseName = Objects.toString(group.getTarget(), "(no target)");
-    return String.join("::", group.getName(), targetBaseName);
+    return sanitise(String.join("::", group.getName(), targetBaseName));
+  }
+
+  private String sanitise(String raw) {
+    // Needed because LaTeX usually expects _ to be in math mode.
+    return raw.replace("_", "\\_");
   }
 }
