@@ -1,7 +1,7 @@
 %
 % RoboCert Graphical notation (using TikZ)
 %
-% Last updated: 2022-09-01
+% Last updated: 2022-10-04
 %
 
 \newcommand{\rckeywordfont}{\sffamily\bfseries}
@@ -44,6 +44,30 @@
     end/.style={fill, very thick, rectangle, minimum height=3pt, minimum width=15pt, inner sep=0em}
 }
 
+
+%
+% Headers
+%
+
+% Header for sequence diagrams
+%
+% #1: name of diagram
+% #2: name of target type
+% #3: name of target
+\newcommand{\rcseq}[3]{\rckeyword{sd} #1 (#2 #3)}
+
+% The name of a component target type
+% #1: name of the type
+\newcommand{\rccomptarget}[1]{\rckeyword{#1}}
+
+% The name of a collection target type
+% #1: name of the type
+\newcommand{\rccolltarget}[1]{\rckeyword{components of #1}}
+
+%
+% Actors
+%
+
 % pseudo-UML stereotype name
 % #1: name of the stereotype
 \newcommand{\rcstereotype}[1]{\rckeyword{\(\langle\!\langle\)\,#1\,\(\rangle\!\rangle\)}}
@@ -60,12 +84,6 @@
 \newcommand{\gextset}[1]{\{#1\}}
 \newcommand{\gemptyset}{\gextset{}}
 \newcommand{\grefset}[1]{\textsf{#1}}
-
-% Header for sequence diagrams
-%
-% #1: name of diagram
-% #2: name of target
-\newcommand{\rcseq}[2]{\rckeyword{sd} #1 (#2)}
 
 % Combined fragment or diagram frame
 % #1: padding factor

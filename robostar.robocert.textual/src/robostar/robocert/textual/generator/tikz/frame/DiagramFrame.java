@@ -13,10 +13,14 @@ package robostar.robocert.textual.generator.tikz.frame;
 import java.util.Objects;
 
 import robostar.robocert.Interaction;
+import robostar.robocert.SpecificationGroup;
+import robostar.robocert.Target;
 import robostar.robocert.textual.generator.tikz.matrix.DiagramRow;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
+import robostar.robocert.textual.generator.tikz.util.TargetTypeNameGenerator;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
+import robostar.robocert.util.resolve.TargetElementResolver;
 
 /**
  * A frame that represents the outer layer of a diagram.
@@ -32,20 +36,31 @@ public record DiagramFrame(Interaction diagram) implements Frame {
 
   @Override
   public String generateLabel(TikzStructureGenerator tikz) {
-    return tikz.command("rcseq").argument(sanitise(diagram.getName())).argument(targetName())
-        .render();
-  }
-
-  private String targetName() {
     final var group = diagram.getGroup();
-    if (group == null) {
-      return "(orphaned)";
-    }
-    final var targetBaseName = Objects.toString(group.getTarget(), "(no target)");
-    return sanitise(String.join("::", group.getName(), targetBaseName));
+    final var target = group == null ? null : group.getTarget();
+
+    // TODO(@MattWindsor91): it seems strange to construct this here.
+    final var targetType = new TargetTypeNameGenerator(tikz).targetTypeName(target);
+    final var targetName = Objects.requireNonNullElse(targetName(group, target), "???");
+
+    return tikz.command("rcseq").argument(sanitise(diagram.getName())).argument(targetType)
+        .argument(targetName).render();
   }
 
-  private String sanitise(String raw) {
+  private static String targetName(SpecificationGroup group, Target target) {
+    if (group == null || target == null) {
+      return null;
+    }
+    // TODO(@MattWindsor91): it seems strange to construct this here.
+    final var elem = new TargetElementResolver().resolve(target);
+    if (elem == null) {
+      return null;
+    }
+    final var baseName = elem.getName();
+    return baseName == null ? null : sanitise(String.join("::", group.getName(), baseName));
+  }
+
+  private static String sanitise(String raw) {
     // Needed because LaTeX usually expects _ to be in math mode.
     return raw.replace("_", "\\_");
   }
