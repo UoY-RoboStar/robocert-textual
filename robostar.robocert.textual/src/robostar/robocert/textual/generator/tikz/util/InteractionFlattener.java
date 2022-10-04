@@ -142,7 +142,7 @@ public class InteractionFlattener {
     final var id = currentId;
     currentId++;
 
-    final var rid = currentId;
+    final var rid = currentRelativeId;
     currentRelativeId++;
 
     relativeIdMap.put(id, rid);
