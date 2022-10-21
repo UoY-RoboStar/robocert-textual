@@ -14,6 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import com.google.inject.Inject;
+import org.eclipse.xtext.serializer.impl.Serializer;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,7 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
 
 /**
- * Tests that
+ * Tests that basic frames lower to the appropriate rows and labels.
  *
  * @author Matt Windsor
  */
@@ -36,6 +37,9 @@ class BasicFrameTest {
 
   @Inject
   private TikzStructureGenerator tikz;
+
+  @Inject
+  private Serializer ser;
 
   /**
    * Tests that row generation produces the expected result.
@@ -60,7 +64,7 @@ class BasicFrameTest {
   @ParameterizedTest
   @EnumSource
   public void TestGenerateLabel(BasicFrame.Type type) {
-    assertThat(frame(type).generateLabel(tikz), is("\\rckeyword{%s}".formatted(type.toString())));
+    assertThat(frame(type).generateLabel(tikz, ser), is("\\rckeyword{%s}".formatted(type.toString())));
   }
 
   private BasicFrame frame(BasicFrame.Type type) {

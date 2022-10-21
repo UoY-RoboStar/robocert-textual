@@ -10,6 +10,7 @@
 
 package robostar.robocert.textual.generator.tikz.frame;
 
+import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
@@ -57,7 +58,7 @@ public record BasicFrame(Type type, int id) implements Frame {
   }
 
   @Override
-  public String generateLabel(TikzStructureGenerator tikz) {
+  public String generateLabel(TikzStructureGenerator tikz, ISerializer _ser) {
     return tikz.command("rckeyword").argument(type.toString()).render();
   }
 }

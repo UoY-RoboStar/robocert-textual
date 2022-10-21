@@ -12,6 +12,7 @@ package robostar.robocert.textual.generator.tikz.frame;
 
 import java.util.Objects;
 
+import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.Interaction;
 import robostar.robocert.SpecificationGroup;
 import robostar.robocert.Target;
@@ -35,7 +36,7 @@ public record DiagramFrame(Interaction diagram) implements Frame {
   }
 
   @Override
-  public String generateLabel(TikzStructureGenerator tikz) {
+  public String generateLabel(TikzStructureGenerator tikz, ISerializer _ser) {
     final var group = diagram.getGroup();
     final var target = group == null ? null : group.getTarget();
 

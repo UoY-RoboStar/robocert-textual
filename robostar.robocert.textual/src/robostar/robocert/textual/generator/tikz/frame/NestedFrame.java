@@ -10,6 +10,7 @@
 
 package robostar.robocert.textual.generator.tikz.frame;
 
+import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.EdgeColumn;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
@@ -28,11 +29,12 @@ public record NestedFrame(Frame frame, int depth) {
    * Renders this frame as TikZ code.
    *
    * @param tikz     low-level structure generator for TikZ.
+   * @param ser      Xtext serialiser, used for expression snippets.
    * @param topLevel depth of the highest frame, used to scale the nesting level argument.
    * @return a string containing TikZ code for this frame.
    */
-  public String render(TikzStructureGenerator tikz, int topLevel) {
-    final var label = frame.generateLabel(tikz);
+  public String render(TikzStructureGenerator tikz, ISerializer ser, int topLevel) {
+    final var label = frame.generateLabel(tikz, ser);
     return tikz.command("rcframe").argument(Integer.toString(topLevel - depth))
         .argument(new Cell(frame.row(EventType.Entered), EdgeColumn.Gutter).name())
         .argument(new Cell(frame.row(EventType.Exited), EdgeColumn.World).name()).argument(label)

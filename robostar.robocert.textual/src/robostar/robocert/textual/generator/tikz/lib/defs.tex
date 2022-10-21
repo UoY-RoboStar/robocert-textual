@@ -1,7 +1,7 @@
 %
 % RoboCert Graphical notation (using TikZ)
 %
-% Last updated: 2022-10-04
+% Last updated: 2022-10-06
 %
 
 \newcommand{\rckeywordfont}{\sffamily\bfseries}
@@ -110,13 +110,20 @@
 % The 'otherwise' guard
 \NewDocumentCommand{\gotherwise}{}{otherwise}
 
-% Loop
-% #1: coordinates to fit
-% #2: loop name
-% #3: loop header
-% (#4: inner sep)
-% (#5: horizontal inner sep)
-\NewDocumentCommand{\gloop}{m m m O{0.4em} O{0}}{\gcfrag{#1}{#4}{\rckeyword{loop}#3 #2}{loop#2}[cfbox][#5]}
+%
+% Loop headers
+%
+
+% Unnamed loop header
+%
+% #1: parameterisation
+\newcommand{\rcloop}[1]{\rckeyword{loop}#1}
+
+% Named loop header
+%
+% #1: name
+% #2: parameterisation
+\newcommand{\rcnamedloop}[2]{\rcloop{#2} #1}
 
 % Gap
 % #1: top-left

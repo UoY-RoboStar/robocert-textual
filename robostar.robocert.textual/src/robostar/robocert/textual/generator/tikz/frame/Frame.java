@@ -10,6 +10,7 @@
 
 package robostar.robocert.textual.generator.tikz.frame;
 
+import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
@@ -33,7 +34,8 @@ public interface Frame {
    * Generates the label for the top corner of this frame.
    *
    * @param tikz TikZ structure generator (eg, for generating commands).
+   * @param ser Xtext serializer (eg, for rendering expressions).
    * @return string of TikZ code for the top corner, to be spliced into the frame macro.
    */
-  String generateLabel(TikzStructureGenerator tikz);
+  String generateLabel(TikzStructureGenerator tikz, ISerializer ser);
 }

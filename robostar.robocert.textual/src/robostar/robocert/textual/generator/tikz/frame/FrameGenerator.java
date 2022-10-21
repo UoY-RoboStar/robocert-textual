@@ -14,6 +14,7 @@ import java.util.Optional;
 import robostar.robocert.AltFragment;
 import robostar.robocert.CombinedFragment;
 import robostar.robocert.Interaction;
+import robostar.robocert.LoopFragment;
 import robostar.robocert.OptFragment;
 import robostar.robocert.XAltFragment;
 import robostar.robocert.textual.generator.tikz.frame.BasicFrame.Type;
@@ -60,6 +61,15 @@ public class FrameGenerator {
       // Catch-all canary for if we don't support the fragment directly.
       return new MissingFrame(object, id);
     }
+
+    @Override
+    public Frame caseLoopFragment(LoopFragment object) {
+      return new LoopFrame(object, id);
+    }
+
+    //
+    // Basic frames
+    //
 
     @Override
     public Frame caseAltFragment(AltFragment object) {

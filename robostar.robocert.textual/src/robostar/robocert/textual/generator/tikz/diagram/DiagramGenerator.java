@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.eclipse.xtext.serializer.impl.Serializer;
 import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
 import robostar.robocert.textual.generator.tikz.diagram.DiagramContentsGenerator.State;
@@ -28,14 +29,17 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
  * Generates TikZ for one diagram.
  *
  * @param tikz        TikZ structure generator.
+ * @param ser         Xtext serializer (used for expression languages).
  * @param contentsGen diagram contents generator.
  * @author Matt Windsor
  */
-public record DiagramGenerator(TikzStructureGenerator tikz, DiagramContentsGenerator contentsGen) {
+public record DiagramGenerator(TikzStructureGenerator tikz, Serializer ser,
+                               DiagramContentsGenerator contentsGen) {
 
   @Inject
   public DiagramGenerator {
     Objects.requireNonNull(tikz);
+    Objects.requireNonNull(ser);
     Objects.requireNonNull(contentsGen);
   }
 
@@ -64,8 +68,8 @@ public record DiagramGenerator(TikzStructureGenerator tikz, DiagramContentsGener
     final var branchSplits = state.branchSplits().stream()
         .map(x -> x.render(tikz, state.outerDepthScale())).collect(Collectors.joining("\n"));
 
-    final var frames = state.frames().stream().map(x -> x.render(tikz, state.outerDepthScale()))
-        .collect(Collectors.joining("\n"));
+    final var frames = state.frames().stream()
+        .map(x -> x.render(tikz, ser, state.outerDepthScale())).collect(Collectors.joining("\n"));
 
     return String.join("\n\n", HEADING, matrix, lifelines, branchSplits, frames);
   }
