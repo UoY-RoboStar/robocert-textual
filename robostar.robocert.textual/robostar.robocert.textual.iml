@@ -20,6 +20,6 @@
     <orderEntry type="library" name="circus.robocalc.robochart.assertions_2.0.0.202112021113" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202206211010" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart.textual_3.0.0.202206290948" level="project" />
-    <orderEntry type="library" name="robostar.robocert_0.1.0.202207261427" level="project" />
+    <orderEntry type="library" name="robostar.robocert_0.1.0.202210211737" level="project" />
   </component>
 </module>

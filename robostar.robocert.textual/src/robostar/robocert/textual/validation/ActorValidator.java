@@ -47,16 +47,10 @@ public class ActorValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check
 	public void checkComponentMemberOfTarget(ComponentActor c) {
-		final var target = c.getGroup().getTarget();
-		final var node = c.getNode();
-
-
-		if (target instanceof CollectionTarget ct) {
-			final var components = targetCompRes.resolve(ct);
-			if (components.noneMatch(x -> EcoreUtil.equals(node, x)))
+		// TODO(@MattWindsor91): error if not a collection target
+		if (!targetCompRes.hasComponent(c.getGroup().getTarget(), c.getNode())) {
 				error("Component must be a member of the target", RoboCertPackage.Literals.COMPONENT_ACTOR__NODE,
 						 NOT_A_COMPONENT);
 		}
-		// TODO(@MattWindsor91): error here
 	}
 }
