@@ -10,11 +10,13 @@
 
 package robostar.robocert.textual.generator.tockcsp.core.tgt;
 
+import circus.robocalc.robochart.OperationRef;
 import circus.robocalc.robochart.generator.csp.comp.untimed.CGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.util.Strings;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robostar.robocert.CollectionTarget;
 import robostar.robocert.ComponentTarget;
@@ -60,9 +62,32 @@ public record UniverseGenerator(CSPStructureGenerator csp, CGeneratorUtils gu,
    */
   public CharSequence generate(Target t) {
     final var processes = processes(t);
-    final var evts = processes.map(x -> csp.namespaced(gu.processId(x), "sem__events"))
+    final var evts = processes.map(x -> csp.namespaced(processName(x), "sem__events"))
         .toArray(CharSequence[]::new);
     return csp.union(evts);
+  }
+
+  private CharSequence processName(EObject e) {
+    return (e instanceof OperationRef r) ? substituteOperationDefName(r) : gu.processId(e);
+  }
+
+  /**
+   * This handles the fact that the RoboChart generator inlines operation definitions within the
+   * CSP for their previous controller.  The generated name given by processId has the right
+   * container for the operation, we just need to replace the controller name with that of its
+   * definition.
+   *
+   * <p> Related to GitHub issue #136.
+   *
+   * @param r operation reference.
+   * @return the qualified CSP name of r but with the definition's name substituted at the end.
+   */
+  private CharSequence substituteOperationDefName(OperationRef r) {
+    // TODO(@MattWindsor91): find a more elegant way of doing this?
+    // TODO(@MattWindsor91): does anything else need this translation?
+    final var elements = Strings.split(gu.processId(r), "::");
+    elements.set(elements.size() - 1, "OP_" + r.getRef().getName());
+    return csp.namespaced(elements.toArray(String[]::new));
   }
 
   private Stream<EObject> processes(Target t) {

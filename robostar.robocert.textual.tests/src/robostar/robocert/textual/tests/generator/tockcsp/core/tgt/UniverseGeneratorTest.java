@@ -13,12 +13,17 @@ package robostar.robocert.textual.tests.generator.tockcsp.core.tgt;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static robostar.robocert.textual.tests.util.GeneratesCSPMatcher.generatesCSP;
 
+import circus.robocalc.robochart.ControllerDef;
+import circus.robocalc.robochart.RCModule;
 import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import robostar.robocert.InControllerTarget;
+import robostar.robocert.SpecificationGroup;
+import robostar.robocert.Target;
 import robostar.robocert.textual.generator.tockcsp.core.tgt.UniverseGenerator;
 import robostar.robocert.textual.tests.examples.Controllers;
 import robostar.robocert.textual.tests.examples.Modules;
@@ -79,7 +84,7 @@ class UniverseGeneratorTest {
     assertThat(grp.getTarget(), generatesCSP("Pkg::Ctrl::sem__events", gen::generate));
   }
 
-    /**
+  /**
    * Tests generation of sem-events for a specification group targeting components directly embedded
    * in a module.
    *
@@ -106,15 +111,80 @@ class UniverseGeneratorTest {
    */
   @Test
   void testGenerate_InModule_Indirect() {
+    final var mod = Modules.indirectControllers(chartFactory);
+    final var target = targetFactory.inModule(mod);
+    final var grp = wrapInGroup(target);
 
-    final var target = targetFactory.inModule(Modules.indirectControllers(chartFactory));
+    // Conjecture: module descendants should always be referred to by their reference name.
+    assertThat(grp.getTarget(),
+        generatesCSP("union(Mod::R1::sem__events, Mod::R2::sem__events)", gen::generate));
 
+    // Adding a package should cause the package to appear in the namespace:
+    wrapInPackage(mod);
+    assertThat(grp.getTarget(),
+        generatesCSP("union(Pkg::Mod::R1::sem__events, Pkg::Mod::R2::sem__events)", gen::generate));
+  }
+
+  /**
+   * Tests generation of sem-events for a specification group targeting components directly
+   * embedded in a controller.
+   */
+  @Test
+  void testGenerate_InController_Direct() {
+    final var ctrl = Controllers.directSubcomponents(chartFactory);
+    final var target = targetFactory.inController(ctrl);
+    final var grp = wrapInGroup(target);
+
+    assertThat(grp.getTarget(),
+        generatesCSP("union(Ctrl::OP_O::sem__events, Ctrl::S::sem__events)", gen::generate));
+
+    // Adding a package should cause the package to appear in the namespace:
+    wrapInPackage(ctrl);
+    assertThat(grp.getTarget(),
+        generatesCSP("union(Pkg::Ctrl::OP_O::sem__events, Pkg::Ctrl::S::sem__events)",
+            gen::generate));
+  }
+
+  /**
+   * Tests generation of sem-events for a specification group targeting components indirectly
+   * referenced from a controller.
+   *
+   * <p>This is a regression test for GitHub issue #136.
+   */
+  @Test
+  void testGenerate_InController_Indirect() {
+    final var ctrl = Controllers.indirectSubcomponents(chartFactory);
+    final var target = targetFactory.inController(ctrl);
+    final var grp = wrapInGroup(target);
+
+    // Conjecture: state machines should be referred to by their reference name;
+    // operations get partly resolved.
+    assertThat(grp.getTarget(),
+        generatesCSP("union(Ctrl::OP_O::sem__events, Ctrl::R1::sem__events)", gen::generate));
+
+    // Adding a package should cause the package to appear in the namespace:
+    wrapInPackage(ctrl);
+    assertThat(grp.getTarget(),
+        generatesCSP("union(Pkg::Ctrl::OP_O::sem__events, Pkg::Ctrl::R1::sem__events)",
+            gen::generate));
+  }
+
+  private SpecificationGroup wrapInGroup(Target target) {
     final var grp = targetFactory.certFactory().createSpecificationGroup();
     grp.setName("Specs");
     grp.setTarget(target);
+    return grp;
+  }
 
-    // Conjecture: module descendants should always be referred to by their 
-    assertThat(grp.getTarget(),
-        generatesCSP("union(Mod::R1::sem__events, Mod::R2::sem__events)", gen::generate));
+  private void wrapInPackage(RCModule mod) {
+    final var pkg = chartFactory.createRCPackage();
+    pkg.setName("Pkg");
+    pkg.getModules().add(mod);
+  }
+
+  private void wrapInPackage(ControllerDef ctrl) {
+    final var pkg = chartFactory.createRCPackage();
+    pkg.setName("Pkg");
+    pkg.getControllers().add(ctrl);
   }
 }
