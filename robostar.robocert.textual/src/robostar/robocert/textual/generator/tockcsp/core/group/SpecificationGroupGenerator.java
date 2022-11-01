@@ -26,7 +26,7 @@ import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robostar.robocert.textual.generator.tockcsp.memory.ModuleGenerator;
 import robostar.robocert.textual.generator.tockcsp.seq.ActorGenerator;
 import robostar.robocert.textual.generator.tockcsp.seq.InteractionGenerator;
-import robostar.robocert.textual.generator.tockcsp.seq.LifelineContextFactory;
+import robostar.robocert.textual.generator.tockcsp.seq.InteractionContextFactory;
 import robostar.robocert.textual.generator.tockcsp.seq.SyncChannelGenerator;
 import robostar.robocert.textual.generator.tockcsp.seq.message.NamedSetModuleGenerator;
 import robostar.robocert.textual.generator.utils.param.TargetParameterResolver;
@@ -71,7 +71,7 @@ public class SpecificationGroupGenerator extends GroupGenerator<SpecificationGro
   @Inject
   private TargetParameterResolver paramRes;
   @Inject
-  private LifelineContextFactory ctxFactory;
+  private InteractionContextFactory ctxFactory;
 
   @Override
   protected Stream<CharSequence> generateBodyElements(SpecificationGroup group) {

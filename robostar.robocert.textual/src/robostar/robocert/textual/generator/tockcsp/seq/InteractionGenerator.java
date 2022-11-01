@@ -47,7 +47,7 @@ public class InteractionGenerator {
   @Inject
   private ModuleGenerator mg;
   @Inject
-  private LifelineContextFactory lcf;
+  private ActorGenerator actorGen;
   @Inject
   private SyncChannelGenerator syncGen;
   @Inject
@@ -71,7 +71,7 @@ public class InteractionGenerator {
   }
 
   private CharSequence generateWithoutMemory(InteractionContext s) {
-    final var lines = lcf.actors(s);
+    final var lines = s.actors(actorGen);
 
     // Optimise single-lifeline processes by directly generating the body without trying to produce
     // alphabets, until processes, etc.

@@ -17,6 +17,7 @@ import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
 import robostar.robocert.ParFragment;
 import robostar.robocert.UntilFragment;
+import robostar.robocert.textual.generator.tockcsp.seq.ActorGenerator;
 
 /**
  * Context required for generating an interaction.
@@ -79,10 +80,24 @@ public record InteractionContext(Interaction seq,
    * <p>This differs from checking the list directly in that, if synchronisation is disabled,
    * we return -1.
    * 
-   * @param fragment until fragment to query.
+   * @param frag until fragment to query.
    * @return -1 if the fragment does not need synchronising; its index, otherwise.
    */
   public int untilIndex(UntilFragment frag) {
     return untils.mustSynchronise(numLifelines()) ? untils.fragments().indexOf(frag) : -1;
+  }
+
+  /**
+   * Creates contexts for each semantics-visible lifeline in the given interaction context.
+   *
+   * <p>Not all lifelines are visible; any that form a context do not appear in the semantics as
+   * they are considered to be the CSP environment.
+   *
+   * @param actorGen actor generator, used for naming the data constructor.
+   * @return the list of actor contexts.
+   */
+  public List<ActorContext> actors(ActorGenerator actorGen) {
+    return lifelines().parallelStream()
+        .map(a -> new ActorContext(this, a, actorGen.dataConstructor(a))).toList();
   }
 }
