@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.RoboCertFactory;
 import robostar.robocert.textual.generator.tockcsp.seq.message.ActorNamespaceResolver;
+import robostar.robocert.textual.tests.examples.Controllers;
 import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
-import robostar.robocert.util.MessageFactory;
 import robostar.robocert.util.TargetFactory;
 
 /**
@@ -48,18 +48,13 @@ public class ActorNamespaceResolverTest {
    */
   @Test
   void resolveControllerInPackage() {
-    final var pkg = rchart.createRCPackage();
-    pkg.setName("pkg");
-
-    final var cdef = rchart.createControllerDef();
-    cdef.setName("ctrl");
-    pkg.getControllers().add(cdef);
+    final var cdef = Controllers.packaged(rchart);
 
     final var sg = rcert.createSpecificationGroup();
     sg.setTarget(targetFactory.inController(cdef));
     final var ta = rcert.createTargetActor();
     ta.setGroup(sg);
 
-    assertThat(res.namespace(ta), is("pkg::ctrl"));
+    assertThat(res.namespace(ta), is("Pkg::Ctrl"));
   }
 }

@@ -20,6 +20,7 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.textual.generator.tockcsp.seq.message.NamedSetModuleGenerator;
+import robostar.robocert.textual.tests.examples.Controllers;
 import robostar.robocert.util.TargetFactory;
 import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
 
@@ -44,18 +45,10 @@ public class NamedSetModuleGeneratorTest {
   @Test
   void testGenerate_nestedTarget_empty() {
     // This used to be a regression test for GitHub issue #109, but that is now done in
-    // TargetGeneratorTest.  Instead, this mainly just makes sure that we're not putting the
+    // UniverseGeneratorTest.  Instead, this mainly just makes sure that we're not putting the
     // universe or anything similar in the message sets.
 
-    final var ctrl = chartFactory.createControllerDef();
-    ctrl.setName("Ctrl");
-
-    // nesting
-    final var mod = chartFactory.createRCModule();
-    mod.setName("Mod");
-    mod.getNodes().add(ctrl);
-
-    final var target = targetFactory.controller(ctrl);
+    final var target = targetFactory.controller(Controllers.nested(chartFactory));
 
     final var grp = targetFactory.certFactory().createSpecificationGroup();
     grp.setName("Specs");

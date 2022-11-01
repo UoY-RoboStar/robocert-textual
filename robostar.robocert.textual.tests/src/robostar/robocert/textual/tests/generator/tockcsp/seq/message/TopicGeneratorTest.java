@@ -12,6 +12,8 @@ package robostar.robocert.textual.tests.generator.tockcsp.seq.message;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static robostar.robocert.textual.tests.util.GeneratesCSPMatcher.generatesCSP;
 
+import circus.robocalc.robochart.ConnectionNode;
+import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.RoboChartFactory;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
@@ -30,6 +32,7 @@ import robostar.robocert.Actor;
 import robostar.robocert.ComponentActor;
 import robostar.robocert.MessageTopic;
 import robostar.robocert.RoboCertFactory;
+import robostar.robocert.textual.tests.examples.Modules;
 import robostar.robocert.util.ActorContextFinder;
 import robostar.robocert.util.ActorNodeResolver;
 import robostar.robocert.util.EventFactory;
@@ -75,15 +78,9 @@ public class TopicGeneratorTest {
     final var eg = new EventTopicGenerator(csp, gu, new DummyEventResolver(rchart), nsResolver);
     tg = new TopicGenerator(csp, nsResolver, eg, ctxResolver);
 
-    final var ctrl1 = rchart.createControllerDef();
-    ctrl1.setName("C1");
-
-    final var ctrl2 = rchart.createControllerDef();
-    ctrl2.setName("C2");
-
-    final var mod = rchart.createRCModule();
-    mod.setName("Mod");
-    mod.getNodes().addAll(List.of(ctrl1, ctrl2));
+    final var mod = Modules.directControllers(rchart);
+    final var ctrl1 = ((ControllerDef) mod.getNodes().get(0));
+    final var ctrl2 = ((ControllerDef) mod.getNodes().get(1));
 
     c1 = rcert.createComponentActor();
     c1.setNode(ctrl1);

@@ -15,12 +15,13 @@ import static robostar.robocert.textual.tests.util.GeneratesCSPMatcher.generates
 
 import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
-import java.util.List;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.textual.generator.tockcsp.core.tgt.UniverseGenerator;
+import robostar.robocert.textual.tests.examples.Controllers;
+import robostar.robocert.textual.tests.examples.Modules;
 import robostar.robocert.util.TargetFactory;
 import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
 
@@ -52,15 +53,7 @@ class UniverseGeneratorTest {
    */
   @Test
   void testGenerate_NestedTarget() {
-    final var ctrl = chartFactory.createControllerDef();
-    ctrl.setName("Ctrl");
-
-    // nesting
-    final var mod = chartFactory.createRCModule();
-    mod.setName("Mod");
-    mod.getNodes().add(ctrl);
-
-    final var target = targetFactory.controller(ctrl);
+    final var target = targetFactory.controller(Controllers.nested(chartFactory));
 
     final var grp = targetFactory.certFactory().createSpecificationGroup();
     grp.setName("Specs");
@@ -69,24 +62,33 @@ class UniverseGeneratorTest {
     assertThat(grp.getTarget(), generatesCSP("Mod::Ctrl::sem__events", gen::generate));
   }
 
-
   /**
-   * Tests generation of sem-events for a specification group targeting components of a module.
+   * Tests generation of sem-events for a specification group targeting a controller inside a
+   * package, but with no user-defined sets.
+   *
+   * <p>This is a regression test for GitHub issue #136.
+   */
+  @Test
+  void testGenerate_PackagedTarget() {
+    final var target = targetFactory.controller(Controllers.packaged(chartFactory));
+
+    final var grp = targetFactory.certFactory().createSpecificationGroup();
+    grp.setName("Specs");
+    grp.setTarget(target);
+
+    assertThat(grp.getTarget(), generatesCSP("Pkg::Ctrl::sem__events", gen::generate));
+  }
+
+    /**
+   * Tests generation of sem-events for a specification group targeting components directly embedded
+   * in a module.
    *
    * <p>This is a regression test for GitHub issue #123.
    */
   @Test
-  void testGenerate_InModule() {
-    final var c1 = chartFactory.createControllerDef();
-    c1.setName("C1");
-    final var c2 = chartFactory.createControllerDef();
-    c2.setName("C2");
+  void testGenerate_InModule_Direct() {
 
-    final var mod = chartFactory.createRCModule();
-    mod.setName("Mod");
-    mod.getNodes().addAll(List.of(c1, c2));
-
-    final var target = targetFactory.inModule(mod);
+    final var target = targetFactory.inModule(Modules.directControllers(chartFactory));
 
     final var grp = targetFactory.certFactory().createSpecificationGroup();
     grp.setName("Specs");
@@ -94,5 +96,25 @@ class UniverseGeneratorTest {
 
     assertThat(grp.getTarget(),
         generatesCSP("union(Mod::C1::sem__events, Mod::C2::sem__events)", gen::generate));
+  }
+
+  /**
+   * Tests generation of sem-events for a specification group targeting components indirectly
+   * referenced from a module.
+   *
+   * <p>This is a regression test for GitHub issues #123 and #136.
+   */
+  @Test
+  void testGenerate_InModule_Indirect() {
+
+    final var target = targetFactory.inModule(Modules.indirectControllers(chartFactory));
+
+    final var grp = targetFactory.certFactory().createSpecificationGroup();
+    grp.setName("Specs");
+    grp.setTarget(target);
+
+    // Conjecture: module descendants should always be referred to by their 
+    assertThat(grp.getTarget(),
+        generatesCSP("union(Mod::R1::sem__events, Mod::R2::sem__events)", gen::generate));
   }
 }
