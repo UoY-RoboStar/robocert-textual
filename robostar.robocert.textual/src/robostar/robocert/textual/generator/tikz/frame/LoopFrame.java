@@ -18,6 +18,7 @@ import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.util.Command;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
+import robostar.robocert.textual.generator.tikz.util.NameSanitiser;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
@@ -44,7 +45,7 @@ public record LoopFrame(LoopFragment loop, int id) implements Frame {
     if (Strings.isNullOrEmpty(name)) {
       return tikz.command("rcloop");
     }
-    return tikz.command("rcnamedloop").argument(name);
+    return tikz.command("rcnamedloop").argument(NameSanitiser.sanitise(name));
   }
 
   public String bound(ISerializer ser, DiscreteBound bound) {

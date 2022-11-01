@@ -19,6 +19,7 @@ import robostar.robocert.Target;
 import robostar.robocert.textual.generator.tikz.matrix.DiagramRow;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
+import robostar.robocert.textual.generator.tikz.util.NameSanitiser;
 import robostar.robocert.textual.generator.tikz.util.TargetTypeNameGenerator;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 import robostar.robocert.util.resolve.TargetElementResolver;
@@ -44,8 +45,10 @@ public record DiagramFrame(Interaction diagram) implements Frame {
     final var targetType = new TargetTypeNameGenerator(tikz).targetTypeName(target);
     final var targetName = Objects.requireNonNullElse(targetName(group, target), "???");
 
-    return tikz.command("rcseq").argument(sanitise(diagram.getName())).argument(targetType)
-        .argument(targetName).render();
+    final var diagramName = NameSanitiser.sanitise(diagram.getName());
+
+    return tikz.command("rcseq").argument(diagramName).argument(targetType).argument(targetName)
+        .render();
   }
 
   private static String targetName(SpecificationGroup group, Target target) {
@@ -58,11 +61,9 @@ public record DiagramFrame(Interaction diagram) implements Frame {
       return null;
     }
     final var baseName = elem.getName();
-    return baseName == null ? null : sanitise(String.join("::", group.getName(), baseName));
-  }
-
-  private static String sanitise(String raw) {
-    // Needed because LaTeX usually expects _ to be in math mode.
-    return raw.replace("_", "\\_");
+    if (baseName == null) {
+      return null;
+    }
+    return NameSanitiser.sanitise(String.join("::", group.getName(), baseName));
   }
 }
