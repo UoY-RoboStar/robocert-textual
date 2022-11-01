@@ -23,6 +23,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
+import robostar.robocert.textual.generator.tockcsp.seq.message.ActorNamespaceResolver;
+import robostar.robocert.textual.generator.tockcsp.seq.message.EventTopicGenerator;
 import robostar.robocert.textual.generator.tockcsp.seq.message.TopicGenerator;
 import robostar.robocert.Actor;
 import robostar.robocert.ComponentActor;
@@ -51,7 +53,7 @@ public class TopicGeneratorTest {
   @Inject
   private CTimedGeneratorUtils gu;
   @Inject
-  private ActorNodeResolver nodeResolver;
+  private ActorNamespaceResolver nsResolver;
   @Inject
   private ActorContextFinder ctxResolver;
   @Inject
@@ -70,7 +72,8 @@ public class TopicGeneratorTest {
   void setUp() {
 
     // Can't resolve this automatically, because it depends on a custom event resolver
-    tg = new TopicGenerator(csp, gu, new DummyEventResolver(rchart), nodeResolver, ctxResolver);
+    final var eg = new EventTopicGenerator(csp, gu, new DummyEventResolver(rchart), nsResolver);
+    tg = new TopicGenerator(csp, nsResolver, eg, ctxResolver);
 
     final var ctrl1 = rchart.createControllerDef();
     ctrl1.setName("C1");
