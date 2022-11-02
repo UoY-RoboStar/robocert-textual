@@ -6,6 +6,7 @@
 - Added `use enum package::EnumName` to pull enumerations into scope, so
   as to avoid the fact that in RoboChart expressions `package::EnumName::X`
   would be parsed as an enumeration `package`.
+- Expression generator now emits enumerations properly.
 
 # 0.1.0
 

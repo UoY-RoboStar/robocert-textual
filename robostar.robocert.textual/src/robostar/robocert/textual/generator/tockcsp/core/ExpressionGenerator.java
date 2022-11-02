@@ -19,6 +19,7 @@ import com.google.inject.Inject;
 
 import circus.robocalc.robochart.BinaryExpression;
 import circus.robocalc.robochart.BooleanExp;
+import circus.robocalc.robochart.EnumExp;
 import circus.robocalc.robochart.Expression;
 import circus.robocalc.robochart.FloatExp;
 import circus.robocalc.robochart.IntegerExp;
@@ -79,6 +80,12 @@ public record ExpressionGenerator(TemporaryVariableGenerator bg, VariableHelper 
 			@Override
 			public CharSequence caseBooleanExp(BooleanExp b) {
 				return b.getValue();
+			}
+			
+			@Override
+			public CharSequence caseEnumExp(EnumExp e) {
+				// TODO(@MattWindsor91): this chaining is bad; remove VariableHelper?
+				return vx.gu().id(e.getLiteral());
 			}
 
 			@Override
