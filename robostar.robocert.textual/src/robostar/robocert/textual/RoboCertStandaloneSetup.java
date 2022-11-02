@@ -16,7 +16,6 @@ import com.google.inject.Injector;
 
 import robostar.robocert.RoboCertFactory;
 import robostar.robocert.RoboCertPackage;
-import robostar.robocert.impl.RoboCertFactoryImpl;
 
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.

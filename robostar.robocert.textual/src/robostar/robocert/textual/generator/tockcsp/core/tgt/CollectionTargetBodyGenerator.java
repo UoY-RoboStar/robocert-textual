@@ -10,6 +10,20 @@
 
 package robostar.robocert.textual.generator.tockcsp.core.tgt;
 
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.eclipse.emf.ecore.EObject;
+
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+
 import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.Context;
@@ -18,19 +32,6 @@ import circus.robocalc.robochart.Variable;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import circus.robocalc.robochart.generator.csp.comp.untimed.CMemoryGenerator;
 import circus.robocalc.robochart.generator.csp.untimed.ExpressionGenerator;
-import com.google.common.collect.Sets;
-import com.google.inject.Inject;
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import org.eclipse.emf.ecore.EObject;
 import robostar.robocert.textual.generator.tockcsp.core.tgt.ComponentSynchroniser.Result;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robostar.robocert.util.resolve.DefinitionResolver;

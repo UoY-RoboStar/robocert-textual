@@ -12,7 +12,6 @@ package robostar.robocert.textual.generator.utils;
 import com.google.inject.Inject;
 import java.util.Objects;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
 import robostar.robocert.BinaryMessageSet;
 import robostar.robocert.BinarySetOperator;
 import robostar.robocert.ExtensionalMessageSet;
@@ -88,19 +87,19 @@ public record MessageSetOptimiser(SetFactory setFactory) {
   private ExtensionalMessageSet extensionalUnion(ExtensionalMessageSet el,
       ExtensionalMessageSet er) {
     // Need to copy because, otherwise, we'd accidentally mutate el.
-    final var result = EcoreUtil2.copy(el);
+    final var result = EcoreUtil.copy(el);
 
     // Try to remove duplicates where possible; it's impossible for us to get all of them, as they
     // aren't always structurally equal, but this'll find the ones that are.
     //
     // This is likely to be very slow.
     for (var m : er.getMessages()) {
-      if (result.getMessages().stream().anyMatch(x -> EcoreUtil2.equals(x, m))) {
+      if (result.getMessages().stream().anyMatch(x -> EcoreUtil.equals(x, m))) {
         continue;
       }
 
       // Need to copy because, otherwise, m would be removed from er.
-      result.getMessages().add(EcoreUtil2.copy(m));
+      result.getMessages().add(EcoreUtil.copy(m));
     }
 
     return result;

@@ -9,13 +9,12 @@
  */
 package robostar.robocert.textual.validation;
 
-import com.google.inject.Inject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 
-import robostar.robocert.CollectionTarget;
+import com.google.inject.Inject;
+
 import robostar.robocert.ComponentActor;
 import robostar.robocert.RoboCertPackage;
 import robostar.robocert.util.resolve.TargetComponentsResolver;

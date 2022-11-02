@@ -14,14 +14,17 @@ import static robostar.robocert.RoboCertPackage.Literals.EVENT_TOPIC__EFROM;
 import static robostar.robocert.RoboCertPackage.Literals.EVENT_TOPIC__ETO;
 import static robostar.robocert.RoboCertPackage.Literals.OPERATION_TOPIC__OPERATION;
 
-import circus.robocalc.robochart.RoboChartPackage.Literals;
-import circus.robocalc.robochart.TypeRef;
-import circus.robocalc.robochart.RefExp;
-import circus.robocalc.robochart.textual.scoping.RoboChartScopeProvider;
-import com.google.inject.Inject;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
+
+import com.google.inject.Inject;
+
+import circus.robocalc.robochart.EnumExp;
+import circus.robocalc.robochart.RefExp;
+import circus.robocalc.robochart.RoboChartPackage.Literals;
+import circus.robocalc.robochart.TypeRef;
+import circus.robocalc.robochart.textual.scoping.RoboChartScopeProvider;
 import robostar.robocert.ConstAssignment;
 import robostar.robocert.EventTopic;
 import robostar.robocert.OperationTopic;
@@ -36,6 +39,7 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	@Inject private VariableScopeProvider vsp;
 	@Inject private TopicScopeProvider tx;
 	@Inject private RoboChartScopeProvider rchart;
+	//@Inject private ScopeHelper scopeHelper;
 
 	
 	@Override
@@ -64,12 +68,31 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 			return vsp.exprScope(x);
 
 		// We delegate the following to RoboChart's scope provider:
+		if (context instanceof EnumExp x)
+			return rchart.getScope(x, reference);
+		//if (context instanceof EnumExp x && reference == Literals.ENUM_EXP__TYPE)
+		//	return enumExpType(x);
 		if (context instanceof TypeRef x && reference == Literals.TYPE_REF__REF)
 			return rchart.getScope(x, reference);
 
 		// Fallback to normal scope resolution.
 		return null;
 	}
+	
+	/*
+	private IScope enumExpType(EnumExp x) {
+		// TODO(@MattWindsor91): tidy this up
+		final var grp = scopeHelper.specificationGroupOf(x);
+		final var tgt = grp.map(SpecificationGroup::getTarget);
+
+		final var tr = new TargetElementResolver();
+		final var tgtObject = tgt.map(tr::resolve);
+		
+		
+		// TODO
+		
+	}
+	*/
 
 	private boolean isEventReference(EReference reference) {
 		return reference == EVENT_TOPIC__EFROM || reference == EVENT_TOPIC__ETO;

@@ -15,7 +15,7 @@ package robostar.robocert.textual.generator;
 
 import java.util.List;
 import java.util.function.Consumer;
-import org.eclipse.core.runtime.CoreException;
+
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;

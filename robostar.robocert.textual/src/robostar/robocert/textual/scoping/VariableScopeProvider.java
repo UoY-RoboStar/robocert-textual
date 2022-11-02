@@ -18,8 +18,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
 import robostar.robocert.textual.generator.utils.param.ConstantParameter;
@@ -36,12 +34,12 @@ import robostar.robocert.util.StreamHelper;
  */
 public record VariableScopeProvider(
     TargetParameterResolver tpResolver,
-    IQualifiedNameProvider qnp
+    ScopeHelper scopeHelper
 ) {
   @Inject
   public VariableScopeProvider {
     Objects.requireNonNull(tpResolver);
-    Objects.requireNonNull(qnp);
+    Objects.requireNonNull(scopeHelper);
   }
 
   /**
@@ -61,7 +59,7 @@ public record VariableScopeProvider(
    * @return the scope, which contains memory variables.
    */
   private List<Variable> memVariables(RefExp expr) {
-    return getParent(expr, Interaction.class).stream().flatMap(this::specMemVariables).toList();
+    return scopeHelper.getParent(expr, Interaction.class).stream().flatMap(this::specMemVariables).toList();
   }
 
   private Stream<Variable> specMemVariables(Interaction x) {
@@ -78,7 +76,7 @@ public record VariableScopeProvider(
    * @return the scope, which contains constant variables.
    */
   private IScope constScope(RefExp expr) {
-    return unifiedScope(constants(expr).toList());
+    return scopeHelper.unifiedScope(constants(expr).toList());
   }
 
   /**
@@ -90,51 +88,20 @@ public record VariableScopeProvider(
    */
   public IScope constAssignmentScope(ConstAssignment asst) {
     // The constants must not have an initial value.
-    return unifiedScope(constants(asst).filter(v -> v.getInitial() == null).toList());
+    final var consts = constants(asst).filter(v -> v.getInitial() == null).toList();
+    return scopeHelper.unifiedScope(consts);
   }
 
   private Stream<Variable> constants(EObject obj) {
     // constScope and constAssignmentScope have the same effective body, except for filtering out
     // value-instantiated constants in the latter.
-    return getParent(obj, SpecificationGroup.class).stream().flatMap(this::specGroupConstants);
+	return scopeHelper.specificationGroupOf(obj).stream().flatMap(this::specGroupConstants);
   }
 
   private Stream<Variable> specGroupConstants(SpecificationGroup group) {
     // TODO(@MattWindsor91): find a way of making it so that we can assign parameters
-    return StreamHelper.filter(tpResolver.parameterisation(group.getTarget()), ConstantParameter.class).map(ConstantParameter::constant);
+	final var allParams = tpResolver.parameterisation(group.getTarget());
+    return StreamHelper.filter(allParams, ConstantParameter.class).map(ConstantParameter::constant);
   }
 
-  /**
-   * Calculates a scope with both unqualified and qualified forms.
-   *
-   * The calculated scope brings every constant into scope on its qualified
-   * name, and then (for now) overlays the unqualified names also.  This
-   * behaviour may change later on, as it introduces ambiguities that may be
-   * resolved in surprising manners.
-   *
-   * @param it  the iterable of items to bring into scope.
-   *
-   * @return  the iterator as a scope as described above.
-   */
-  private IScope unifiedScope(Iterable<? extends EObject> it) {
-    // TODO(@MattWindsor91): this shouldn't bring ambiguous names into
-    // scope, or there should at least be a validation issue for it.
-    return Scopes.scopeFor(it, fullyQualifiedScope(it));
-  }
-
-  /**
-   * Calculates a scope bringing every given constant into scope on its
-   * fully qualified name.
-   *
-   * @param it  the iterable of items to bring into scope.
-   *
-   * @return  the iterator as a scope as described above.
-   */
-  private IScope fullyQualifiedScope(Iterable<? extends EObject> it) {
-    return Scopes.scopeFor(it, qnp, IScope.NULLSCOPE);
-  }
-
-  private <T extends EObject> Optional<T> getParent(EObject ele, Class<T> clazz) {
-    return Optional.ofNullable(EcoreUtil2.getContainerOfType(ele, clazz));
-  }
 }

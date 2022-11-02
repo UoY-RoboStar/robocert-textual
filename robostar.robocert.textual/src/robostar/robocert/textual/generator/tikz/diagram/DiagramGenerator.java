@@ -10,17 +10,19 @@
 
 package robostar.robocert.textual.generator.tikz.diagram;
 
-import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.eclipse.xtext.serializer.impl.Serializer;
+import org.eclipse.xtext.serializer.ISerializer;
+
+import com.google.inject.Inject;
+
 import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
 import robostar.robocert.textual.generator.tikz.diagram.DiagramContentsGenerator.State;
-import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.ActorColumn;
+import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.DiagramRow;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
@@ -33,7 +35,7 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
  * @param contentsGen diagram contents generator.
  * @author Matt Windsor
  */
-public record DiagramGenerator(TikzStructureGenerator tikz, Serializer ser,
+public record DiagramGenerator(TikzStructureGenerator tikz, ISerializer ser,
                                DiagramContentsGenerator contentsGen) {
 
   @Inject

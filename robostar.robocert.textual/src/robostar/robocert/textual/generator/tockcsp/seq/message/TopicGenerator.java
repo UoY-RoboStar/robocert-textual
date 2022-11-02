@@ -9,23 +9,17 @@
  */
 package robostar.robocert.textual.generator.tockcsp.seq.message;
 
-import circus.robocalc.robochart.Event;
-import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import java.util.Objects;
+
 import javax.inject.Inject;
-import org.eclipse.emf.ecore.EObject;
-import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
+
 import robostar.robocert.Actor;
-import robostar.robocert.ComponentActor;
 import robostar.robocert.EventTopic;
 import robostar.robocert.MessageTopic;
-import robostar.robocert.ModuleTarget;
 import robostar.robocert.OperationTopic;
-import robostar.robocert.TargetActor;
 import robostar.robocert.World;
+import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robostar.robocert.util.ActorContextFinder;
-import robostar.robocert.util.ActorNodeResolver;
-import robostar.robocert.util.resolve.EventResolver;
 
 /**
  * Generates CSP-M for message channels using message topics.
