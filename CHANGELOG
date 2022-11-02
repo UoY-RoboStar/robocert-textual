@@ -1,0 +1,12 @@
+# Unreleased
+
+## 2022-02-11
+
+- Changed scoping rules to allow enumerations to be scoped properly.
+- Added `use enum package::EnumName` to pull enumerations into scope, so
+  as to avoid the fact that in RoboChart expressions `package::EnumName::X`
+  would be parsed as an enumeration `package`.
+
+# 0.1.0
+
+Initial release.

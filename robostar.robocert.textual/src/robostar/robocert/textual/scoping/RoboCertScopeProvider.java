@@ -37,9 +37,9 @@ import robostar.robocert.OperationTopic;
  */
 public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	@Inject private VariableScopeProvider vsp;
-	@Inject private TopicScopeProvider tx;
+	@Inject private TopicScopeProvider tsp;
+	@Inject private EnumScopeProvider esp;	
 	@Inject private RoboChartScopeProvider rchart;
-	//@Inject private ScopeHelper scopeHelper;
 
 	
 	@Override
@@ -59,17 +59,15 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	 */
 	private IScope tryGetScope(EObject context, EReference reference) {
 		if (context instanceof EventTopic e && isEventReference(reference))
-			return tx.getEventScope(e, reference == EVENT_TOPIC__EFROM);
+			return tsp.getEventScope(e, reference == EVENT_TOPIC__EFROM);
 		if (context instanceof OperationTopic o && reference == OPERATION_TOPIC__OPERATION)
-			return tx.getOperationScope(o);
+			return tsp.getOperationScope(o);
 		if (context instanceof ConstAssignment k && reference == CONST_ASSIGNMENT__CONSTANTS)
 			return vsp.constAssignmentScope(k);
 		if (context instanceof RefExp x && reference == Literals.REF_EXP__REF)
 			return vsp.exprScope(x);
-
-		// We delegate the following to RoboChart's scope provider:
 		if (context instanceof EnumExp x)
-			return rchart.getScope(x, reference);
+			return esp.exprScope(x, reference);
 		//if (context instanceof EnumExp x && reference == Literals.ENUM_EXP__TYPE)
 		//	return enumExpType(x);
 		if (context instanceof TypeRef x && reference == Literals.TYPE_REF__REF)
@@ -81,14 +79,7 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
 	
 	/*
 	private IScope enumExpType(EnumExp x) {
-		// TODO(@MattWindsor91): tidy this up
-		final var grp = scopeHelper.specificationGroupOf(x);
-		final var tgt = grp.map(SpecificationGroup::getTarget);
 
-		final var tr = new TargetElementResolver();
-		final var tgtObject = tgt.map(tr::resolve);
-		
-		
 		// TODO
 		
 	}

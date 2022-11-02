@@ -86,8 +86,18 @@ SpecificationGroup:
 	'specification' 'group' {SpecificationGroup} name=ID?
 	BEGIN
 	'target' '=' target=Target ('with' BEGIN (assignments+=ConstAssignment)+ END)?
-	(ActorList | interactions+=Interaction | messageSets+=NamedMessageSet)*
+	(ActorList | interactions+=Interaction | messageSets+=NamedMessageSet | ImportedEnum)*
 	END;
+
+/**
+ * Lets users bring enumerations from RoboChart packages into scope.
+ *
+ * This is a hack to deal with the fact that the RoboChart expression parser
+ * doesn't allow fully qualified enumerations.
+ */
+fragment ImportedEnum *:
+	"use" "enum" importedEnums+=[Enumeration|QualifiedName]
+;
 
 /**
  * Explicitly specifying the semantic model of a property.
