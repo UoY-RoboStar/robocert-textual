@@ -14,6 +14,7 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -182,6 +183,7 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
     final var sets = csp.sets();
 
     // It's ill-formed for there to be no controllers.
+    assert (!ctrls.isEmpty());
 
     // starting with c5
     // stack has: c4[c5], c3[c4, c5], etc.
@@ -204,27 +206,31 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
     final var ctrls = new ArrayDeque<Component>();
     while (!syncs.isEmpty()) {
       final var x = syncs.pop();
-      final var comp = x.comp();
-      final var compName = x.name();
-      final var compDef = definition(comp);
-
-      final var mainBody =
-          csp.namespaced(compName, gu.getSuffix(false, true)).toString() + gu.parameterisation(
-              compDef, Collections.emptySet());
-      final var renamed = x.renaming().in(mainBody);
-
-      final CharSequence[] unconnectedEvents = unconnectedEvents(comp, conns, compDef, compName);
-      final var hidden = unconnectedEvents.length == 0 ? renamed
-          : csp.bins().hide(renamed, csp.enumeratedSet(unconnectedEvents));
-
-      final var body = csp.let(constantDefs(comp, ctx, compDef)).within(hidden);
-
-      final var otherChannels = syncs.stream().flatMap(y -> y.channels().stream())
-          .collect(Collectors.toUnmodifiableSet());
-
-      ctrls.push(new Component(body, Sets.intersection(x.channels(), otherChannels)));
+      ctrls.push(expandComponent(syncs, conns, ctx, x));
     }
     return ctrls;
+  }
+
+  private Component expandComponent(Deque<Result<T>> syncs, List<Connection> conns, C ctx,
+      Result<T> x) {
+    final var comp = x.comp();
+    final var compDef = definition(comp);
+
+    final var compName = x.name();
+    final var fullName = csp.namespaced(compName, gu.getSuffix(false, true)).toString();
+    final var mainBody = fullName + gu.parameterisation(compDef, Collections.emptySet());
+    final var renamed = x.renaming().in(mainBody);
+
+    final CharSequence[] unconnectedEvents = unconnectedEvents(comp, conns, compDef, compName);
+    final var hidden = unconnectedEvents.length == 0 ? renamed
+        : csp.bins().hide(renamed, csp.enumeratedSet(unconnectedEvents));
+
+    final var body = csp.let(constantDefs(comp, ctx, compDef)).within(hidden);
+
+    final var otherChannels = syncs.stream().flatMap(y -> y.channels().stream())
+        .collect(Collectors.toUnmodifiableSet());
+
+    return new Component(body, Sets.intersection(x.channels(), otherChannels));
   }
 
   private CharSequence[] unconnectedEvents(ConnectionNode comp, List<Connection> conns,
@@ -308,11 +314,22 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
   /**
    * Stores information about a component for composition purposes.
    *
-   * @param body         the body of the component.
+   * @param body         body of the component.
    * @param intersection intersection of this component's channels and the others against which it
    *                     is being composed.
    */
   private record Component(CharSequence body, Set<String> intersection) {
 
+    /**
+     * Constructs a component.
+     *
+     * @param body         body of the component.
+     * @param intersection intersection of this component's channels and the others against which it
+     *                     is being composed.
+     */
+    public Component {
+      Objects.requireNonNull(body);
+      Objects.requireNonNull(intersection);
+    }
   }
 }
