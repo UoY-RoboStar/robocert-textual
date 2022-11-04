@@ -14,11 +14,13 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 import org.osgi.framework.FrameworkUtil;
 import robostar.robocert.textual.generator.tockcsp.core.group.AssertionGroupGenerator;
 import robostar.robocert.textual.generator.tockcsp.core.ImportGenerator;
+import robostar.robocert.textual.generator.tockcsp.core.group.CSPGroupGenerator;
 import robostar.robocert.textual.generator.tockcsp.core.group.SpecificationGroupGenerator;
 import robostar.robocert.textual.generator.utils.PackageGenerator;
 import robostar.robocert.textual.generator.utils.name.GroupNamer;
@@ -27,31 +29,31 @@ import robostar.robocert.CSPGroup;
 import robostar.robocert.CertPackage;
 import robostar.robocert.Group;
 import robostar.robocert.SpecificationGroup;
+import robostar.robocert.util.RoboCertSwitch;
 
 /**
- * Generates CSP-M for {@link CertPackage}s.
+ * Generates CSP-M files for {@link CertPackage}s.
  *
  * @author Matt Windsor
  */
-public record CertPackageGenerator(
-    AssertionGroupGenerator ag,
-    GroupNamer groupNamer,
-    SpecificationGroupGenerator sg,
-    ImportGenerator ig
-) implements PackageGenerator {
+public record CertPackageGenerator(GroupNamer groupNamer, AssertionGroupGenerator ag,
+                                   CSPGroupGenerator cg, SpecificationGroupGenerator sg,
+                                   ImportGenerator ig) implements PackageGenerator {
 
   /**
    * Constructs a CertPackage generator.
    *
-   * @param ag         the assertion group generator.
-   * @param groupNamer a namer used for CSP groups.
-   * @param sg         the sequence group generator.
-   * @param ig         the import generator.
+   * @param groupNamer namer used for CSP groups.
+   * @param ag         assertion group generator.
+   * @param cg         CSP group generator.
+   * @param sg         sequence group generator.
+   * @param ig         import generator.
    */
   @Inject
   public CertPackageGenerator {
-    Objects.requireNonNull(ag);
     Objects.requireNonNull(groupNamer);
+    Objects.requireNonNull(ag);
+    Objects.requireNonNull(cg);
     Objects.requireNonNull(sg);
     Objects.requireNonNull(ig);
   }
@@ -101,27 +103,26 @@ public record CertPackageGenerator(
   }
 
   private CharSequence generateGroup(Group it) {
-    // TODO(@MattWindsor91): dependency-inject these somehow
-    if (it instanceof AssertionGroup a) {
-      return ag.generate(a);
-    }
-    if (it instanceof CSPGroup c) {
-      return generateCSPGroup(c);
-    }
-    if (it instanceof SpecificationGroup s) {
-      return sg.generate(s);
-    }
+    return new RoboCertSwitch<CharSequence>() {
+      @Override
+      public CharSequence caseAssertionGroup(AssertionGroup a) {
+        return ag.generate(a);
+      }
 
-    throw new IllegalArgumentException("unsupported group: %s".formatted(it));
-  }
+      @Override
+      public CharSequence caseCSPGroup(CSPGroup c) {
+        return cg.generate(c);
+      }
 
-  private CharSequence generateCSPGroup(CSPGroup it) {
-    final var name = groupNamer.getOrSynthesiseName(it);
-    return String.join(
-        "\n",
-        "-- BEGIN INLINE CSP %s".formatted(name),
-        it.getCsp(),
-        "-- END INLINE CSP %s".formatted(name)
-    );
+      @Override
+      public CharSequence caseSpecificationGroup(SpecificationGroup s) {
+        return sg.generate(s);
+      }
+
+      @Override
+      public CharSequence defaultCase(EObject it) {
+        throw new IllegalArgumentException("unsupported group: %s".formatted(it));
+      }
+    }.doSwitch(it);
   }
 }
