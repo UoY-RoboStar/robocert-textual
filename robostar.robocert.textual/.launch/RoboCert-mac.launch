@@ -11,7 +11,7 @@
     <booleanAttribute key="clearConfig" value="true"/>
     <booleanAttribute key="clearws" value="false"/>
     <booleanAttribute key="clearwslog" value="false"/>
-    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/RoboCert"/>
+    <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/RoboCert-mac"/>
     <booleanAttribute key="default" value="false"/>
     <setAttribute key="deselected_workspace_bundles">
         <setEntry value="robostar.robocert.textual.tests"/>
@@ -28,7 +28,7 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
-    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/OpenJDK 17.0.3 [17.0.3]"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/OpenJDK 17.0.4.1 [17.0.4.1]"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl}"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
     <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms256m -Xmx2048m"/>
@@ -101,11 +101,9 @@
         <setEntry value="org.eclipse.core.expressions@default:default"/>
         <setEntry value="org.eclipse.core.externaltools@default:default"/>
         <setEntry value="org.eclipse.core.filebuffers@default:default"/>
-        <setEntry value="org.eclipse.core.filesystem.linux.x86_64@default:false"/>
+        <setEntry value="org.eclipse.core.filesystem.macosx@default:default"/>
         <setEntry value="org.eclipse.core.filesystem@default:default"/>
         <setEntry value="org.eclipse.core.jobs@default:default"/>
-        <setEntry value="org.eclipse.core.net.linux.x86_64@default:false"/>
-        <setEntry value="org.eclipse.core.net.linux@default:false"/>
         <setEntry value="org.eclipse.core.net@default:default"/>
         <setEntry value="org.eclipse.core.resources@default:default"/>
         <setEntry value="org.eclipse.core.runtime@default:true"/>
@@ -129,9 +127,9 @@
         <setEntry value="org.eclipse.e4.ui.ide@default:default"/>
         <setEntry value="org.eclipse.e4.ui.model.workbench@default:default"/>
         <setEntry value="org.eclipse.e4.ui.services@default:default"/>
-        <setEntry value="org.eclipse.e4.ui.swt.gtk@default:false"/>
         <setEntry value="org.eclipse.e4.ui.widgets@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.addons.swt@default:default"/>
+        <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt.cocoa@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.renderers.swt@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench.swt@default:default"/>
         <setEntry value="org.eclipse.e4.ui.workbench3@default:default"/>
@@ -240,12 +238,13 @@
         <setEntry value="org.eclipse.sirius.ext.swt@default:default"/>
         <setEntry value="org.eclipse.sirius.ui@default:default"/>
         <setEntry value="org.eclipse.sirius@default:default"/>
-        <setEntry value="org.eclipse.swt.gtk.linux.x86_64@default:false"/>
+        <setEntry value="org.eclipse.swt.cocoa.macosx.aarch64@default:default"/>
         <setEntry value="org.eclipse.swt@default:default"/>
         <setEntry value="org.eclipse.team.core@default:default"/>
         <setEntry value="org.eclipse.team.ui@default:default"/>
         <setEntry value="org.eclipse.text@default:default"/>
         <setEntry value="org.eclipse.ui.cheatsheets@default:default"/>
+        <setEntry value="org.eclipse.ui.cocoa@default:default"/>
         <setEntry value="org.eclipse.ui.console@default:default"/>
         <setEntry value="org.eclipse.ui.editors@default:default"/>
         <setEntry value="org.eclipse.ui.externaltools@default:default"/>
@@ -297,6 +296,7 @@
         <setEntry value="org.eclipse.xtext.xtext.generator@default:default"/>
         <setEntry value="org.eclipse.xtext@default:default"/>
         <setEntry value="org.hamcrest.core@default:default"/>
+        <setEntry value="org.hamcrest@default:default"/>
         <setEntry value="org.junit.jupiter.api@default:default"/>
         <setEntry value="org.junit.platform.commons@default:default"/>
         <setEntry value="org.junit.platform.engine@default:default"/>
@@ -312,12 +312,15 @@
         <setEntry value="org.w3c.dom.events@default:default"/>
         <setEntry value="org.w3c.dom.smil@default:default"/>
         <setEntry value="org.w3c.dom.svg@default:default"/>
-        <setEntry value="robostar.robocert@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
+        <setEntry value="robostar.robocert.edit@default:default"/>
+        <setEntry value="robostar.robocert.editor@default:default"/>
+        <setEntry value="robostar.robocert.tests@default:default"/>
         <setEntry value="robostar.robocert.textual.ide@default:default"/>
         <setEntry value="robostar.robocert.textual.ui@default:default"/>
         <setEntry value="robostar.robocert.textual@default:default"/>
+        <setEntry value="robostar.robocert@default:default"/>
     </setAttribute>
     <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
