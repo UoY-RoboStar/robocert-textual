@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import robostar.robocert.textual.generator.intf.seq.context.InteractionContext;
 import robostar.robocert.textual.generator.intf.seq.context.UntilContext;
+import robostar.robocert.textual.generator.tockcsp.csp.CSPEvent;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robostar.robocert.textual.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robostar.robocert.textual.generator.tockcsp.seq.SyncChannelGenerator;
@@ -59,15 +60,15 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
 
     var body = cs.tuple(csp.pre(SyncChannelGenerator.TERM_CHANNEL, csp.skip()));
 
-    final var chanBase = ctx.untils().channel();
+    final var chanBase = new CSPEvent(ctx.untils().channel().toString());
     final var fragments = ctx.untils().fragments();
     for (var i = 0; i < fragments.size(); i++) {
-      final var chan = "%s.%d".formatted(chanBase, i);
+      final var chan = chanBase.dot(Integer.toString(i));
 
       final var fragBody = blockGen.generate(fragments.get(i), ictx);
       // These should match the standard library definition of UntilSyncDir.
-      final var enter = "%s.enter".formatted(chan);
-      final var leave = "%s!leave".formatted(chan);
+      final var enter = chan.dot("enter");
+      final var leave = chan.output("leave");
       final var withChans = csp.seq(csp.pre(enter, fragBody), csp.pre(leave, NAME));
       body = csp.bins().extChoice(body, cs.tuple(withChans));
     }

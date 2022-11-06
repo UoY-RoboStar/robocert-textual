@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import robostar.robocert.textual.generator.tockcsp.csp.CSPEvent;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.LetGenerator.Let;
 
 /**
@@ -67,6 +68,18 @@ public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenera
   public CharSequence pre(CharSequence event, CharSequence rest) {
     // TODO(@MattWindsor91): linebreak if not about to hit a tuple?
     return "%s -> %s".formatted(event, rest);
+  }
+
+
+  /**
+   * Constructs a CSP prefix.
+   * @param event the event to prefix.
+   * @param rest the process following the prefix.
+   * @return a prefix of event onto rest.
+   */
+  public CharSequence pre(CSPEvent event, CharSequence rest) {
+    // TODO(@MattWindsor91): temporary workaround?
+    return pre(event.toString(), rest);
   }
 
   /**

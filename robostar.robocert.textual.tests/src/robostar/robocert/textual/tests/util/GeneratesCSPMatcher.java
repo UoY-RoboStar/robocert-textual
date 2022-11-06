@@ -22,7 +22,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  */
 public class GeneratesCSPMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
   private final String expected;
-  private final Function<T, CharSequence> generator;
+  private final Function<T, ? extends CharSequence> generator;
 
   /**
    * Constructs a generates-CSP matcher.
@@ -30,7 +30,7 @@ public class GeneratesCSPMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
    * @param expected the expected value modulo light normalisation.
    * @param generator the generator to test.
    */
-  public GeneratesCSPMatcher(String expected, Function<T, CharSequence> generator) {
+  public GeneratesCSPMatcher(String expected, Function<T, ? extends CharSequence> generator) {
     super();
     this.expected = tidy(expected);
     this.generator = generator;
@@ -45,7 +45,7 @@ public class GeneratesCSPMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
    * @return the matcher.
    */
   public static <T> GeneratesCSPMatcher<T> generatesCSP(
-      String expected, Function<T, CharSequence> generator) {
+      String expected, Function<T, ? extends CharSequence> generator) {
     return new GeneratesCSPMatcher<>(expected, generator);
   }
 
