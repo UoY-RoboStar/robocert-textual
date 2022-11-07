@@ -14,7 +14,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import robostar.robocert.textual.generator.intf.seq.context.InteractionContext;
 import robostar.robocert.textual.generator.intf.seq.context.UntilContext;
-import robostar.robocert.textual.generator.tockcsp.csp.CSPEvent;
+import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPEvent;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robostar.robocert.textual.generator.intf.seq.fragment.BlockFragmentGenerator;
 import robostar.robocert.textual.generator.tockcsp.seq.SyncChannelGenerator;

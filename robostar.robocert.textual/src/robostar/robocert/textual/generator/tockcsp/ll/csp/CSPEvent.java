@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package robostar.robocert.textual.generator.tockcsp.csp;
+package robostar.robocert.textual.generator.tockcsp.ll.csp;
 
 import java.util.Arrays;
 

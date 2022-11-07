@@ -13,7 +13,6 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
-import robostar.robocert.textual.generator.tockcsp.csp.CSPEvent;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.LetGenerator.Let;
 
 /**

@@ -8,13 +8,13 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package robostar.robocert.textual.tests.generator.tockcsp.csp;
+package robostar.robocert.textual.tests.generator.tockcsp.ll.csp;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static robostar.robocert.textual.tests.util.GeneratesCSPMatcher.generatesCSP;
 
 import org.junit.jupiter.api.Test;
-import robostar.robocert.textual.generator.tockcsp.csp.CSPEvent;
+import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPEvent;
 
 /**
  * Tests the CSP event builder notation.
