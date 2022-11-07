@@ -38,7 +38,7 @@ public record CSPEvent(String head, Suffix... tail) {
    * @param end array of new values to input-append to the CSP event.
    * @return the new object resulting from input-appending the given suffixes.
    */
-  public CSPEvent input(String... end) {
+  public CSPEvent in(String... end) {
     return appendWithOperator(Operator.Input, end);
   }
 
@@ -48,7 +48,7 @@ public record CSPEvent(String head, Suffix... tail) {
    * @param end array of new values to output-append to the CSP event.
    * @return the new object resulting from output-appending the given suffixes.
    */
-  public CSPEvent output(String... end) {
+  public CSPEvent out(String... end) {
     return appendWithOperator(Operator.Output, end);
   }
 

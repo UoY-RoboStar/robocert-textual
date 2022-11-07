@@ -68,7 +68,7 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
       final var fragBody = blockGen.generate(fragments.get(i), ictx);
       // These should match the standard library definition of UntilSyncDir.
       final var enter = chan.dot("enter");
-      final var leave = chan.output("leave");
+      final var leave = chan.out("leave");
       final var withChans = csp.seq(csp.pre(enter, fragBody), csp.pre(leave, NAME));
       body = csp.bins().extChoice(body, cs.tuple(withChans));
     }

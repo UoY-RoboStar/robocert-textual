@@ -24,7 +24,7 @@ import robostar.robocert.textual.generator.tockcsp.csp.CSPEvent;
 public class CSPEventTest {
   @Test
   public void TestToString_Mixed() {
-    final var evt = new CSPEvent("chan").input("x").dot("y", "z").output("a", "b");
+    final var evt = new CSPEvent("chan").in("x").dot("y", "z").out("a", "b");
 
     assertThat(evt, generatesCSP("chan?x.y.z!a!b", CSPEvent::toString));
   }
