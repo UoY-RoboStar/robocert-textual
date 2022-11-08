@@ -110,7 +110,7 @@ public class InModuleTargetBodyGenerator extends
     return csp.bins()
         .genParallel(csp.sets().tuple(modGen.composeBuffers(async, bidirecAsync, element)),
             csp.enumeratedSet(syncset),
-            csp.let(modGen.compileBuffers(async, bidirecAsync, element)).within(body));
+            csp.let(modGen.compileBuffers(async, bidirecAsync, element)).within(body).toString());
   }
 }
 

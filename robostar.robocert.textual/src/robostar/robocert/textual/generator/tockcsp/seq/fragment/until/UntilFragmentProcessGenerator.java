@@ -14,10 +14,10 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import robostar.robocert.textual.generator.intf.seq.context.InteractionContext;
 import robostar.robocert.textual.generator.intf.seq.context.UntilContext;
+import robostar.robocert.textual.generator.tockcsp.core.tgt.TerminationGenerator;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPEvent;
 import robostar.robocert.textual.generator.tockcsp.ll.csp.CSPStructureGenerator;
 import robostar.robocert.textual.generator.intf.seq.fragment.BlockFragmentGenerator;
-import robostar.robocert.textual.generator.tockcsp.seq.SyncChannelGenerator;
 import robostar.robocert.UntilFragment;
 
 /**
@@ -31,21 +31,26 @@ import robostar.robocert.UntilFragment;
  * <p>Fragments are referred-to by occurrence order; this means that the list of fragments must
  * be kept in the same order across all calls within this generator.
  *
- * @param csp the low-level CSP structure generator.
+ * @param csp low-level CSP structure generator.
+ * @param blockGen block generator, used for expanding the individual until-fragments.
+ * @param termGen  termination generator.
  */
 public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
-                                            BlockFragmentGenerator blockGen) {
+                                            BlockFragmentGenerator blockGen,
+                                            TerminationGenerator termGen) {
 
   /**
    * Constructs an until-fragment process generator.
    *
-   * @param csp      the low-level CSP structure generator.
-   * @param blockGen the block generator, used for expanding the individual until-fragments.
+   * @param csp      low-level CSP structure generator.
+   * @param blockGen block generator, used for expanding the individual until-fragments.
+   * @param termGen  termination generator.
    */
   @Inject
   public UntilFragmentProcessGenerator {
     Objects.requireNonNull(csp);
     Objects.requireNonNull(blockGen);
+    Objects.requireNonNull(termGen);
   }
 
   /**
@@ -58,7 +63,7 @@ public record UntilFragmentProcessGenerator(CSPStructureGenerator csp,
     final var ictx = new UntilContext(ctx);
     final var cs = csp.sets();
 
-    var body = cs.tuple(csp.pre(SyncChannelGenerator.TERM_CHANNEL, csp.skip()));
+    var body = cs.tuple(termGen.terminateProc());
 
     final var chanBase = new CSPEvent(ctx.untils().channel().toString());
     final var fragments = ctx.untils().fragments();

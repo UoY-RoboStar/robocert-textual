@@ -82,6 +82,17 @@ public record CSPStructureGenerator(BinaryGenerator bins, LetGenerator letGenera
   }
 
   /**
+   * Constructs a CSP event.
+   *
+   * @param head first part of the CSP event.
+   * @param tail any subsequent parts of the CSP event, along with their operators.
+   * @return a CSP event.
+   */
+  public CSPEvent event(String head, CSPEvent.Suffix ...tail) {
+    return new CSPEvent(head, tail);
+  }
+
+  /**
    * @return the RoboChart encoding of timestop.
    */
   public CharSequence timestop() {

@@ -53,12 +53,28 @@ public class LetGenerator {
      * @param body the 'within' part of the body.
      * @return the finished let-within sequence.
      */
-    public CharSequence within(CharSequence body) {
-      if (elements.length == 0) {
-        return body;
+    public LetWithin within(CharSequence body) {
+      return new LetWithin(this, body);
+    }
+  }
+
+  /**
+   * A full let-within binding.
+   * <p>
+   * We can continue to modify the bindings and body separately.
+   *
+   * @param bindings
+   * @param body
+   */
+  public record LetWithin(Let bindings, CharSequence body) {
+
+    @Override
+    public String toString() {
+      if (bindings.elements.length == 0) {
+        return body.toString();
       }
 
-      final var elementStanza = String.join("\n", elements);
+      final var elementStanza = String.join("\n", bindings.elements);
 
       return """
           let

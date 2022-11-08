@@ -59,6 +59,6 @@ class LetGeneratorTest {
 	}
 
 	private CharSequence withinSkip(LetGenerator.Let l) {
-		return l.within("SKIP");
+		return l.within("SKIP").toString();
 	}
 }

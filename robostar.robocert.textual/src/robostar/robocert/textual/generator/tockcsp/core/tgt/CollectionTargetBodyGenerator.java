@@ -230,7 +230,7 @@ public abstract class CollectionTargetBodyGenerator<E extends EObject, C extends
     final var otherChannels = syncs.stream().flatMap(y -> y.channels().stream())
         .collect(Collectors.toUnmodifiableSet());
 
-    return new Component(body, Sets.intersection(x.channels(), otherChannels));
+    return new Component(body.toString(), Sets.intersection(x.channels(), otherChannels));
   }
 
   private CharSequence[] unconnectedEvents(ConnectionNode comp, List<Connection> conns,
