@@ -12,6 +12,7 @@ package robostar.robocert.textual.generator.tikz.util;
 
 import com.google.inject.Inject;
 import java.util.Objects;
+import org.eclipse.emf.ecore.EObject;
 import robostar.robocert.ControllerTarget;
 import robostar.robocert.InControllerTarget;
 import robostar.robocert.InModuleTarget;
@@ -43,7 +44,12 @@ public record TargetTypeNameGenerator(TikzStructureGenerator tikz) {
    */
   public String targetTypeName(Target tgt) {
     // TODO(@MattWindsor91): this duplicates the toString on targets!
-    final var result = new RoboCertSwitch<String>() {
+    return new RoboCertSwitch<String>() {
+      @Override
+      public String defaultCase(EObject e) {
+        return "unknown";
+      }
+
       //
       // Component targets
       //
@@ -83,7 +89,6 @@ public record TargetTypeNameGenerator(TikzStructureGenerator tikz) {
         return collection("controller");
       }
     }.doSwitch(tgt);
-    return Objects.requireNonNullElse(result, "unknown");
   }
 
   private String component(String name) {

@@ -39,51 +39,39 @@ public class FrameGenerator {
       return Optional.empty();
     }
 
-    return Optional.ofNullable(new Switch(event.id()).doSwitch(event.subject()))
-        .map(x -> new NestedFrame(x, event.depth()));
+    final var id = event.id();
+    return Optional.ofNullable(new RoboCertSwitch<Frame>() {
+      @Override
+      public Frame caseInteraction(Interaction object) {
+        return new DiagramFrame(object);
+      }
+
+      @Override
+      public Frame caseCombinedFragment(CombinedFragment object) {
+        // Catch-all canary for if we don't support the fragment directly.
+        return new MissingFrame(object, id);
+      }
+
+      @Override
+      public Frame caseLoopFragment(LoopFragment object) {
+        return new LoopFrame(object, id);
+      }
+
+      @Override
+      public Frame caseAltFragment(AltFragment object) {
+        return new BasicFrame(Type.Alt, id);
+      }
+
+      @Override
+      public Frame caseOptFragment(OptFragment object) {
+        return new BasicFrame(Type.Opt, id);
+      }
+
+      @Override
+      public Frame caseXAltFragment(XAltFragment object) {
+        return new BasicFrame(Type.XAlt, id);
+      }
+    }.doSwitch(event.subject())).map(x -> new NestedFrame(x, event.depth()));
   }
 
-  private static class Switch extends RoboCertSwitch<Frame> {
-
-    private final int id;
-
-    private Switch(int id) {
-      this.id = id;
-    }
-
-    @Override
-    public Frame caseInteraction(Interaction object) {
-      return new DiagramFrame(object);
-    }
-
-    @Override
-    public Frame caseCombinedFragment(CombinedFragment object) {
-      // Catch-all canary for if we don't support the fragment directly.
-      return new MissingFrame(object, id);
-    }
-
-    @Override
-    public Frame caseLoopFragment(LoopFragment object) {
-      return new LoopFrame(object, id);
-    }
-
-    //
-    // Basic frames
-    //
-
-    @Override
-    public Frame caseAltFragment(AltFragment object) {
-      return new BasicFrame(Type.Alt, id);
-    }
-
-    @Override
-    public Frame caseOptFragment(OptFragment object) {
-      return new BasicFrame(Type.Opt, id);
-    }
-
-    @Override
-    public Frame caseXAltFragment(XAltFragment object) {
-      return new BasicFrame(Type.XAlt, id);
-    }
-  }
 }

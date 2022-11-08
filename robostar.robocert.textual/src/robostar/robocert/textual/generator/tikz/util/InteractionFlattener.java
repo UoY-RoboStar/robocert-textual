@@ -57,62 +57,59 @@ public class InteractionFlattener {
   public Result unwind() {
     entries = new ArrayList<>();
     maxDepth = 0;
-    new Switch().doSwitch(subject);
+    new RoboCertSwitch<Boolean>() {
+      @Override
+      public Boolean caseInteraction(Interaction object) {
+        final var id = enterNested(object);
+        for (var frag : object.getFragments()) {
+          doSwitch(frag);
+        }
+        exitNested(object, id);
+
+        return Boolean.TRUE;
+      }
+
+      @Override
+      public Boolean caseBranchFragment(BranchFragment object) {
+        final var id = enterNested(object);
+        for (var branch : object.getBranches()) {
+          doSwitch(branch);
+        }
+        exitNested(object, id);
+
+        return Boolean.TRUE;
+      }
+
+      @Override
+      public Boolean caseBlockFragment(BlockFragment object) {
+        final var id = enterNested(object);
+        doSwitch(object.getBody());
+        exitNested(object, id);
+
+        return Boolean.TRUE;
+      }
+
+      @Override
+      public Boolean caseInteractionOperand(InteractionOperand object) {
+        // Don't create a separate nesting level for interaction operands.
+        // If we ever need to make it possible to distinguish these by nesting level, we'll have to
+        // make it a variable of the flattener, I think.
+        final var id = enter(object);
+        for (var inner : object.getFragments()) {
+          doSwitch(inner);
+        }
+        exit(object, id);
+
+        return Boolean.TRUE;
+      }
+
+      @Override
+      public Boolean caseOccurrenceFragment(OccurrenceFragment object) {
+        enter(object);
+        return Boolean.TRUE;
+      }
+    }.doSwitch(subject);
     return new Result(entries, maxDepth);
-  }
-
-  private class Switch extends RoboCertSwitch<Boolean> {
-
-    @Override
-    public Boolean caseInteraction(Interaction object) {
-      final var id = enterNested(object);
-      for (var frag : object.getFragments()) {
-        doSwitch(frag);
-      }
-      exitNested(object, id);
-
-      return Boolean.TRUE;
-    }
-
-    @Override
-    public Boolean caseBranchFragment(BranchFragment object) {
-      final var id = enterNested(object);
-      for (var branch : object.getBranches()) {
-        doSwitch(branch);
-      }
-      exitNested(object, id);
-
-      return Boolean.TRUE;
-    }
-
-    @Override
-    public Boolean caseBlockFragment(BlockFragment object) {
-      final var id = enterNested(object);
-      doSwitch(object.getBody());
-      exitNested(object, id);
-
-      return Boolean.TRUE;
-    }
-
-    @Override
-    public Boolean caseInteractionOperand(InteractionOperand object) {
-      // Don't create a separate nesting level for interaction operands.
-      // If we ever need to make it possible to distinguish these by nesting level, we'll have to
-      // make it a variable of the flattener, I think.
-      final var id = enter(object);
-      for (var inner : object.getFragments()) {
-        doSwitch(inner);
-      }
-      exit(object, id);
-
-      return Boolean.TRUE;
-    }
-
-    @Override
-    public Boolean caseOccurrenceFragment(OccurrenceFragment object) {
-      enter(object);
-      return Boolean.TRUE;
-    }
   }
 
   /**
