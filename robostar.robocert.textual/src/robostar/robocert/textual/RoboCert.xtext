@@ -64,18 +64,6 @@ fragment ConstName *:
 fragment AssignWords *:
 	'set' 'to' | 'assigned';
 
-/* RoboCert is whitespace-sensitive, with these terminals delimiting blocks
- * where a change of indentation must happen.
- * 
- * See:
- * https://www.eclipse.org/Xtext/documentation/307_special_languages.html#whitespace-aware-languages
- */
-terminal BEGIN:
-	'synthetic:BEGIN';
-
-terminal END:
-	'synthetic:END';
-
 /**
  * A specification group.
  * 
@@ -84,10 +72,10 @@ terminal END:
  */
 SpecificationGroup:
 	'specification' 'group' {SpecificationGroup} name=ID?
-	BEGIN
-	'target' '=' target=Target ('with' BEGIN (assignments+=ConstAssignment)+ END)?
+	'{'
+	'target' '=' target=Target ('with' (assignments+=ConstAssignment)+)?
 	(ActorList | interactions+=Interaction | messageSets+=NamedMessageSet | ImportedEnum)*
-	END;
+	'}';
 
 /**
  * Lets users bring enumerations from RoboChart packages into scope.
@@ -140,7 +128,7 @@ SingletonAssertionGroup returns AssertionGroup:
  * Produces the body of a non-singleton assertion group.
  */
 FullAssertionGroup returns AssertionGroup:
-	{AssertionGroup} 'group' (name=ID)? BEGIN ('assertion' assertions+=Assertion)* END;
+	{AssertionGroup} 'group' (name=ID)? '{' ('assertion' assertions+=Assertion)* '}';
 
 /**
  * An assertion, less the leading 'assertion' keyword (because this might be
@@ -149,7 +137,7 @@ FullAssertionGroup returns AssertionGroup:
  * Assertions may break over whitespace, for readability.
  */
 Assertion:
-	name=ID ':' (property=Property | BEGIN property=Property END);
+	name=ID ':' property=Property;
 
 /**
  * Top-level disjunction of properties.
@@ -259,11 +247,11 @@ fragment ActorList *:
  */
 Interaction:
 	'sequence' name=ID
-	BEGIN
+	'{'
 	(variables=InteractionVars)?	
 	(('actor' | 'actors') actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?)+
 	fragments+=InteractionFragment+
-	END;
+	'}';
 
 /**
  * An interaction variable list (may be empty).
@@ -285,7 +273,7 @@ enum InteractionVarsModifier returns VariableModifier:
  * A subsequence.
  */
 fragment Subsequence *:
-	BEGIN fragments+=InteractionFragment+ END;
+	fragments+=InteractionFragment+;
 
 /**
  * An interaction operand in block position.
@@ -296,9 +284,6 @@ fragment Subsequence *:
  * - 'nothing'.
  */
 BlockInteractionOperand returns InteractionOperand:
-	// Singleton
-	':' guard=Guard (fragments+=InteractionFragment | 'nothing') |
-	// Non-singleton
 	guard=Guard (Subsequence 'end' | 'nothing')
 ;
 
@@ -309,8 +294,6 @@ BlockInteractionOperand returns InteractionOperand:
  * (The 'end' comes from the enclosing branch.)
  */
 BranchInteractionOperand returns InteractionOperand:
-	// Singleton
-	':' guard=Guard (fragments+=InteractionFragment | 'nothing') |
 	// Non-singleton
 	guard=Guard (Subsequence | 'nothing')
 ;
@@ -325,13 +308,6 @@ Guard:
 	'otherwise' {ElseGuard} |
 	{ExprGuard} expr=Expression
 	) ']';
-
-/**
- * Consumes nothing and instantly returns an empty guard.
- */
-ImplicitEmptyGuard returns EmptyGuard:
-	{EmptyGuard}
-;
 
 //
 // INTERACTION FRAGMENTS
