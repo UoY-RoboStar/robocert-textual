@@ -14,6 +14,8 @@ specific:
   has been abolished, and should be replaced with an `end` at the end of
   the line instead;
 - any use of `:` in branch fragments should be removed without replacement.
+- `deadline (X units) on Y` is now `deadline (X units on Y)`;
+- `deadlock on Y` is now `deadlock (on Y)`, for consistency.
 
 ## Features
 

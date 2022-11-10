@@ -183,7 +183,7 @@ enum DoesCorePropertyType returns CorePropertyType:
  * A time unit expression.
  */
 TimeUnits returns Expression:
-	'(' Expression 'time'? ('unit' | 'units')? ')';
+	Expression 'time'? ('unit' | 'units')?;
 
 //
 // MODALITIES
@@ -334,7 +334,7 @@ BlockFragment:
 	'loop' {LoopFragment} ('(' bound=DiscreteBound ('time' | 'times')? ')')?) (name=ID)? body=BlockInteractionOperand;
 
 DeadlineFragment:
-	'deadline' units=TimeUnits 'on' actor=[Actor];
+	'deadline' '(' units=TimeUnits 'on' actor=[Actor] ')';
 
 //
 // Discrete bounds
@@ -380,8 +380,8 @@ Occurrence:
 	LifelineOccurrence;
 
 LifelineOccurrence:
-	('wait' {WaitOccurrence} units=TimeUnits |
-	'deadlock' {DeadlockOccurrence}) 'on' actor=[Actor|QualifiedName];
+	('wait' {WaitOccurrence} '(' units=TimeUnits ')' |
+	'deadlock' {DeadlockOccurrence}) '(' 'on' actor=[Actor|QualifiedName] ')';
 
 //
 // MESSAGES
