@@ -35,14 +35,21 @@ public class ParseTestHelper {
 	 * The prefix appended to lifted subsequences.
 	 */
 	private static final String PREFIX = """
-specification group X
+specification group X {
   target = module Mod
   actors = {target as T, world as W}
-  sequence Y
+  sequence Y {
     actors T, W
 """;
+
+	/**
+	 * The suffix appended to lifted subsequences.
+	 */
+	private static final String SUFFIX = """
+  }
+}
+""";
 	
-	// This class is in Xtend so we can use Xtend templates.
 	@Inject ParseHelper<CertPackage> parseHelper;
 	
 	/**
@@ -79,7 +86,7 @@ specification group X
 	 *         subsequence.
 	 */
 	public CharSequence liftSubsequence(CharSequence subsequence) {
-		return PREFIX + subsequence.toString().indent(4);
+		return PREFIX + subsequence.toString().indent(4) + SUFFIX;
 	}
 
 	/**

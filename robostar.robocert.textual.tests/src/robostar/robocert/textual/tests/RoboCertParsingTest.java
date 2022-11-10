@@ -37,13 +37,15 @@ class RoboCertParsingTest {
 	@Test
 	void loadModel() {
 		final var result = Assertions.assertDoesNotThrow(() -> parseHelper.parse("""
-specification group S
+specification group S {
   target = module Mod
   actors = {target as T, world as W}
-  sequence Test
+  sequence Test {
     var x: real
     actors T and W
-    anything until: deadlock on T
+    anything until deadlock on T end
+  }
+}
 """));
 		Assertions.assertNotNull(result);
 		final var errors = result.eResource().getErrors();
