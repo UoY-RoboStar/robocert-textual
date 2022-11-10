@@ -25,6 +25,8 @@ specific:
 - The word `set` may now be omitted in a reference to a message set (but not
   a definition of one).  For instance, `any except SetName until deadlock end`
   is now legal.  The valid forms are `message set`, `set`, or no keyword.
+- `specification group`s may now be called `property group`s.  The latter term
+  is preferred and may become the sole valid name in future versions.
 
 ## Fixes
 

@@ -71,7 +71,8 @@ fragment AssignWords *:
  * actors, message sets, and so on.
  */
 SpecificationGroup:
-	'specification' 'group' {SpecificationGroup} name=ID?
+	('property' | 'specification')
+	'group' {SpecificationGroup} name=ID?
 	'{'
 	'target' '=' target=Target ('with' (assignments+=ConstAssignment)+)?
 	(ActorList | interactions+=Interaction | messageSets+=NamedMessageSet | ImportedEnum)*
