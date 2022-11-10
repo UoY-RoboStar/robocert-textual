@@ -1,12 +1,34 @@
-# Unreleased
+# 0.2.0 (unreleased)
 
-## 2022-02-11
+## Breaking changes
 
-- Changed scoping rules to allow enumerations to be scoped properly.
+This version greatly and incompatibly changes the top-level syntax of
+RoboCert to align closer to the other RoboStar textual languages.  In
+specific:
+
+- whitespace is no longer significant;
+- `group`s and `sequence`s now require opening and closing braces for
+  block delimiting (the interior of sequences still use Mermaid-style
+  syntax and therefore do not use braces);
+- the use of `:` to denote a one-liner combined fragment in sequences
+  has been abolished, and should be replaced with an `end` at the end of
+  the line instead;
+- any use of `:` in branch fragments should be removed without replacement.
+
+## Features
+
 - Added `use enum package::EnumName` to pull enumerations into scope, so
   as to avoid the fact that in RoboChart expressions `package::EnumName::X`
   would be parsed as an enumeration `package`.
+- The word `set` may now be omitted in a reference to a message set (but not
+  a definition of one).  For instance, `any except SetName until deadlock end`
+  is now legal.  The valid forms are `message set`, `set`, or no keyword.
+
+## Fixes
+
+- Changed scoping rules to allow enumerations to be scoped properly.
 - Expression generator now emits enumerations properly.
+
 
 # 0.1.0
 
