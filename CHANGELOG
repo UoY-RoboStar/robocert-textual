@@ -1,23 +1,25 @@
-# 0.2.0 (unreleased)
+# Changelog
 
-## Breaking changes
+## 0.2.0 (2022-11-10)
 
-This version greatly and incompatibly changes the top-level syntax of
-RoboCert to align closer to the other RoboStar textual languages.  In
+### Changed
+
+**Breaking**: This version greatly and incompatibly changes the top-level
+syntax of RoboCert to align closer to the other RoboStar textual languages.  In
 specific:
 
-- whitespace is no longer significant;
+- Whitespace is no longer significant.
 - `group`s and `sequence`s now require opening and closing braces for
   block delimiting (the interior of sequences still use Mermaid-style
-  syntax and therefore do not use braces);
-- the use of `:` to denote a one-liner combined fragment in sequences
+  syntax and therefore do not use braces).
+- The use of `:` to denote a one-liner combined fragment in sequences
   has been abolished, and should be replaced with an `end` at the end of
-  the line instead;
-- any use of `:` in branch fragments should be removed without replacement.
-- `deadline (X units) on Y` is now `deadline (X units on Y)`;
+  the line instead.
+- Any use of `:` in branch fragments should be removed without replacement.
+- `deadline (X units) on Y` is now `deadline (X units on Y)`.
 - `deadlock on Y` is now `deadlock (on Y)`, for consistency.
 
-## Features
+### Added
 
 - Added `use enum package::EnumName` to pull enumerations into scope, so
   as to avoid the fact that in RoboChart expressions `package::EnumName::X`
@@ -28,12 +30,12 @@ specific:
 - `specification group`s may now be called `property group`s.  The latter term
   is preferred and may become the sole valid name in future versions.
 
-## Fixes
+### Fixed
 
 - Changed scoping rules to allow enumerations to be scoped properly.
 - Expression generator now emits enumerations properly.
 
 
-# 0.1.0
+## 0.1.0
 
 Initial release.
