@@ -463,7 +463,7 @@ PrimitiveSet returns MessageSet:
 	'(' MessageSet ')' |
 	'universe' {UniverseMessageSet} |
 	ExtensionalMessageSet |
-	'message'? 'set' {RefMessageSet} set=[NamedMessageSet];
+	('message'? 'set')? {RefMessageSet} set=[NamedMessageSet];
 
 /**
  * An extensional message set.
