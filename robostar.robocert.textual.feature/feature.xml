@@ -2,7 +2,7 @@
 <feature
       id="robostar.robocert.textual.feature"
       label="RoboCert Textual Editor"
-      version="0.1.0.qualifier">
+      version="0.2.0.qualifier">
 
    <description url="https://www.cs.york.ac.uk/robostar/robotool/">
       This feature includes plugins that provide a textual editor for RoboChart.

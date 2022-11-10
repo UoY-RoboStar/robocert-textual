@@ -3,7 +3,7 @@ Automatic-Module-Name: robostar.robocert.textual.ui.tests
 Bundle-ManifestVersion: 2
 Bundle-Name: robostar.robocert.textual.ui.tests
 Bundle-Vendor: RoboStar
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-SymbolicName: robostar.robocert.textual.ui.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: robostar.robocert.textual.ui;bundle-version="0.1.0",

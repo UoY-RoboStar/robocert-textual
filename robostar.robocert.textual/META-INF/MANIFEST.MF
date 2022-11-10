@@ -4,7 +4,7 @@ Main-Class: robostar.robocert.textual.generator.Main
 Bundle-ManifestVersion: 2
 Bundle-Name: robostar.robocert.textual
 Bundle-Vendor: RoboStar
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.2.0.qualifier
 Bundle-SymbolicName: robostar.robocert.textual; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: robostar.robocert;bundle-version="0.1.0",
