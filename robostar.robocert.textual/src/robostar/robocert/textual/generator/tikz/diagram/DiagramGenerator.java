@@ -84,7 +84,7 @@ public record DiagramGenerator(TikzStructureGenerator tikz, ISerializer ser,
   }
 
   private String renderMatrixRow(List<Cell> row) {
-    return row.stream().map(x -> x.render(tikz).orElse(""))
+    return row.stream().map(x -> x.render(tikz))
         .collect(Collectors.joining(" & ", "  ", " \\\\"));
   }
 }

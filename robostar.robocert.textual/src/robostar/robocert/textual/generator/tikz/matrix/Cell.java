@@ -37,19 +37,18 @@ public record Cell(Row row, Column column) {
    *   If either the location or the body is null, we don't generate any cell code.
    *
    * @param tikz low-level TikZ structure generator.
-   * @return TikZ code for the cell (either a node or a coordinate), if one has been generated.
+   * @return TikZ code for the cell (either a node or a coordinate).
    */
-  public Optional<String> render(TikzStructureGenerator tikz) {
-    return row.generateBody(column).map(body -> {
-      final var locName = name();
+  public String render(TikzStructureGenerator tikz) {
+    final var body = row.generateBody(column);
+    final var locName = name();
 
-      final var label = body.renderLabel(tikz);
-      if (label.isEmpty()) {
-        return tikz.coordinate(locName);
-      }
-      final var style = body.renderStyle(tikz).orElse("");
-      return tikz.node(style, locName, label.get());
-    });
+    final var label = body.renderLabel(tikz);
+    if (label.isEmpty()) {
+      return tikz.coordinate(locName);
+    }
+    final var style = body.renderStyle(tikz).orElse("");
+    return tikz.node(style, locName, label.get());
   }
 
   /**

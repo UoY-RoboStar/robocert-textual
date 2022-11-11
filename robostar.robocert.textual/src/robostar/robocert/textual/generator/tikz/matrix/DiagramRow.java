@@ -33,13 +33,13 @@ public record DiagramRow(EventType type) implements Row {
   }
 
   @Override
-  public Optional<CellBody> generateBody(Column column) {
+  public CellBody generateBody(Column column) {
     // Generate actor heads.
     final var actor = column.getActor();
     if (type == EventType.Entered && actor.isPresent()) {
-      return Optional.of(new ActorHeadCellBody(actor.get()));
+      return new ActorHeadCellBody(actor.get());
     }
 
-    return Optional.of(new CoordinateCellBody());
+    return new CoordinateCellBody();
   }
 }

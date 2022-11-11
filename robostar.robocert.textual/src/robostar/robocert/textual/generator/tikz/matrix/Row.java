@@ -18,7 +18,7 @@ import robostar.robocert.Actor;
  *
  * @author Matt Windsor
  * @see Column
- * @see CellLocation
+ * @see Cell
  */
 public interface Row {
 
@@ -33,7 +33,7 @@ public interface Row {
    * Constructs the cell body for this row, given that it is appearing in a particular column.
    *
    * @param column the column for this row.
-   * @return the expected cell body, which may be empty if we don't want to generate a cell.
+   * @return the expected cell body for this column.
    */
-  Optional<CellBody> generateBody(Column column);
+  CellBody generateBody(Column column);
 }

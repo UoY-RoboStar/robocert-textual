@@ -25,9 +25,7 @@ public record OccurrenceRow(int id) implements Row {
   }
 
   @Override
-  public Optional<CellBody> generateBody(Column column) {
-    // Generate all cells in the column.
-    // (Technically we don't need the LHS, but it's harmless to generate it.)
-    return Optional.of(new CoordinateCellBody());
+  public CellBody generateBody(Column column) {
+    return new CoordinateCellBody();
   }
 }

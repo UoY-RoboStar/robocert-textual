@@ -11,7 +11,6 @@
 package robostar.robocert.textual.generator.tikz.matrix;
 
 import java.util.Objects;
-import java.util.Optional;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 
 /**
@@ -33,8 +32,7 @@ public record CombinedFragmentRow(EventType type, int id) implements Row {
   }
 
   @Override
-  public Optional<CellBody> generateBody(Column column) {
-    // Only generate coordinates for endpoints, not actors.
-    return column.getActor().isPresent() ? Optional.empty() : Optional.of(new CoordinateCellBody());
+  public CellBody generateBody(Column column) {
+    return new CoordinateCellBody();
   }
 }
