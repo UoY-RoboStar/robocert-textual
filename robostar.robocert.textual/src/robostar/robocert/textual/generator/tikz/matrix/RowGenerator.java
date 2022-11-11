@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import robostar.robocert.CombinedFragment;
 import robostar.robocert.Interaction;
 import robostar.robocert.InteractionOperand;
+import robostar.robocert.OccurrenceFragment;
 import robostar.robocert.textual.generator.tikz.diagram.Lifeline;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.Event;
 import robostar.robocert.util.RoboCertSwitch;
@@ -58,6 +59,11 @@ public class RowGenerator {
         // Emit branch separators if this is an entry into an interaction operand that is not the
         // first such operand in its parent.
         return event.isBranchSplit() ? makeRow(new BranchRow(event.id())) : null;
+      }
+
+      @Override
+      public Stream<Cell> caseOccurrenceFragment(OccurrenceFragment object) {
+        return makeRow(new OccurrenceRow(event.id()));
       }
 
       private Stream<Cell> makeRow(Row row) {

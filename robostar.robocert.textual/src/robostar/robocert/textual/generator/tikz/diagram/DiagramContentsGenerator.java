@@ -18,11 +18,14 @@ import com.google.inject.Inject;
 
 import java.util.stream.Stream;
 import robostar.robocert.Interaction;
+import robostar.robocert.MessageOccurrence;
+import robostar.robocert.OccurrenceFragment;
 import robostar.robocert.World;
 import robostar.robocert.textual.generator.tikz.frame.FrameGenerator;
 import robostar.robocert.textual.generator.tikz.frame.NestedFrame;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.RowGenerator;
+import robostar.robocert.textual.generator.tikz.message.LifelineMessage;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener;
 import robostar.robocert.textual.generator.tikz.util.Renderable;
 
@@ -52,16 +55,23 @@ public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator row
     final var matrixRows = new ArrayList<List<Cell>>();
     final var frames = new ArrayList<NestedFrame>();
     final var branchSplits = new ArrayList<BranchSplit>();
+    final var messages = new ArrayList<LifelineMessage>();
 
     for (var entry : unwound.events()) {
+      // TODO(@MattWindsor91): normalise these generators, possibly.
       rowGen.generate(entry, lifelines).ifPresent(matrixRows::add);
       frameGen.generate(entry).ifPresent(frames::add);
 
       if (entry.isBranchSplit()) {
         branchSplits.add(new BranchSplit(entry.id(), entry.depth()));
       }
+      if (entry.subject() instanceof OccurrenceFragment o) {
+        if (o.getOccurrence() instanceof MessageOccurrence m) {
+          messages.add(new LifelineMessage(m, entry.id()));
+        }
+      }
     }
-    return new State(lifelines, matrixRows, frames, branchSplits, unwound.maxDepth());
+    return new State(lifelines, matrixRows, frames, branchSplits, messages, unwound.maxDepth());
   }
 
 
@@ -75,7 +85,7 @@ public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator row
    * @param outerDepthScale amount by which we should scale the outer frame's margin.
    */
   public record State(List<Lifeline> lifelines, List<List<Cell>> matrixRows, List<NestedFrame> frames,
-                      List<BranchSplit> branchSplits, int outerDepthScale) {
+                      List<BranchSplit> branchSplits, List<LifelineMessage> messages, int outerDepthScale) {
 
     /**
      * Gets all of the contents of the state as a stream of streams of renderables.
@@ -87,7 +97,8 @@ public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator row
       return Stream.of(
           lifelines.stream().map(x -> x),
           frames.stream().map(x -> x),
-          branchSplits.stream().map(x -> x)
+          branchSplits.stream().map(x -> x),
+          messages.stream().map(x -> x)
       );
     }
   }

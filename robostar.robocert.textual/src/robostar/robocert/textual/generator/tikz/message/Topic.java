@@ -10,11 +10,14 @@
 
 package robostar.robocert.textual.generator.tikz.message;
 
-import org.eclipse.xtext.serializer.ISerializer;
+import org.eclipse.emf.ecore.EObject;
+import robostar.robocert.EventTopic;
 import robostar.robocert.MessageTopic;
+import robostar.robocert.OperationTopic;
 import robostar.robocert.RoboCertPackage;
+import robostar.robocert.textual.generator.tikz.util.NameSanitiser;
 import robostar.robocert.textual.generator.tikz.util.Renderable;
-import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
+import robostar.robocert.util.RoboCertSwitch;
 
 /**
  * Represents a message topic.
@@ -28,7 +31,8 @@ public record Topic(MessageTopic topic) implements Renderable {
   @Override
   public String render(Renderable.Context ctx) {
     final var cmdName = "rc%stopic".formatted(typeName());
-    return ctx.tikz().command(cmdName).render();
+    final var name = NameSanitiser.sanitise(topicName());
+    return ctx.tikz().command(cmdName).argument(name).render();
   }
 
   private String typeName() {
@@ -37,5 +41,36 @@ public record Topic(MessageTopic topic) implements Renderable {
       case RoboCertPackage.EVENT_TOPIC -> "event";
       default -> throw new IllegalArgumentException("unsupported topic: %s".formatted(topic));
     };
+  }
+
+  private String topicName() {
+    return new RoboCertSwitch<String>() {
+      @Override
+      public String defaultCase(EObject e) {
+        return e.toString();
+      }
+
+      @Override
+      public String caseOperationTopic(OperationTopic o) {
+        return o.getOperation().getName();
+      }
+
+      @Override
+      public String caseEventTopic(EventTopic e) {
+        // TODO(@MattWindsor91): I think this is duplicating something in the CSP gen.
+        final var efrom = e.getEfrom();
+        final var eto = e.getEto();
+
+        // Take name from whichever event is present.
+        // If both are present, and different, return eFrom/eTo.
+        if (efrom == null) {
+          return eto == null ? "??" : eto.getName();
+        }
+        if (eto == null || efrom.getName().equals(eto.getName())) {
+          return efrom.getName();
+        }
+        return "%s/%s".formatted(efrom.getName(), eto.getName());
+      }
+    }.doSwitch(topic);
   }
 }

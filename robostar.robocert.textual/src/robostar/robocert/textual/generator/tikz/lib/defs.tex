@@ -35,12 +35,12 @@
     deadline/.style={solid, font={\scriptsize}},
     deadlinespan/.style={latex-latex},
 % Temperature modalities
-    cold/.style={thick, solid},
-    hot/.style={cold, double},
+    rccold/.style={thick, solid},
+    rchot/.style={rccold, double},
 % Occurrences
-    arrow/.style={->, cold},
+    arrow/.style={->, rccold},
     arrowlabel/.style={fill=white, font={\scriptsize\sffamily}, inner sep=0.2em},
-    wait/.style={cold, font={\scriptsize}},
+    wait/.style={rccold, font={\scriptsize}},
     end/.style={fill, very thick, rectangle, minimum height=3pt, minimum width=15pt, inner sep=0em}
 }
 
@@ -136,6 +136,18 @@
 %% MESSAGES
 %%
 
+% Generic message command
+% #1: LHS
+% #2: RHS
+% #3: topic
+% #4: arguments
+% #5: temperature modality
+\newcommand{\rcmessage}[5]{\draw (#1) edge[arrow, #5] node[arrowlabel] {#3#4} (#2);}
+
+% Topics
+\newcommand{\rceventtopic}[1]{\rckeyword{event}\(\;\)#1}
+\newcommand{\rcoptopic}[1]{\rckeyword{op}\(\;\)#1}
+
 %
 % Set types (in math mode)
 %
@@ -193,30 +205,12 @@
 % #3: branch header
 \NewDocumentCommand{\gbranch}{m m m}{\gcfrag{#1}{0.1em}{#3 #2}{branch#2}}
 
-% Alternative branch header
-\NewDocumentCommand{\galternative}{}{\rckeyword{alt}}
-% X-Alternative branch header
-\NewDocumentCommand{\gxalternative}{}{\rckeyword{xalt}}
-% Parallel branch header
-\NewDocumentCommand{\gparallel}{}{\rckeyword{par}}
-% Optional block header
-\NewDocumentCommand{\gopt}{}{\rckeyword{opt}}
-
-
 % Loop bounds
 % These follow UML for now.
 \newcommand{\gloopinfinite}{}
 \newcommand{\gloopdefinite}[1]{(#1)}
 \newcommand{\glooprange}[2]{(#1, #2)}
 \newcommand{\glooplower}[1]{\glooprange{#1}{\(\ast\)}}
-
-% Generic message command
-% #1: LHS
-% #2: RHS
-% #3: sigil
-% #4: label
-% #5: temperature
-\NewDocumentCommand{\gmessage}{m m m m m}{\draw (#1) edge[arrow, \IfBooleanTF{#5}{hot}{cold}] node[arrowlabel] {#3\(\;\)#4} (#2);}
 
 % #1: temperature (star)
 % #2: LHS

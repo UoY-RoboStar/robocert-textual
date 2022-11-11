@@ -27,7 +27,11 @@ public record MessageArgumentList(List<ValueSpecification> args) implements Rend
 
   @Override
   public String render(Renderable.Context ctx) {
+    if (args.isEmpty()) {
+      return "";
+    }
+
     final var ser = ctx.ser();
-    return args.stream().map(ser::serialize).collect(Collectors.joining(", "));
+    return args.stream().map(ser::serialize).collect(Collectors.joining(", ", "(", ")"));
   }
 }
