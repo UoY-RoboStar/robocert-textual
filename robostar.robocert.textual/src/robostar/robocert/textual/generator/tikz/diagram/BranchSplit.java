@@ -13,7 +13,7 @@ package robostar.robocert.textual.generator.tikz.diagram;
 import robostar.robocert.textual.generator.tikz.matrix.BranchRow;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.EdgeColumn;
-import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 
 /**
  * Represents a point where two branches split in a diagram.
@@ -21,17 +21,11 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
  * @param id    ID of the second branch in the split.
  * @param depth depth the branches, used to work out where to start and stop drawing the line.
  */
-public record BranchSplit(int id, int depth) {
+public record BranchSplit(int id, int depth) implements Renderable {
 
-  /**
-   * Renders a branch split line.
-   *
-   * @param tikz     low-level Tikz structural generator.
-   * @param maxDepth depth of the innermost item in the diagram.
-   * @return TikZ code for the split line.
-   */
-  public String render(TikzStructureGenerator tikz, int maxDepth) {
-    final var depthOffset = (maxDepth - depth) + 1;
+  @Override
+  public String render(Renderable.Context ctx) {
+    final var depthOffset = (ctx.topLevel() - depth) + 1;
 
     final var startName = Cell.nameOf(new BranchRow(id), EdgeColumn.Gutter);
     final var start = nudge(startName, -depthOffset);
@@ -39,7 +33,7 @@ public record BranchSplit(int id, int depth) {
     final var endName = Cell.nameOf(new BranchRow(id), EdgeColumn.World);
     final var end = nudge(endName, depthOffset);
 
-    return tikz.draw("rcsep").to(start).to(end).render();
+    return ctx.tikz().draw("rcsep").to(start).to(end).render();
   }
 
   private String nudge(String nodeName, int amount) {

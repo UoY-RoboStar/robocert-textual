@@ -23,6 +23,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import robostar.robocert.textual.generator.tikz.frame.BasicFrame;
 import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
 
@@ -64,7 +65,8 @@ class BasicFrameTest {
   @ParameterizedTest
   @EnumSource
   public void TestGenerateLabel(BasicFrame.Type type) {
-    assertThat(frame(type).generateLabel(tikz, ser), is("\\rc%s".formatted(type.toString())));
+    final var ctx = new Renderable.Context(tikz, ser, 1);
+    assertThat(frame(type).generateLabel(ctx), is("\\rc%s".formatted(type.toString())));
   }
 
   private BasicFrame frame(BasicFrame.Type type) {

@@ -10,12 +10,11 @@
 
 package robostar.robocert.textual.generator.tikz.frame;
 
-import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.CombinedFragment;
 import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
-import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 
 /**
  * Placeholder frame for a type of combined fragment not yet supported by the generator.
@@ -35,7 +34,7 @@ public record MissingFrame(CombinedFragment fragment, int id) implements Frame {
   }
 
   @Override
-  public String generateLabel(TikzStructureGenerator tikz, ISerializer _ser) {
+  public String generateLabel(Renderable.Context ctx) {
     return "unknown (%s) %d".formatted(fragment.toString(), id);
   }
 }

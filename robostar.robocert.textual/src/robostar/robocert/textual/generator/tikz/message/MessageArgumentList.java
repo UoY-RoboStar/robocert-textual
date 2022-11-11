@@ -26,7 +26,8 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 public record MessageArgumentList(List<ValueSpecification> args) implements Renderable {
 
   @Override
-  public String render(TikzStructureGenerator tikz, ISerializer ser) {
+  public String render(Renderable.Context ctx) {
+    final var ser = ctx.ser();
     return args.stream().map(ser::serialize).collect(Collectors.joining(", "));
   }
 }

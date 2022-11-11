@@ -14,6 +14,7 @@ import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
@@ -58,7 +59,7 @@ public record BasicFrame(Type type, int id) implements Frame {
   }
 
   @Override
-  public String generateLabel(TikzStructureGenerator tikz, ISerializer _ser) {
-    return tikz.command("rc%s".formatted(type)).render();
+  public String generateLabel(Renderable.Context ctx) {
+    return ctx.tikz().command("rc%s".formatted(type)).render();
   }
 }

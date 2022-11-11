@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.RoboCertFactory;
 import robostar.robocert.textual.generator.tikz.frame.LoopFrame;
+import robostar.robocert.textual.generator.tikz.util.Renderable.Context;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
 import robostar.robocert.util.ExpressionFactory;
@@ -58,14 +59,16 @@ class LoopFrameTest {
    */
   @Test
   public void TestGenerateLabelUnnamed() {
-    assertThat(frame(null, null, null).generateLabel(tikz, ser), is("\\rcloop{}"));
+    final var ctx = new Context(tikz, ser, 1);
+
+    assertThat(frame(null, null, null).generateLabel(ctx), is("\\rcloop{}"));
 
     // High bound defaults to infinity
-    assertThat(frame(null, ef.integer(2), null).generateLabel(tikz, ser), is("\\rcloop{(2, *)}"));
+    assertThat(frame(null, ef.integer(2), null).generateLabel(ctx), is("\\rcloop{(2, *)}"));
 
     // Low bound defaults to high bound
-    assertThat(frame(null, null, ef.integer(4)).generateLabel(tikz, ser), is("\\rcloop{(4)}"));
-    assertThat(frame(null, ef.integer(2), ef.integer(4)).generateLabel(tikz, ser),
+    assertThat(frame(null, null, ef.integer(4)).generateLabel(ctx), is("\\rcloop{(4)}"));
+    assertThat(frame(null, ef.integer(2), ef.integer(4)).generateLabel(ctx),
         is("\\rcloop{(2, 4)}"));
   }
 
@@ -74,18 +77,20 @@ class LoopFrameTest {
    */
   @Test
   public void TestGenerateLabelNamed() {
-    assertThat(frame("a", null, null).generateLabel(tikz, ser), is("\\rcnamedloop{a}{}"));
+    final var ctx = new Context(tikz, ser, 1);
+
+    assertThat(frame("a", null, null).generateLabel(ctx), is("\\rcnamedloop{a}{}"));
 
     // High bound defaults to infinity
-    assertThat(frame("b", ef.integer(2), null).generateLabel(tikz, ser),
+    assertThat(frame("b", ef.integer(2), null).generateLabel(ctx),
         is("\\rcnamedloop{b}{(2, *)}"));
 
     // Low bound defaults to high bound
-    assertThat(frame("c", null, ef.integer(4)).generateLabel(tikz, ser),
+    assertThat(frame("c", null, ef.integer(4)).generateLabel(ctx),
         is("\\rcnamedloop{c}{(4)}"));
 
     // Checking for name sanitisation
-    assertThat(frame("d_e", ef.integer(2), ef.integer(4)).generateLabel(tikz, ser),
+    assertThat(frame("d_e", ef.integer(2), ef.integer(4)).generateLabel(ctx),
         is("\\rcnamedloop{d\\_e}{(2, 4)}"));
   }
 

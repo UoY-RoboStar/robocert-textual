@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import com.google.inject.Inject;
 
-import robostar.robocert.Actor;
+import java.util.stream.Stream;
 import robostar.robocert.Interaction;
 import robostar.robocert.World;
 import robostar.robocert.textual.generator.tikz.frame.FrameGenerator;
@@ -24,6 +24,7 @@ import robostar.robocert.textual.generator.tikz.frame.NestedFrame;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.RowGenerator;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 
 /**
  * Assembles an intermediate form of the TikZ diagram, ready to be turned into code.
@@ -44,7 +45,7 @@ public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator row
    * @return the built state, ready to be formatted into TikZ code.
    */
   public State generate(Interaction it) {
-    final var actors = it.getActors().stream().filter(x -> !(x instanceof World)).toList();
+    final var lifelines = it.getActors().stream().filter(x -> !(x instanceof World)).map(Lifeline::new).toList();
 
     final var unwound = new InteractionFlattener(it).unwind();
 
@@ -53,28 +54,41 @@ public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator row
     final var branchSplits = new ArrayList<BranchSplit>();
 
     for (var entry : unwound.events()) {
-      rowGen.generate(entry, actors).ifPresent(matrixRows::add);
+      rowGen.generate(entry, lifelines).ifPresent(matrixRows::add);
       frameGen.generate(entry).ifPresent(frames::add);
 
       if (entry.isBranchSplit()) {
         branchSplits.add(new BranchSplit(entry.id(), entry.depth()));
       }
     }
-    return new State(actors, matrixRows, frames, branchSplits, unwound.maxDepth());
+    return new State(lifelines, matrixRows, frames, branchSplits, unwound.maxDepth());
   }
 
 
   /**
    * Diagram state produced by this intermediate step.
    *
-   * @param lifelines       actors forming lifelines in this diagram.
+   * @param lifelines       lifelines in this diagram.
    * @param matrixRows      rows to place in the diagram's matrix.
    * @param frames          frames to render on top of the diagram's matrix.
    * @param branchSplits    rows on which two branches split from each other.
    * @param outerDepthScale amount by which we should scale the outer frame's margin.
    */
-  public record State(List<Actor> lifelines, List<List<Cell>> matrixRows, List<NestedFrame> frames,
+  public record State(List<Lifeline> lifelines, List<List<Cell>> matrixRows, List<NestedFrame> frames,
                       List<BranchSplit> branchSplits, int outerDepthScale) {
 
+    /**
+     * Gets all of the contents of the state as a stream of streams of renderables.
+     *
+     * @return the renderable contents (less, for now, the matrix).
+     */
+    public Stream<Stream<Renderable>> contents() {
+      // the x -> x is used for type upcasting
+      return Stream.of(
+          lifelines.stream().map(x -> x),
+          frames.stream().map(x -> x),
+          branchSplits.stream().map(x -> x)
+      );
+    }
   }
 }

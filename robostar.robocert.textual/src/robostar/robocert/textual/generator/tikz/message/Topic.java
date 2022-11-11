@@ -26,9 +26,9 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 public record Topic(MessageTopic topic) implements Renderable {
 
   @Override
-  public String render(TikzStructureGenerator tikz, ISerializer ser) {
+  public String render(Renderable.Context ctx) {
     final var cmdName = "rc%stopic".formatted(typeName());
-    return tikz.command(cmdName).render();
+    return ctx.tikz().command(cmdName).render();
   }
 
   private String typeName() {

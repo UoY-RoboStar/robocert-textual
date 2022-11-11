@@ -14,10 +14,10 @@ import com.google.common.collect.Streams;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import robostar.robocert.Actor;
 import robostar.robocert.CombinedFragment;
 import robostar.robocert.Interaction;
 import robostar.robocert.InteractionOperand;
+import robostar.robocert.textual.generator.tikz.diagram.Lifeline;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.Event;
 import robostar.robocert.util.RoboCertSwitch;
 
@@ -38,10 +38,10 @@ public class RowGenerator {
    * Generates a row as a list of cells.
    *
    * @param event  event for which we are generating a row.
-   * @param actors list of non-World actors participating in the interaction.
+   * @param lifelines list of non-World actors participating in the interaction.
    * @return the row, if one is indeed generatable for this event.
    */
-  public Optional<List<Cell>> generate(Event event, List<Actor> actors) {
+  public Optional<List<Cell>> generate(Event event, List<Lifeline> lifelines) {
     return Optional.ofNullable(new RoboCertSwitch<Stream<Cell>>() {
       @Override
       public Stream<Cell> caseInteraction(Interaction object) {
@@ -61,7 +61,7 @@ public class RowGenerator {
       }
 
       private Stream<Cell> makeRow(Row row) {
-        final var actorCells = actors.stream().map(a -> new Cell(row, new ActorColumn(a)));
+        final var actorCells = lifelines.stream().map(a -> new Cell(row, new ActorColumn(a.actor())));
 
         final var left = new Cell(row, EdgeColumn.Gutter);
         final var right = new Cell(row, EdgeColumn.World);

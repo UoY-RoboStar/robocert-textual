@@ -14,6 +14,7 @@ import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
 import robostar.robocert.textual.generator.tikz.matrix.EdgeColumn;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
@@ -23,19 +24,12 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
  * @param depth depth of the given frame.
  * @author Matt Windsor
  */
-public record NestedFrame(Frame frame, int depth) {
+public record NestedFrame(Frame frame, int depth) implements Renderable {
 
-  /**
-   * Renders this frame as TikZ code.
-   *
-   * @param tikz     low-level structure generator for TikZ.
-   * @param ser      Xtext serialiser, used for expression snippets.
-   * @param topLevel depth of the highest frame, used to scale the nesting level argument.
-   * @return a string containing TikZ code for this frame.
-   */
-  public String render(TikzStructureGenerator tikz, ISerializer ser, int topLevel) {
-    final var label = frame.generateLabel(tikz, ser);
-    return tikz.command("rcframe").argument(Integer.toString(topLevel - depth))
+  @Override
+  public String render(Renderable.Context ctx) {
+    final var label = frame.generateLabel(ctx);
+    return ctx.tikz().command("rcframe").argument(Integer.toString(ctx.topLevel() - depth))
         .argument(new Cell(frame.row(EventType.Entered), EdgeColumn.Gutter).name())
         .argument(new Cell(frame.row(EventType.Exited), EdgeColumn.World).name()).argument(label)
         .render();

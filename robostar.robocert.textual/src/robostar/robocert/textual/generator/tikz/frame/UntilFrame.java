@@ -10,14 +10,12 @@
 
 package robostar.robocert.textual.generator.tikz.frame;
 
-import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.UntilFragment;
 import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.message.Set;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
-import robostar.robocert.textual.generator.tikz.util.NameSanitiser;
-import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 
 /**
  * Frame representing an {@link UntilFragment}.
@@ -35,9 +33,9 @@ public record UntilFrame(UntilFragment fragment, int id) implements Frame {
   }
 
   @Override
-  public String generateLabel(TikzStructureGenerator tikz, ISerializer ser) {
-    final var messages = new Set(fragment.getIntraMessages()).render(tikz, ser);
+  public String generateLabel(Renderable.Context ctx) {
+    final var messages = new Set(fragment.getIntraMessages()).render(ctx);
 
-    return tikz.command("rcanyuntil").argument(messages).render();
+    return ctx.tikz().command("rcanyuntil").argument(messages).render();
   }
 }

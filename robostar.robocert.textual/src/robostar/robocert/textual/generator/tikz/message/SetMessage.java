@@ -10,9 +10,7 @@
 
 package robostar.robocert.textual.generator.tikz.message;
 
-import org.eclipse.xtext.serializer.ISerializer;
 import robostar.robocert.textual.generator.tikz.util.Renderable;
-import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
  * Represents a message inside a message set.
@@ -23,13 +21,13 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 public record SetMessage(robostar.robocert.Message msg) implements Renderable {
 
   @Override
-  public String render(TikzStructureGenerator tikz, ISerializer ser) {
+  public String render(Renderable.Context ctx) {
     final var from = msg.getFrom().getName();
     final var to = msg.getTo().getName();
-    final var topic = new Topic(msg.getTopic()).render(tikz, ser);
-    final var args = new MessageArgumentList(msg.getArguments()).render(tikz, ser);
+    final var topic = new Topic(msg.getTopic()).render(ctx);
+    final var args = new MessageArgumentList(msg.getArguments()).render(ctx);
 
-    return tikz.command("rcsetmessage").argument(from).argument(to).argument(topic).argument(args)
+    return ctx.tikz().command("rcsetmessage").argument(from).argument(to).argument(topic).argument(args)
         .render();
   }
 }

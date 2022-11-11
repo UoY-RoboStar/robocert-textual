@@ -19,6 +19,7 @@ import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.util.Command;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.textual.generator.tikz.util.NameSanitiser;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
@@ -36,8 +37,8 @@ public record LoopFrame(LoopFragment loop, int id) implements Frame {
   }
 
   @Override
-  public String generateLabel(TikzStructureGenerator tikz, ISerializer ser) {
-    return labelCommand(tikz).argument(bound(ser, loop.getBound())).render();
+  public String generateLabel(Renderable.Context ctx) {
+    return labelCommand(ctx.tikz()).argument(bound(ctx.ser(), loop.getBound())).render();
   }
 
   private Command labelCommand(TikzStructureGenerator tikz) {

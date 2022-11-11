@@ -18,13 +18,24 @@ import org.eclipse.xtext.serializer.ISerializer;
  * @author Matt Windsor
  */
 public interface Renderable {
+  // TODO(@MattWindsor91): this seems awkwardly coupled.
 
   /**
    * Renders the element.
    *
-   * @param tikz TikZ structure generator, used to create TikZ commands.
-   * @param ser  serialiser used for rendering expressions.
+   * @param ctx rendering context.
    * @return string of rendered TikZ.
    */
-  String render(TikzStructureGenerator tikz, ISerializer ser);
+  String render(Context ctx);
+
+  /**
+   * Context for rendering.
+   *
+   * @param tikz     TikZ structure generator, used to create TikZ commands.
+   * @param ser      serialiser used for rendering expressions.
+   * @param topLevel nesting level of the highest-nested element, used for scaling purposes.
+   */
+  record Context(TikzStructureGenerator tikz, ISerializer ser, int topLevel) {
+
+  }
 }

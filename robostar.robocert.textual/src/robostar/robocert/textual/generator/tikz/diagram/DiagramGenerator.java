@@ -14,17 +14,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import java.util.stream.Stream;
 import org.eclipse.xtext.serializer.ISerializer;
 
 import com.google.inject.Inject;
 
-import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
 import robostar.robocert.textual.generator.tikz.diagram.DiagramContentsGenerator.State;
-import robostar.robocert.textual.generator.tikz.matrix.ActorColumn;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
-import robostar.robocert.textual.generator.tikz.matrix.DiagramRow;
-import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
+import robostar.robocert.textual.generator.tikz.util.Renderable;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
@@ -64,16 +62,16 @@ public record DiagramGenerator(TikzStructureGenerator tikz, ISerializer ser,
 
     final String matrix = renderMatrix(state);
 
-    final var lifelines = state.lifelines().stream().map(this::lifeline)
-        .collect(Collectors.joining("\n"));
+    final var contents = state.contents()
+        .map(grp -> renderContentGroup(grp, state.outerDepthScale()))
+        .collect(Collectors.joining("\n\n"));
 
-    final var branchSplits = state.branchSplits().stream()
-        .map(x -> x.render(tikz, state.outerDepthScale())).collect(Collectors.joining("\n"));
+    return String.join("\n\n", HEADING, matrix, contents);
+  }
 
-    final var frames = state.frames().stream()
-        .map(x -> x.render(tikz, ser, state.outerDepthScale())).collect(Collectors.joining("\n"));
-
-    return String.join("\n\n", HEADING, matrix, lifelines, branchSplits, frames);
+  private String renderContentGroup(Stream<Renderable> grp, int topLevel) {
+    final var ctx = new Renderable.Context(tikz, ser, topLevel);
+    return grp.map(s -> s.render(ctx)).collect(Collectors.joining("\n"));
   }
 
   private String renderMatrix(State state) {
@@ -88,18 +86,5 @@ public record DiagramGenerator(TikzStructureGenerator tikz, ISerializer ser,
   private String renderMatrixRow(List<Cell> row) {
     return row.stream().map(x -> x.render(tikz).orElse(""))
         .collect(Collectors.joining(" & ", "  ", " \\\\"));
-  }
-
-  /**
-   * Constructs the TikZ command for drawing an actor's lifeline.
-   *
-   * @param actor actor for which we are drawing a lifeline.
-   * @return TikZ for the lifeline, a line between the actor start and actor end.
-   */
-  private String lifeline(Actor actor) {
-    final var col = new ActorColumn(actor);
-    final var start = Cell.nameOf(new DiagramRow(EventType.Entered), col);
-    final var end = Cell.nameOf(new DiagramRow(EventType.Exited), col);
-    return tikz.draw("rclifeline").to(start).to(end).render();
   }
 }
