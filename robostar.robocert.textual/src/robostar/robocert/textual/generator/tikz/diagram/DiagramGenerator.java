@@ -20,8 +20,9 @@ import org.eclipse.xtext.serializer.ISerializer;
 import com.google.inject.Inject;
 
 import robostar.robocert.Interaction;
-import robostar.robocert.textual.generator.tikz.diagram.DiagramContentsGenerator.State;
+import robostar.robocert.textual.generator.tikz.frame.FrameGenerator;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
+import robostar.robocert.textual.generator.tikz.matrix.RowGenerator;
 import robostar.robocert.textual.generator.tikz.util.Renderable;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
@@ -34,13 +35,15 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
  * @author Matt Windsor
  */
 public record DiagramGenerator(TikzStructureGenerator tikz, ISerializer ser,
-                               DiagramContentsGenerator contentsGen) {
+                               FrameGenerator frameGen, RowGenerator rowGen
+                               ) {
 
   @Inject
   public DiagramGenerator {
     Objects.requireNonNull(tikz);
     Objects.requireNonNull(ser);
-    Objects.requireNonNull(contentsGen);
+    Objects.requireNonNull(frameGen);
+    Objects.requireNonNull(rowGen);
   }
 
   public static final String HEADING = """
@@ -58,7 +61,8 @@ public record DiagramGenerator(TikzStructureGenerator tikz, ISerializer ser,
   public CharSequence generate(Interaction it) {
     // We treat the World separately -- it always appears at the end of a row.
 
-    final var state = contentsGen.generate(it);
+    final var state = new DiagramContentsGenerator(frameGen, rowGen);
+    state.generate(it);
 
     final String matrix = renderMatrix(state);
 
@@ -74,7 +78,7 @@ public record DiagramGenerator(TikzStructureGenerator tikz, ISerializer ser,
     return grp.map(s -> s.render(ctx)).collect(Collectors.joining("\n"));
   }
 
-  private String renderMatrix(State state) {
+  private String renderMatrix(DiagramContentsGenerator state) {
     final var style = "rcsequence, row sep=(\\the\\rctopmargin + (%d*\\the\\rcstepmargin))".formatted(
         state.outerDepthScale());
     final var prefix = "\\matrix[%s]{\n".formatted(style);

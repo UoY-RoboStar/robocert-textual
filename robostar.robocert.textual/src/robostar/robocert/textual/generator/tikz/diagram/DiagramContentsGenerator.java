@@ -12,10 +12,7 @@ package robostar.robocert.textual.generator.tikz.diagram;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import com.google.inject.Inject;
-
+import java.util.Optional;
 import java.util.stream.Stream;
 import robostar.robocert.Interaction;
 import robostar.robocert.MessageOccurrence;
@@ -24,9 +21,14 @@ import robostar.robocert.World;
 import robostar.robocert.textual.generator.tikz.frame.FrameGenerator;
 import robostar.robocert.textual.generator.tikz.frame.NestedFrame;
 import robostar.robocert.textual.generator.tikz.matrix.Cell;
+import robostar.robocert.textual.generator.tikz.matrix.CellAlias;
+import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
+import robostar.robocert.textual.generator.tikz.matrix.OccurrenceRow;
+import robostar.robocert.textual.generator.tikz.matrix.Row;
 import robostar.robocert.textual.generator.tikz.matrix.RowGenerator;
 import robostar.robocert.textual.generator.tikz.message.LifelineMessage;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener;
+import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
 import robostar.robocert.textual.generator.tikz.util.Renderable;
 
 /**
@@ -34,28 +36,35 @@ import robostar.robocert.textual.generator.tikz.util.Renderable;
  *
  * @author Matt Windsor
  */
-public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator rowGen) {
+public class DiagramContentsGenerator {
 
-  @Inject
-  public DiagramContentsGenerator {
-    Objects.requireNonNull(frameGen);
-    Objects.requireNonNull(rowGen);
+  private List<Lifeline> lifelines = new ArrayList<>();
+  private List<List<Cell>> matrixRows = new ArrayList<>();
+  private final List<NestedFrame> frames = new ArrayList<>();
+  private final List<BranchSplit> branchSplits = new ArrayList<>();
+  private final List<LifelineMessage> messages = new ArrayList<>();
+  private final List<CellAlias> aliases = new ArrayList<>();
+  private int outerDepthScale = 0;
+
+  private final FrameGenerator frameGen;
+  private final RowGenerator rowGen;
+
+  public DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator rowGen) {
+    this.frameGen = frameGen;
+    this.rowGen = rowGen;
   }
 
   /**
-   * Builds intermediate diagram state.
+   * Populates intermediate diagram state.
    *
-   * @return the built state, ready to be formatted into TikZ code.
+   * @param it interaction from which we are populating the state.
    */
-  public State generate(Interaction it) {
-    final var lifelines = it.getActors().stream().filter(x -> !(x instanceof World)).map(Lifeline::new).toList();
+  public void generate(Interaction it) {
+    lifelines = it.getActors().stream().filter(x -> !(x instanceof World))
+        .map(Lifeline::new).toList();
 
     final var unwound = new InteractionFlattener(it).unwind();
-
-    final var matrixRows = new ArrayList<List<Cell>>();
-    final var frames = new ArrayList<NestedFrame>();
-    final var branchSplits = new ArrayList<BranchSplit>();
-    final var messages = new ArrayList<LifelineMessage>();
+    outerDepthScale = unwound.maxDepth();
 
     for (var entry : unwound.events()) {
       // TODO(@MattWindsor91): normalise these generators, possibly.
@@ -71,35 +80,91 @@ public record DiagramContentsGenerator(FrameGenerator frameGen, RowGenerator row
         }
       }
     }
-    return new State(lifelines, matrixRows, frames, branchSplits, messages, unwound.maxDepth());
+
+    flattenRows();
   }
 
+  /**
+   * Gets all of the generated contents as a stream of streams of renderables.
+   *
+   * @return the renderable contents (less, for now, the matrix).
+   */
+  public Stream<Stream<Renderable>> contents() {
+    // the x -> x is used for type upcasting
+    return Stream.of(aliases.stream().map(x -> x), lifelines.stream().map(x -> x), frames.stream().map(x -> x),
+        branchSplits.stream().map(x -> x), messages.stream().map(x -> x));
+  }
+
+  private void flattenRows() {
+    final var newRows = new ArrayList<List<Cell>>(matrixRows.size());
+
+    // TODO(@MattWindsor91): clean this up!!
+    List<Cell> lastRlist = null;
+    Optional<Row> lastRow = Optional.empty();
+    for (var rlist : matrixRows) {
+      final var row = extractRow(rlist);
+      var skipped = false;
+
+      if (lastRow.isPresent()) {
+        if (row.isPresent()) {
+          if (shouldMerge(lastRow.get(), row.get())) {
+            for (var i = 0; i < rlist.size(); i++) {
+              aliases.add(new CellAlias(lastRlist.get(i), rlist.get(i)));
+            }
+            skipped = true;
+          }
+        }
+      }
+
+      if (!skipped) {
+        newRows.add(rlist);
+      }
+      lastRlist = rlist;
+      lastRow = row;
+    }
+
+    matrixRows = newRows;
+  }
+
+  private static boolean shouldMerge(Row last, Row current) {
+    var lastIsCfEntry = false;
+    var lastIsCfExit = false;
+    var currIsCfExit = false;
+
+    if (last instanceof CombinedFragmentRow lrc) {
+      lastIsCfEntry = lrc.type() == EventType.Entered;
+      lastIsCfExit = lrc.type() == EventType.Exited;
+    }
+
+    if (current instanceof CombinedFragmentRow crc) {
+      currIsCfExit = crc.type() == EventType.Exited;
+    }
+    final var currIsOf = current instanceof OccurrenceRow;
+
+    final var isEntryMerger = lastIsCfEntry && currIsOf;
+    final var isDoubleExit = lastIsCfExit && currIsCfExit;
+
+    return isEntryMerger || isDoubleExit;
+  }
+
+  private Optional<Row> extractRow(List<Cell> rlist) {
+    if (rlist.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(rlist.get(0).row());
+  }
 
   /**
-   * Diagram state produced by this intermediate step.
-   *
-   * @param lifelines       lifelines in this diagram.
-   * @param matrixRows      rows to place in the diagram's matrix.
-   * @param frames          frames to render on top of the diagram's matrix.
-   * @param branchSplits    rows on which two branches split from each other.
-   * @param outerDepthScale amount by which we should scale the outer frame's margin.
+   * @return the outer depth scale.
    */
-  public record State(List<Lifeline> lifelines, List<List<Cell>> matrixRows, List<NestedFrame> frames,
-                      List<BranchSplit> branchSplits, List<LifelineMessage> messages, int outerDepthScale) {
+  public int outerDepthScale() {
+    return outerDepthScale;
+  }
 
-    /**
-     * Gets all of the contents of the state as a stream of streams of renderables.
-     *
-     * @return the renderable contents (less, for now, the matrix).
-     */
-    public Stream<Stream<Renderable>> contents() {
-      // the x -> x is used for type upcasting
-      return Stream.of(
-          lifelines.stream().map(x -> x),
-          frames.stream().map(x -> x),
-          branchSplits.stream().map(x -> x),
-          messages.stream().map(x -> x)
-      );
-    }
+  /**
+   * @return the matrix rows.
+   */
+  public List<List<Cell>> matrixRows() {
+    return matrixRows;
   }
 }
