@@ -11,6 +11,8 @@
 package robostar.robocert.textual.generator.tikz.util;
 
 import org.eclipse.xtext.serializer.ISerializer;
+import robostar.robocert.textual.generator.tikz.matrix.Cell;
+import robostar.robocert.textual.generator.tikz.matrix.EdgeColumn;
 
 /**
  * Interface representing a sequence diagram element that can be rendered to TikZ.
@@ -37,5 +39,47 @@ public interface Renderable {
    */
   record Context(TikzStructureGenerator tikz, ISerializer ser, int topLevel) {
 
+    /**
+     * Gets the offset of the depth of something from the inmost depth level of the diagram.
+     * @param depth depth for which we want an offset.
+     * @return the calculated offset.
+     */
+    public int depthOffset(int depth) {
+      // TODO(@MattWindsor91): off by one?
+      return topLevel() - depth;
+    }
+
+    /**
+     * Produces a TikZ coordinate for moving a coordinate left by multiples of the step margin.
+     * @param nodeName existing coordinate.
+     * @param offset the amount by which we are moving the coordinate.
+     * @return TikZ for shifting the coordinate.
+     */
+    public String nudgeLeft(String nodeName, int offset) {
+      return nudgeBy(nodeName, -depthOffset(offset));
+    }
+
+    /**
+     * Adjusts the TikZ for an edge cell by accounting for nesting.
+     *
+     * @param cell cell whose coordinate we want to reference
+     * @param offset the nesting level we want to adjust towards.
+     * @return TikZ for the shifted coordinate.
+     */
+    public String nestedEdgeCellName(Cell cell, int offset) {
+      final var baseName = cell.name();
+
+      if (!(cell.column() instanceof EdgeColumn e)) {
+        return baseName;
+      }
+
+      final var sign = e == EdgeColumn.Gutter ? -1 : 1;
+
+      return nudgeBy(baseName, depthOffset(offset) * sign);
+    }
+
+    private String nudgeBy(String nodeName, int amount) {
+      return "$(%s) + (%d*\\the\\rcstepmargin, 0)$".formatted(nodeName, amount);
+    }
   }
 }

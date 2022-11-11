@@ -36,8 +36,8 @@ public record LifelineMessage(MessageOccurrence msgOcc, int id) implements Rende
     // TODO(@MattWindsor91): deduplicate with SetMessage somehow?
 
     final var msg = msgOcc.getMessage();
-    final var from = cellName(msg.getFrom());
-    final var to = cellName(msg.getTo());
+    final var from = cellName(msg.getFrom(), ctx);
+    final var to = cellName(msg.getTo(), ctx);
     final var topic = new Topic(msg.getTopic()).render(ctx);
     final var args = new MessageArgumentList(msg.getArguments()).render(ctx);
     final var temp = msgOcc.getTemperature() == Temperature.COLD ? "rccold" : "rchot";
@@ -46,8 +46,10 @@ public record LifelineMessage(MessageOccurrence msgOcc, int id) implements Rende
         .argument(args).argument(temp).render();
   }
 
-  private String cellName(Actor a) {
-    return Cell.nameOf(new OccurrenceRow(id), actorColumn(a));
+  private String cellName(Actor a, Context ctx) {
+    final var cell = new Cell(new OccurrenceRow(id), actorColumn(a));
+    // We want to nudge an edge cell to the outermost nesting level.
+    return ctx.nestedEdgeCellName(cell, 0);
   }
 
   private Column actorColumn(Actor a) {

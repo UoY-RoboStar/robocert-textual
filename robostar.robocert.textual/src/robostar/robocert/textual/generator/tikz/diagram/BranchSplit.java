@@ -25,18 +25,13 @@ public record BranchSplit(int id, int depth) implements Renderable {
 
   @Override
   public String render(Renderable.Context ctx) {
-    final var depthOffset = (ctx.topLevel() - depth) + 1;
+    final var startCell = new Cell(new BranchRow(id), EdgeColumn.Gutter);
+    final var start = ctx.nestedEdgeCellName(startCell, depth - 1);
 
-    final var startName = Cell.nameOf(new BranchRow(id), EdgeColumn.Gutter);
-    final var start = nudge(startName, -depthOffset);
-
-    final var endName = Cell.nameOf(new BranchRow(id), EdgeColumn.World);
-    final var end = nudge(endName, depthOffset);
+    final var endCell = new Cell(new BranchRow(id), EdgeColumn.World);
+    final var end = ctx.nestedEdgeCellName(endCell, depth - 1);
 
     return ctx.tikz().draw("rcsep").to(start).to(end).render();
   }
 
-  private String nudge(String nodeName, int amount) {
-    return "$(%s) + (%d*\\the\\rcstepmargin, 0)$".formatted(nodeName, amount);
-  }
 }
