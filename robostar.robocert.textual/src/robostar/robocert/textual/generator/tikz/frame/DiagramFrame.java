@@ -47,8 +47,8 @@ public record DiagramFrame(Interaction diagram) implements Frame {
 
     final var diagramName = NameSanitiser.sanitise(diagram.getName());
 
-    return tikz.command("rcseq").argument(diagramName).argument(targetType).argument(targetName)
-        .render();
+    return tikz.command("rcsequence").argument(diagramName).argument(targetType)
+        .argument(targetName).render();
   }
 
   private static String targetName(SpecificationGroup group, Target target) {

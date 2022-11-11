@@ -11,46 +11,23 @@
 package robostar.robocert.textual.generator.tikz.frame;
 
 import org.eclipse.xtext.serializer.ISerializer;
+import robostar.robocert.UntilFragment;
 import robostar.robocert.textual.generator.tikz.matrix.CombinedFragmentRow;
 import robostar.robocert.textual.generator.tikz.matrix.Row;
+import robostar.robocert.textual.generator.tikz.message.Set;
 import robostar.robocert.textual.generator.tikz.util.InteractionFlattener.EventType;
+import robostar.robocert.textual.generator.tikz.util.NameSanitiser;
 import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
- * Frame representing a basic combined fragment with no arguments.
+ * Frame representing an {@link UntilFragment}.
  *
- * @param type type of frame.
+ * @param fragment fragment being represented.
  * @param id   ID of the entry event for this frame.
+ *
  * @author Matt Windsor
  */
-public record BasicFrame(Type type, int id) implements Frame {
-
-  /**
-   * Enumeration of types of basic frame.
-   */
-  public enum Type {
-    /**
-     * An 'alt' frame.
-     */
-    Alt,
-    /**
-     * An 'opt' frame.
-     */
-    Opt,
-    /**
-     * An 'xalt' frame.
-     */
-    XAlt;
-
-    @Override
-    public String toString() {
-      return switch (this) {
-        case Alt -> "alt";
-        case Opt -> "opt";
-        case XAlt -> "xalt";
-      };
-    }
-  }
+public record UntilFrame(UntilFragment fragment, int id) implements Frame {
 
   @Override
   public Row row(EventType type) {
@@ -58,7 +35,9 @@ public record BasicFrame(Type type, int id) implements Frame {
   }
 
   @Override
-  public String generateLabel(TikzStructureGenerator tikz, ISerializer _ser) {
-    return tikz.command("rc%s".formatted(type)).render();
+  public String generateLabel(TikzStructureGenerator tikz, ISerializer ser) {
+    final var messages = new Set(fragment.getIntraMessages()).render(tikz, ser);
+
+    return tikz.command("rcanyuntil").argument(messages).render();
   }
 }

@@ -64,7 +64,7 @@ class BasicFrameTest {
   @ParameterizedTest
   @EnumSource
   public void TestGenerateLabel(BasicFrame.Type type) {
-    assertThat(frame(type).generateLabel(tikz, ser), is("\\rckeyword{%s}".formatted(type.toString())));
+    assertThat(frame(type).generateLabel(tikz, ser), is("\\rc%s".formatted(type.toString())));
   }
 
   private BasicFrame frame(BasicFrame.Type type) {

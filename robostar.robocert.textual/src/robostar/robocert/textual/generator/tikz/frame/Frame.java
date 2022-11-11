@@ -17,6 +17,9 @@ import robostar.robocert.textual.generator.tikz.util.TikzStructureGenerator;
 
 /**
  * Interface of types of frame in a TikZ encoding of a sequence diagram.
+ * <p>
+ * Frames typically correspond to the outer rim of a combined fragment, but can also represent
+ * diagrams.
  *
  * @author Matt Windsor
  */

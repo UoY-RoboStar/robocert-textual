@@ -1,7 +1,7 @@
 %
 % RoboCert Graphical notation (using TikZ)
 %
-% Last updated: 2022-10-06
+% Last updated: 2022-11-11
 %
 
 \newcommand{\rckeywordfont}{\sffamily\bfseries}
@@ -21,16 +21,16 @@
 
 \usetikzlibrary{arrows.meta,matrix,shapes,calc,fit}
 \tikzset{
+% Diagram structure
     % Row sep is set by the diagram
-    rcseq/.style={column sep=8em},
-% Actors
+    rcsequence/.style={column sep=8em},
     rcactor/.style={draw, rectangle, minimum width=4em, align=center, minimum height=1.7em, fill={rcshading}, font={\footnotesize\sffamily}},
-% Control flow
     rclifeline/.style={thick},
     cfbox/.style={draw, solid},
     cfheader/.style={chamfered rectangle, draw, font={\scriptsize\sffamily}, fill={rcshading}, chamfered rectangle corners=south east, inner sep=0.1em},
     rcsep/.style={draw, thick, dotted},
     guard/.style={font={\scriptsize\sffamily}, anchor=north east, align=right, inner sep=0.2em},
+% Actors
 % Deadlines
     deadline/.style={solid, font={\scriptsize}},
     deadlinespan/.style={latex-latex},
@@ -44,6 +44,9 @@
     end/.style={fill, very thick, rectangle, minimum height=3pt, minimum width=15pt, inner sep=0em}
 }
 
+%%
+%% DIAGRAM STRUCTURE
+%%
 
 %
 % Headers
@@ -54,7 +57,7 @@
 % #1: name of diagram
 % #2: name of target type
 % #3: name of target
-\newcommand{\rcseq}[3]{\rckeyword{sd} #1 (#2 #3)}
+\newcommand{\rcsequence}[3]{\rckeyword{sd} #1 (#2 #3)}
 
 % The name of a component target type
 % #1: name of the type
@@ -63,6 +66,18 @@
 % The name of a collection target type
 % #1: name of the type
 \newcommand{\rccolltarget}[1]{\rckeyword{components of #1}}
+
+% Combined fragment or diagram frame
+% #1: padding factor
+% #2: top-left
+% #3: bottom-right
+% #4: header
+\newcommand{\rcframe}[4]{
+% Slightly eccentric definition here to line the world up with the RHS,
+% and leave room for the top 'sd' line.
+    \draw ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) rectangle ($(#3) + (#1*\the\rcstepmargin, -#1*\the\rcstepmargin)$);
+    \node[cfheader, anchor=north west] at ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) {\footnotesize #4};
+}
 
 %
 % Actors
@@ -79,23 +94,67 @@
 % #1: name of the type
 \newcommand{\rccomponent}[1]{\rcstereotype{component} #1}
 
-\newcommand{\gdiff}[2]{#1\setminus#2}
-\newcommand{\guniverse}{\ast}
-\newcommand{\gextset}[1]{\{#1\}}
-\newcommand{\gemptyset}{\gextset{}}
-\newcommand{\grefset}[1]{\textsf{#1}}
+%%
+%% FRAGMENTS
+%%
 
-% Combined fragment or diagram frame
-% #1: padding factor
-% #2: top-left
-% #3: bottom-right
-% #4: header
-\newcommand{\rcframe}[4]{
-  % Slightly eccentric definition here to line the world up with the RHS,
-  % and leave room for the top 'sd' line.
-  \draw ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) rectangle ($(#3) + (#1*\the\rcstepmargin, -#1*\the\rcstepmargin)$);
-  \node[cfheader, anchor=north west] at ($(#2) + (-#1*\the\rcstepmargin, \the\rctopmargin)$) {\footnotesize #4};
-}
+%
+% Basic
+%
+
+\newcommand{\rcalt}{\rckeyword{alt}}
+\newcommand{\rcopt}{\rckeyword{opt}}
+\newcommand{\rcpar}{\rckeyword{par}}
+\newcommand{\rcseq}{\rckeyword{seq}}
+\newcommand{\rcxalt}{\rckeyword{xalt}}
+
+%
+% Loops
+%
+
+% Unnamed loop header
+%
+% #1: parameterisation
+\newcommand{\rcloop}[1]{\rckeyword{loop}#1}
+
+% Named loop header
+%
+% #1: name
+% #2: parameterisation
+\newcommand{\rcnamedloop}[2]{\rcloop{#2} #1}
+
+%
+% Other
+%
+
+% any..until header
+%
+% #1: intra-message set
+\newcommand{\rcanyuntil}[1]{\rckeyword{any} (\(#1\)) \rckeyword{until}}
+
+%%
+%% MESSAGES
+%%
+
+%
+% Set types (in math mode)
+%
+
+\newcommand{\rcuniverseset}{\ast}
+\newcommand{\rcextset}[1]{\{#1\}}
+\newcommand{\rcrefset}[1]{\textsf{#1}}
+
+%
+% Set operations (in math mode)
+%
+
+\newcommand{\rcsetdiff}[2]{#1\setminus#2}
+\newcommand{\rcsetunion}[2]{#1\cup#2}
+\newcommand{\rcsetinter}[2]{#1\cap#2}
+
+%%
+%% UNSORTED/UNPORTED
+%%
 
 % Guard
 % #1: name
@@ -109,21 +168,6 @@
 
 % The 'otherwise' guard
 \NewDocumentCommand{\gotherwise}{}{otherwise}
-
-%
-% Loop headers
-%
-
-% Unnamed loop header
-%
-% #1: parameterisation
-\newcommand{\rcloop}[1]{\rckeyword{loop}#1}
-
-% Named loop header
-%
-% #1: name
-% #2: parameterisation
-\newcommand{\rcnamedloop}[2]{\rcloop{#2} #1}
 
 % Gap
 % #1: top-left

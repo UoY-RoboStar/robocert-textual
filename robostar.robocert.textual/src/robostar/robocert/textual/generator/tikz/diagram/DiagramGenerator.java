@@ -77,7 +77,7 @@ public record DiagramGenerator(TikzStructureGenerator tikz, ISerializer ser,
   }
 
   private String renderMatrix(State state) {
-    final var style = "rcseq, row sep=(\\the\\rctopmargin + (%d*\\the\\rcstepmargin))".formatted(
+    final var style = "rcsequence, row sep=(\\the\\rctopmargin + (%d*\\the\\rcstepmargin))".formatted(
         state.outerDepthScale());
     final var prefix = "\\matrix[%s]{\n".formatted(style);
 
