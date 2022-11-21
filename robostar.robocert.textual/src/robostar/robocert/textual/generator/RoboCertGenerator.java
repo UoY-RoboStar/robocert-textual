@@ -16,6 +16,7 @@ package robostar.robocert.textual.generator;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -60,7 +61,21 @@ public class RoboCertGenerator extends AbstractGenerator {
 		// Workaround for resolution errors.
 		EcoreUtil.resolveAll(input.getResourceSet());
 
-		forEachGenerator(gen -> SafeRunner.run(() -> gen.doGenerate(input, fsa, context)), context);
+		forEachGenerator(gen -> SafeRunner.run(new ISafeRunnable() {
+			@Override
+			public void handleException(Throwable e) {
+				// TODO(@MattWindsor91): is there a log this should be sent to?
+				System.err.println("ERROR: RoboCert generator threw an exception.");
+				System.err.println("Please file this as a bug at github.com/UoY-RoboStar/robocert-textual.");
+				System.err.println("Details:");
+				e.printStackTrace();
+			}
+			
+			@Override
+			public void run() throws Exception {
+				gen.doGenerate(input, fsa, context);
+			}
+		}), context);
 	}
 
 	@Override
