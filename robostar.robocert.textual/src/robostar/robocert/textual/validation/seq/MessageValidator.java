@@ -15,7 +15,6 @@ import circus.robocalc.robochart.Type;
 import circus.robocalc.robochart.textual.RoboCalcTypeProvider;
 
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
@@ -47,20 +46,30 @@ public class MessageValidator extends AbstractDeclarativeValidator {
   @Inject
   private RoboCalcTypeProvider typeProvider;
 
-  // TODO(@MattWindsor91): fix the below
-  public static final String EDGE_ACTORS_INDISTINCT = "edgeActorsIndistinct";
-  //
-  // Message
-  //
-  public static final String OPERATION_NEEDS_CONTEXT = "operationNeedsContext";
-  public static final String OPERATION_FROM_CONTEXT = "operationFromContext";
+  // TODO(@MattWindsor91): re-express this in terms of SMTp1 and SMF2.
+  public static final String OPERATION_FROM_WORLD = "operationFromContext";
 
+  // Topic (Tp)
+  // TODO: SMTp1
   public static final String EVENT_TOPIC_HAS_CONNECTION = "SMTp2";
-
+  // TODO: SMTp3
+  
+  // Arguments (A)
   public static final String HAS_CORRECT_ARGUMENT_COUNT = "SMA1";
   public static final String ARGUMENTS_TYPE_COMPATIBLE = "SMA2";
 
-
+  // From (F)
+  public static final String EDGE_ACTORS_INDISTINCT = "SMF1";
+  // TODO: SMF2
+  
+  // To (T)
+  public static final String OPERATION_NOT_TO_WORLD = "SMT1";
+  
+  @Override
+  public void register(EValidatorRegistrar registrar) {
+    // per discussion in ComposedChecks annotation documentation
+  }
+  
   /**
    * Checks to see if a message with an event topic corresponds to a connection.
    *
@@ -93,11 +102,6 @@ public class MessageValidator extends AbstractDeclarativeValidator {
     // TODO(@MattWindsor91):
   }
 
-  @Override
-  public void register(EValidatorRegistrar registrar) {
-    // per discussion in ComposedChecks annotation documentation
-  }
-
   /**
    * Checks that an edge's general flow is valid.
    *
@@ -107,7 +111,7 @@ public class MessageValidator extends AbstractDeclarativeValidator {
   public void checkEdgeFlow(Message m) {
     if (EcoreUtil.equals(m.getFrom(), m.getTo())) {
       error(
-          "A message cannot mention the same actor at both endpoints",
+          "The 'from' of a message must not be equal to the 'to' of the message",
           Literals.MESSAGE__FROM,
           EDGE_ACTORS_INDISTINCT);
     }
@@ -125,17 +129,19 @@ public class MessageValidator extends AbstractDeclarativeValidator {
       return;
     }
 
-    if (isContext(m.getFrom())) {
+    // TODO(@MattWindsor91): this might not be enough to specify that we are
+    // targeting a robotic platform.
+    if (isWorld(m.getFrom())) {
       error(
           "Operation messages must not originate from a context",
           Literals.MESSAGE__FROM,
-          OPERATION_FROM_CONTEXT);
+          OPERATION_FROM_WORLD);
     }
-    if (!isContext(m.getTo())) {
+    if (!isWorld(m.getTo())) {
       error(
-          "Operation messages must call into a context",
+          "The 'to' of a message with an operation topic must be a world",
           Literals.MESSAGE__TO,
-          OPERATION_NEEDS_CONTEXT);
+          OPERATION_NOT_TO_WORLD);
     }
 
     // TODO(@MattWindsor91): I think that scoping rules will ensure that
@@ -164,6 +170,7 @@ public class MessageValidator extends AbstractDeclarativeValidator {
 	  );
     }
 	
+    // Check as many argument/parameter pairs as we can, the above error notwithstanding.
     final var safeRange = Math.min(nparams, nargs);
     for (var i = 0; i < safeRange; i++) {
       if (!argumentTypeOk(args.get(i), params.get(i))) {
@@ -188,7 +195,7 @@ public class MessageValidator extends AbstractDeclarativeValidator {
 	 return false;
   }
 
-  private boolean isContext(Actor a) {
+  private boolean isWorld(Actor a) {
     return a instanceof World;
   }
 }
