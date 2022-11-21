@@ -7,21 +7,31 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package robostar.robocert.textual.validation;
+package robostar.robocert.textual.validation.seq;
 
 import com.google.inject.Inject;
+
+import circus.robocalc.robochart.Type;
+import circus.robocalc.robochart.textual.RoboCalcTypeProvider;
+
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 import robostar.robocert.Actor;
 import robostar.robocert.EventTopic;
+import robostar.robocert.ExpressionValueSpecification;
 import robostar.robocert.Message;
 import robostar.robocert.OperationTopic;
+import robostar.robocert.WildcardValueSpecification;
 import robostar.robocert.RoboCertPackage.Literals;
+import robostar.robocert.ValueSpecification;
 import robostar.robocert.World;
 import robostar.robocert.util.resolve.EventResolver;
+import robostar.robocert.util.resolve.ParamTypeResolver;
 
 /**
  * Validates aspects of message specifications.
@@ -29,6 +39,13 @@ import robostar.robocert.util.resolve.EventResolver;
  * @author Matt Windsor
  */
 public class MessageValidator extends AbstractDeclarativeValidator {
+ 
+  @Inject
+  private EventResolver eventRes;
+  @Inject
+  private ParamTypeResolver paramTypeRes;
+  @Inject
+  private RoboCalcTypeProvider typeProvider;
 
   // TODO(@MattWindsor91): fix the below
   public static final String EDGE_ACTORS_INDISTINCT = "edgeActorsIndistinct";
@@ -40,9 +57,15 @@ public class MessageValidator extends AbstractDeclarativeValidator {
 
   public static final String EVENT_TOPIC_HAS_CONNECTION = "SMTp2";
 
-  @Inject
-  private EventResolver eventResolver;
+  public static final String HAS_CORRECT_ARGUMENT_COUNT = "SMA1";
+  public static final String ARGUMENTS_TYPE_COMPATIBLE = "SMA2";
 
+
+  /**
+   * Checks to see if a message with an event topic corresponds to a connection.
+   *
+   * @param m message being checked.
+   */
   @Check
   public void checkEventTopicHasConnection(Message m) {
     if (!(m.getTopic() instanceof EventTopic e)) {
@@ -50,7 +73,7 @@ public class MessageValidator extends AbstractDeclarativeValidator {
     }
     final var from = m.getFrom();
     final var to = m.getTo();
-    final var candidates = eventResolver.resolve(e, from, to)
+    final var candidates = eventRes.resolve(e, from, to)
         .collect(Collectors.toUnmodifiableSet());
 
     if (candidates.isEmpty()) {
@@ -78,11 +101,11 @@ public class MessageValidator extends AbstractDeclarativeValidator {
   /**
    * Checks that an edge's general flow is valid.
    *
-   * @param s the spec to check.
+   * @param m message to check.
    */
   @Check
-  public void checkEdgeFlow(Message s) {
-    if (EcoreUtil.equals(s.getFrom(), s.getTo())) {
+  public void checkEdgeFlow(Message m) {
+    if (EcoreUtil.equals(m.getFrom(), m.getTo())) {
       error(
           "A message cannot mention the same actor at both endpoints",
           Literals.MESSAGE__FROM,
@@ -93,22 +116,22 @@ public class MessageValidator extends AbstractDeclarativeValidator {
   /**
    * Checks that the flow of an operation message is valid.
    *
-   * @param s the spec to check.
+   * @param m message to check.
    */
   @Check
-  public void checkMessageOperationFlow(Message s) {
+  public void checkMessageOperationFlow(Message m) {
     // This check is only relevant for operation topics.
-    if (!(s.getTopic() instanceof OperationTopic)) {
+    if (!(m.getTopic() instanceof OperationTopic)) {
       return;
     }
 
-    if (isContext(s.getFrom())) {
+    if (isContext(m.getFrom())) {
       error(
           "Operation messages must not originate from a context",
           Literals.MESSAGE__FROM,
           OPERATION_FROM_CONTEXT);
     }
-    if (!isContext(s.getTo())) {
+    if (!isContext(m.getTo())) {
       error(
           "Operation messages must call into a context",
           Literals.MESSAGE__TO,
@@ -118,6 +141,51 @@ public class MessageValidator extends AbstractDeclarativeValidator {
     // TODO(@MattWindsor91): I think that scoping rules will ensure that
     // there cannot be any operation messages into things that can't be
     // called into from this target, but I'm unsure.
+  }
+
+  /**
+   * Checks the arguments of a message against their parameters.
+   * 
+   * @param m message to check.
+   */
+  @Check
+  public void checkArgumentsAgainstParameters(Message m) {
+    final var args = m.getArguments();
+    final var nargs = args.size();
+    final var params = paramTypeRes.resolve(m.getTopic()).toList();
+    final var nparams = params.size();
+
+	
+    if (nparams != nargs) {
+	  error(
+        "The arguments of a message must have exactly as many elements as its topic has parameters.",
+        Literals.MESSAGE__ARGUMENTS,
+        HAS_CORRECT_ARGUMENT_COUNT
+	  );
+    }
+	
+    final var safeRange = Math.min(nparams, nargs);
+    for (var i = 0; i < safeRange; i++) {
+      if (!argumentTypeOk(args.get(i), params.get(i))) {
+        error(
+          "The arguments of a message must have exactly as many elements as its topic has parameters.",
+          Literals.MESSAGE__ARGUMENTS,
+          ARGUMENTS_TYPE_COMPATIBLE        		
+        );
+      }
+	}
+  }
+
+  private boolean argumentTypeOk(ValueSpecification arg, Type ptype) {
+	 if (arg instanceof WildcardValueSpecification) {
+		 // Wildcards match against any type.
+		 return true;
+	 }
+	 if (arg instanceof ExpressionValueSpecification e) {
+		 final var etype = typeProvider.typeFor(e.getExpr());
+		 return typeProvider.typeCompatible(etype, ptype);
+	 }
+	 return false;
   }
 
   private boolean isContext(Actor a) {
