@@ -381,8 +381,8 @@ Occurrence:
 	LifelineOccurrence;
 
 LifelineOccurrence:
-	('wait' {WaitOccurrence} '(' units=TimeUnits ')' |
-	'deadlock' {DeadlockOccurrence}) '(' 'on' actor=[Actor|QualifiedName] ')';
+	('wait' {WaitOccurrence} '(' units=TimeUnits |
+	'deadlock' {DeadlockOccurrence} '(') 'on' actor=[Actor|QualifiedName] ')';
 
 //
 // MESSAGES

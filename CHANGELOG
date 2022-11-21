@@ -17,6 +17,7 @@ specific:
   the line instead.
 - Any use of `:` in branch fragments should be removed without replacement.
 - `deadline (X units) on Y` is now `deadline (X units on Y)`.
+- `wait (X units) on Y` is now `wait (X units on Y)`.
 - `deadlock on Y` is now `deadlock (on Y)`, for consistency.
 
 ### Added
