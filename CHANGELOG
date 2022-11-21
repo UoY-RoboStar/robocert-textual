@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (2022-11-10)
+## 0.2.0 (2022-11-21)
 
 ### Changed
 
@@ -34,6 +34,11 @@ specific:
 
 - Changed scoping rules to allow enumerations to be scoped properly.
 - Expression generator now emits enumerations properly.
+- **BREAKING**: Validation rules for well-formedness conditions `SMA1`
+  (message argument lists must be same size as topics' parameter lists) and
+  `SMA2` (message arguments must be type-compatible with parameters) have
+  been added to the validator.  Previously ill-formed but silently accepted
+  input will now be rejected.
 
 
 ## 0.1.0
