@@ -168,7 +168,7 @@ public class MessageValidator extends AbstractDeclarativeValidator {
     for (var i = 0; i < safeRange; i++) {
       if (!argumentTypeOk(args.get(i), params.get(i))) {
         error(
-          "The arguments of a message must have exactly as many elements as its topic has parameters.",
+          "The arguments of a message must be type-compatible with their corresponding parameters.",
           Literals.MESSAGE__ARGUMENTS,
           ARGUMENTS_TYPE_COMPATIBLE        		
         );
