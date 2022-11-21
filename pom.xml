@@ -274,27 +274,27 @@
 		<!-- RoboChart repositories -->
 		<repository>
 			<id>robochart-assertions</id>
-			<url>https://www.cs.york.ac.uk/robostar/robotool/assertions/update/</url>
+			<url>https://robostar.cs.york.ac.uk/robotool/assertions/update/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>robochart-csp-gen</id>
-			<url>https://www.cs.york.ac.uk/robostar/robotool/csp-generator/update/</url>
+			<url>https://robostar.cs.york.ac.uk/robotool/csp-generator/update/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>robochart-metamodel</id>
-			<url>https://www.cs.york.ac.uk/robostar/robotool/metamodel/update/</url>
+			<url>https://robostar.cs.york.ac.uk/robotool/metamodel/update/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>robochart-textual</id>
-			<url>https://www.cs.york.ac.uk/robostar/robotool/textual/update/</url>
+			<url>https://robostar.cs.york.ac.uk/robotool/textual/update/</url>
 			<layout>p2</layout>
 		</repository>
 		<repository>
 			<id>robocert-metamodel</id>
-			<url>https://www.cs.york.ac.uk/robostar/robotool/robocert-metamodel/update/</url>
+			<url>https://robostar.cs.york.ac.uk/robotool/robocert-metamodel/update/</url>
 			<layout>p2</layout>
 		</repository>
 		<!-- End RoboChart repositories -->
