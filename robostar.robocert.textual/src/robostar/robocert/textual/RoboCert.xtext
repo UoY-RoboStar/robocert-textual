@@ -319,7 +319,15 @@ Guard:
 InteractionFragment:
 	BlockFragment |
 	BranchFragment |
+	AnyFragment |
 	{OccurrenceFragment} occurrence=Occurrence;
+
+/**
+ * An any-fragment.
+ */
+AnyFragment:
+	('any' | 'anything') intraMessages=IntraMessageSet
+;
 
 //
 // Block fragments
@@ -330,8 +338,7 @@ InteractionFragment:
 BlockFragment:
 	(DeadlineFragment |
 	('opt' | 'optional') {OptFragment} |
-	('any' | 'anything') {UntilFragment} intraMessages=IntraMessageSet 'until' |
-	'block' {UntilFragment} intraMessages=EmptySet |
+	'until' {UntilFragment} trigger=BranchInteractionOperand 'do' |
 	'loop' {LoopFragment} ('(' bound=DiscreteBound ('time' | 'times')? ')')?) (name=ID)? body=BlockInteractionOperand;
 
 DeadlineFragment:
