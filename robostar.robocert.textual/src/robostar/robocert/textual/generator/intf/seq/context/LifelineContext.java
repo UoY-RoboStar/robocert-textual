@@ -10,9 +10,10 @@
 
 package robostar.robocert.textual.generator.intf.seq.context;
 
+import java.util.function.Function;
 import java.util.stream.Stream;
 import robostar.robocert.Actor;
-import robostar.robocert.UntilFragment;
+import robostar.robocert.SequentialFragment;
 
 /**
  * Context related to the current lifeline being generated.
@@ -55,14 +56,13 @@ public interface LifelineContext {
   InteractionContext global();
 
   /**
-   * Gets the index of an until fragment with respect to this lifeline.
+   * Handles a sequential fragment according to whether this lifeline is in sequential position or not.
    *
-   * <p>This differs from the index given by the global context in that, if we are generating
-   * inside an until-process, all until-fragments within will be emitted inline and this
-   * will return -1.
-   *
-   * @param frag the fragment whose index is required.
-   * @return -1 if this fragment does not have an index; the index of the fragment otherwise.
+   * @param f fragment to be expanded.
+   * @param <T> type of output for this sequential fragment.
+   * @param emitInline function to be used if we are in sequential position (and want the fragment expanded).
+   * @param emitReference function to be used if we are not in sequential position (accepts the fragment index).
+   * @return the result of whichever of the emitting functions was called.
    */
-  int untilIndex(UntilFragment frag);
+  <T> T handleSequential(SequentialFragment f, Function<SequentialFragment, T> emitInline, Function<Integer, T> emitReference);
 }
