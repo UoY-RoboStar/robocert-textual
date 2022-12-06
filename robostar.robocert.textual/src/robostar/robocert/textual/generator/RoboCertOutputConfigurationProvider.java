@@ -33,9 +33,9 @@ public class RoboCertOutputConfigurationProvider extends OutputConfigurationProv
         final var config = Platform.getExtensionRegistry().getConfigurationElementsFor(RoboCertGenerator.GEN_ID);
         final var ocp = super.getOutputConfigurations();
         for (var e : config) {
-            var folder = Objects.requireNonNullElse(e.getAttribute("folder"), "src-gen");
+            final var folder = Objects.requireNonNullElse(e.getAttribute("folder"), "src-gen");
 
-            Object o;
+            final Object o;
             try {
                 o = e.createExecutableExtension("class");
             } catch (CoreException ex) {
@@ -50,21 +50,6 @@ public class RoboCertOutputConfigurationProvider extends OutputConfigurationProv
         }
         return ocp;
     }
-
-    /**
-     * Key of the CSP standard library output configuration.
-     */
-    public static final String CSP_LIBRARY_OUTPUT = "CSP_LIBRARY_OUTPUT";
-
-    /**
-     * Key of the TikZ output configuration.
-     */
-    public static final String TIKZ_OUTPUT = "TIKZ_OUTPUT";
-
-    /**
-     * Key of the TikZ standard library output configuration.
-     */
-    public static final String TIKZ_LIBRARY_OUTPUT = "TIKZ_LIBRARY_OUTPUT";
 
     private OutputConfiguration buildConfig(AbstractRoboCertGeneratorPlugin plugin, String dir) {
         final var result = new OutputConfiguration(plugin.ID());
