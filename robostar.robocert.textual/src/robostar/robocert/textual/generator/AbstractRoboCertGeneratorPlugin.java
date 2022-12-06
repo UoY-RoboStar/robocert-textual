@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package robostar.robocert.textual.generator.utils.param;
+package robostar.robocert.textual.generator;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.generator.AbstractGenerator;
@@ -27,7 +27,7 @@ import robostar.robocert.textual.generator.utils.StandardLibraryGenerator;
  *
  * @author Matt Windsor
  */
-public abstract class AbstractRoboCertGenerator extends AbstractGenerator {
+public abstract class AbstractRoboCertGeneratorPlugin extends AbstractGenerator implements RoboCertGeneratorPlugin {
 
   @Override
   public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
@@ -53,4 +53,5 @@ public abstract class AbstractRoboCertGenerator extends AbstractGenerator {
    * @return a library generator, which should be configured in-line here.
    */
   protected abstract StandardLibraryGenerator libGenerator();
+
 }

@@ -26,20 +26,9 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter;
 import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom;
 import circus.robocalc.robochart.RoboChartFactory;
-import robostar.robocert.textual.generator.intf.seq.ContextualGenerator;
-import robostar.robocert.textual.generator.intf.seq.fragment.BlockFragmentGenerator;
-import robostar.robocert.textual.generator.tockcsp.seq.InteractionOperandGenerator;
-import robostar.robocert.textual.generator.tockcsp.seq.fragment.BlockFragmentGeneratorImpl;
-import robostar.robocert.InteractionOperand;
 import robostar.robocert.RoboCertFactory;
-import robostar.robocert.textual.generator.intf.seq.OccurrenceGenerator;
-import robostar.robocert.textual.generator.tockcsp.seq.occurrence.OccurrenceGeneratorImpl;
-import robostar.robocert.textual.generator.intf.seq.SubsequenceGenerator;
-import robostar.robocert.textual.generator.intf.seq.InteractionFragmentGenerator;
 
 import org.eclipse.xtext.conversion.IValueConverterService;
-import robostar.robocert.textual.generator.tockcsp.seq.SubsequenceGeneratorImpl;
-import robostar.robocert.textual.generator.tockcsp.seq.fragment.InteractionFragmentGeneratorImpl;
 import robostar.robocert.impl.RoboCertFactoryImpl;
 import robostar.robocert.util.resolve.EventResolver;
 import robostar.robocert.util.resolve.EventResolverImpl;
@@ -58,30 +47,6 @@ public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	
 	public Class<? extends IOutputConfigurationProvider> bindIOutputConfigurationProvider() {
 		return RoboCertOutputConfigurationProvider.class;
-	}
-
-	public Class<? extends OccurrenceGenerator> bindOccurrenceGenerator() {
-		return OccurrenceGeneratorImpl.class;
-	}
-
-	public Class<? extends SubsequenceGenerator> bindSubsequenceGenerator() {
-		return SubsequenceGeneratorImpl.class;
-	}
-
-	public Class<? extends InteractionFragmentGenerator> bindInteractionFragmentGenerator() {
-		return InteractionFragmentGeneratorImpl.class;
-	}
-
-	public Class<? extends ContextualGenerator<InteractionOperand>> bindInteractionOperandGenerator() {
-		return InteractionOperandGenerator.class;
-	}
-
-	// public Class<? extends EventResolver> bindEventResolver() {
-	// return EventResolverImpl.class;
-	// }
-
-	public Class<? extends BlockFragmentGenerator> bindBlockFragmentGenerator() {
-		return BlockFragmentGeneratorImpl.class;
 	}
 
 	/**

@@ -43,7 +43,7 @@ specification group S {
   sequence Test {
     var x: real
     actors T and W
-    anything until deadlock (on T) end
+    anything
   }
 }
 """));

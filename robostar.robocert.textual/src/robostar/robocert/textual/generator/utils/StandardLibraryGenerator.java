@@ -23,7 +23,8 @@ import org.eclipse.xtext.generator.IGeneratorContext;
  */
 public class StandardLibraryGenerator {
 
-  private String dir = "lib/semantics";	
+  private String inDir = "lib/semantics";
+  private String outDir = "lib";
   private String outputCfg = IFileSystemAccess2.DEFAULT_OUTPUT;
   private final List<String> files = new ArrayList<>();
 
@@ -38,11 +39,13 @@ public class StandardLibraryGenerator {
    */
   public <T> boolean generate(IFileSystemAccess2 fsa, IGeneratorContext context, Class<T> tClass) {
     for (var filename : files) {
-      final var path = String.join("/",  dir, filename);
-      final var stream = tClass.getResourceAsStream(path);
-      Objects.requireNonNull(stream, () -> "Missing internal resource: " + path);
+      final var inPath = String.join("/", inDir, filename);
+      final var outPath = String.join("/", outDir, filename);
 
-      fsa.generateFile(filename, outputCfg, stream);
+      final var stream = tClass.getResourceAsStream(inPath);
+      Objects.requireNonNull(stream, () -> "Missing internal resource: " + inPath);
+
+      fsa.generateFile(outPath, outputCfg, stream);
       if (context.getCancelIndicator().isCanceled()) {
         return true;
       }
@@ -56,8 +59,18 @@ public class StandardLibraryGenerator {
    * @param dir new input directory.
    */
   public void setInputDirectory(String dir) {
-    this.dir = dir;
+    inDir = dir;
   }
+
+  /**
+   * Changes the output directory from default.
+   *
+   * @param dir new output directory.
+   */
+  public void setOutputDirectory(String dir) {
+    outDir = dir;
+  }
+
 
   /**
    * Changes the output configuration from default.

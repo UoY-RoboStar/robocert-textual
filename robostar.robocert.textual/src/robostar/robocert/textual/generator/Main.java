@@ -151,9 +151,8 @@ public class Main {
     x.setOutputDirectory(x.getOutputDirectory().replaceFirst("^.", string));
   }
 
-  @SuppressWarnings("LocalCanBeFinal")
   private List<Path> findFiles(Path project) throws IOException {
-    try (var files = Files.walk(project)) {
+    try (final var files = Files.walk(project)) {
       return files.filter(this::shouldConsider).toList();
     }
   }

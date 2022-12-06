@@ -9,43 +9,41 @@
  */
 package robostar.robocert.textual.generator;
 
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-import org.eclipse.xtext.generator.IFileSystemAccess;
-import org.eclipse.xtext.generator.IOutputConfigurationProvider;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.xtext.generator.OutputConfiguration;
+import org.eclipse.core.runtime.Platform;
 
-import com.google.inject.Inject;
+import org.eclipse.xtext.generator.OutputConfigurationProvider;
 
-import robostar.robocert.textual.generator.tikz.TikzPathSet;
-import robostar.robocert.textual.generator.tockcsp.core.TockCspPathSet;
 
 /**
  * Overrides output configuration to save CSP to csp-gen.
  */
-public class RoboCertOutputConfigurationProvider implements IOutputConfigurationProvider {
-
-	@Inject
-	private TockCspPathSet tockCspPathSet;
-
-
-	@Inject
-	private TikzPathSet tikzPathSet;
-
+public class RoboCertOutputConfigurationProvider extends OutputConfigurationProvider {
 	@Override
 	public Set<OutputConfiguration> getOutputConfigurations() {
-		// TODO: is this the right thing to do?
-		// TODO: PRISM gen
+		final var config = Platform.getExtensionRegistry().getConfigurationElementsFor(RoboCertGenerator.GEN_ID);
+		final var ocp = super.getOutputConfigurations();
+		for (var e : config) {
+			var folder = Objects.requireNonNullElse(e.getAttribute("folder"), "src-gen");
 
-		final var set = new HashSet<OutputConfiguration>(4);
+			Object o;
+			try {
+				o = e.createExecutableExtension("class");
+			} catch (CoreException ex) {
+				System.err.println("Couldn't instantiate generator plugin " + e.getName());
+				ex.printStackTrace();
+				continue;
+			}
 
-		set.add(buildConfig(IFileSystemAccess.DEFAULT_OUTPUT, "tock-CSP folder", tockCspPathSet.PACKAGE_PATH));
-		set.add(buildConfig(CSP_LIBRARY_OUTPUT, "tock-CSP standard library", tockCspPathSet.LIBRARY_PATH));
-
-		set.add(buildConfig(TIKZ_OUTPUT, "TikZ folder", tikzPathSet.DIAGRAM_PATH));
-		set.add(buildConfig(TIKZ_LIBRARY_OUTPUT, "TikZ standard library", tikzPathSet.LIBRARY_PATH));
-		return set;
+			if (o instanceof AbstractRoboCertGeneratorPlugin g) {
+				ocp.add(buildConfig(g, folder));
+			}
+		}
+		return ocp;
 	}
 
 	/**
@@ -63,10 +61,10 @@ public class RoboCertOutputConfigurationProvider implements IOutputConfiguration
 	 */
 	public static final String TIKZ_LIBRARY_OUTPUT = "TIKZ_LIBRARY_OUTPUT";
 
-	private OutputConfiguration buildConfig(String name, String descr, String dir) {
-		final var result = new OutputConfiguration(name);
-		result.setDescription(descr);
-		result.setOutputDirectory(dir);
+	private OutputConfiguration buildConfig(AbstractRoboCertGeneratorPlugin plugin, String dir) {
+		final var result = new OutputConfiguration(plugin.ID());
+		result.setDescription(plugin.description());
+		result.setOutputDirectory("./" + dir);
 		result.setOverrideExistingResources(true);
 		result.setCreateOutputDirectory(true);
 		result.setCleanUpDerivedResources(true);

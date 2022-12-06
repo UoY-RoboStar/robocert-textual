@@ -33,7 +33,7 @@ public class MessageFactory {
   @Inject RoboCertFactory rcert;
 
   /**
-   * Hoists the given set into being the gap set for an UntilFragment that is attached to the test
+   * Hoists the given set into being the intra-messages set for an AnyFragment that is attached to the test
    * subsequence.
    *
    * <p>Acts in-place.
@@ -41,7 +41,7 @@ public class MessageFactory {
    * @param g the set to hoist.
    */
   public void setupAsGap(MessageSet g) {
-    final var it = rcert.createUntilFragment();
+    final var it = rcert.createAnyFragment();
     it.setIntraMessages(g);
     seq().getFragments().add(it);
   }

@@ -28,11 +28,11 @@
     <orderEntry type="library" name="hamcrest" level="project" />
     <orderEntry type="library" name="junit.jupiter" level="project" />
     <orderEntry type="library" name="eclipse.xtext.testing" level="project" />
-    <orderEntry type="library" name="circus.robocalc.robochart.generator.csp_3.0.0.202110151017" level="project" />
     <orderEntry type="library" name="eclipse.platform.core.runtime" level="project" />
-    <orderEntry type="library" name="circus.robocalc.robochart.assertions_2.0.0.202112021113" level="project" />
-    <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202206211010" level="project" />
-    <orderEntry type="library" name="circus.robocalc.robochart.textual_3.0.0.202206290948" level="project" />
     <orderEntry type="library" name="robostar.robocert_0.1.0.202211041544" level="project" />
+    <orderEntry type="library" name="circus.robocalc.robochart.textual_3.0.0.202206290948" level="project" />
+    <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202206211010" level="project" />
+    <orderEntry type="library" name="robostar.robocert-0.2.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="circus.robocalc.robochart.generator.csp_3.0.0.202209090727" level="project" />
   </component>
 </module>

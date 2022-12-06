@@ -11,7 +11,9 @@
 package robostar.robocert.textual.generator.utils.param;
 
 import circus.robocalc.robochart.Variable;
-import circus.robocalc.robochart.generator.csp.comp.untimed.CGeneratorUtils;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
+
 import java.util.Optional;
 
 /**
@@ -21,12 +23,19 @@ import java.util.Optional;
  */
 public interface Parameter {
   /**
-   * Gets the CSP-M ID of the parameter (as used in parameterisation files, etc).
+   * Gets the namespace into which this type of parameter should be placed in CSP etc.
    *
-   * @param gu a RoboChart CSP-M generator utilities object.
-   * @return the snake-cased constant identifier of the parameter.
+   * @return the prefix to put on the qualified name.
    */
-  String cspId(CGeneratorUtils gu);
+  String prefix();
+
+  /**
+   * Gets the qualified name of the parameter (as used in parameterisation files, etc).
+   *
+   * @param qnp a qualified name provider.
+   * @return the qualified name of the parameter.
+   */
+  QualifiedName qualifiedName(IQualifiedNameProvider qnp);
 
   /**
    * @return the underlying constant of this parameter, if one exists.

@@ -150,6 +150,7 @@ public record RoboChartParameterResolver(CTimedGeneratorUtils gu, DefinitionReso
   }
 
   private Stream<Parameter> localsOf(EObject it) {
-    return ConstantParameter.localsOf(it, gu);
+    // TODO(@MattWindsor91): reduce tight coupling with the CSP generator
+    return gu.allLocalConstants(it).parallelStream().map(k -> new ConstantParameter(k, it));
   }
 }

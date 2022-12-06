@@ -16,6 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import circus.robocalc.robochart.RoboChartFactory;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
@@ -28,12 +29,12 @@ import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertCustomInjectorProvider.class)
 class ConstantParameterTest {
-  @Inject private CTimedGeneratorUtils gu;
+  @Inject private IQualifiedNameProvider qnp;
   @Inject private DummyVariableFactory varFactory;
   @Inject private RoboChartFactory roboChartFactory;
 
   /**
-   * Tests that the cspId of a parameter depends on its container and not the container of its
+   * Tests that the qualified name of a parameter depends on its container and not the container of its
    * constant; for instance, a constant defined in an interface isn't attributed to that interface.
    */
   @Test
@@ -49,6 +50,6 @@ class ConstantParameterTest {
     // We're not testing lookup of constants here, so we don't link the interface to ctrl.
     final var p = new ConstantParameter(vl.getVars().get(0), ctrl);
 
-    assertThat(p.cspId(gu), is("const_ctrl_var"));
+    assertThat(p.qualifiedName(qnp).toString("_"), is("ctrl_var"));
   }
 }

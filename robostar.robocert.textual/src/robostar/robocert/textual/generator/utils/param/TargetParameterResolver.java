@@ -9,14 +9,15 @@
  */
 package robostar.robocert.textual.generator.utils.param;
 
-import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import robostar.robocert.textual.generator.utils.VariableHelper;
+
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
 import robostar.robocert.ConstAssignment;
 import robostar.robocert.ControllerTarget;
 import robostar.robocert.InControllerTarget;
@@ -33,7 +34,7 @@ import robostar.robocert.util.InstantiationHelper;
  *
  * @author Matt Windsor
  */
-public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartParameterResolver rcResolver, VariableHelper varHelp) {
+public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartParameterResolver rcResolver, IQualifiedNameProvider qnp) {
 	// TODO(@MattWindsor91): if we manage to get rid of varHelp here, we might
 	// be able to move this to the model helpers.
 	
@@ -41,7 +42,7 @@ public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartPar
 	public TargetParameterResolver {
 		Objects.requireNonNull(instHelp);
 		Objects.requireNonNull(rcResolver);
-		Objects.requireNonNull(varHelp);
+		Objects.requireNonNull(qnp);
 	}
 
 	/**
@@ -78,21 +79,17 @@ public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartPar
 	 *
 	 * @apiNote If the instantiation is null, we return the stream unmodified.
 	 *
-	 * @param gu   used for working out names of constants.
 	 * @param s    the stream to filter.
 	 * @param inst the instantiation in question (may be null).
 	 * @return an iterator of uninstantiated constant names.
 	 */
-	public Stream<Parameter> excludeInstantiated(CTimedGeneratorUtils gu, Stream<Parameter> s, List<ConstAssignment> inst) {
-		// TODO(@MattWindsor91): the use of CSP IDs/gu here to distinguish different parameters is a
-		// bit awkward.
+	public Stream<Parameter> excludeInstantiated(Stream<Parameter> s, List<ConstAssignment> inst) {
 		if (inst == null)
 			return s;
 
 		final var keys = instantiatedKeys(inst);
-		// We rely on constantId being a String here;
 		// other CharSequences might not have proper equality.
-		return s.filter(x -> !keys.contains(x.cspId(gu)));
+		return s.filter(x -> !keys.contains(x.qualifiedName(qnp)));
 	}
 
 	/**
@@ -105,8 +102,8 @@ public record TargetParameterResolver(InstantiationHelper instHelp, RoboChartPar
 		return s.filter(x -> x.tryGetConstant().map(k -> k.getInitial() == null).orElse(true));
 	}
 
-	private Set<String> instantiatedKeys(List<ConstAssignment> inst) {
-		return instHelp.allConstants(inst).map(varHelp::constantId)
+	private Set<QualifiedName> instantiatedKeys(List<ConstAssignment> inst) {
+		return instHelp.allConstants(inst).map(qnp::getFullyQualifiedName)
 				.collect(Collectors.toUnmodifiableSet());
 	}
 }

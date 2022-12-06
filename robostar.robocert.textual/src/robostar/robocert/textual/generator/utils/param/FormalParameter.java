@@ -11,7 +11,9 @@
 package robostar.robocert.textual.generator.utils.param;
 
 import circus.robocalc.robochart.Variable;
-import circus.robocalc.robochart.generator.csp.comp.untimed.CGeneratorUtils;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.naming.QualifiedName;
+
 import java.util.Optional;
 
 /**
@@ -22,8 +24,13 @@ import java.util.Optional;
  */
 public record FormalParameter(circus.robocalc.robochart.Parameter param) implements Parameter {
   @Override
-  public String cspId(CGeneratorUtils gu) {
-    return gu.paramId(param);
+  public String prefix() {
+    return "param";
+  }
+
+  @Override
+  public QualifiedName qualifiedName(IQualifiedNameProvider qnp) {
+    return QualifiedName.create(param.getName());
   }
 
   @Override
