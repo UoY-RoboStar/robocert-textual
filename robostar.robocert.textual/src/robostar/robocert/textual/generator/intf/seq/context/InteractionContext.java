@@ -28,9 +28,16 @@ public interface InteractionContext {
     Interaction interaction();
 
     /**
+     * Gets the number of lifelines in this interaction.
+     *
+     * @return the number of lifelines (equal to the size of {@code lifelines()}.
+     */
+    int numLifelines();
+
+    /**
      * Produces contexts for each of the lifelines in this interaction.
      *
      * @return a stream of lifeline contexts.
      */
-    Stream<? extends LifelineContext> lifelines();
+    Stream<LifelineContext> lifelines();
 }
