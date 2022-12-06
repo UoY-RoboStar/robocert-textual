@@ -20,57 +20,62 @@ import org.eclipse.xtext.generator.OutputConfigurationProvider;
 
 
 /**
- * Overrides output configuration to save CSP to csp-gen.
+ * Performs output configuration for the RoboCert generators.
+ *
+ * <p>Since v0.2 this has been a straightforward port of the RoboChart analogue.
+ *
+ * @author Alvaro Miyazawa
+ * @author Matt Windsor
  */
 public class RoboCertOutputConfigurationProvider extends OutputConfigurationProvider {
-	@Override
-	public Set<OutputConfiguration> getOutputConfigurations() {
-		final var config = Platform.getExtensionRegistry().getConfigurationElementsFor(RoboCertGenerator.GEN_ID);
-		final var ocp = super.getOutputConfigurations();
-		for (var e : config) {
-			var folder = Objects.requireNonNullElse(e.getAttribute("folder"), "src-gen");
+    @Override
+    public Set<OutputConfiguration> getOutputConfigurations() {
+        final var config = Platform.getExtensionRegistry().getConfigurationElementsFor(RoboCertGenerator.GEN_ID);
+        final var ocp = super.getOutputConfigurations();
+        for (var e : config) {
+            var folder = Objects.requireNonNullElse(e.getAttribute("folder"), "src-gen");
 
-			Object o;
-			try {
-				o = e.createExecutableExtension("class");
-			} catch (CoreException ex) {
-				System.err.println("Couldn't instantiate generator plugin " + e.getName());
-				ex.printStackTrace();
-				continue;
-			}
+            Object o;
+            try {
+                o = e.createExecutableExtension("class");
+            } catch (CoreException ex) {
+                System.err.println("Couldn't instantiate generator plugin " + e.getName());
+                ex.printStackTrace();
+                continue;
+            }
 
-			if (o instanceof AbstractRoboCertGeneratorPlugin g) {
-				ocp.add(buildConfig(g, folder));
-			}
-		}
-		return ocp;
-	}
+            if (o instanceof AbstractRoboCertGeneratorPlugin g) {
+                ocp.add(buildConfig(g, folder));
+            }
+        }
+        return ocp;
+    }
 
-	/**
-	 * Key of the CSP standard library output configuration.
-	 */
-	public static final String CSP_LIBRARY_OUTPUT = "CSP_LIBRARY_OUTPUT";
+    /**
+     * Key of the CSP standard library output configuration.
+     */
+    public static final String CSP_LIBRARY_OUTPUT = "CSP_LIBRARY_OUTPUT";
 
-	/**
-	 * Key of the TikZ output configuration.
-	 */
-	public static final String TIKZ_OUTPUT = "TIKZ_OUTPUT";
+    /**
+     * Key of the TikZ output configuration.
+     */
+    public static final String TIKZ_OUTPUT = "TIKZ_OUTPUT";
 
-	/**
-	 * Key of the TikZ standard library output configuration.
-	 */
-	public static final String TIKZ_LIBRARY_OUTPUT = "TIKZ_LIBRARY_OUTPUT";
+    /**
+     * Key of the TikZ standard library output configuration.
+     */
+    public static final String TIKZ_LIBRARY_OUTPUT = "TIKZ_LIBRARY_OUTPUT";
 
-	private OutputConfiguration buildConfig(AbstractRoboCertGeneratorPlugin plugin, String dir) {
-		final var result = new OutputConfiguration(plugin.ID());
-		result.setDescription(plugin.description());
-		result.setOutputDirectory("./" + dir);
-		result.setOverrideExistingResources(true);
-		result.setCreateOutputDirectory(true);
-		result.setCleanUpDerivedResources(true);
-		result.setSetDerivedProperty(true);
-		result.setKeepLocalHistory(true);
-		return result;
-	}
+    private OutputConfiguration buildConfig(AbstractRoboCertGeneratorPlugin plugin, String dir) {
+        final var result = new OutputConfiguration(plugin.ID());
+        result.setDescription(plugin.description());
+        result.setOutputDirectory("./" + dir);
+        result.setOverrideExistingResources(true);
+        result.setCreateOutputDirectory(true);
+        result.setCleanUpDerivedResources(true);
+        result.setSetDerivedProperty(true);
+        result.setKeepLocalHistory(true);
+        return result;
+    }
 
 }
