@@ -32,66 +32,66 @@ import org.eclipse.core.runtime.Platform;
  * https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 public class RoboCertGenerator extends AbstractGenerator {
-	@Override
-	public void beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		// Workaround for resolution errors.
-		EcoreUtil.resolveAll(input.getResourceSet());
+    @Override
+    public void beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+        // Workaround for resolution errors.
+        EcoreUtil.resolveAll(input.getResourceSet());
 
-		forEachGenerator(gen -> gen.beforeGenerate(input, fsa, context), context);
-	}
+        forEachGenerator(gen -> gen.beforeGenerate(input, fsa, context), context);
+    }
 
-	@Override
-	public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		// Workaround for resolution errors.
-		EcoreUtil.resolveAll(input.getResourceSet());
+    @Override
+    public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+        // Workaround for resolution errors.
+        EcoreUtil.resolveAll(input.getResourceSet());
 
-		forEachGenerator(gen -> SafeRunner.run(new LoggingRunner() {
-			@Override
-			public void run() throws Exception {
-				gen.doGenerate(input, fsa, context);
-			}
-		}), context);
-	}
+        forEachGenerator(gen -> SafeRunner.run(new LoggingRunner() {
+            @Override
+            public void run() {
+                gen.doGenerate(input, fsa, context);
+            }
+        }), context);
+    }
 
-	@Override
-	public void afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		forEachGenerator(gen -> gen.afterGenerate(input, fsa, context), context);
-	}
+    @Override
+    public void afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+        forEachGenerator(gen -> gen.afterGenerate(input, fsa, context), context);
+    }
 
-	/**
-	 * Applies the consumer to each registered generator, returning early on cancellation.
-	 * @param f function to apply to each generator.
-	 * @param context context used to check cancellation.
-	 */
-	private void forEachGenerator(Consumer<IGenerator2> f, IGeneratorContext context) {
-		final var config = Platform.getExtensionRegistry().getConfigurationElementsFor(GEN_ID);
-		for (var e : config) {
-			if (context.getCancelIndicator().isCanceled())
-				return;
-			SafeRunner.run(new LoggingRunner(){
-				@Override
-				public void run() throws Exception {
-					final var o = e.createExecutableExtension("class");
-					if (o instanceof IGenerator2 g) {
-						f.accept(g);
-					}
-				}
-			});
-		}
-	}
+    /**
+     * Applies the consumer to each registered generator, returning early on cancellation.
+     *
+     * @param f       function to apply to each generator.
+     * @param context context used to check cancellation.
+     */
+    private void forEachGenerator(Consumer<IGenerator2> f, IGeneratorContext context) {
+        final var config = Platform.getExtensionRegistry().getConfigurationElementsFor(GEN_ID);
+        for (var e : config) {
+            if (context.getCancelIndicator().isCanceled()) return;
+            SafeRunner.run(new LoggingRunner() {
+                @Override
+                public void run() throws Exception {
+                    final var o = e.createExecutableExtension("class");
+                    if (o instanceof IGenerator2 g) {
+                        f.accept(g);
+                    }
+                }
+            });
+        }
+    }
 
-	/**
-	 * The generator ID, used for pulling in generator plugins.
-	 */
-	public final static String GEN_ID = "robocert.generator";
+    /**
+     * The generator ID, used for pulling in generator plugins.
+     */
+    public static final String GEN_ID = "robocert.generator";
 
-	private abstract static class LoggingRunner implements ISafeRunnable {
-		public void handleException(Throwable e) {
-			// TODO(@MattWindsor91): is there a log this should be sent to?
-			System.err.println("ERROR: RoboCert generator threw an exception.");
-			System.err.println("Please file this as a bug at github.com/UoY-RoboStar/robocert-textual.");
-			System.err.println("Details:");
-			e.printStackTrace();
-		}
-	}
+    private abstract static class LoggingRunner implements ISafeRunnable {
+        public void handleException(Throwable e) {
+            // TODO(@MattWindsor91): is there a log this should be sent to?
+            System.err.println("ERROR: RoboCert generator threw an exception.");
+            System.err.println("Please file this as a bug at github.com/UoY-RoboStar/robocert-textual.");
+            System.err.println("Details:");
+            e.printStackTrace();
+        }
+    }
 }

@@ -10,18 +10,19 @@
 
 package robostar.robocert.textual.generator.plugin;
 
+import com.google.common.collect.Iterators;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
-import robostar.robocert.textual.generator.utils.GeneratorUtil;
+import robostar.robocert.CertPackage;
 import robostar.robocert.textual.generator.utils.PackageGenerator;
-import robostar.robocert.textual.generator.utils.StandardLibraryGenerator;
 
 /**
  * Abstractly implements the RoboCert style of generator.
  * <p>
- *
+ * <p>
  * This involves copying over a standard library of (CSP, TikZ, etc) definitions, then generating
  * separately for each package.
  *
@@ -29,29 +30,42 @@ import robostar.robocert.textual.generator.utils.StandardLibraryGenerator;
  */
 public abstract class AbstractRoboCertGeneratorPlugin extends AbstractGenerator implements RoboCertGeneratorPlugin {
 
-  @Override
-  public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-    final var libGen = libGenerator();
-    final var isCancelled = libGen.generate(fsa, context, getClass());
-    if (isCancelled) {
-      // Don't bother generating the packages.
-      return;
+    @Override
+    public void doGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+        generateLibrary(fsa, context);
+        generatePackages(input, fsa, context);
     }
 
-    final var pkgGen = pkgGenerator();
-    GeneratorUtil.forEachPackage(input, context, pkg -> pkgGen.generate(fsa, context, pkg));
-  }
+    private void generateLibrary(IFileSystemAccess2 fsa, IGeneratorContext context) {
+        libGenerator().generate(getClass(), fsa, context);
+    }
 
-  /**
-   * Factory method for the package generator.
-   * @return a generator mapping RoboCert packages to output.
-   */
-  protected abstract PackageGenerator pkgGenerator();
+    private void generatePackages(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+        final var pkgGen = pkgGenerator();
+        final var contents = EcoreUtil.getAllContents(input, true);
+        final var packages = Iterators.filter(contents, CertPackage.class);
 
-  /**
-   * Factory method for the library generator.
-   * @return a library generator, which should be configured in-line here.
-   */
-  protected abstract StandardLibraryGenerator libGenerator();
+        while (packages.hasNext()) {
+            if (context.getCancelIndicator().isCanceled()) {
+                break;
+            }
+            pkgGen.generate(fsa, context, packages.next());
+        }
+    }
+
+
+    /**
+     * Factory method for the package generator.
+     *
+     * @return a generator mapping RoboCert packages to output.
+     */
+    protected abstract PackageGenerator pkgGenerator();
+
+    /**
+     * Factory method for the library generator.
+     *
+     * @return a library generator, which should be configured in-line here.
+     */
+    protected abstract StandardLibraryGenerator libGenerator();
 
 }
