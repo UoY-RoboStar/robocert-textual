@@ -8,21 +8,25 @@
  * SPDX-License-Identifier: EPL-2.0
  */
 
-package robostar.robocert.textual.generator;
+package robostar.robocert.textual.generator.plugin;
 
 import org.eclipse.xtext.generator.IGenerator2;
 
 /**
  * Interface of RoboCert generator plugins.
  *
- * These have the usual structure of an Xtext generator, but with additional metadata used in forming output
- * configurations.
+ * <p>
+ * These have the usual structure of an Xtext generator, but with additional
+ * metadata used in forming output configurations.
  *
  * @author Matt Windsor
  */
 public interface RoboCertGeneratorPlugin extends IGenerator2 {
     /**
      * Gets a machine-readable ID for the generator.
+     *
+     * <p>The main generator will register the plugin's output configuration
+     * under this ID.
      *
      * @return the ID.
      */

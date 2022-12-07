@@ -17,6 +17,7 @@ import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.core.runtime.Platform;
 
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
+import robostar.robocert.textual.generator.plugin.AbstractRoboCertGeneratorPlugin;
 
 
 /**
