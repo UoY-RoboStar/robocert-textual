@@ -42,7 +42,8 @@ public class StandardLibraryGenerator extends AbstractGeneratorComponent<Class<?
         Objects.requireNonNull(inClass, "Need a class from which to get resources");
 
         for (var filename : files) {
-            if (context.getCancelIndicator().isCanceled()) {
+            final var ci = context.getCancelIndicator();
+            if (ci != null && ci.isCanceled()) {
                 break;
             }
 

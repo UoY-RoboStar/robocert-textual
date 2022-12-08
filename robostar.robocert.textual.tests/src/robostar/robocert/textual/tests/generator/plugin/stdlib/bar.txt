@@ -1,0 +1,1 @@
+Example standard library file 'bar'
