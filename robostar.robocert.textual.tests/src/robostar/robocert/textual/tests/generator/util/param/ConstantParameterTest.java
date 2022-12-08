@@ -14,7 +14,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import circus.robocalc.robochart.RoboChartFactory;
-import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.testing.InjectWith;
