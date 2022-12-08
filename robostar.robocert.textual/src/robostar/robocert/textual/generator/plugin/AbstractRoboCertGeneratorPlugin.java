@@ -17,7 +17,6 @@ import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 import robostar.robocert.CertPackage;
-import robostar.robocert.textual.generator.utils.PackageGenerator;
 
 /**
  * Abstractly implements the RoboCert style of generator.
@@ -49,7 +48,7 @@ public abstract class AbstractRoboCertGeneratorPlugin extends AbstractGenerator 
             if (context.getCancelIndicator().isCanceled()) {
                 break;
             }
-            pkgGen.generate(fsa, context, packages.next());
+            pkgGen.generate(packages.next(), fsa, context);
         }
     }
 
@@ -59,13 +58,13 @@ public abstract class AbstractRoboCertGeneratorPlugin extends AbstractGenerator 
      *
      * @return a generator mapping RoboCert packages to output.
      */
-    protected abstract PackageGenerator pkgGenerator();
+    protected abstract GeneratorComponent<CertPackage> pkgGenerator();
 
     /**
      * Factory method for the library generator.
      *
      * @return a library generator, which should be configured in-line here.
      */
-    protected abstract StandardLibraryGenerator libGenerator();
+    protected abstract GeneratorComponent<Class<?>> libGenerator();
 
 }

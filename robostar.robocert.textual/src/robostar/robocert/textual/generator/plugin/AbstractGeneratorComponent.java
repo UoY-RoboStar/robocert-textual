@@ -11,7 +11,6 @@
 package robostar.robocert.textual.generator.plugin;
 
 import org.eclipse.xtext.generator.IFileSystemAccess2;
-import org.eclipse.xtext.generator.IGeneratorContext;
 
 /**
  * Boilerplate for subcomponents of a generator plugin.
@@ -22,19 +21,10 @@ import org.eclipse.xtext.generator.IGeneratorContext;
  * @param <T> type of input to the generator.
  * @author Matt Windsor
  */
-public abstract class AbstractGeneratorComponent<T> {
+public abstract class AbstractGeneratorComponent<T> implements GeneratorComponent<T> {
 
     protected String outDir = "lib";
     protected String outputCfg = IFileSystemAccess2.DEFAULT_OUTPUT;
-
-    /**
-     * Generates this component of the plugin's RoboCert output.
-     *
-     * @param input   input for the generator.
-     * @param fsa     file system access for writing files.
-     * @param context context for the generator.
-     */
-    public abstract void generate(T input, IFileSystemAccess2 fsa, IGeneratorContext context);
 
     /**
      * Changes the output directory from default.
