@@ -320,14 +320,14 @@ InteractionFragment:
 	BlockFragment |
 	BranchFragment |
 	AnyFragment |
-	{OccurrenceFragment} occurrence=Occurrence;
+	'wait' {WaitFragment} '(' units=TimeUnits 'on' actor=[Actor] ')' |
+	{MessageOccurrence} message=Message OptTemperature;
 
 /**
  * An any-fragment.
  */
 AnyFragment:
-	('any' | 'anything') intraMessages=IntraMessageSet
-;
+	('any' | 'anything') intraMessages=IntraMessageSet;
 
 //
 // Block fragments
@@ -336,13 +336,10 @@ AnyFragment:
  * A block fragment.
  */
 BlockFragment:
-	(DeadlineFragment |
+	('deadline' {DeadlineFragment} '(' units=TimeUnits 'on' actor=[Actor] ')' |
 	('opt' | 'optional') {OptFragment} |
 	'until' {UntilFragment} trigger=BranchInteractionOperand 'do' |
 	'loop' {LoopFragment} ('(' bound=DiscreteBound ('time' | 'times')? ')')?) (name=ID)? body=BlockInteractionOperand;
-
-DeadlineFragment:
-	'deadline' '(' units=TimeUnits 'on' actor=[Actor] ')';
 
 //
 // Discrete bounds
@@ -363,12 +360,23 @@ DiscreteBound:
  * A branching construct.
  */
 BranchFragment:
-	ParFragment | AltOrXAltFragment;
+	ParFragment | StrictFragment | AltOrXAltFragment;
 
 ParFragment:
 	('par' | 'parallel') {ParFragment} (name=ID)? 
 		branches+=BranchInteractionOperand
 		('and' branches+=BranchInteractionOperand)+
+	'end';
+
+/**
+ * A strict fragment.
+ * 
+ * This isn't in Mermaid, so our syntax is bespoke.
+ */
+StrictFragment:
+	'strict' {StrictFragment} (name=ID)? 
+		branches+=BranchInteractionOperand
+		('then' branches+=BranchInteractionOperand)+
 	'end';
 	
 AltOrXAltFragment returns BranchFragment:
@@ -378,27 +386,24 @@ AltOrXAltFragment returns BranchFragment:
 	'end';
 
 //
-// OCCURRENCES
-//
-/**
- * An occurrence in a sequence diagram.
- */
-Occurrence:
-	{MessageOccurrence} message=Message OptTemperature |
-	LifelineOccurrence;
-
-LifelineOccurrence:
-	('wait' {WaitOccurrence} '(' units=TimeUnits |
-	'deadlock' {DeadlockOccurrence} '(') 'on' actor=[Actor|QualifiedName] ')';
-
-//
 // MESSAGES
 //
 /**
  * A message specification.
  */
 Message:
-	from=[Actor|ID] '->>' to=[Actor|ID] ':' topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')?;
+	from=Endpoint synchronicity=Synchronicity to=Endpoint ':'
+	topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')?;
+
+enum Synchronicity:
+	SYNCHRONOUS='->>' |
+	ASYNCHRONOUS='-)';
+
+Endpoint:
+	// The '|' is meant to invoke the vertical wall of a sequence diagram.
+	'|' {World} |
+	{ActorEndpoint} actor=[Actor|ID]
+;
 
 //
 // Message topics
@@ -458,13 +463,6 @@ enum DiffOperator returns BinarySetOperator:
 	DIFFERENCE='except';
 
 /**
- * Pseudo-rule that pulls a gap message set to empty if we don't see an
- * explicit rule.
- */
-EmptySet returns ExtensionalMessageSet:
-	{ExtensionalMessageSet};
-
-/**
  * A primitive message set.
  */
 PrimitiveSet returns MessageSet:
@@ -493,7 +491,7 @@ ValueSpecification:
 // ACTORS
 //
 Actor:
-	('target' {TargetActor} | 'world' {World} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
+	('target' {TargetActor} | 'component' {ComponentActor} node=[ConnectionNode|QualifiedName]) 'as' name=ID;
 
 //
 // SEQUENCE PROPERTIES
