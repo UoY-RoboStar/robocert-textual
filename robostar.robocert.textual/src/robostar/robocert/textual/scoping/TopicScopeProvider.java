@@ -20,24 +20,24 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
-import robostar.robocert.Actor;
-import robostar.robocert.EventTopic;
-import robostar.robocert.ModuleTarget;
-import robostar.robocert.OperationTopic;
-import robostar.robocert.World;
-import robostar.robocert.util.ActorContextFinder;
+import robostar.robocert.*;
+import robostar.robocert.util.GroupFinder;
+import robostar.robocert.util.resolve.DefinitionResolver;
+import robostar.robocert.util.resolve.node.EndpointNodeResolver;
 
 /**
  * Scoping logic for message topics.
  *
  * @author Matt Windsor
  */
-public record TopicScopeProvider(CTimedGeneratorUtils gu, ActorContextFinder acf) {
+public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver defRes, EndpointNodeResolver endRes, GroupFinder groupFinder) {
 
   @Inject
   public TopicScopeProvider {
     Objects.requireNonNull(gu);
-    Objects.requireNonNull(acf);
+    Objects.requireNonNull(defRes);
+    Objects.requireNonNull(endRes);
+    Objects.requireNonNull(groupFinder);
   }
 
   /**
@@ -59,12 +59,13 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, ActorContextFinder acf
       isEfrom = to instanceof World;
       // However, there is a corner-case: the appropriate scope on a module target is the robotic
       // platform (ie, the World), and not the contents of the module (ie, the TargetActor).
-      if (from.getGroup().getTarget() instanceof ModuleTarget) {
+      final var tgt = groupFinder.findTarget(from);
+      if (tgt.filter(x -> x instanceof ModuleTarget).isPresent()) {
         isEfrom = !isEfrom;
       }
     }
 
-    return Scopes.scopeFor(actorCandidates(isEfrom ? from : to, gu::allEvents));
+    return Scopes.scopeFor(endpointCandidates(isEfrom ? from : to, gu::allEvents));
   }
 
   /**
@@ -74,10 +75,10 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, ActorContextFinder acf
    * @return the scope (may be null).
    */
   public IScope getOperationScope(OperationTopic t) {
-    return Scopes.scopeFor(actorCandidates(t.getMessage().getFrom(), gu::allOperations));
+    return Scopes.scopeFor(endpointCandidates(t.getMessage().getFrom(), gu::allOperations));
   }
 
-  private <T extends EObject> Set<T> actorCandidates(Actor a, Function<Context, List<T>> selector) {
-    return acf.contexts(a).map(selector).flatMap(List<T>::stream).collect(Collectors.toSet());
+  private <T extends EObject> Set<T> endpointCandidates(Endpoint e, Function<Context, List<T>> selector) {
+    return endRes.resolve(e).map(defRes::context).map(selector).flatMap(List<T>::stream).collect(Collectors.toSet());
   }
 }

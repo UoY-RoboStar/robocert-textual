@@ -16,17 +16,15 @@ import static robostar.robocert.textual.tests.matchers.Matchers.hasScope;
 import com.google.inject.Inject;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robostar.robocert.RoboCertFactory;
-import robostar.robocert.Target;
-import robostar.robocert.TargetActor;
-import robostar.robocert.World;
+import robostar.robocert.*;
 import robostar.robocert.util.MessageFactory;
 import robostar.robocert.util.TargetFactory;
 import robostar.robocert.textual.scoping.TopicScopeProvider;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
-import robostar.robocert.textual.tests.util.resolvers.ForagingExample;
+import robostar.robocert.tests.util.resolve.ForagingExample;
 
 /**
  * Tests {@link TopicScopeProvider}.
@@ -37,59 +35,71 @@ import robostar.robocert.textual.tests.util.resolvers.ForagingExample;
 @InjectWith(RoboCertInjectorProvider.class)
 class TopicScopeProviderTest {
 
-  @Inject
-  private RoboCertFactory certFactory;
-  @Inject
-  private TopicScopeProvider scope;
-  @Inject
-  private MessageFactory msgFactory;
-  @Inject
-  private TargetFactory targetFactory;
-  @Inject
-  private ForagingExample example;
+    @Inject
+    private RoboCertFactory certFactory;
+    @Inject
+    private TopicScopeProvider scope;
+    @Inject
+    private MessageFactory msgFactory;
+    @Inject
+    private TargetFactory targetFactory;
+    @Inject
+    private ForagingExample example;
 
+    private World world;
+    private ActorEndpoint target;
 
-  /**
-   * Tests that the topic scope for a module is always the robotic platform.
-   *
-   * This is an oddity related to the fact that the relationship between the module and platform in
-   * RoboCert is different from that between the two in RoboChart (in the latter, the module
-   * contains the platform; in the former, the platform is effectively the module's world.
-   */
-  @Test
-  void testTopicScope_module() {
-    final var mod = targetFactory.module(example.foraging);
-    final var world = certFactory.createWorld();
-    final var target = certFactory.createTargetActor();
-    wrapActors(mod, world, target);
+    @BeforeEach
+    void init() {
+        world = certFactory.createWorld();
+        target = msgFactory.actor(certFactory.createTargetActor());
+    }
 
-    final var topic = msgFactory.eventTopic(null);
-    msgFactory.spec(world, target, topic);
-    assertThat(scope.getEventScope(topic, true), hasScope(example.platformObstacle));
-    assertThat(scope.getEventScope(topic, false), hasScope(example.platformObstacle));
-  }
+    /**
+     * Tests that the topic scope for a module is always the robotic platform.
+     * <p>
+     * This is an oddity related to the fact that the relationship between the module and platform in
+     * RoboCert is different from that between the two in RoboChart (in the latter, the module
+     * contains the platform; in the former, the platform is effectively the module's world.
+     */
+    @Test
+    void testTopicScope_module() {
+        final var mod = targetFactory.module(example.foraging);
 
-  /**
-   * Tests that the topic scope for a controller is the controller.
-   */
-  @Test
-  void testTopicScope_controller() {
-    final var ctrl = targetFactory.controller(example.obstacleAvoidance);
-    final var world = certFactory.createWorld();
-    final var target = certFactory.createTargetActor();
-    wrapActors(ctrl, world, target);
+        final var topic = msgFactory.eventTopic(null);
+        wrap(mod, msgFactory.spec(world, target, topic));
 
-    final var topic = msgFactory.eventTopic(null);
-    msgFactory.spec(world, target, topic);
-    assertThat(scope.getEventScope(topic, true), hasScope(example.obstacleAvoidanceObstacle));
-    assertThat(scope.getEventScope(topic, false), hasScope(example.obstacleAvoidanceObstacle));
-  }
+        assertThat(scope.getEventScope(topic, true), hasScope(example.platformObstacle));
+        assertThat(scope.getEventScope(topic, false), hasScope(example.platformObstacle));
+    }
 
-  private void wrapActors(Target t, World world, TargetActor target) {
-    final var sgroup = certFactory.createSpecificationGroup();
-    sgroup.setName("Grp");
-    sgroup.setTarget(t);
-    sgroup.getActors().add(world);
-    sgroup.getActors().add(target);
-  }
+    /**
+     * Tests that the topic scope for a controller is the controller.
+     */
+    @Test
+    void testTopicScope_controller() {
+        final var ctrl = targetFactory.controller(example.obstacleAvoidance);
+
+        final var topic = msgFactory.eventTopic(null);
+        wrap(ctrl, msgFactory.spec(world, target, topic));
+
+        assertThat(scope.getEventScope(topic, true), hasScope(example.obstacleAvoidanceObstacle));
+        assertThat(scope.getEventScope(topic, false), hasScope(example.obstacleAvoidanceObstacle));
+    }
+
+    private void wrap(Target tgt, Message msg) {
+        // TODO(@MattWindsor91): unify this with the existing wrapping logic, which we can't use
+        // because uses messages to perform the wrapping
+
+        final var grp = certFactory.createSpecificationGroup();
+        grp.setName("Grp");
+        grp.setTarget(tgt);
+
+        final var ms = certFactory.createExtensionalMessageSet();
+        ms.getMessages().add(msg);
+        final var nms = certFactory.createNamedMessageSet();
+        nms.setName("Msgs");
+        nms.setSet(ms);
+        grp.getMessageSets().add(nms);
+    }
 }

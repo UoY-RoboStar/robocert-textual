@@ -18,7 +18,7 @@ import robostar.robocert.ComponentTarget;
 import robostar.robocert.RoboCertPackage;
 import robostar.robocert.SpecificationGroup;
 import robostar.robocert.TargetActor;
-import robostar.robocert.World;
+import robostar.robocert.util.StreamHelper;
 
 /**
  * Validates aspects of sequence groups.
@@ -26,69 +26,53 @@ import robostar.robocert.World;
  * @author Matt Windsor
  */
 public class SequenceGroupValidator extends AbstractDeclarativeValidator {
-  // TODO(@MattWindsor91): systematic codes
-  public static final String SMA_NEEDS_SYSTEM = "smaNeedsSystem";
-  public static final String SYS_COMPONENTS = "sysComponents";
-  public static final String SYS_NEEDS_ONE_SMA = "sysNeedsOneSMA";
-  public static final String TOO_MANY_CONTEXTS = "tooManyContexts";
+    // TODO(@MattWindsor91): systematic codes
+    public static final String SMA_NEEDS_SYSTEM = "smaNeedsSystem";
+    public static final String SYS_COMPONENTS = "sysComponents";
+    public static final String SYS_NEEDS_ONE_SMA = "sysNeedsOneSMA";
 
-  @Override
-  public void register(EValidatorRegistrar registrar) {
-    // per discussion in ComposedChecks annotation documentation
-  }
+    @Override
+    public void register(EValidatorRegistrar registrar) {
+        // per discussion in ComposedChecks annotation documentation
+    }
 
-  /**
-   * Checks that the counts of target actors makes sense for this target.
-   *
-   * <p>This composes with checkActorCounts.
-   *
-   * @param group the sequence group to check.
-   */
-  @Check
-  public void checkTargetActorCount(SpecificationGroup group) {
+    /**
+     * Checks that the counts of actors of certain types are valid.
+     *
+     * @param group the sequence group to check.
+     */
+    @Check
+    public void checkActorCounts(SpecificationGroup group) {
+        if (hasComponentTarget(group)) {
 
-    if (!hasComponentTarget(group) && hasActors(group, TargetActor.class))
-      actorError("Only component targets can have target actors", SMA_NEEDS_SYSTEM);
+            if (hasActors(group, ComponentActor.class)) {
+                actorError("Component targets cannot have subcomponent actors", SYS_COMPONENTS);
+            }
+            if (1 < StreamHelper.filter(group.getActors().parallelStream(), TargetActor.class).count()) {
+                actorError("There can be at most one target actor", SYS_NEEDS_ONE_SMA);
+            }
+        } else {
+            if (hasActors(group, TargetActor.class)) {
+                actorError("Only component targets can have target actors", SMA_NEEDS_SYSTEM);
+            }
+        }
+    }
 
-    if (1 < countActors(group, TargetActor.class))
-      actorError("There can be at most one target actor", SYS_NEEDS_ONE_SMA);
-  }
+    private void actorError(String string, String code) {
+        error(string, RoboCertPackage.Literals.SPECIFICATION_GROUP__ACTORS, code);
+    }
 
-  /**
-   * Checks that the counts of actors of certain types are valid.
-   *
-   * <p>This contains the checks common to all group targets.
-   *
-   * @param group the sequence group to check.
-   */
-  @Check
-  public void checkActorCounts(SpecificationGroup group) {
-    if (hasComponentTarget(group) && hasActors(group, ComponentActor.class))
-      actorError("Component targets cannot have subcomponent actors", SYS_COMPONENTS);
+    //
+    // Utility functions
+    //
 
-    if (1 < countActors(group, World.class))
-      actorError("There can be at most one context actor", TOO_MANY_CONTEXTS);
-  }
+    // TODO(@MattWindsor91): I think these are used/useful/duplicated elsewhere?
 
-  private void actorError(String string, String code) {
-    error(string, RoboCertPackage.Literals.SPECIFICATION_GROUP__ACTORS, code);
-  }
+    private boolean hasComponentTarget(SpecificationGroup g) {
+        return g.getTarget() instanceof ComponentTarget;
+    }
 
-  //
-  // Utility functions
-  //
-
-  // TODO(@MattWindsor91): I think these are used/useful/duplicated elsewhere?
-
-  private boolean hasComponentTarget(SpecificationGroup g) {
-    return g.getTarget() instanceof ComponentTarget;
-  }
-
-  private boolean hasActors(SpecificationGroup g, Class<? extends Actor> clazz) {
-    return g.getActors().parallelStream().anyMatch(clazz::isInstance);
-  }
-
-  private long countActors(SpecificationGroup g, Class<? extends Actor> clazz) {
-    return g.getActors().parallelStream().filter(clazz::isInstance).count();
-  }
+    private boolean hasActors(SpecificationGroup g, Class<? extends Actor> clazz) {
+        return g.getActors().parallelStream().anyMatch(clazz::isInstance);
+    }
 }

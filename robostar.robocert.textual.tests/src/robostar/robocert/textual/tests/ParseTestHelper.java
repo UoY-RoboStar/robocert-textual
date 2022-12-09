@@ -22,7 +22,6 @@ import robostar.robocert.CertPackage;
 import robostar.robocert.ExpressionValueSpecification;
 import robostar.robocert.InteractionFragment;
 import robostar.robocert.MessageOccurrence;
-import robostar.robocert.OccurrenceFragment;
 import robostar.robocert.SpecificationGroup;
 import robostar.robocert.util.StreamHelper;
 
@@ -37,9 +36,9 @@ public class ParseTestHelper {
 	private static final String PREFIX = """
 specification group X {
   target = module Mod
-  actors = {target as T, world as W}
+  actors = {target as T}
   sequence Y {
-    actors T, W
+    actor T
 """;
 
 	/**
@@ -113,7 +112,7 @@ specification group X {
 	 *         expression.
 	 */
 	public CharSequence liftExpr(CharSequence expr) {
-		return liftSubsequence("T->>W: op Z(%s)".formatted(expr));
+		return liftSubsequence("T->>|: op Z(%s)".formatted(expr));
 	}
 	
 	/**
@@ -125,16 +124,14 @@ specification group X {
 	 */
 	public Expression unliftExpr(CertPackage it) {
 		final var sseq = unliftSubsequence(it);
-		final var oocc = StreamHelper.firstOfClass(sseq.stream(), OccurrenceFragment.class);
-		if (oocc.isEmpty()) {
+		final var om = StreamHelper.firstOfClass(sseq.stream(), MessageOccurrence.class);
+		if (om.isEmpty()) {
 			throw new IllegalArgumentException("subsequence does not contain an occurrence fragment");
 		}
-		final var occ = oocc.get().getOccurrence();
-		if (occ instanceof MessageOccurrence m) {
-			final var arg = m.getMessage().getArguments().get(0);
-			if (arg instanceof ExpressionValueSpecification e) {
-				return e.getExpr();
-			}
+		final var m = om.get();
+		final var arg = m.getMessage().getArguments().get(0);
+		if (arg instanceof ExpressionValueSpecification e) {
+			return e.getExpr();
 		}
 
 		throw new IllegalArgumentException("couldn't find expression in lifted code");

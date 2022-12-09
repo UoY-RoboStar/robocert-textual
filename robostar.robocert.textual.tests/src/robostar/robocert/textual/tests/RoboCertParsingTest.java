@@ -39,10 +39,10 @@ class RoboCertParsingTest {
 		final var result = Assertions.assertDoesNotThrow(() -> parseHelper.parse("""
 specification group S {
   target = module Mod
-  actors = {target as T, world as W}
+  actors = {target as T}
   sequence Test {
     var x: real
-    actors T and W
+    actors T
     anything
   }
 }

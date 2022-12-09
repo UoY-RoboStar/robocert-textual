@@ -73,7 +73,7 @@ public class MessageFactory {
 
   public SpecificationGroup group() {
     final var it = rcert.createSpecificationGroup();
-    it.getActors().addAll(mf.systemActors());
+    it.getActors().add(mf.targetActor());
     it.setTarget(target());
     return it;
   }

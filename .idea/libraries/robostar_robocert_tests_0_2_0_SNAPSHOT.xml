@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="robostar.robocert.tests-0.2.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../robocert-metamodel/robostar.robocert.tests/target/robostar.robocert.tests-0.2.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

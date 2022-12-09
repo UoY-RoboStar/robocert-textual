@@ -34,5 +34,6 @@
     <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202206211010" level="project" />
     <orderEntry type="library" name="robostar.robocert-0.2.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart.generator.csp_3.0.0.202209090727" level="project" />
+    <orderEntry type="library" name="robostar.robocert.tests-0.2.0-SNAPSHOT" level="project" />
   </component>
 </module>

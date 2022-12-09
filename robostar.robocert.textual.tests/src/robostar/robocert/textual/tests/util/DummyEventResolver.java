@@ -16,10 +16,8 @@ import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
 import java.util.Objects;
 import java.util.stream.Stream;
-import robostar.robocert.Actor;
-import robostar.robocert.ComponentActor;
-import robostar.robocert.EventTopic;
-import robostar.robocert.World;
+
+import robostar.robocert.*;
 import robostar.robocert.util.resolve.EventResolver;
 
 public record DummyEventResolver(RoboChartFactory chart) implements EventResolver {
@@ -29,7 +27,7 @@ public record DummyEventResolver(RoboChartFactory chart) implements EventResolve
   }
 
   @Override
-  public Stream<Connection> resolve(EventTopic topic, Actor from, Actor to) {
+  public Stream<Connection> resolve(EventTopic topic, Endpoint from, Endpoint to) {
     final var efrom = topic.getEfrom();
     final var efromName = efrom.getName();
     final var eto = topic.getEto();
@@ -51,13 +49,13 @@ public record DummyEventResolver(RoboChartFactory chart) implements EventResolve
     return Stream.of();
   }
 
-  private ConnectionNode fabricateNode(Actor a) {
+  private ConnectionNode fabricateNode(Endpoint a) {
     if (a instanceof World) {
       final var rp = chart.createRoboticPlatformDef();
       rp.setName("RP");
       return rp;
     }
-    if (a instanceof ComponentActor c) {
+    if (a instanceof ActorEndpoint n && n.getActor() instanceof ComponentActor c) {
       return c.getNode();
     }
     // this is likely not even reached.
