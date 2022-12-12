@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
-import robostar.robocert.Actor;
 import robostar.robocert.EventTopic;
 import robostar.robocert.ExpressionValueSpecification;
 import robostar.robocert.Message;
@@ -28,7 +27,6 @@ import robostar.robocert.OperationTopic;
 import robostar.robocert.WildcardValueSpecification;
 import robostar.robocert.RoboCertPackage.Literals;
 import robostar.robocert.ValueSpecification;
-import robostar.robocert.World;
 import robostar.robocert.util.resolve.EventResolver;
 import robostar.robocert.util.resolve.ParamTypeResolver;
 
@@ -173,9 +171,5 @@ public class MessageValidator extends AbstractDeclarativeValidator {
             return typeProvider.typeCompatible(etype, ptype);
         }
         return false;
-    }
-
-    private boolean isWorld(Actor a) {
-        return a instanceof World;
     }
 }
