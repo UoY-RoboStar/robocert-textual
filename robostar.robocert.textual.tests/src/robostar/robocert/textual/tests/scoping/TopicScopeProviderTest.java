@@ -24,7 +24,7 @@ import robostar.robocert.util.MessageFactory;
 import robostar.robocert.util.TargetFactory;
 import robostar.robocert.textual.scoping.TopicScopeProvider;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
-import robostar.robocert.tests.util.resolve.ForagingExample;
+import robostar.robocert.tests.examples.ForagingExample;
 
 /**
  * Tests {@link TopicScopeProvider}.

@@ -17,19 +17,15 @@ import org.eclipse.xtext.validation.ComposedChecks;
 import robostar.robocert.textual.validation.core.ExpressionValidator;
 import robostar.robocert.textual.validation.seq.DiscreteBoundValidator;
 import robostar.robocert.textual.validation.seq.ActorValidator;
-import robostar.robocert.textual.validation.seq.DeadlineFragmentValidator;
-import robostar.robocert.textual.validation.seq.LifelineOccurrenceValidator;
 import robostar.robocert.textual.validation.seq.MessageValidator;
-import robostar.robocert.textual.validation.seq.SequenceGroupValidator;
+import robostar.robocert.textual.validation.seq.SpecificationGroupValidator;
 
 /**
  * This class contains custom validation rules.
  * <p>
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
-@ComposedChecks(validators = {ActorValidator.class, DiscreteBoundValidator.class,
-    DeadlineFragmentValidator.class, ExpressionValidator.class, LifelineOccurrenceValidator.class,
-    MessageValidator.class, SequenceGroupValidator.class})
+@ComposedChecks(validators = {ActorValidator.class, DiscreteBoundValidator.class, ExpressionValidator.class, MessageValidator.class, SpecificationGroupValidator.class})
 public class RoboCertValidator extends AbstractRoboCertValidator {
 
 }

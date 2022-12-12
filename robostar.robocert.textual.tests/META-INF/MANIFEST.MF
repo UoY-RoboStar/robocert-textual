@@ -7,7 +7,8 @@ Bundle-Version: 0.2.0.qualifier
 Bundle-SymbolicName: robostar.robocert.textual.tests; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: robostar.robocert.textual;bundle-version="0.1.0",
- robostar.robocert;bundle-version="0.1.0",
+ robostar.robocert;bundle-version="0.2.0",
+ robostar.robocert.tests;bundle-version="0.2.0",
  circus.robocalc.robochart;bundle-version="2.0.0",
  circus.robocalc.robochart.textual;bundle-version="3.0.0",
  circus.robocalc.robochart.generator.csp;bundle-version="3.0.0",

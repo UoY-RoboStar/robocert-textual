@@ -21,11 +21,11 @@ import robostar.robocert.TargetActor;
 import robostar.robocert.util.StreamHelper;
 
 /**
- * Validates aspects of sequence groups.
+ * Validates aspects of specification groups.
  *
  * @author Matt Windsor
  */
-public class SequenceGroupValidator extends AbstractDeclarativeValidator {
+public class SpecificationGroupValidator extends AbstractDeclarativeValidator {
     // TODO(@MattWindsor91): systematic codes
     public static final String SMA_NEEDS_SYSTEM = "smaNeedsSystem";
     public static final String SYS_COMPONENTS = "sysComponents";
