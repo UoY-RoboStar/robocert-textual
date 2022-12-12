@@ -100,6 +100,8 @@ class TopicScopeProviderTest {
         final var nms = certFactory.createNamedMessageSet();
         nms.setName("Msgs");
         nms.setSet(ms);
+
+        grp.getActors().add(target.getActor());
         grp.getMessageSets().add(nms);
     }
 }

@@ -9,6 +9,7 @@
  */
 package robostar.robocert.textual.scoping;
 
+import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.Context;
 import circus.robocalc.robochart.generator.csp.comp.timed.CTimedGeneratorUtils;
 import com.google.inject.Inject;
@@ -17,6 +18,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
@@ -56,7 +59,7 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver def
     // For outbound messages, we can only resolve efrom, but need to work out which of the two
     // actors gives us the right scope. By default, we use whichever Actor isn't the World.
     if (msg.isOutbound()) {
-      isEfrom = to instanceof World;
+      isEfrom = to.isWorld();
       // However, there is a corner-case: the appropriate scope on a module target is the robotic
       // platform (ie, the World), and not the contents of the module (ie, the TargetActor).
       final var tgt = groupFinder.findTarget(from);
@@ -79,6 +82,12 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver def
   }
 
   private <T extends EObject> Set<T> endpointCandidates(Endpoint e, Function<Context, List<T>> selector) {
-    return endRes.resolve(e).map(defRes::context).map(selector).flatMap(List<T>::stream).collect(Collectors.toSet());
+    final var nodes = endRes.resolve(e);
+    return nodes.flatMap(n -> selectToStream(n, selector)).collect(Collectors.toSet());
+  }
+
+  private <T extends EObject> Stream<T> selectToStream(ConnectionNode n, Function<Context, List<T>> selector) {
+    final var ctx = defRes.context(n);
+    return selector.apply(ctx).stream();
   }
 }
