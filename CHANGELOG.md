@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (2022-11-21)
+## Unreleased (2022-11-21)
 
 ### Changed
 
@@ -18,18 +18,33 @@ specific:
 - Any use of `:` in branch fragments should be removed without replacement.
 - `deadline (X units) on Y` is now `deadline (X units on Y)`.
 - `wait (X units) on Y` is now `wait (X units on Y)`.
-- `deadlock on Y` is now `deadlock (on Y)`, for consistency.
+
+Another **breaking change** is that the CSP generator, TikZ generator, and
+textual plugin are all now separate; the former two will be provided as
+separate plugins from now.
 
 ### Added
 
-- Added `use enum package::EnumName` to pull enumerations into scope, so
-  as to avoid the fact that in RoboChart expressions `package::EnumName::X`
+- Added `use enum package::EnumName` to pull enumerations into scope, to
+  avoid the fact that in RoboChart expressions `package::EnumName::X`
   would be parsed as an enumeration `package`.
 - The word `set` may now be omitted in a reference to a message set (but not
   a definition of one).  For instance, `any except SetName until deadlock end`
   is now legal.  The valid forms are `message set`, `set`, or no keyword.
 - `specification group`s may now be called `property group`s.  The latter term
   is preferred and may become the sole valid name in future versions.
+- Added `until ... do ... end` and `timeout (X units) ... end`, corresponding
+  to the new `DoUntilFragment` and `UntilFragment` forms.
+- Added `anything (in X except Y)`, etc. (eg, without a corresponding `until`),
+  corresponding to the new `AnyFragment`.  Note that such an `anything` must be
+  at the end of its operand or interaction; for this reason, any attempt to put
+  an `anything` before an `until ... do ... end` block will fail to parse.
+- Lists that previously accepted `x, y, z`, `x, y, and z`, and `x, y and z`
+  now admit any arbitrary combination of `,`, `and`, and `, and`.
+
+### Removed
+
+- `deadlock on Y` is no longer available.
 
 ### Fixed
 

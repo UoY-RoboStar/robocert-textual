@@ -41,8 +41,7 @@ specification group S {
   target = module Mod
   actors = {target as T}
   sequence Test {
-    var x: real
-    actors T
+    actors T { var x: real }
     anything
   }
 }

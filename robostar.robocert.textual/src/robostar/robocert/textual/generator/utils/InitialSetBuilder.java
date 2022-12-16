@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import robostar.robocert.BlockFragment;
 import robostar.robocert.BranchFragment;
 import robostar.robocert.InteractionOperand;
-import robostar.robocert.MessageOccurrence;
+import robostar.robocert.MessageFragment;
 import robostar.robocert.InteractionFragment;
 import robostar.robocert.Message;
 import robostar.robocert.UntilFragment;
@@ -42,7 +42,7 @@ public class InitialSetBuilder {
     }
 
     private Stream<Message> fragmentInitialSet(InteractionFragment fragment) {
-        if (fragment instanceof MessageOccurrence m) {
+        if (fragment instanceof MessageFragment m) {
             return Stream.of(m.getMessage());
         }
 

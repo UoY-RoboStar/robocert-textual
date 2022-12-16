@@ -44,13 +44,19 @@ CollectionTarget:
 // TODO(@MattWindsor91): extended targets
 
 /**
+ * Separator possibilities for lists.
+ */
+fragment Sep *:
+	'and' ','? | ',';
+
+/**
  * A constant assignment.
  * 
- * As with many such lists, the definition of ConstAssignment allows commas
- * with an optional trailing (potentially Oxford-style) 'and'.
+ * As with many such lists, the definition of ConstAssignment allows ',',
+ * 'and', or 
  */
 ConstAssignment:
-	ConstName (',' ConstName)* (','? 'and' ConstName)? AssignWords value=Expression;
+	ConstName (Sep ConstName)* AssignWords value=Expression;
 
 /**
  * Adds a constant to the constants list.
@@ -240,7 +246,7 @@ CSPProperty:
 fragment ActorList *:
 	// should match 'use X', 'use X, Y', 'use X and Y', 'use X, Y and Z',
 	// 'use X, Y, and Z', and so on.
-	'actors' '=' '{' actors+=Actor (',' actors+=Actor)* (','? 'and' actors+=Actor)? '}'
+	'actors' '=' '{' actors+=Actor (Sep actors+=Actor)* '}'
 ;
 
 /**
@@ -249,17 +255,20 @@ fragment ActorList *:
 Interaction:
 	'sequence' name=ID
 	'{'
-	(variables=InteractionVars)?	
-	(('actor' | 'actors') actors+=[Actor] (',' actors+=[Actor])* (','? 'and' actors+=[Actor])?)+
+	(('actor' | 'actors') lifelines+=Lifeline (Sep lifelines+=Lifeline)*)
 	fragments+=InteractionFragment+
 	'}';
+
+Lifeline:
+	{Lifeline} actor=[Actor] ('{' variables=InteractionVars '}')?
+;
 
 /**
  * An interaction variable list (may be empty).
  */
 InteractionVars returns VariableList:
 	{VariableList}
-	modifier=InteractionVarsModifier vars+=Variable (',' vars+=Variable)* (','? 'and' vars+=Variable)?
+	modifier=InteractionVarsModifier vars+=Variable (Sep vars+=Variable)*
 ;
 
 /**
@@ -319,15 +328,30 @@ Guard:
 InteractionFragment:
 	BlockFragment |
 	BranchFragment |
-	AnyFragment |
-	'wait' {WaitFragment} '(' units=TimeUnits 'on' actor=[Actor] ')' |
-	{MessageOccurrence} message=Message OptTemperature;
+	Any |
+	'wait' WaitFragment |
+	{MessageFragment} message=Message OptTemperature;
+
+/**
+ * A wait fragment, less its 'wait' keyword.
+ *
+ * This rule is factored out because we use it for TimeoutFragments too.
+ */
+WaitFragment:
+	'(' units=TimeUnits 'on' actor=[Actor] ')'
+;
 
 /**
  * An any-fragment.
  */
-AnyFragment:
-	('any' | 'anything') intraMessages=IntraMessageSet;
+Any returns InteractionFragment:
+	('any' | 'anything')
+	({AnyFragment} allowed=IntraMessageSet)
+	// Note on this syntactic ambiguity:
+	// 'any' must always be the final item in its operand, so following an
+	// AnyFragment with an UntilFragment never makes semantic sense.  As such,
+	// it syntactically always resolves to an AnyUntilFragment.
+	(-> 'until' {AnyUntilFragment.body=current} trigger=BlockInteractionOperand)?;
 
 //
 // Block fragments
@@ -336,10 +360,13 @@ AnyFragment:
  * A block fragment.
  */
 BlockFragment:
-	('deadline' {DeadlineFragment} '(' units=TimeUnits 'on' actor=[Actor] ')' |
-	('opt' | 'optional') {OptFragment} |
-	'until' {UntilFragment} trigger=BranchInteractionOperand 'do' |
-	'loop' {LoopFragment} ('(' bound=DiscreteBound ('time' | 'times')? ')')?) (name=ID)? body=BlockInteractionOperand;
+	(
+		'deadline' {DeadlineFragment} '(' units=TimeUnits 'on' actor=[Actor] ')' |
+		'timeout' {TimeoutFragment} trigger=WaitFragment |
+		('opt' | 'optional') {OptFragment} |
+		'until' {DoUntilFragment} trigger=BranchInteractionOperand 'do' |
+		'loop' {LoopFragment} ('(' bound=DiscreteBound ('time' | 'times')? ')')?
+	) (name=ID)? body=BlockInteractionOperand;
 
 //
 // Discrete bounds

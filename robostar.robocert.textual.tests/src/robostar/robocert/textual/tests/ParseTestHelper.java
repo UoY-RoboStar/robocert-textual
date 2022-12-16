@@ -21,7 +21,7 @@ import org.eclipse.xtext.testing.util.ParseHelper;
 import robostar.robocert.CertPackage;
 import robostar.robocert.ExpressionValueSpecification;
 import robostar.robocert.InteractionFragment;
-import robostar.robocert.MessageOccurrence;
+import robostar.robocert.MessageFragment;
 import robostar.robocert.SpecificationGroup;
 import robostar.robocert.util.StreamHelper;
 
@@ -124,7 +124,7 @@ specification group X {
 	 */
 	public Expression unliftExpr(CertPackage it) {
 		final var sseq = unliftSubsequence(it);
-		final var om = StreamHelper.firstOfClass(sseq.stream(), MessageOccurrence.class);
+		final var om = StreamHelper.firstOfClass(sseq.stream(), MessageFragment.class);
 		if (om.isEmpty()) {
 			throw new IllegalArgumentException("subsequence does not contain an occurrence fragment");
 		}

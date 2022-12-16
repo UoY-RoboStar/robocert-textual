@@ -42,7 +42,7 @@ public class MessageFactory {
    */
   public void setupAsGap(MessageSet g) {
     final var it = rcert.createAnyFragment();
-    it.setIntraMessages(g);
+    it.setAllowed(g);
     seq().getFragments().add(it);
   }
 
