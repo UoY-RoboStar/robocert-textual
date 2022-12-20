@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="eclipse.platform.ui" type="repository">
+    <properties include-transitive-deps="false" maven-id="org.eclipse.platform:org.eclipse.ui:3.201.200" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/platform/org.eclipse.ui/3.201.200/org.eclipse.ui-3.201.200.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

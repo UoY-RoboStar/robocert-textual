@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="eclipse.platform.ui.workbench" type="repository">
+    <properties include-transitive-deps="false" maven-id="org.eclipse.platform:org.eclipse.ui.workbench:3.127.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/platform/org.eclipse.ui.workbench/3.127.0/org.eclipse.ui.workbench-3.127.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

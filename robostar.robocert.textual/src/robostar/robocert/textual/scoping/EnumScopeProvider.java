@@ -27,34 +27,35 @@ import circus.robocalc.robochart.textual.scoping.RoboChartScopeProvider;
  * @author Matt Windsor
  */
 public record EnumScopeProvider(ScopeHelper helper, RoboChartScopeProvider chart) {
-	/**
-	 * Constructs an EnumScopeProvider.
-	 *
-	 * @param helper scope helper.
-	 * @param chart  RoboChart scope provider.
-	 */
-	@Inject
-	public EnumScopeProvider {
-		Objects.requireNonNull(helper);
-		Objects.requireNonNull(chart);
-	}
 
-	/**
-	 * Produces a scope for part of an enumeration expression.
-	 * 
-	 * @param exp enumeration expression.
-	 * @param ref reference of what is being resolved within the expression.
-	 * @return a scope corresponding to the given reference and expression.
-	 */
-	public IScope exprScope(EnumExp exp, EReference ref) {
-		// Usually we delegate to RoboChart; for types, we do a little extra.
-		final var chartScope = chart.getScope(exp, ref);
-		return ref == Literals.ENUM_EXP__TYPE ? typeScope(exp, chartScope) : chartScope;
-	}
+  /**
+   * Constructs an EnumScopeProvider.
+   *
+   * @param helper scope helper.
+   * @param chart  RoboChart scope provider.
+   */
+  @Inject
+  public EnumScopeProvider {
+    Objects.requireNonNull(helper);
+    Objects.requireNonNull(chart);
+  }
 
-	private IScope typeScope(EnumExp exp, IScope chartScope) {
-		// We want to add into scope any explicitly-imported enumerations.
-		final var grp = helper.specificationGroupOf(exp);
-		return grp.map(g -> Scopes.scopeFor(g.getImportedEnums(), chartScope)).orElse(chartScope);
-	}
+  /**
+   * Produces a scope for part of an enumeration expression.
+   *
+   * @param exp enumeration expression.
+   * @param ref reference of what is being resolved within the expression.
+   * @return a scope corresponding to the given reference and expression.
+   */
+  public IScope exprScope(EnumExp exp, EReference ref) {
+    // Usually we delegate to RoboChart; for types, we do a little extra.
+    final var chartScope = chart.getScope(exp, ref);
+    return ref == Literals.ENUM_EXP__TYPE ? typeScope(exp, chartScope) : chartScope;
+  }
+
+  private IScope typeScope(EnumExp exp, IScope chartScope) {
+    // We want to add into scope any explicitly-imported enumerations.
+    final var grp = helper.specificationGroupOf(exp);
+    return grp.map(g -> Scopes.scopeFor(g.getImportedEnums(), chartScope)).orElse(chartScope);
+  }
 }
