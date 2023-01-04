@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 University of York and others
+ * Copyright (c) 2022, 2023 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,8 +9,10 @@
  */
 package robostar.robocert.textual.scoping;
 
+import circus.robocalc.robochart.Enumeration;
 import java.util.Objects;
 
+import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.Scopes;
@@ -20,6 +22,9 @@ import com.google.inject.Inject;
 import circus.robocalc.robochart.EnumExp;
 import circus.robocalc.robochart.RoboChartPackage.Literals;
 import circus.robocalc.robochart.textual.scoping.RoboChartScopeProvider;
+import robostar.robocert.CertPackage;
+import robostar.robocert.util.StreamHelper;
+import robostar.robocert.util.resolve.ResolveHelper;
 
 /**
  * Provides scopes for RoboChart enumerations.
@@ -55,7 +60,12 @@ public record EnumScopeProvider(ScopeHelper helper, RoboChartScopeProvider chart
 
   private IScope typeScope(EnumExp exp, IScope chartScope) {
     // We want to add into scope any explicitly-imported enumerations.
-    final var grp = helper.specificationGroupOf(exp);
-    return grp.map(g -> Scopes.scopeFor(g.getImportedEnums(), chartScope)).orElse(chartScope);
+    final var pkg = ResolveHelper.containerOfType(exp, CertPackage.class);
+    final var enums = pkg.stream().flatMap(this::packageEnums).toList();
+    return Scopes.scopeFor(enums, chartScope);
+  }
+
+  private Stream<Enumeration> packageEnums(CertPackage pkg) {
+    return pkg.getRcImports().stream().flatMap(i -> StreamHelper.filter(i.getTypes().stream(), Enumeration.class));
   }
 }
