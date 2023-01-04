@@ -10,6 +10,7 @@
 
 package robostar.robocert.textual.generator.intf.seq.context;
 
+import circus.robocalc.robochart.Variable;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -37,6 +38,18 @@ public record SequentialContext(InteractionContext global) implements LifelineCo
      */
     public SequentialContext {
         Objects.requireNonNull(global);
+    }
+
+    @Override
+    public Stream<Variable> variables() {
+        // Sequential contexts currently have no access to any variables.
+        return Stream.empty();
+    }
+
+    @Override
+    public boolean needsMemory() {
+        // Sequential contexts never generate a memory.
+        return false;
     }
 
     @Override

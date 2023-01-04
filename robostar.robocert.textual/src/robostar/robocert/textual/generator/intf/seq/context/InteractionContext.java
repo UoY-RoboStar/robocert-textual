@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 University of York and others
+ * Copyright (c) 2022, 2023 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +13,7 @@ package robostar.robocert.textual.generator.intf.seq.context;
 import robostar.robocert.Interaction;
 
 import java.util.stream.Stream;
+import robostar.robocert.util.resolve.VariableResolver;
 
 /**
  * Common-denominator interface for interaction contexts.
@@ -28,16 +29,34 @@ public interface InteractionContext {
     Interaction interaction();
 
     /**
-     * Gets the number of lifelines in this interaction.
+     * Gets contexts for each of the lifelines in this interaction.
      *
-     * @return the number of lifelines (equal to the size of {@code lifelines()}.
-     */
-    int numLifelines();
-
-    /**
-     * Produces contexts for each of the lifelines in this interaction.
-     *
-     * @return a stream of lifeline contexts.
+     * @return a list of lifeline contexts.
      */
     Stream<LifelineContext> lifelines();
+
+    /**
+     * Gets all the variables reachable from this interaction.
+     *
+     * @return a list of variables (with attached lifelines).
+     */
+    Stream<VariableResolver.Result> variables();
+
+    /**
+     * Gets the number of lifelines in this interaction.
+     *
+     * @return the number of lifelines (equal to the size of {@code lifelines()}).
+     */
+    default long numLifelines() {
+        return lifelines().count();
+    }
+
+    /**
+     * Does this interaction need memory processes?
+     *
+     * @return true if, and only if, at least one specification variable exists in the interaction.
+     */
+    default boolean needsMemory() {
+        return variables().findAny().isPresent();
+    }
 }

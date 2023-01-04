@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 University of York and others
+ * Copyright (c) 2022, 2023 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +10,7 @@
 
 package robostar.robocert.textual.generator.intf.seq.context;
 
+import circus.robocalc.robochart.Variable;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import robostar.robocert.Actor;
@@ -19,9 +20,26 @@ import robostar.robocert.SequentialFragment;
  * Context related to the current lifeline being generated.
  *
  * <p>Depending on where we are in generation, this may be tied to a particular {@link Actor}, or
- * a special linearised context representing an until-fragment.
+ * a sequential process used for realising sequential fragments.
  */
 public interface LifelineContext {
+
+  /**
+   * Gets the variables in scope for this lifeline.
+   *
+   * @return a stream of the lifeline's in-scope variables.
+   */
+  Stream<Variable> variables();
+
+  /**
+   * Does this lifeline require a memory?
+   *
+   * @return true if the lifeline requires a memory (generally, there is at least one lifeline-local
+   *         variable in scope for this lifeline).
+   */
+  default boolean needsMemory() {
+    return variables().findAny().isPresent();
+  }
 
   /**
    * Is this context for the given actor?
