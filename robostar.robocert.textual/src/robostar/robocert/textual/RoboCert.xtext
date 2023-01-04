@@ -423,8 +423,12 @@ Message:
 	topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')?;
 
 enum Synchronicity:
+	// Mermaid style
 	SYNCHRONOUS='->>' |
-	ASYNCHRONOUS='-)';
+	ASYNCHRONOUS='-)' |
+	// Unicode style (as used in literate forms of papers)
+	SYNCHRONOUS='↠' |
+	ASYNCHRONOUS='⇾' ;
 
 Endpoint:
 	// The '|' is meant to invoke the vertical wall of a sequence diagram.
