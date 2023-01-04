@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.ConstAssignment;
 import robostar.robocert.RoboCertFactory;
-import robostar.robocert.util.ExpressionFactory;
+import robostar.robocert.util.factory.robochart.ExpressionFactory;
 import robostar.robocert.textual.scoping.VariableScopeProvider;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 import robostar.robocert.textual.tests.util.DummyVariableFactory;

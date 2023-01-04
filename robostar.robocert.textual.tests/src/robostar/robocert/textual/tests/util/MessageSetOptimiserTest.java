@@ -14,8 +14,6 @@ import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
@@ -27,7 +25,7 @@ import robostar.robocert.ExtensionalMessageSet;
 import robostar.robocert.MessageSet;
 import robostar.robocert.RoboCertFactory;
 import robostar.robocert.textual.generator.utils.MessageSetOptimiser;
-import robostar.robocert.util.SetFactory;
+import robostar.robocert.util.factory.SetFactory;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 
 /**

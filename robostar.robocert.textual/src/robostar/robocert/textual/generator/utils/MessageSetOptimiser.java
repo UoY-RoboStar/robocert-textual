@@ -17,7 +17,7 @@ import robostar.robocert.BinarySetOperator;
 import robostar.robocert.ExtensionalMessageSet;
 import robostar.robocert.MessageSet;
 import robostar.robocert.UniverseMessageSet;
-import robostar.robocert.util.SetFactory;
+import robostar.robocert.util.factory.SetFactory;
 
 /**
  * Functionality for optimising message sets.

@@ -19,7 +19,7 @@ import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import robostar.robocert.util.ExpressionFactory;
+import robostar.robocert.util.factory.robochart.ExpressionFactory;
 
 /**
  * Tests the parsing of RoboCert expressions.
