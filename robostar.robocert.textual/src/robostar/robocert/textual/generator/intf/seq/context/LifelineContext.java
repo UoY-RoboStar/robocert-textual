@@ -35,7 +35,7 @@ public interface LifelineContext {
    * Does this lifeline require a memory?
    *
    * @return true if the lifeline requires a memory (generally, there is at least one lifeline-local
-   *         variable in scope for this lifeline).
+   * variable in scope for this lifeline).
    */
   default boolean needsMemory() {
     return variables().findAny().isPresent();
@@ -74,13 +74,17 @@ public interface LifelineContext {
   InteractionContext global();
 
   /**
-   * Handles a sequential fragment according to whether this lifeline is in sequential position or not.
+   * Handles a sequential fragment according to whether this lifeline is in sequential position or
+   * not.
    *
-   * @param f fragment to be expanded.
-   * @param <T> type of output for this sequential fragment.
-   * @param emitInline function to be used if we are in sequential position (and want the fragment expanded).
-   * @param emitReference function to be used if we are not in sequential position (accepts the fragment index).
+   * @param f             fragment to be expanded.
+   * @param <T>           type of output for this sequential fragment.
+   * @param emitInline    function to be used if we are in sequential position (and want the
+   *                      fragment expanded).
+   * @param emitReference function to be used if we are not in sequential position (accepts the
+   *                      fragment index).
    * @return the result of whichever of the emitting functions was called.
    */
-  <T> T handleSequential(SequentialFragment f, Function<SequentialFragment, T> emitInline, Function<Integer, T> emitReference);
+  <T> T handleSequential(SequentialFragment f, Function<SequentialFragment, T> emitInline,
+      Function<Integer, T> emitReference);
 }

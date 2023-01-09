@@ -36,13 +36,6 @@ public interface InteractionContext {
     Stream<LifelineContext> lifelines();
 
     /**
-     * Gets all the variables reachable from this interaction.
-     *
-     * @return a list of variables (with attached lifelines).
-     */
-    Stream<VariableResolver.Result> variables();
-
-    /**
      * Gets the number of lifelines in this interaction.
      *
      * @return the number of lifelines (equal to the size of {@code lifelines()}).
@@ -50,6 +43,13 @@ public interface InteractionContext {
     default long numLifelines() {
         return lifelines().count();
     }
+
+    /**
+     * Gets all the variables reachable from this interaction.
+     *
+     * @return a list of variables (with attached lifelines).
+     */
+    Stream<VariableResolver.Result> variables();
 
     /**
      * Does this interaction need memory processes?

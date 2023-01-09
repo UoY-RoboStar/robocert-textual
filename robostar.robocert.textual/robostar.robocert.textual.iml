@@ -19,7 +19,6 @@
     <orderEntry type="library" name="robostar.robocert-0.2.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart.textual_3.0.0.202206290948" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart.generator.csp_3.0.0.202209090727" level="project" />
-    <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202206211010" level="project" />
     <orderEntry type="library" name="eclipse.xtext.ide" level="project" />
     <orderEntry type="library" name="eclipse.platform.ui" level="project" />
     <orderEntry type="library" name="eclipse.platform.ui.workbench" level="project" />
@@ -27,5 +26,6 @@
     <orderEntry type="library" name="eclipse.xtext.util" level="project" />
     <orderEntry type="library" name="eclipse.xtext.common.types" level="project" />
     <orderEntry type="library" name="eclipse.xtext.ui.shared" level="project" />
+    <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202206211010" level="project" />
   </component>
 </module>
