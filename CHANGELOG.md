@@ -16,8 +16,6 @@ specific:
   has been abolished, and should be replaced with an `end` at the end of
   the line instead.
 - Any use of `:` in branch fragments should be removed without replacement.
-- `deadline (X units) on Y` is now `deadline (X units on Y)`.
-- `wait (X units) on Y` is now `wait (X units on Y)`.
 
 Another **breaking change** is that the CSP generator, TikZ generator, and
 textual plugin are all now separate; the former two will be provided as

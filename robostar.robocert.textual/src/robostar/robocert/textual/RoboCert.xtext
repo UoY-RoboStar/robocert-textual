@@ -330,7 +330,14 @@ InteractionFragment:
  * This rule is factored out because we use it for TimeoutFragments too.
  */
 WaitFragment:
-	'(' units=TimeUnits 'on' actor=[Actor] ')'
+	TimeFragmentTail
+;
+
+/**
+ * Common body of time fragments.
+ */
+fragment TimeFragmentTail *:
+	'(' units=TimeUnits ')' 'on' 'actor'? actor=[Actor]
 ;
 
 /**
@@ -353,7 +360,7 @@ Any returns InteractionFragment:
  */
 BlockFragment:
 	(
-		'deadline' {DeadlineFragment} '(' units=TimeUnits 'on' actor=[Actor] ')' |
+		'deadline' {DeadlineFragment} TimeFragmentTail |
 		'timeout' {TimeoutFragment} trigger=WaitFragment |
 		('opt' | 'optional') {OptFragment} |
 		'until' {DoUntilFragment} trigger=BranchInteractionOperand 'do' |
