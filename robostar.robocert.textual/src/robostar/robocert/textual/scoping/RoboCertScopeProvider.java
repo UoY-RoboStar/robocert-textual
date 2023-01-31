@@ -28,64 +28,65 @@ import circus.robocalc.robochart.textual.scoping.RoboChartScopeProvider;
 import robostar.robocert.ConstAssignment;
 import robostar.robocert.EventTopic;
 import robostar.robocert.OperationTopic;
+import robostar.robocert.util.resolve.EndIndex;
 
 /**
  * This class contains custom scoping description.
- * 
- * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping
- * on how and when to use it.
+ *
+ * <p>
+ * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#scoping on how and when
+ * to use it.
  */
 public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
-	@Inject private VariableScopeProvider vsp;
-	@Inject private TopicScopeProvider tsp;
-	@Inject private EnumScopeProvider esp;	
-	@Inject private RoboChartScopeProvider rchart;
 
-	
-	@Override
-	public IScope getScope(EObject context, EReference reference) {
-		final var scope = tryGetScope(context, reference);
-		return scope == null ? super.getScope(context, reference) : scope;
-	}
-	
-	/**
-	 * Tries to get a custom scope for the given context and reference.
-	 *
-	 * @param context   context of the feature being resolved.
-	 * @param reference reference to the feature being resolved.
-	 * 
-	 * @return the custom scope (may be null, in which case we delegate to the
-	 *         parent scoping rules).
-	 */
-	private IScope tryGetScope(EObject context, EReference reference) {
-		if (context instanceof EventTopic e && isEventReference(reference))
-			return tsp.getEventScope(e, reference == EVENT_TOPIC__EFROM);
-		if (context instanceof OperationTopic o && reference == OPERATION_TOPIC__OPERATION)
-			return tsp.getOperationScope(o);
-		if (context instanceof ConstAssignment k && reference == CONST_ASSIGNMENT__CONSTANTS)
-			return vsp.constAssignmentScope(k);
-		if (context instanceof RefExp x && reference == Literals.REF_EXP__REF)
-			return vsp.exprScope(x);
-		if (context instanceof EnumExp x)
-			return esp.exprScope(x, reference);
-		//if (context instanceof EnumExp x && reference == Literals.ENUM_EXP__TYPE)
-		//	return enumExpType(x);
-		if (context instanceof TypeRef x && reference == Literals.TYPE_REF__REF)
-			return rchart.getScope(x, reference);
+  @Inject
+  private VariableScopeProvider vsp;
+  @Inject
+  private TopicScopeProvider tsp;
+  @Inject
+  private EnumScopeProvider esp;
+  @Inject
+  private RoboChartScopeProvider rchart;
 
-		// Fallback to normal scope resolution.
-		return null;
-	}
-	
-	/*
-	private IScope enumExpType(EnumExp x) {
 
-		// TODO
-		
-	}
-	*/
+  @Override
+  public IScope getScope(EObject context, EReference reference) {
+    final var scope = tryGetScope(context, reference);
+    return scope == null ? super.getScope(context, reference) : scope;
+  }
 
-	private boolean isEventReference(EReference reference) {
-		return reference == EVENT_TOPIC__EFROM || reference == EVENT_TOPIC__ETO;
-	}
+  /**
+   * Tries to get a custom scope for the given context and reference.
+   *
+   * @param context   context of the feature being resolved.
+   * @param reference reference to the feature being resolved.
+   * @return the custom scope (may be null, in which case we delegate to the parent scoping rules).
+   */
+  private IScope tryGetScope(EObject context, EReference reference) {
+    if (context instanceof EventTopic e && isEventReference(reference)) {
+      return tsp.eventScope(e, reference == EVENT_TOPIC__EFROM ? EndIndex.From : EndIndex.To);
+    }
+    if (context instanceof OperationTopic o && reference == OPERATION_TOPIC__OPERATION) {
+      return tsp.getOperationScope(o);
+    }
+    if (context instanceof ConstAssignment k && reference == CONST_ASSIGNMENT__CONSTANTS) {
+      return vsp.constAssignmentScope(k);
+    }
+    if (context instanceof RefExp x && reference == Literals.REF_EXP__REF) {
+      return vsp.exprScope(x);
+    }
+    if (context instanceof EnumExp x) {
+      return esp.exprScope(x, reference);
+    }
+    if (context instanceof TypeRef x && reference == Literals.TYPE_REF__REF) {
+      return rchart.getScope(x, reference);
+    }
+
+    // Fallback to normal scope resolution.
+    return null;
+  }
+
+  private boolean isEventReference(EReference reference) {
+    return reference == EVENT_TOPIC__EFROM || reference == EVENT_TOPIC__ETO;
+  }
 }

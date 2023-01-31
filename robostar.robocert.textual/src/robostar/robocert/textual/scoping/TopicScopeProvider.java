@@ -26,14 +26,16 @@ import org.eclipse.xtext.scoping.Scopes;
 import robostar.robocert.*;
 import robostar.robocert.util.GroupFinder;
 import robostar.robocert.util.resolve.DefinitionResolver;
-import robostar.robocert.util.resolve.node.EndpointNodeResolver;
+import robostar.robocert.util.resolve.EndIndex;
+import robostar.robocert.util.resolve.node.MessageEndNodeResolver;
 
 /**
  * Scoping logic for message topics.
  *
  * @author Matt Windsor
  */
-public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver defRes, EndpointNodeResolver endRes, GroupFinder groupFinder) {
+public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver defRes,
+                                 MessageEndNodeResolver endRes, GroupFinder groupFinder) {
 
   @Inject
   public TopicScopeProvider {
@@ -44,31 +46,38 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver def
   }
 
   /**
-   * Calculates the scope of operations available to the given topic.
+   * Calculates the scope of events available to the given topic.
    *
-   * @param t       the topic for which we are getting scoping information.
-   * @param isEfrom whether we are looking at eFrom.
-   * @return the scope (may be null).
+   * @param t        the topic for which we are getting scoping information
+   * @param eventEnd the end of the message at which the event being resolved is located
+   * @return the scope (can be null)
    */
-  public IScope getEventScope(EventTopic t, boolean isEfrom) {
-    final var msg = t.getMessage();
-    final var from = msg.getFrom();
-    final var to = msg.getTo();
+  public IScope eventScope(EventTopic t, EndIndex eventEnd) {
+    final var grp = groupFinder.find(t);
+    if (grp.isEmpty()) {
+      return IScope.NULLSCOPE;
+    }
+    final var actors = grp.get().getActors();
 
+    final var msg = t.getMessage();
+    final var tgt = grp.get().getTarget();
+
+    final var end = scopeEnd(msg, tgt, eventEnd);
+    return Scopes.scopeFor(endCandidates(end.of(msg), actors, gu::allEvents));
+  }
+
+  private EndIndex scopeEnd(Message msg, Target tgt, EndIndex eventEnd) {
     // For component messages, we take scope from whichever side of the message we are resolving.
-    // For outbound messages, we can only resolve efrom, but need to work out which of the two
-    // actors gives us the right scope. By default, we use whichever Actor isn't the World.
-    if (msg.isOutbound()) {
-      isEfrom = to.isWorld();
-      // However, there is a corner-case: the appropriate scope on a module target is the robotic
-      // platform (ie, the World), and not the contents of the module (ie, the TargetActor).
-      final var tgt = groupFinder.findTarget(from);
-      if (tgt.filter(x -> x instanceof ModuleTarget).isPresent()) {
-        isEfrom = !isEfrom;
-      }
+    if (!msg.isOutbound()) {
+      return eventEnd;
     }
 
-    return Scopes.scopeFor(endpointCandidates(isEfrom ? from : to, gu::allEvents));
+    // For outbound messages, we usually take scope from whichever side is NOT the gate.
+    final var usualEnd = msg.getTo().isGate() ? EndIndex.From : EndIndex.To;
+
+    // However, there is a corner-case: the appropriate scope on a module target is the robotic
+    // platform (i.e. the gate), and not the contents of the module (ie, the TargetActor).
+    return usualEnd.oppositeIf(tgt instanceof ModuleTarget);
   }
 
   /**
@@ -78,15 +87,25 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver def
    * @return the scope (may be null).
    */
   public IScope getOperationScope(OperationTopic t) {
-    return Scopes.scopeFor(endpointCandidates(t.getMessage().getFrom(), gu::allOperations));
+    final var grp = groupFinder.find(t);
+    if (grp.isEmpty()) {
+      return IScope.NULLSCOPE;
+    }
+    final var actors = grp.get().getActors();
+
+    // Operation scopes are always defined on the 'from' end, because (as of writing),
+    // all operations are calls to the robotic platform (gate).
+    return Scopes.scopeFor(endCandidates(t.getMessage().getFrom(), actors, gu::allOperations));
   }
 
-  private <T extends EObject> Set<T> endpointCandidates(Endpoint e, Function<Context, List<T>> selector) {
-    final var nodes = endRes.resolve(e);
+  private <T extends EObject> Set<T> endCandidates(MessageEnd e, List<Actor> actors,
+      Function<Context, List<T>> selector) {
+    final var nodes = endRes.resolve(e, actors);
     return nodes.flatMap(n -> selectToStream(n, selector)).collect(Collectors.toSet());
   }
 
-  private <T extends EObject> Stream<T> selectToStream(ConnectionNode n, Function<Context, List<T>> selector) {
+  private <T extends EObject> Stream<T> selectToStream(ConnectionNode n,
+      Function<Context, List<T>> selector) {
     final var ctx = defRes.context(n);
     return selector.apply(ctx).stream();
   }

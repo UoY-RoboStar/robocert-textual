@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import robostar.robocert.*;
 import robostar.robocert.util.resolve.EventResolver;
+import robostar.robocert.util.resolve.EventResolverQuery;
 
 public record DummyEventResolver(RoboChartFactory chart) implements EventResolver {
   @Inject
@@ -27,10 +28,10 @@ public record DummyEventResolver(RoboChartFactory chart) implements EventResolve
   }
 
   @Override
-  public Stream<Connection> resolve(EventTopic topic, Endpoint from, Endpoint to) {
-    final var efrom = topic.getEfrom();
+  public Stream<Connection> resolve(EventResolverQuery q) {
+    final var efrom = q.topic().getEfrom();
     final var efromName = efrom.getName();
-    final var eto = topic.getEto();
+    final var eto = q.topic().getEto();
     final var etoName = eto.getName();
 
     // Expose an async bidirectional connection from 'bidi1' to 'bidi2'.
@@ -40,8 +41,8 @@ public record DummyEventResolver(RoboChartFactory chart) implements EventResolve
       final var rightWayUp = efromName.equals("bidi1");
       conn.setEfrom(rightWayUp ? efrom : eto);
       conn.setEto(rightWayUp ? eto : efrom);
-      conn.setFrom(fabricateNode(rightWayUp ? from : to));
-      conn.setTo(fabricateNode(rightWayUp ? to : from));
+      conn.setFrom(fabricateNode(rightWayUp ? q.from() : q.to()));
+      conn.setTo(fabricateNode(rightWayUp ? q.to() : q.from()));
       return Stream.of(conn);
     }
     // TODO(@MattWindsor91): add more events as time goes by.
@@ -49,13 +50,13 @@ public record DummyEventResolver(RoboChartFactory chart) implements EventResolve
     return Stream.of();
   }
 
-  private ConnectionNode fabricateNode(Endpoint a) {
-    if (a instanceof World) {
+  private ConnectionNode fabricateNode(MessageEnd a) {
+    if (a instanceof Gate) {
       final var rp = chart.createRoboticPlatformDef();
       rp.setName("RP");
       return rp;
     }
-    if (a instanceof ActorEndpoint n && n.getActor() instanceof ComponentActor c) {
+    if (a instanceof MessageOccurrence n && n.getActor() instanceof ComponentActor c) {
       return c.getNode();
     }
     // this is likely not even reached.

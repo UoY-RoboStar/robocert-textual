@@ -406,7 +406,10 @@ StrictFragment:
 	'end';
 	
 AltOrXAltFragment returns BranchFragment:
-	(('alt' | 'provisional'? 'alternative') {AltFragment} | ('xalt' | 'mandatory' 'alternative') {XAltFragment}) (name=ID)?
+	// Allowed here:
+	// - alt, alternative, provisional alt, provisional alternative
+	// - xalt, mandatory alt, mandatory alternative
+	('provisional'? ('alt' | 'alternative') {AltFragment} | ('xalt' | 'mandatory' ('alt' | 'alternative')) {XAltFragment}) (name=ID)?
 		branches+=BranchInteractionOperand
 		('else' branches+=BranchInteractionOperand)+
 	'end';
@@ -418,7 +421,7 @@ AltOrXAltFragment returns BranchFragment:
  * A message specification.
  */
 Message:
-	from=Endpoint synchronicity=Synchronicity to=Endpoint ':'
+	from=MessageEnd synchronicity=Synchronicity to=MessageEnd ':'
 	topic=MessageTopic ('(' (arguments+=ValueSpecification (',' arguments+=ValueSpecification)*)? ')')?;
 
 enum Synchronicity:
@@ -429,10 +432,10 @@ enum Synchronicity:
 	SYNCHRONOUS='↠' |
 	ASYNCHRONOUS='⇾' ;
 
-Endpoint:
+MessageEnd:
 	// The '|' is meant to invoke the vertical wall of a sequence diagram.
-	'|' {World} |
-	{ActorEndpoint} actor=[Actor|ID]
+	'|' {Gate} |
+	{MessageOccurrence} actor=[Actor|ID]
 ;
 
 //
@@ -442,7 +445,7 @@ Endpoint:
  * A message topic.
  */
 MessageTopic:
-	'event' {EventTopic} efrom=[Event|QualifiedName] ('/' eto=[Event|QualifiedName])? |
+	('ev' | 'event') {EventTopic} efrom=[Event|QualifiedName] ('/' eto=[Event|QualifiedName])? |
 	('op' | 'operation') {OperationTopic} operation=[OperationSig|QualifiedName];
 
 //
