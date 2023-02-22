@@ -60,7 +60,7 @@ public class RoboCertScopeProvider extends AbstractRoboCertScopeProvider {
    *
    * @param context   context of the feature being resolved.
    * @param reference reference to the feature being resolved.
-   * @return the custom scope (may be null, in which case we delegate to the parent scoping rules).
+   * @return the custom scope (can be null, in which case we delegate to the parent scoping rules).
    */
   private IScope tryGetScope(EObject context, EReference reference) {
     if (context instanceof EventTopic e && isEventReference(reference)) {
