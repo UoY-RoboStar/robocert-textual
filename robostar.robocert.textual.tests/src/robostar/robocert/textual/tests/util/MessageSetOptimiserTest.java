@@ -9,7 +9,6 @@
  */
 package robostar.robocert.textual.tests.util;
 
-import java.util.List;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 
@@ -50,12 +49,12 @@ class MessageSetOptimiserTest {
 	 */
 	@Test
 	void testOptimise_Union() {
-		assertThat(sf.union(sf.empty(), sf.empty()), optimisesTo(sf.empty()));
-		assertThat(sf.union(sf.universe(), sf.empty()), optimisesTo(sf.universe()));
-		assertThat(sf.union(sf.empty(), sf.universe()), optimisesTo(sf.universe()));
+		assertThat(sf.union(sf.extensional(), sf.extensional()), optimisesTo(sf.extensional()));
+		assertThat(sf.union(sf.universe(), sf.extensional()), optimisesTo(sf.universe()));
+		assertThat(sf.union(sf.extensional(), sf.universe()), optimisesTo(sf.universe()));
 		assertThat(sf.union(sf.universe(), sf.universe()), optimisesTo(sf.universe()));
-		assertThat(sf.union(single(), sf.empty()), optimisesTo(single()));
-		assertThat(sf.union(sf.empty(), single()), optimisesTo(single()));
+		assertThat(sf.union(single(), sf.extensional()), optimisesTo(single()));
+		assertThat(sf.union(sf.extensional(), single()), optimisesTo(single()));
 		assertThat(sf.union(single(), single()), optimisesTo(single())); // ?
 		assertThat(sf.union(single(), sf.universe()), optimisesTo(sf.universe()));
 		assertThat(sf.union(sf.universe(), single()), optimisesTo(sf.universe()));
@@ -66,12 +65,12 @@ class MessageSetOptimiserTest {
 	 */
 	@Test
 	void testIsActive_Intersection() {
-		assertThat(sf.inter(sf.empty(), sf.empty()), optimisesTo(sf.empty()));
-		assertThat(sf.inter(sf.universe(), sf.empty()), optimisesTo(sf.empty()));
-		assertThat(sf.inter(sf.empty(), sf.universe()), optimisesTo(sf.empty()));
+		assertThat(sf.inter(sf.extensional(), sf.extensional()), optimisesTo(sf.extensional()));
+		assertThat(sf.inter(sf.universe(), sf.extensional()), optimisesTo(sf.extensional()));
+		assertThat(sf.inter(sf.extensional(), sf.universe()), optimisesTo(sf.extensional()));
 		assertThat(sf.inter(sf.universe(), sf.universe()), optimisesTo(sf.universe()));
-		assertThat(sf.inter(single(), sf.empty()), optimisesTo(sf.empty()));
-		assertThat(sf.inter(sf.empty(), single()), optimisesTo(sf.empty()));
+		assertThat(sf.inter(single(), sf.extensional()), optimisesTo(sf.extensional()));
+		assertThat(sf.inter(sf.extensional(), single()), optimisesTo(sf.extensional()));
 		assertThat(sf.inter(single(), sf.universe()), optimisesTo(single()));
 		assertThat(sf.inter(sf.universe(), single()), optimisesTo(single()));
 
@@ -84,13 +83,13 @@ class MessageSetOptimiserTest {
 	 */
 	@Test
 	void testIsActive_Difference() {
-		assertThat(sf.diff(sf.empty(), sf.empty()), optimisesTo(sf.empty()));
-		assertThat(sf.diff(sf.universe(), sf.empty()), optimisesTo(sf.universe()));
-		assertThat(sf.diff(sf.empty(), sf.universe()), optimisesTo(sf.empty()));
-		assertThat(sf.diff(sf.universe(), sf.universe()), optimisesTo(sf.empty()));
-		assertThat(sf.diff(single(), sf.empty()), optimisesTo(single()));
-		assertThat(sf.diff(sf.empty(), single()), optimisesTo(sf.empty()));
-		assertThat(sf.diff(single(), sf.universe()), optimisesTo(sf.empty()));
+		assertThat(sf.diff(sf.extensional(), sf.extensional()), optimisesTo(sf.extensional()));
+		assertThat(sf.diff(sf.universe(), sf.extensional()), optimisesTo(sf.universe()));
+		assertThat(sf.diff(sf.extensional(), sf.universe()), optimisesTo(sf.extensional()));
+		assertThat(sf.diff(sf.universe(), sf.universe()), optimisesTo(sf.extensional()));
+		assertThat(sf.diff(single(), sf.extensional()), optimisesTo(single()));
+		assertThat(sf.diff(sf.extensional(), single()), optimisesTo(sf.extensional()));
+		assertThat(sf.diff(single(), sf.universe()), optimisesTo(sf.extensional()));
 
 		// These terms can't be optimised:
 		assertThat(sf.diff(single(), single()), optimisesTo(sf.diff(single(), single())));
@@ -98,7 +97,7 @@ class MessageSetOptimiserTest {
 	}
 
 	private ExtensionalMessageSet single() {
-		return sf.extensional(List.of(rf.createMessage()));
+		return sf.extensional(rf.createMessage());
 	}
 
 	private Matcher<MessageSet> optimisesTo(MessageSet m) {

@@ -89,7 +89,7 @@ public class MessageValidator extends AbstractDeclarativeValidator {
       return;
     }
 
-    final var q = new EventResolverQuery(e, m.getFrom(), m.getTo(), grp.get().getActors());
+    final var q = new EventResolverQuery(m, e, grp.get().getActors());
     final var candidates = eventRes.resolve(q).collect(Collectors.toUnmodifiableSet());
 
     if (candidates.isEmpty()) {

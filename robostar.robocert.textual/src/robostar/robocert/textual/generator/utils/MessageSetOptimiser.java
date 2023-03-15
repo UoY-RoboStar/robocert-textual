@@ -126,7 +126,7 @@ public record MessageSetOptimiser(SetFactory setFactory) {
 
     // If either side is empty, so is an intersection.
     if (isVisiblyEmpty(lhs) || isVisiblyEmpty(rhs)) {
-      return setFactory.empty();
+      return setFactory.extensional();
     }
 
     // Fallback to distribution.
@@ -153,7 +153,7 @@ public record MessageSetOptimiser(SetFactory setFactory) {
     // If we're subtracting everything, or have nothing to begin with,
     // we can throw the whole set away.
     if (isVisiblyEmpty(lhs) || rhs instanceof UniverseMessageSet) {
-      return setFactory.empty();
+      return setFactory.extensional();
     }
 
     // If we're subtracting nothing, we can optimise the subtraction away.

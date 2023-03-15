@@ -10,7 +10,6 @@
 
 package robostar.robocert.textual.tests.util;
 
-import circus.robocalc.robochart.Connection;
 import circus.robocalc.robochart.ConnectionNode;
 import circus.robocalc.robochart.RoboChartFactory;
 import com.google.inject.Inject;
@@ -20,6 +19,8 @@ import java.util.stream.Stream;
 import robostar.robocert.*;
 import robostar.robocert.util.resolve.EventResolver;
 import robostar.robocert.util.resolve.EventResolverQuery;
+import robostar.robocert.util.resolve.result.ResolvedEvent;
+import robostar.robocert.util.resolve.result.ResolvedEvent.Direction;
 
 public record DummyEventResolver(RoboChartFactory chart) implements EventResolver {
   @Inject
@@ -28,7 +29,7 @@ public record DummyEventResolver(RoboChartFactory chart) implements EventResolve
   }
 
   @Override
-  public Stream<Connection> resolve(EventResolverQuery q) {
+  public Stream<ResolvedEvent> resolve(EventResolverQuery q) {
     final var efrom = q.topic().getEfrom();
     final var efromName = efrom.getName();
     final var eto = q.topic().getEto();
@@ -43,7 +44,7 @@ public record DummyEventResolver(RoboChartFactory chart) implements EventResolve
       conn.setEto(rightWayUp ? eto : efrom);
       conn.setFrom(fabricateNode(rightWayUp ? q.from() : q.to()));
       conn.setTo(fabricateNode(rightWayUp ? q.to() : q.from()));
-      return Stream.of(conn);
+      return Stream.of(new ResolvedEvent(q, rightWayUp ? Direction.FORWARDS : Direction.BACKWARDS, conn));
     }
     // TODO(@MattWindsor91): add more events as time goes by.
 
