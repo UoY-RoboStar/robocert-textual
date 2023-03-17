@@ -10,6 +10,8 @@
 
 package robostar.robocert.textual.generator.intf.seq.context;
 
+import java.util.List;
+import robostar.robocert.Actor;
 import robostar.robocert.Interaction;
 
 import java.util.stream.Stream;
@@ -28,6 +30,16 @@ public interface InteractionContext {
    * @return the interaction.
    */
   Interaction interaction();
+
+  /**
+   * Gets the list of all actors in this context's interaction.
+   *
+   * @return the list of all actors
+   */
+  default List<Actor> allActors() {
+    return interaction().getGroup().getActors();
+  }
+
 
   /**
    * Gets contexts for each of the lifelines in this interaction.

@@ -11,6 +11,7 @@
 package robostar.robocert.textual.generator.intf.seq.context;
 
 import circus.robocalc.robochart.Variable;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import robostar.robocert.Actor;
@@ -72,6 +73,14 @@ public interface LifelineContext {
    * @return the interaction context.
    */
   InteractionContext global();
+
+  /**
+   * Gets the list of all actors in this context's interaction.
+   * @return the list of all actors (including this one)
+   */
+  default List<Actor> allActors() {
+    return global().allActors();
+  }
 
   /**
    * Handles a sequential fragment according to whether this lifeline is in sequential position or
