@@ -24,4 +24,6 @@ Require-Bundle: robostar.robocert.textual;bundle-version="0.2.0",
  org.eclipse.xtext.xbase.lib;bundle-version="2.25.0",
  org.eclipse.xtext.xbase.testing
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Export-Package: robostar.robocert.textual.tests;x-internal=true
+Export-Package: robostar.robocert.textual.tests,
+ robostar.robocert.textual.tests.examples,
+ robostar.robocert.textual.tests.matchers
