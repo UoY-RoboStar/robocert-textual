@@ -7,8 +7,10 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<xtextVersion>2.27.0</xtextVersion>
+		<!-- Last version to support 2021-12 -->
+		<xtextVersion>2.28.0</xtextVersion>
 		<mwe2Version>2.13.0</mwe2Version>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
@@ -248,6 +250,11 @@
 		<repository>
 			<id>eclipse-release</id>
 			<url>${eclipse-repo.url}</url>
+			<layout>p2</layout>
+		</repository>
+		<repository>
+			<id>xtext</id>
+			<url>https://download.eclipse.org/modeling/tmf/xtext/updates/releases/${xtextVersion}/</url>
 			<layout>p2</layout>
 		</repository>
 		<!-- Used for picking up hamcrest 2 -->
