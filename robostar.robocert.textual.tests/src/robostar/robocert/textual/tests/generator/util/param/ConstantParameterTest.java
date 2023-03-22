@@ -21,8 +21,8 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.textual.generator.utils.param.ConstantParameter;
-import robostar.robocert.textual.tests.util.DummyVariableFactory;
-import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
+import robostar.robocert.textual.tests.common.DummyVariableFactory;
+import robostar.robocert.textual.tests.common.RoboCertCustomInjectorProvider;
 
 /** Tests functionality of {@link ConstantParameter}s. */
 @ExtendWith(InjectionExtension.class)

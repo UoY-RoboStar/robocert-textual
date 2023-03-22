@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 University of York and others
+ * Copyright (c) 2021-2023 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -7,10 +7,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  */
-package robostar.robocert.textual.tests.util;
+package robostar.robocert.textual.tests.common.matchers;
 
-import circus.robocalc.robochart.Expression;
-import circus.robocalc.robochart.IntegerExp;
 import org.eclipse.xtext.EcoreUtil2;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;

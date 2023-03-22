@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.textual.generator.utils.name.GroupNamer;
 import robostar.robocert.RoboCertFactory;
-import robostar.robocert.textual.tests.util.RoboCertCustomInjectorProvider;
+import robostar.robocert.textual.tests.common.RoboCertCustomInjectorProvider;
 
 /**
  * Tests {@link GroupNamer}.

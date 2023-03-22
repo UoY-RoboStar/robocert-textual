@@ -24,6 +24,7 @@ import robostar.robocert.ExtensionalMessageSet;
 import robostar.robocert.MessageSet;
 import robostar.robocert.RoboCertFactory;
 import robostar.robocert.textual.generator.utils.MessageSetOptimiser;
+import robostar.robocert.textual.tests.common.matchers.MessageSetOptimisesTo;
 import robostar.robocert.util.factory.SetFactory;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 

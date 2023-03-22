@@ -11,7 +11,7 @@
 package robostar.robocert.textual.tests.scoping;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static robostar.robocert.textual.tests.matchers.Matchers.hasScope;
+import static robostar.robocert.textual.tests.common.matchers.Matchers.hasScope;
 
 import circus.robocalc.robochart.ControllerDef;
 import circus.robocalc.robochart.RoboChartFactory;
@@ -26,7 +26,7 @@ import robostar.robocert.RoboCertFactory;
 import robostar.robocert.util.factory.robochart.ExpressionFactory;
 import robostar.robocert.textual.scoping.VariableScopeProvider;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
-import robostar.robocert.textual.tests.util.DummyVariableFactory;
+import robostar.robocert.textual.tests.common.DummyVariableFactory;
 
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
