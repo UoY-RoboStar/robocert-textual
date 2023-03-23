@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 University of York and others
+ * Copyright (c) 2022-2023 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -32,12 +32,19 @@ import robostar.robocert.textual.tests.common.DummyVariableFactory;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
 class VariableScopeProviderTest {
-  @Inject private RoboCertFactory certFac;
-  @Inject private RoboChartFactory chartFac;
-  @Inject private TargetFactory tgtFac;
-  @Inject private VariableScopeProvider scope;
-  @Inject private DummyVariableFactory varFac;
-  @Inject private ExpressionFactory exprFac;
+
+  @Inject
+  private RoboCertFactory certFac;
+  @Inject
+  private RoboChartFactory chartFac;
+  @Inject
+  private TargetFactory tgtFac;
+  @Inject
+  private VariableScopeProvider scope;
+  @Inject
+  private DummyVariableFactory varFac;
+  @Inject
+  private ExpressionFactory exprFac;
 
   // We assume the differences in how we handle targets will (eventually) be tested elsewhere.
   // This is just a convenient type of target to use here.
@@ -55,13 +62,17 @@ class VariableScopeProviderTest {
     sgrp.getAssignments().add(asst);
   }
 
-  /** Tests that a constant assignment on an empty controller generates an empty scope. */
+  /**
+   * Tests that a constant assignment on an empty controller generates an empty scope.
+   */
   @Test
   void testConstAssignmentScope_empty() {
     assertThat(scope.constAssignmentScope(asst), hasScope());
   }
 
-  /** Tests that value-assigned constants are ignored. */
+  /**
+   * Tests that value-assigned constants are ignored.
+   */
   @Test
   void testConstAssignmentScope_ignoreValueAssigned() {
     final var vf = varFac.constantList("foo", "bar");
