@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.ConstAssignment;
 import robostar.robocert.RoboCertFactory;
+import robostar.robocert.util.factory.TargetFactory;
 import robostar.robocert.util.factory.robochart.ExpressionFactory;
 import robostar.robocert.textual.scoping.VariableScopeProvider;
 import robostar.robocert.textual.tests.RoboCertInjectorProvider;
@@ -31,11 +32,12 @@ import robostar.robocert.textual.tests.common.DummyVariableFactory;
 @ExtendWith(InjectionExtension.class)
 @InjectWith(RoboCertInjectorProvider.class)
 class VariableScopeProviderTest {
-  @Inject private RoboCertFactory certFactory;
-  @Inject private RoboChartFactory chartFactory;
+  @Inject private RoboCertFactory certFac;
+  @Inject private RoboChartFactory chartFac;
+  @Inject private TargetFactory tgtFac;
   @Inject private VariableScopeProvider scope;
-  @Inject private DummyVariableFactory varFactory;
-  @Inject private ExpressionFactory exprFactory;
+  @Inject private DummyVariableFactory varFac;
+  @Inject private ExpressionFactory exprFac;
 
   // We assume the differences in how we handle targets will (eventually) be tested elsewhere.
   // This is just a convenient type of target to use here.
@@ -44,15 +46,12 @@ class VariableScopeProviderTest {
 
   @BeforeEach
   void setUp() {
-    ctrl = chartFactory.createControllerDef();
+    ctrl = chartFac.createControllerDef();
 
-    final var ctgt = certFactory.createControllerTarget();
-    ctgt.setController(ctrl);
+    asst = certFac.createConstAssignment();
 
-    asst = certFactory.createConstAssignment();
-
-    final var sgrp = certFactory.createSpecificationGroup();
-    sgrp.setTarget(ctgt);
+    final var sgrp = certFac.createSpecificationGroup();
+    sgrp.setTarget(tgtFac.controller(ctrl));
     sgrp.getAssignments().add(asst);
   }
 
@@ -65,8 +64,8 @@ class VariableScopeProviderTest {
   /** Tests that value-assigned constants are ignored. */
   @Test
   void testConstAssignmentScope_ignoreValueAssigned() {
-    final var vf = varFactory.constantList("foo", "bar");
-    vf.getVars().get(0).setInitial(exprFactory.bool(false));
+    final var vf = varFac.constantList("foo", "bar");
+    vf.getVars().get(0).setInitial(exprFac.bool(false));
     ctrl.getVariableList().add(vf);
 
     assertThat(scope.constAssignmentScope(asst), hasScope(vf.getVars().get(1)));
