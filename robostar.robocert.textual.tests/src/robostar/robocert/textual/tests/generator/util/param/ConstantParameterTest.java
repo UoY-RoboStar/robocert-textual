@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 University of York and others
+ * Copyright (c) 2022-2023 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -21,12 +21,12 @@ import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import robostar.robocert.textual.generator.utils.param.ConstantParameter;
+import robostar.robocert.textual.tests.RoboCertInjectorProvider;
 import robostar.robocert.textual.tests.common.DummyVariableFactory;
-import robostar.robocert.textual.tests.common.RoboCertCustomInjectorProvider;
 
 /** Tests functionality of {@link ConstantParameter}s. */
 @ExtendWith(InjectionExtension.class)
-@InjectWith(RoboCertCustomInjectorProvider.class)
+@InjectWith(RoboCertInjectorProvider.class)
 class ConstantParameterTest {
   @Inject private IQualifiedNameProvider qnp;
   @Inject private DummyVariableFactory varFactory;
