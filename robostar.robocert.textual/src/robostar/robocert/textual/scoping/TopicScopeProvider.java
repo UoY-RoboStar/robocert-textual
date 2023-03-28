@@ -53,20 +53,23 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver def
    * @return the scope (can be null)
    */
   public IScope eventScope(EventTopic t, EndIndex eventEnd) {
-    final var grp = groupFinder.find(t);
-    if (grp.isEmpty()) {
-      return IScope.NULLSCOPE;
-    }
-    final var actors = grp.get().getActors();
+    return groupFinder.findOnObject(t).map(g -> eventScopeFor(g, t, eventEnd))
+        .orElse(IScope.NULLSCOPE);
+  }
+
+  private IScope eventScopeFor(SpecificationGroup grp, EventTopic t, EndIndex eventEnd) {
+    final var actors = grp.getActors();
 
     final var msg = t.getMessage();
-    final var tgt = grp.get().getTarget();
+    final var tgt = grp.getTarget();
 
     final var end = scopeEnd(msg, tgt, eventEnd);
     return Scopes.scopeFor(endCandidates(end.of(msg), actors, gu::allEvents));
   }
 
   private EndIndex scopeEnd(Message msg, Target tgt, EndIndex eventEnd) {
+    // TODO(@MattWindsor91): this seems to duplicate a lot of the logic in the metamodel resolvers.
+
     // For component messages, we take scope from whichever side of the message we are resolving.
     if (!msg.isOutbound()) {
       return eventEnd;
@@ -87,11 +90,11 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver def
    * @return the scope (may be null).
    */
   public IScope getOperationScope(OperationTopic t) {
-    final var grp = groupFinder.find(t);
-    if (grp.isEmpty()) {
-      return IScope.NULLSCOPE;
-    }
-    final var actors = grp.get().getActors();
+    return groupFinder.findOnObject(t).map(g -> operationScopeFor(g, t)).orElse(IScope.NULLSCOPE);
+  }
+
+  private IScope operationScopeFor(SpecificationGroup grp, OperationTopic t) {
+    final var actors = grp.getActors();
 
     // Operation scopes are always defined on the 'from' end, because (as of writing),
     // all operations are calls to the robotic platform (gate).

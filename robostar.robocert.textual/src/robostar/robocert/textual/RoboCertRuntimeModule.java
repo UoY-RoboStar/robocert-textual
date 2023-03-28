@@ -16,7 +16,6 @@ package robostar.robocert.textual;
 import circus.robocalc.robochart.textual.scoping.RoboChartImportURIGlobalScopeProvider;
 import circus.robocalc.robochart.textual.scoping.RoboChartImportedNamespaceAwareLocalScopeProvider;
 import com.google.inject.Binder;
-import com.google.inject.TypeLiteral;
 
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
@@ -32,6 +31,7 @@ import org.eclipse.xtext.conversion.IValueConverterService;
 import robostar.robocert.impl.RoboCertFactoryImpl;
 import robostar.robocert.util.resolve.EventResolver;
 import robostar.robocert.util.resolve.EventResolverImpl;
+import robostar.robocert.wfc.seq.MessageArgumentsChecker.ExpressionTypeChecker;
 
 /**
  * Use this class to register components to be used at runtime / without the
@@ -41,7 +41,10 @@ import robostar.robocert.util.resolve.EventResolverImpl;
 public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	@Override
 	public void configure(Binder binder) {
-		binder.bind(new TypeLiteral<EventResolver>() {}).to(EventResolverImpl.class); 
+		// TODO(@MattWindsor91): can these be done declaratively?
+		binder.bind(EventResolver.class).to(EventResolverImpl.class);
+		binder.bind(ExpressionTypeChecker.class).to(RoboCalcExpressionTypeChecker.class);
+
 		super.configure(binder);
 	}
 	

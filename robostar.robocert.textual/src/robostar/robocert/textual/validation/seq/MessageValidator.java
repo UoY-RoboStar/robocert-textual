@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022 University of York and others
+ * Copyright (c) 2021-2023 University of York and others
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,9 +11,6 @@ package robostar.robocert.textual.validation.seq;
 
 import com.google.inject.Inject;
 
-import circus.robocalc.robochart.Type;
-import circus.robocalc.robochart.textual.RoboCalcTypeProvider;
-
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -21,16 +18,14 @@ import org.eclipse.xtext.validation.AbstractDeclarativeValidator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 import robostar.robocert.EventTopic;
-import robostar.robocert.ExpressionValueSpecification;
 import robostar.robocert.Message;
 import robostar.robocert.OperationTopic;
-import robostar.robocert.WildcardValueSpecification;
+import robostar.robocert.SpecificationGroup;
 import robostar.robocert.RoboCertPackage.Literals;
-import robostar.robocert.ValueSpecification;
 import robostar.robocert.util.GroupFinder;
 import robostar.robocert.util.resolve.EventResolver;
 import robostar.robocert.util.resolve.EventResolverQuery;
-import robostar.robocert.util.resolve.ParamTypeResolver;
+import robostar.robocert.wfc.seq.MessageArgumentsChecker;
 
 /**
  * Validates aspects of message specifications.
@@ -42,9 +37,7 @@ public class MessageValidator extends AbstractDeclarativeValidator {
   @Inject
   private EventResolver eventRes;
   @Inject
-  private ParamTypeResolver paramTypeRes;
-  @Inject
-  private RoboCalcTypeProvider typeProvider;
+  private MessageArgumentsChecker argsChecker;
   @Inject
   private GroupFinder groupFinder;
 
@@ -55,10 +48,6 @@ public class MessageValidator extends AbstractDeclarativeValidator {
   // TODO: SMTp1
   public static final String EVENT_TOPIC_HAS_CONNECTION = "SMTp2";
   // TODO: SMTp3
-
-  // Arguments (A)
-  public static final String HAS_CORRECT_ARGUMENT_COUNT = "SMA1";
-  public static final String ARGUMENTS_TYPE_COMPATIBLE = "SMA2";
 
   // From (F)
   public static final String EDGE_ACTORS_INDISTINCT = "SMF1";
@@ -84,12 +73,11 @@ public class MessageValidator extends AbstractDeclarativeValidator {
     }
     // We need to know which actors are defined on this message's enclosing SpecificationGroup,
     // so that we can work out what the target's world is.
-    final var grp = groupFinder.find(m);
-    if (grp.isEmpty()) {
-      return;
-    }
+    groupFinder.findOnObject(m).ifPresent(g -> checkEventTopicHasConnectionOn(m, e, g));
+  }
 
-    final var q = new EventResolverQuery(m, e, grp.get().getActors());
+  private void checkEventTopicHasConnectionOn(Message m, EventTopic e, SpecificationGroup grp) {
+    final var q = new EventResolverQuery(m, e, grp.getActors());
     final var candidates = eventRes.resolve(q).collect(Collectors.toUnmodifiableSet());
 
     if (candidates.isEmpty()) {
@@ -157,37 +145,18 @@ public class MessageValidator extends AbstractDeclarativeValidator {
    */
   @Check
   public void checkArgumentsAgainstParameters(Message m) {
-    final var args = m.getArguments();
-    final var numArgs = args.size();
-    final var params = paramTypeRes.resolve(m.getTopic()).toList();
-    final var numParams = params.size();
+    final var result = argsChecker.check(m);
 
-    if (numParams != numArgs) {
+    if (!result.isSMA1()) {
       error(
           "The arguments of a message must have exactly as many elements as its topic has parameters.",
-          Literals.MESSAGE__ARGUMENTS, HAS_CORRECT_ARGUMENT_COUNT);
+          Literals.MESSAGE__ARGUMENTS, "SMA1");
     }
 
-    // Check as many argument/parameter pairs as we can, the above error notwithstanding.
-    final var safeRange = Math.min(numParams, numArgs);
-    for (var i = 0; i < safeRange; i++) {
-      if (!argumentTypeOk(args.get(i), params.get(i))) {
-        error(
-            "The arguments of a message must be type-compatible with their corresponding parameters.",
-            Literals.MESSAGE__ARGUMENTS, ARGUMENTS_TYPE_COMPATIBLE);
-      }
+    if (!result.isSMA2()) {
+      error(
+          "The arguments of a message must be type-compatible with their corresponding parameters.",
+          Literals.MESSAGE__ARGUMENTS, "SMA2");
     }
-  }
-
-  private boolean argumentTypeOk(ValueSpecification arg, Type ptype) {
-    if (arg instanceof WildcardValueSpecification) {
-      // Wildcards match against any type.
-      return true;
-    }
-    if (arg instanceof ExpressionValueSpecification e) {
-      final var etype = typeProvider.typeFor(e.getExpr());
-      return typeProvider.typeCompatible(etype, ptype);
-    }
-    return false;
   }
 }
