@@ -28,6 +28,7 @@ import robostar.robocert.util.GroupFinder;
 import robostar.robocert.util.resolve.DefinitionResolver;
 import robostar.robocert.util.resolve.EndIndex;
 import robostar.robocert.util.resolve.node.MessageEndNodeResolver;
+import robostar.robocert.util.resolve.node.ResolveContext;
 
 /**
  * Scoping logic for message topics.
@@ -58,13 +59,13 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver def
   }
 
   private IScope eventScopeFor(SpecificationGroup grp, EventTopic t, EndIndex eventEnd) {
-    final var actors = grp.getActors();
+    final var ctx = new ResolveContext(grp);
 
     final var msg = t.getMessage();
     final var tgt = grp.getTarget();
 
     final var end = scopeEnd(msg, tgt, eventEnd);
-    return Scopes.scopeFor(endCandidates(end.of(msg), actors, gu::allEvents));
+    return Scopes.scopeFor(endCandidates(end.of(msg), ctx, gu::allEvents));
   }
 
   private EndIndex scopeEnd(Message msg, Target tgt, EndIndex eventEnd) {
@@ -94,16 +95,16 @@ public record TopicScopeProvider(CTimedGeneratorUtils gu, DefinitionResolver def
   }
 
   private IScope operationScopeFor(SpecificationGroup grp, OperationTopic t) {
-    final var actors = grp.getActors();
+    final var ctx = new ResolveContext(grp);
 
     // Operation scopes are always defined on the 'from' end, because (as of writing),
     // all operations are calls to the robotic platform (gate).
-    return Scopes.scopeFor(endCandidates(t.getMessage().getFrom(), actors, gu::allOperations));
+    return Scopes.scopeFor(endCandidates(t.getMessage().getFrom(), ctx, gu::allOperations));
   }
 
-  private <T extends EObject> Set<T> endCandidates(MessageEnd e, List<Actor> actors,
+  private <T extends EObject> Set<T> endCandidates(MessageEnd e, ResolveContext ctx,
       Function<Context, List<T>> selector) {
-    final var nodes = endRes.resolve(e, actors);
+    final var nodes = endRes.resolve(e, ctx);
     return nodes.flatMap(n -> selectToStream(n, selector)).collect(Collectors.toSet());
   }
 

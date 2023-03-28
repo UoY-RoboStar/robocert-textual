@@ -25,6 +25,7 @@ import robostar.robocert.RoboCertPackage.Literals;
 import robostar.robocert.util.GroupFinder;
 import robostar.robocert.util.resolve.EventResolver;
 import robostar.robocert.util.resolve.EventResolverQuery;
+import robostar.robocert.util.resolve.node.ResolveContext;
 import robostar.robocert.wfc.seq.MessageArgumentsChecker;
 
 /**
@@ -77,7 +78,7 @@ public class MessageValidator extends AbstractDeclarativeValidator {
   }
 
   private void checkEventTopicHasConnectionOn(Message m, EventTopic e, SpecificationGroup grp) {
-    final var q = new EventResolverQuery(m, e, grp.getActors());
+    final var q = new EventResolverQuery(m, e, new ResolveContext(grp));
     final var candidates = eventRes.resolve(q).collect(Collectors.toUnmodifiableSet());
 
     if (candidates.isEmpty()) {
