@@ -24,8 +24,8 @@
     <orderEntry type="library" name="eclipse.xtext.util" level="project" />
     <orderEntry type="library" name="eclipse.xtext.common.types" level="project" />
     <orderEntry type="library" name="eclipse.xtext.ui.shared" level="project" />
-    <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202206211010" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart.generator.csp_3.0.0.202302061250" level="project" />
     <orderEntry type="library" name="circus.robocalc.robochart.textual_3.0.0.202206290948" level="project" />
+    <orderEntry type="library" name="circus.robocalc.robochart_2.0.0.202206211010" level="project" />
   </component>
 </module>
