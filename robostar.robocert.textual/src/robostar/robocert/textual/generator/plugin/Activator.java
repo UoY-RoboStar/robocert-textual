@@ -12,6 +12,7 @@ package robostar.robocert.textual.generator.plugin;
 import com.google.common.collect.Maps;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.ui.shared.SharedStateModule;
@@ -74,9 +75,9 @@ public class Activator extends AbstractUIPlugin {
     }
   }
 
-  protected com.google.inject.Module getRuntimeModule(String grammar) {
+  protected Module getRuntimeModule(String grammar) {
     if (ROBOSTAR_ROBOCERT_TEXTUAL_ROBOCERT.equals(grammar)) {
-      return new RoboCertRuntimeModule();
+      return new  RoboCertRuntimeModule();
     }
     throw new IllegalArgumentException(grammar);
   }

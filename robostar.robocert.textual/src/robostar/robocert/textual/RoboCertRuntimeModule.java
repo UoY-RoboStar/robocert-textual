@@ -13,24 +13,17 @@
  */
 package robostar.robocert.textual;
 
+import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter;
 import circus.robocalc.robochart.textual.scoping.RoboChartImportURIGlobalScopeProvider;
 import circus.robocalc.robochart.textual.scoping.RoboChartImportedNamespaceAwareLocalScopeProvider;
 import com.google.inject.Binder;
-
+import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.scoping.IGlobalScopeProvider;
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
 import robostar.robocert.textual.generator.RoboCertOutputConfigurationProvider;
-import org.eclipse.xtext.naming.IQualifiedNameConverter;
-import circus.robocalc.robochart.textual.RoboChartQualifiedNameConverter;
-import circus.robocalc.robochart.impl.RoboChartFactoryImplCustom;
-import circus.robocalc.robochart.RoboChartFactory;
-import robostar.robocert.RoboCertFactory;
-
-import org.eclipse.xtext.conversion.IValueConverterService;
-import robostar.robocert.impl.RoboCertFactoryImpl;
-import robostar.robocert.util.resolve.EventResolver;
-import robostar.robocert.util.resolve.EventResolverImpl;
+import robostar.robocert.util.RoboCertBaseModule;
 import robostar.robocert.wfc.seq.MessageArgumentsChecker.ExpressionTypeChecker;
 
 /**
@@ -41,8 +34,9 @@ import robostar.robocert.wfc.seq.MessageArgumentsChecker.ExpressionTypeChecker;
 public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 	@Override
 	public void configure(Binder binder) {
+		binder.install(new RoboCertBaseModule());
+
 		// TODO(@MattWindsor91): can these be done declaratively?
-		binder.bind(EventResolver.class).to(EventResolverImpl.class);
 		binder.bind(ExpressionTypeChecker.class).to(RoboCalcExpressionTypeChecker.class);
 
 		super.configure(binder);
@@ -80,20 +74,5 @@ public class RoboCertRuntimeModule extends AbstractRoboCertRuntimeModule {
 		binder.bind(org.eclipse.xtext.scoping.IScopeProvider.class)
 				.annotatedWith(com.google.inject.name.Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
 				.to(RoboChartImportedNamespaceAwareLocalScopeProvider.class);
-	}
-
-	/**
-	 * Binds the RoboCert factory.
-	 */
-	public Class<? extends RoboCertFactory> bindRoboCertFactory() {
-		// TODO(@MattWindsor91): is this the right way to do this?
-		return RoboCertFactoryImpl.class;
-	}
-
-	/**
-	 * Binds the RoboChart custom factory.
-	 */
-	public Class<? extends RoboChartFactory> bindRoboChartFactory() {
-		return RoboChartFactoryImplCustom.class;
 	}
 }

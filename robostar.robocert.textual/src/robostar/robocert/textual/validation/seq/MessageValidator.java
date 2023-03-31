@@ -23,8 +23,8 @@ import robostar.robocert.OperationTopic;
 import robostar.robocert.SpecificationGroup;
 import robostar.robocert.RoboCertPackage.Literals;
 import robostar.robocert.util.GroupFinder;
-import robostar.robocert.util.resolve.EventResolver;
-import robostar.robocert.util.resolve.EventResolverQuery;
+import robostar.robocert.util.resolve.message.EventResolver;
+import robostar.robocert.util.resolve.message.EventResolverQuery;
 import robostar.robocert.util.resolve.node.ResolveContext;
 import robostar.robocert.wfc.seq.MessageArgumentsChecker;
 

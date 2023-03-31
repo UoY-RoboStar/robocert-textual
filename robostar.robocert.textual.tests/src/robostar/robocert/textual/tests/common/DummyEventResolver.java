@@ -17,10 +17,10 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import robostar.robocert.*;
-import robostar.robocert.util.resolve.EventResolver;
-import robostar.robocert.util.resolve.EventResolverQuery;
+import robostar.robocert.util.resolve.message.EventResolver;
+import robostar.robocert.util.resolve.message.EventResolverQuery;
 import robostar.robocert.util.resolve.result.ResolvedEvent;
-import robostar.robocert.util.resolve.result.ResolvedEvent.Direction;
+import robostar.robocert.util.resolve.result.MatchDirection;
 
 public record DummyEventResolver(RoboChartFactory chart) implements EventResolver {
   @Inject
@@ -44,7 +44,7 @@ public record DummyEventResolver(RoboChartFactory chart) implements EventResolve
       conn.setEto(rightWayUp ? eto : efrom);
       conn.setFrom(fabricateNode(rightWayUp ? q.from() : q.to()));
       conn.setTo(fabricateNode(rightWayUp ? q.to() : q.from()));
-      return Stream.of(new ResolvedEvent(q, rightWayUp ? Direction.FORWARDS : Direction.BACKWARDS, conn));
+      return Stream.of(new ResolvedEvent(q, rightWayUp ? MatchDirection.FORWARDS : MatchDirection.BACKWARDS, conn));
     }
     // TODO(@MattWindsor91): add more events as time goes by.
 
