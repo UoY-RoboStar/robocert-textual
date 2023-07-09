@@ -361,7 +361,7 @@ Any returns InteractionFragment:
 BlockFragment:
 	(
 		'deadline' {DeadlineFragment} TimeFragmentTail |
-		'timeout' {TimeoutFragment} trigger=WaitFragment |
+		'timeout' {TimeoutFragment} TimeFragmentTail |
 		('opt' | 'optional') {OptFragment} |
 		'until' {DoUntilFragment} trigger=BranchInteractionOperand 'do' |
 		'loop' {LoopFragment} ('(' bound=DiscreteBound ('time' | 'times')? ')')?

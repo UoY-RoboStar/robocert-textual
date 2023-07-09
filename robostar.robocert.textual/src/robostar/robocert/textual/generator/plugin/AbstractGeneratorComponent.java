@@ -10,6 +10,8 @@
 
 package robostar.robocert.textual.generator.plugin;
 
+import java.util.Objects;
+
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 
 /**
@@ -32,15 +34,27 @@ public abstract class AbstractGeneratorComponent<T> implements GeneratorComponen
      * @param dir new output directory.
      */
     public void setOutputDirectory(String dir) {
-        outDir = dir;
+        outDir = Objects.requireNonNull(dir);
     }
 
     /**
      * Changes the output configuration from default.
      *
-     * @param outputCfg name of the new output configuration.
+     * @param id name of the new output configuration.
      */
-    public void setOutputConfiguration(String outputCfg) {
-        this.outputCfg = outputCfg;
+    public void setOutputConfiguration(String id) {
+        outputCfg = Objects.requireNonNull(id);
+    }
+    
+    /**
+     * Wrapper for {@code fsa.generateFile} that ensures the correct configuration.
+     * @param fsa      the generator to use
+     * @param fileName the file name to generate
+     * @param contents the contents to write
+     */
+    protected void generateFile(IFileSystemAccess2 fsa, String fileName, CharSequence contents) {
+    	var fqName = outDir.isEmpty() ? fileName : outDir + "/" + fileName;
+    	
+    	fsa.generateFile(fqName, outputCfg, contents);
     }
 }

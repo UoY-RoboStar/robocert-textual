@@ -47,7 +47,7 @@ public class StandardLibraryGenerator extends AbstractGeneratorComponent<Class<?
                 break;
             }
 
-            final var inPath = String.join("/", inDir, filename);
+            final var inPath = "/" + String.join("/", inDir, filename);
             final var outPath = String.join("/", outDir, filename);
 
             final var stream = inClass.getResourceAsStream(inPath);
