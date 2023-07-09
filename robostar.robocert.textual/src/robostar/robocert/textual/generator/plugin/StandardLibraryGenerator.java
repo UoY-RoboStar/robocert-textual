@@ -27,7 +27,7 @@ import org.eclipse.xtext.generator.IGeneratorContext;
  * @author Matt Windsor
  */
 public class StandardLibraryGenerator extends AbstractGeneratorComponent<Class<?>> {
-    private String inDir = "lib/semantics";
+    private String inDir = "/lib/semantics";
     private final List<String> files = new ArrayList<>();
 
     /**
@@ -47,7 +47,7 @@ public class StandardLibraryGenerator extends AbstractGeneratorComponent<Class<?
                 break;
             }
 
-            final var inPath = "/" + String.join("/", inDir, filename);
+            final var inPath = String.join("/", inDir, filename);
             final var outPath = String.join("/", outDir, filename);
 
             final var stream = inClass.getResourceAsStream(inPath);
@@ -60,7 +60,13 @@ public class StandardLibraryGenerator extends AbstractGeneratorComponent<Class<?
     /**
      * Changes the input directory from default.
      *
-     * @param dir new input directory.
+     * <p>
+     * This follows the standard Java resource loading conventions:
+     * if it is prefixed with a '/', it is an absolute path;
+     * it is is not, it is relative to the class passed to {@code generate}.
+     * </p>
+     *
+     * @param dir the new input directory
      */
     public void setInputDirectory(String dir) {
         inDir = dir;
