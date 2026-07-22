@@ -131,7 +131,8 @@ public record ExpressionGenerator(TemporaryVariableGenerator bg, VariableHelper 
 	private Optional<CharSequence> tryGenerateArithBinary(BinaryExpression it) {
 		return generateArithOp(it).map(op -> {
 			// TODO(@MattWindsor91): type getting from a context
-			final var type = typeGen.compileType(typeProvider.typeFor(it));
+			// Type Object for now as calculating type requires active ResourceSet with libraries in scope.
+			final var type = "Object"; //typeGen.compileType(typeProvider.typeFor(it));
 			return "%s(%s, %s, %s)".formatted(op, generate(it.getLeft()), generate(it.getRight()), type);
 		});
 	}
