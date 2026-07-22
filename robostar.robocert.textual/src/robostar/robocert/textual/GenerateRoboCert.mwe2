@@ -20,7 +20,7 @@ var rootPath = ".."
 Workflow {
 	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
 		scanClassPath = true
-		platformUri = ".."
+		platformUri = "${rootPath}"
 		
 		// NOTE(@MattWindsor91): some of this might not be necessary, review
 		// at some point.
